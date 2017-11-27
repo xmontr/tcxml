@@ -6,4 +6,4 @@
 //
 
 @javax.xml.bind.annotation.XmlSchema(namespace = "http://www.example.org/tcxml", elementFormDefault = javax.xml.bind.annotation.XmlNsForm.QUALIFIED)
-package model;
+package tcxml.model;

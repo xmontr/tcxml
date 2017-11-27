@@ -1,4 +1,4 @@
-package core;
+package tcxml.core;
 
 public class TcXmlException extends Exception{
 	

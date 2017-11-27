@@ -6,7 +6,7 @@
 //
 
 
-package model;
+package tcxml.model;
 
 import javax.xml.bind.JAXBElement;
 import javax.xml.bind.annotation.XmlElementDecl;
