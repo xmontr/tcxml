@@ -1,5 +1,7 @@
 package tcxmlplugin;
 
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.osgi.framework.BundleContext;
 
@@ -45,6 +47,15 @@ public class Activator extends AbstractUIPlugin {
 	 */
 	public static Activator getDefault() {
 		return plugin;
+	}
+	
+	
+	
+	public void log ( String message, int severity, Throwable ex){
+		IStatus status = new Status(severity, Activator.PLUGIN_ID, message,ex);
+		getLog().log(status );
+		
+		
 	}
 
 }
