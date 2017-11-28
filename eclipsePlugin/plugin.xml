@@ -1,5 +1,94 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?eclipse version="3.4"?>
 <plugin>
+   <extension
+         point="org.eclipse.ui.perspectives">
+      <perspective
+            class="tcxmlplugin.PerspectiveTcXmlFactory"
+            icon="icons/firefox_16x16.png"
+            id="tcxmlplugin.perspective1"
+            name="tcxm.mainPerspective">
+      </perspective>
+   </extension>
+   <extension
+         point="org.eclipse.ui.navigator.viewer">
+      <viewer
+            viewerId="tcxmlplugin.TcXmlExplorer.id">
+      </viewer>
+      <viewerContentBinding
+            viewerId="tcxmlplugin.TcXmlExplorer.id">
+         <includes>
+            <contentExtension
+                  pattern="org.eclipse.ui.navigator.resourceContent">
+            </contentExtension>
+            <contentExtension
+                  pattern="tcxmlplugin.commonFilter1">
+            </contentExtension>
+         </includes>
+      </viewerContentBinding>
+      <viewerActionBinding
+            viewerId="tcxmlplugin.TcXmlExplorer.id">
+         <includes>
+            <actionExtension
+                  pattern="org.eclipse.ui.navigator.resources.OpenActions">
+            </actionExtension>
+            <actionExtension
+                  pattern="org.eclipse.ui.navigator.resources.ResourceMgmtActions">
+            </actionExtension>
+         </includes>
+      </viewerActionBinding>
+   </extension>
+   <extension
+         point="org.eclipse.ui.navigator.navigatorContent">
+      <commonFilter
+            class="tcxmlplugin.nature.NatureTcXmlFilter"
+            id="tcxmlplugin.commonFilter1"
+            name="nature tcxml filter">
+      </commonFilter>
+   </extension>
+   <extension
+         point="org.eclipse.ui.decorators">
+      <decorator
+            class="tcxmlplugin.TcXmlDecorator"
+            id="tcxmlplugin.decorator1"
+            label="tcxml decorator">
+      </decorator>
+   </extension>
+   <extension
+         point="org.eclipse.ui.newWizards">
+      <wizard
+            class="tcxmlplugin.wizzard.ProjectTcxmlWizzard"
+            finalPerspective="tcxmlplugin.perspective1"
+            id="tcxmlplugin.wizard1"
+            name="name">
+      </wizard>
+   </extension>
+   <extension
+         point="org.eclipse.ui.views">
+      <view
+            class="tcxmlplugin.TcXmlExplorer"
+            id="tcxmlplugin.TcXmlExplorer.id"
+            name="tcxml explorer view"
+            restorable="true">
+      </view>
+   </extension>
+   <extension
+         id="tcxml.natureid"
+         name="tcxml nature id"
+         point="org.eclipse.core.resources.natures">
+      <runtime>
+         <run
+               class="tcxmlplugin.nature.NatureTcXml">
+         </run>
+      </runtime>
+   </extension>
+   <extension
+         point="org.eclipse.ui.ide.projectNatureImages">
+      <image
+            icon="icons/firefox_16x16.png"
+            id="tcxmlplugin.natureimage1"
+            natureId="tcxml.natureid">
+      </image>
+   </extension>
 
 </plugin>
