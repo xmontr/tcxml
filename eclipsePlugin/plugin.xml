@@ -90,5 +90,15 @@
             natureId="tcxml.natureid">
       </image>
    </extension>
+   <extension
+         point="org.eclipse.ui.editors">
+      <editor
+            class="tcxmlplugin.editor.TcXmlEditor"
+            default="false"
+            icon="icons/hammer.png"
+            id="tcxmlplugin.editor1"
+            name="tc xml editor">
+      </editor>
+   </extension>
 
 </plugin>

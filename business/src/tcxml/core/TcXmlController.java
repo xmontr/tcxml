@@ -25,7 +25,15 @@ public class TcXmlController {
     
     private Logger log;
     
-    /***
+    public Map<String, Step> getActionMap() {
+		return actionMap;
+	}
+
+	public void setActionMap(Map<String, Step> actionMap) {
+		this.actionMap = actionMap;
+	}
+
+	/***
      *  java model for the xml truscript
      * 
      */

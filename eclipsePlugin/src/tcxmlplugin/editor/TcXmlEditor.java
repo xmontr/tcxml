@@ -2,6 +2,7 @@ package tcxmlplugin.editor;
 
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+import java.util.Map;
 
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.swt.SWT;
@@ -10,13 +11,15 @@ import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorSite;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.part.EditorPart;
+import org.eclipse.ui.part.FileEditorInput;
 
+import tcxml.model.Step;
 import tcxmlplugin.composite.TcViewer;
 
 
 public class TcXmlEditor  extends EditorPart   {
 
-	private Composite tcViewer;
+	private TcViewer tcViewer;
 
 	@Override
 	public void doSave(IProgressMonitor monitor) {
@@ -34,6 +37,7 @@ public class TcXmlEditor  extends EditorPart   {
 	public void init(IEditorSite site, IEditorInput input) throws PartInitException {
 	setInput(input);
 	setSite(site);
+	FileEditorInput fi = (FileEditorInput)input ;
 		
 	}
 
@@ -52,6 +56,9 @@ public class TcXmlEditor  extends EditorPart   {
 	@Override
 	public void createPartControl(Composite parent) {
 		tcViewer = new TcViewer(parent, SWT.NONE);
+
+	Map<String, Step> actionmap = tcxml.core.TcXmlController.getInstance().getActionMap();
+		tcViewer.populateAction( actionmap);
 		
 	}
 

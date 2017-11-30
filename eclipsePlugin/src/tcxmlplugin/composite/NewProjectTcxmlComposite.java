@@ -7,7 +7,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
 
-import tcxmlplugin.TcXmlController;
+import tcxmlplugin.TcXmlPluginController;
 import tcxmlplugin.model.ProjectTcxmlModel;
 
 import org.eclipse.core.databinding.Binding;
@@ -73,7 +73,7 @@ public class NewProjectTcxmlComposite extends Composite {
 				if(el.isEmpty()){
 					ret =ValidationStatus.error(" Project Name cannnot be empty");
 				}else {
-					if(TcXmlController.getInstance().isAlreadyExistingProject(el)){
+					if(TcXmlPluginController.getInstance().isAlreadyExistingProject(el)){
 						ret=ValidationStatus.error("project already exist");
 					}
 				}

@@ -10,7 +10,7 @@ import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchWizard;
 
 import tcxmlplugin.Activator;
-import tcxmlplugin.TcXmlController;
+import tcxmlplugin.TcXmlPluginController;
 
 public class ProjectTcxmlWizzard  extends Wizard    implements IWorkbenchWizard {
 	
@@ -36,7 +36,7 @@ public class ProjectTcxmlWizzard  extends Wizard    implements IWorkbenchWizard 
 				IStatus ret = Status.OK_STATUS;
 				try {
 					
-					TcXmlController.getInstance().createSkeletonProject(formpage.getProjectName(), monitor);
+					TcXmlPluginController.getInstance().createSkeletonProject(formpage.getProjectName(), monitor);
 				} catch (Exception e) {
 					//
 					//RemoteJmxConnectionManager.getInstance()
