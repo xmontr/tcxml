@@ -4,6 +4,10 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.ToolBar;
 
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -19,9 +23,11 @@ import org.eclipse.swt.widgets.ToolItem;
 import org.eclipse.wb.swt.ResourceManager;
 
 import tcxml.model.Step;
+import tcxmlplugin.TcXmlPluginController;
 
-public class TcViewer extends Composite  {
+public class TcViewer extends Composite implements PropertyChangeListener  {
 	private ActionsViewer actionsViewer;
+	private Map<String, Step> actionMap;
 
 	public TcViewer(Composite parent, int style) {
 		super(parent, style);
@@ -72,11 +78,38 @@ public class TcViewer extends Composite  {
 
 	public void populateAction(Map<String, Step> actionmap) {
 		
+		this.actionMap = actionmap;
+		
+		 List<String> allActions =    new ArrayList<String>(actionmap.keySet())    ;
+		 
+		 TcXmlPluginController.getInstance().info(("fouded actions :" + allActions.size()  ))   ;
+	
+		 
+		actionsViewer.getModel().setAllActions(allActions);
+		
+		actionsViewer.getModel().addPropertyChangeListener(ActionsModel.ACTION_SELECTED, this);
 		
 		
 		
 		
 		
+		
+	}
+
+	@Override
+	public void propertyChange(PropertyChangeEvent evt) {
+		if(evt.getPropertyName().equals(ActionsModel.ACTION_SELECTED)) {
+			
+			String  selection = (String) evt.getNewValue();
+			this.showSelectedAction(actionMap.get(selection));
+			
+			
+		}
+		
+	}
+
+	private void showSelectedAction(Step step) {
+		actionsViewer.showSelectedAction( step);
 		
 	}
 	

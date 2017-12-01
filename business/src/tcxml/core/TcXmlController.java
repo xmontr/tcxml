@@ -151,7 +151,7 @@ private void parseXml() throws TcXmlException {
 		switch (action) {
 		case "action":
 		String actionName = currentstep.getActionName();	
-		actionMap.put(action, currentstep);
+		actionMap.put(actionName, currentstep);
 			log.fine(" found action name=" +  actionName );
 			
 			break;
