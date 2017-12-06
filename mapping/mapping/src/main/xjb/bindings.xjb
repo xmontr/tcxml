@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding ="UTF-8"?>
+<jaxb:bindings
+    schemaLocation="../xsd/tcxml.xsd"
+	xmlns:jaxb="http://java.sun.com/xml/ns/jaxb" 	xmlns:li="http://jaxb.dev.java.net/plugin/code-injector"
+    version="1.0"
+    xmlns:xs="http://www.w3.org/2001/XMLSchema"> 
+  <jaxb:bindings node="/xs:schema">
+    <li:listener>java.beans.PropertyChangeListener</li:listener>
+  </jaxb:bindings>
+</jaxb:bindings>
