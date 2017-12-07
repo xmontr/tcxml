@@ -38,6 +38,7 @@
                     </execution>
                 </executions>
                 <configuration>
+                <generatePackage>tcxml.model</generatePackage>
                     <schemaIncludes>
                         <schemaInclude>**/*.xsd</schemaInclude>
                     </schemaIncludes>
@@ -82,4 +83,5 @@
             </plugin>
         </plugins>
     </build>
+ <description>java model from xsd file definition. classes generated suport also propertychangelistener.</description>
 </project>
