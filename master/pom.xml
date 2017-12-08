@@ -25,6 +25,7 @@
   <modules>
   	<module>../mapping/mapping</module>
   	<module>../business</module>
+  	<module>../eclipsePlugin</module>
   </modules>
   <description>master project for tcxml</description>
 </project>
