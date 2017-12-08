@@ -30,9 +30,24 @@ public class ModelTest {
 		
 		Set<String> keys = actionmap.keySet();
 		
-	boolean hasinit = keys.contains("init");
-	
-	assertTrue("found init action", hasinit);
+		String[] action = new String[] {
+				"Init",
+				"Action",
+				"TC01",
+				"TC02",
+				"TC03",
+				"End",
+				
+				
+		};
+		
+		
+		for (String act : action) {
+			checkPresence(act,keys);
+			
+		}
+		
+
 		
 		
 		
@@ -40,6 +55,13 @@ public class ModelTest {
 		
 		
 	
+	}
+
+	private void checkPresence(String action, Set<String> keys) {
+		boolean hasinit = keys.contains("Init");
+		
+		assertTrue("found Init action", hasinit);
+		
 	}
 
 }
