@@ -36,6 +36,15 @@
       </dependency>
     </dependencies>
       </plugin>
+      			 <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-jar-plugin</artifactId>
+        <version>3.0.2</version>
+        <configuration>
+<outputDirectory>../eclipsePlugin/lib</outputDirectory>
+        </configuration>
+      
+      </plugin>
     </plugins>
   </build>
   <dependencies>
@@ -52,6 +61,8 @@
   	</dependency>
   </dependencies>
   <properties>
-  	<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<maven.compiler.source>1.8</maven.compiler.source>
+		<maven.compiler.target>1.8</maven.compiler.target>
   </properties>
 </project>
