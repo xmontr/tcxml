@@ -37,6 +37,20 @@
           <artifactId>tycho-compiler-plugin</artifactId>
           <version>1.0.0</version>
         </plugin>
+        <plugin>
+        	<groupId>org.eclipse.tycho</groupId>
+        	<artifactId>target-platform-configuration</artifactId>
+        	<version>1.0.0</version>
+        	<configuration>
+        	                    <resolver>p2</resolver>
+                    <pomDependencies>consider</pomDependencies>
+        	</configuration>
+        </plugin>
+        <plugin>
+        	<groupId>org.eclipse.tycho</groupId>
+        	<artifactId>tycho-packaging-plugin</artifactId>
+        	<version>1.0.0</version>
+        </plugin>
     </plugins>
   </build>
   <dependencies>
@@ -45,11 +59,7 @@
   		<artifactId>tcxmlBusiness</artifactId>
   		<version>0.0.1-SNAPSHOT</version>
   	</dependency>
-  	<dependency>
-  		<groupId>org.eclipse.platform</groupId>
-  		<artifactId>org.eclipse.ui</artifactId>
-  		<version>3.109.0</version>
-  	</dependency>
+  	
   </dependencies>
    <repositories>
     <repository>
@@ -58,4 +68,9 @@
       <layout>p2</layout>
     </repository>
   </repositories>
+   <properties>
+   	<tycho.env.osgi.arch>x86_64</tycho.env.osgi.arch>
+   	<tycho.env.osgi.os>win32</tycho.env.osgi.os>
+   	<tycho.env.osgi.ws>win32</tycho.env.osgi.ws>
+   </properties>
 </project>

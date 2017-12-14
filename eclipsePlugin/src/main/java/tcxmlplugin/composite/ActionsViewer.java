@@ -30,6 +30,10 @@ public class ActionsViewer extends Composite {
 	private ActionsModel model = new ActionsModel();
 	private Combo combo;
 
+
+
+	private Composite actionContainer;
+
 	public ActionsViewer(Composite parent, int style) {
 		super(parent, style);
 		setLayout(new GridLayout(2, false));
@@ -42,7 +46,7 @@ public class ActionsViewer extends Composite {
 		combo = comboViewer.getCombo();
 		combo.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		
-		Composite actionContainer = new Composite(this, SWT.NONE);
+		actionContainer = new Composite(this, SWT.NONE);
 		actionContainer.setLayout(new FillLayout(SWT.VERTICAL));
 		
 	
@@ -71,8 +75,13 @@ public class ActionsViewer extends Composite {
 	}
 
 	public void showSelectedAction(Step step) {
+		//clean old one
+		
 		List<Step> list = step.getStep();
-		for (Step step2 : list) {
+		for (Step step2 : list) { // add the step
+			DefaultStepViewer stepviewer = new DefaultStepViewer(actionContainer, SWT.NONE);
+			stepviewer.setModel(step2);
+			
 			
 			
 			
