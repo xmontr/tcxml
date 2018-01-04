@@ -101,6 +101,7 @@ public class TcViewer extends Composite implements PropertyChangeListener  {
 		if(evt.getPropertyName().equals(ActionsModel.ACTION_SELECTED)) {
 			
 			String  selection = (String) evt.getNewValue();
+			TcXmlPluginController.getInstance().info("selected action:" + selection);
 			this.showSelectedAction(actionMap.get(selection));
 			
 			

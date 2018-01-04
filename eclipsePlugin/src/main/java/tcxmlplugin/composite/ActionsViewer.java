@@ -7,6 +7,7 @@ import org.eclipse.swt.widgets.Label;
 import tcxml.model.Step;
 
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.custom.ScrolledComposite;
 import org.eclipse.swt.widgets.Combo;
 import org.eclipse.jface.viewers.ComboViewer;
 import org.eclipse.swt.layout.GridData;
@@ -46,8 +47,17 @@ public class ActionsViewer extends Composite {
 		combo = comboViewer.getCombo();
 		combo.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		
+
+		
+		
+		//ScrolledComposite sc = new ScrolledComposite(this,  SWT.BORDER | SWT.V_SCROLL);
+	
 		actionContainer = new Composite(this, SWT.NONE);
-		actionContainer.setLayout(new FillLayout(SWT.VERTICAL));
+		actionContainer.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, false, false, 2, 1));
+		//sc.setExpandVertical(true);
+		//sc.setContent(actionContainer);
+		actionContainer.setLayout(new GridLayout(1,false));
+	
 		
 	
 		m_bindingContext = initDataBindings();
@@ -79,13 +89,19 @@ public class ActionsViewer extends Composite {
 		
 		List<Step> list = step.getStep();
 		for (Step step2 : list) { // add the step
-			DefaultStepViewer stepviewer = new DefaultStepViewer(actionContainer, SWT.NONE);
-			stepviewer.setModel(step2);
-			
-			
-			
+			addStep(step2);
+				
 			
 		}
+		actionContainer.pack();
+	}
+
+	private void addStep(Step step2) {
+		DefaultStepViewer stepviewer = new DefaultStepViewer(actionContainer, SWT.NONE);
+		stepviewer.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
+		stepviewer.setModel(step2);
+		stepviewer.pack();
 		
 	}
+	
 }
