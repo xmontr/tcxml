@@ -8,6 +8,8 @@ import tcxml.model.Step;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.ScrolledComposite;
+import org.eclipse.swt.events.ExpandEvent;
+import org.eclipse.swt.events.ExpandListener;
 import org.eclipse.swt.widgets.Combo;
 import org.eclipse.jface.viewers.ComboViewer;
 import org.eclipse.swt.layout.GridData;
@@ -23,7 +25,7 @@ import org.eclipse.core.databinding.UpdateListStrategy;
 import org.eclipse.core.databinding.observable.value.IObservableValue;
 import org.eclipse.swt.layout.FillLayout;
 
-public class ActionsViewer extends Composite {
+public class ActionsViewer extends Composite  {
 	private DataBindingContext m_bindingContext;
 	
 	
@@ -33,7 +35,7 @@ public class ActionsViewer extends Composite {
 
 
 
-	private Composite actionContainer;
+	private StepContainer stepContainer;
 
 	public ActionsViewer(Composite parent, int style) {
 		super(parent, style);
@@ -50,13 +52,11 @@ public class ActionsViewer extends Composite {
 
 		
 		
-		//ScrolledComposite sc = new ScrolledComposite(this,  SWT.BORDER | SWT.V_SCROLL);
 	
-		actionContainer = new Composite(this, SWT.NONE);
-		actionContainer.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, false, false, 2, 1));
-		//sc.setExpandVertical(true);
-		//sc.setContent(actionContainer);
-		actionContainer.setLayout(new GridLayout(1,false));
+	
+		stepContainer = new StepContainer(this, SWT.NONE);
+		stepContainer.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 2, 1));
+
 	
 		
 	
@@ -86,22 +86,18 @@ public class ActionsViewer extends Composite {
 
 	public void showSelectedAction(Step step) {
 		//clean old one
-		
+		stepContainer.clean();
 		List<Step> list = step.getStep();
 		for (Step step2 : list) { // add the step
-			addStep(step2);
+			stepContainer.addStep(step2);
 				
 			
 		}
-		actionContainer.pack();
+	
 	}
 
-	private void addStep(Step step2) {
-		DefaultStepViewer stepviewer = new DefaultStepViewer(actionContainer, SWT.NONE);
-		stepviewer.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
-		stepviewer.setModel(step2);
-		stepviewer.pack();
-		
-	}
+
+
+
 	
 }

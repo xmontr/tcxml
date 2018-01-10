@@ -68,7 +68,7 @@ public class TcViewer extends Composite implements PropertyChangeListener  {
 		tbtmNewItem_1.setImage(ResourceManager.getPluginImage("tcxmlplugin", "icons/script-icon_16.png"));
 		tbtmNewItem_1.setText("Actions");
 		
-		actionsViewer = new ActionsViewer(tabFolder, SWT.NONE);
+		actionsViewer = new ActionsViewer(tabFolder, SWT.BORDER);
 		tbtmNewItem_1.setControl(actionsViewer);
 		
 		CTabItem tbtmNewItem_2 = new CTabItem(tabFolder, SWT.NONE);

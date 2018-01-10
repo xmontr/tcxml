@@ -12,77 +12,87 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.core.databinding.DataBindingContext;
 import org.eclipse.core.databinding.observable.value.IObservableValue;
 import org.eclipse.jface.databinding.swt.WidgetProperties;
+import org.eclipse.core.databinding.beans.BeanProperties;
 import org.eclipse.core.databinding.beans.PojoProperties;
 import org.eclipse.swt.widgets.ExpandBar;
 import org.eclipse.swt.widgets.ExpandItem;
 import org.eclipse.swt.custom.ScrolledComposite;
+import org.eclipse.swt.events.ExpandListener;
 
 public class DefaultStepViewer extends Composite{
+	
 	private DataBindingContext m_bindingContext;
 
 	public DefaultStepViewer(Composite parent, int style) {
 		super(parent, style);
-		setLayout(new FillLayout());
-		
-		
-		ExpandBar expandBar = new ExpandBar(this, SWT.NONE);
-		
-		
-		ExpandItem xpndtmNewExpanditem = new ExpandItem(expandBar, SWT.NONE);
-		xpndtmNewExpanditem.setExpanded(false);
-		xpndtmNewExpanditem.setText("New ExpandItem");
-		
-		
-		
-	//	ScrolledComposite scrolledComposite = new ScrolledComposite(expandBar, SWT.BORDER | SWT.V_SCROLL);
-		Composite thecontent = new Composite(expandBar, SWT.NONE);
-	//	scrolledComposite.setContent(thecontent);
-		thecontent.setLayout(new GridLayout(2, false));
-		
-	//	scrolledComposite.setExpandHorizontal(true);
-	//	scrolledComposite.setExpandVertical(true);
+
+		this.setLayout(new GridLayout(2, false));
+		this.model = new Step();
+
 
 		
 		
-		Label typelabel = new Label(thecontent, SWT.NONE);
-		typelabel.setLayoutData(new GridData(SWT.RIGHT, SWT.FILL, false, true, 1, 1));
+		Label typelabel = new Label(this, SWT.NONE);
+		typelabel.setLayoutData(new GridData(SWT.RIGHT, SWT.FILL, false, false, 1, 1));
 		typelabel.setText("type");
 		
-		typetext = new Text(thecontent, SWT.BORDER);
-		typetext.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
+		typetext = new Text(this, SWT.BORDER);
+		typetext.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false, 1, 1));
 		
-		Label stepidlabel = new Label(thecontent, SWT.NONE);
+		Label stepidlabel = new Label(this, SWT.NONE);
 		stepidlabel.setLayoutData(new GridData(SWT.RIGHT, SWT.FILL, false, false, 1, 1));
 		stepidlabel.setText("stepid");
 		
-		stepidtext = new Text(thecontent, SWT.BORDER);
+		stepidtext = new Text(this, SWT.BORDER);
 		stepidtext.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false, 1, 1));
 		
-		Label argumentlabel = new Label(thecontent, SWT.NONE);
+		Label argumentlabel = new Label(this, SWT.NONE);
 		argumentlabel.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
 		argumentlabel.setText("argument");
 		
-		argumenttext = new Text(thecontent, SWT.BORDER);
+		argumenttext = new Text(this, SWT.BORDER);
 		argumenttext.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		
-		Label libnamelabel = new Label(thecontent, SWT.NONE);
+		Label libnamelabel = new Label(this, SWT.NONE);
 		libnamelabel.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
 		libnamelabel.setText("libname");
 		
-		libnametext = new Text(thecontent, SWT.BORDER);
-		libnametext.setText("");
+		libnametext = new Text(this, SWT.BORDER);
+		
 		libnametext.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		
-		Label funcnamelabel = new Label(thecontent, SWT.NONE);
+		Label funcnamelabel = new Label(this, SWT.NONE);
 		funcnamelabel.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
 		funcnamelabel.setText("funcname");
 		
-		funcnametext = new Text(thecontent, SWT.BORDER);
+		funcnametext = new Text(this, SWT.BORDER);
 		funcnametext.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		
+		actionlabel = new Label(this, SWT.NONE);
+		actionlabel.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
+		actionlabel.setText("action");
 		
-		xpndtmNewExpanditem.setControl(thecontent);
-		xpndtmNewExpanditem.setHeight(xpndtmNewExpanditem.getControl().computeSize(SWT.DEFAULT, SWT.DEFAULT).y );
+		actiontext = new Text(this, SWT.BORDER);
+		actiontext.setText("");
+		actiontext.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
+		
+		levellabel = new Label(this, SWT.NONE);
+		levellabel.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
+		levellabel.setText("level");
+		
+		leveltext = new Text(this, SWT.BORDER);
+		leveltext.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
+		
+		indexlabel = new Label(this, SWT.NONE);
+		indexlabel.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
+		indexlabel.setText("index");
+		
+		indextext = new Text(this, SWT.BORDER);
+		indextext.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
+		
+		
+		
+	
 		
 		
 		m_bindingContext = initDataBindings();
@@ -96,22 +106,73 @@ private Text argumenttext;
 private Text stepidtext;
 private Text libnametext;
 private Text funcnametext;
+private Label actionlabel;
+private Text actiontext;
+private Label levellabel;
+private Text leveltext;
+private Label indexlabel;
+private Text indextext;
+
 	public Step getModel() {
 		return model;
 	}
+	
+	
+	
+	
 	public void setModel(Step model) {
 		this.model = model;
+	}
+	
+	public void populate( Step mo) {
+		
+		
+		model.setAction(mo.getAction());
+		model.setActionName(mo.getActionName());
+		model.setActiveStep(mo.getActiveStep());
+		model.setArguments(mo.getArguments());
+		model.setAutoEndEventFF(mo.getAutoEndEventFF());
+		model.setCatch(mo.getCatch());
+		model.setCategoryName(mo.getCategoryName());
+		model.setEndEvent(mo.getEndEvent());
+		model.setFuncName(mo.getFuncName());
+		model.setIndex(mo.getIndex());
+		model.setLevel(mo.getLevel());
+		model.setLibName(mo.getLibName());
+		model.setMethodName(mo.getMethodName());
+		model.setName(mo.getName());
+		model.setNewAttribute(mo.getNewAttribute());
+		model.setObjectTimeout(mo.getObjectTimeout());
+		model.setOverwriteUI(mo.getOverwriteUI());
+		model.setTestObject(mo.getTestObject());
+		model.setType(mo.getType());
+		model.setObjectTimeout(mo.getObjectTimeout());
+		model.setRecDuration(mo.getRecDuration());
+		model.setSection(mo.getSection());
+		model.setSnapshotId(mo.getSnapshotId());
+		model.setStepId(mo.getStepId());
+		model.setTestObject(mo.getTestObject());
+		
+		
+	}
+
+
+
+
+	public String getTitle() {
+		// TODO Auto-generated method stub
+		return "step #" +  model.getStepId();
 	}
 	protected DataBindingContext initDataBindings() {
 		DataBindingContext bindingContext = new DataBindingContext();
 		//
-		IObservableValue observeTextTypetextObserveWidget = WidgetProperties.text(SWT.Modify).observe(typetext);
-		IObservableValue typebytesModelObserveValue = PojoProperties.value("type.bytes").observe(model);
-		bindingContext.bindValue(observeTextTypetextObserveWidget, typebytesModelObserveValue, null, null);
-		//
 		IObservableValue observeTextStepidtextObserveWidget_1 = WidgetProperties.text(SWT.Modify).observe(stepidtext);
-		IObservableValue stepIdModelObserveValue = PojoProperties.value("stepId").observe(model);
+		IObservableValue stepIdModelObserveValue = BeanProperties.value("stepId").observe(model);
 		bindingContext.bindValue(observeTextStepidtextObserveWidget_1, stepIdModelObserveValue, null, null);
+		//
+		IObservableValue observeTextTypetextObserveWidget_1 = WidgetProperties.text(SWT.Modify).observe(typetext);
+		IObservableValue typeModelObserveValue = BeanProperties.value("type").observe(model);
+		bindingContext.bindValue(observeTextTypetextObserveWidget_1, typeModelObserveValue, null, null);
 		//
 		return bindingContext;
 	}
