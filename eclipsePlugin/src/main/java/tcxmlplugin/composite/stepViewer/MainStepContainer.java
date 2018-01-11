@@ -1,4 +1,4 @@
-package tcxmlplugin.composite;
+package tcxmlplugin.composite.stepViewer;
 
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.ExpandBar;
@@ -12,11 +12,11 @@ import tcxml.model.Step;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.layout.GridData;
 
-public class StepContainer extends Composite {
+public class MainStepContainer extends Composite implements StepContainer {
 
 	private ExpandBar bar;
 
-	public StepContainer(Composite parent, int style) {
+	public MainStepContainer(Composite parent, int style) {
 		super(parent, style);
 		setLayout(new FillLayout());
 		
@@ -25,29 +25,36 @@ public class StepContainer extends Composite {
 
 	}
 
-	public void addStep(Step step2) {
+	public void addStep(Step step) {
+		
+		 AbstractTestViewer tv = StepViewerFactory.getViewer(step,this);
+
 	
 			
 
 	
 		
 		ExpandItem xpndtmNewExpanditem = new ExpandItem(bar, SWT.NONE);
-		DefaultStepViewer stepviewer = new DefaultStepViewer(bar, SWT.NONE);
-		stepviewer.populate(step2);
+
 		xpndtmNewExpanditem.setExpanded(false);
-		xpndtmNewExpanditem.setText(stepviewer.getTitle());
+		xpndtmNewExpanditem.setText(tv.getTitle());
 		
-		xpndtmNewExpanditem.setHeight(stepviewer.computeSize(SWT.DEFAULT, SWT.DEFAULT).y );
-		xpndtmNewExpanditem.setControl(stepviewer);
+		xpndtmNewExpanditem.setHeight(tv.computeSize(SWT.DEFAULT, SWT.DEFAULT).y );
+		xpndtmNewExpanditem.setControl(tv);
 		
 		
 		
+	}
+
+	public ExpandBar getBar() {
+		return bar;
 	}
 
 	public void clean() {
 	ExpandItem[] li = bar.getItems();
 	for (ExpandItem expandItem : li) {
 		expandItem.dispose();
+		bar.redraw();
 	}
 		
 	}

@@ -5,6 +5,7 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Label;
 
 import tcxml.model.Step;
+import tcxmlplugin.composite.stepViewer.MainStepContainer;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.ScrolledComposite;
@@ -35,7 +36,7 @@ public class ActionsViewer extends Composite  {
 
 
 
-	private StepContainer stepContainer;
+	private MainStepContainer stepContainer;
 
 	public ActionsViewer(Composite parent, int style) {
 		super(parent, style);
@@ -54,7 +55,7 @@ public class ActionsViewer extends Composite  {
 		
 	
 	
-		stepContainer = new StepContainer(this, SWT.NONE);
+		stepContainer = new MainStepContainer(this, SWT.NONE);
 		stepContainer.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 2, 1));
 
 	

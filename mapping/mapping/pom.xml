@@ -52,7 +52,7 @@
 					<args>
 						<arg>-Xconstrained-properties</arg>
 						<arg>-constrained=y</arg>
-						<arg>-bound=n</arg>
+						<arg>-bound=y</arg>
 
 
 
