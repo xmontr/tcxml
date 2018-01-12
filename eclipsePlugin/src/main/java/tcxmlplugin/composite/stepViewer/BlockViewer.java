@@ -3,6 +3,7 @@ package tcxmlplugin.composite.stepViewer;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.ExpandBar;
 import org.eclipse.swt.widgets.ExpandItem;
 
@@ -18,8 +19,11 @@ public class BlockViewer extends AbstractTestViewer implements StepContainer {
 		super(parent, style);
 		setLayout(new FillLayout());
 		
-		bar = new ExpandBar(this, style);
-	}
+		bar = new ExpandBar(this, SWT.BORDER);
+		bar.setBackground( getDisplay().getSystemColor( SWT.COLOR_WHITE) );
+		
+		
+	}	
 
 	@Override
 	public String getTitle() {
@@ -71,4 +75,29 @@ public class BlockViewer extends AbstractTestViewer implements StepContainer {
 		return bar;
 	}
 
-}
+	@Override
+
+		public void clean() {
+			ExpandItem[] li = bar.getItems();
+			for (ExpandItem expandItem : li) {
+			Control innercontrol = expandItem.getControl();
+			if( innercontrol instanceof StepContainer) {
+				
+				expandItem.dispose();
+				((StepContainer) innercontrol).clean();
+				
+			}
+				
+				
+			else {
+				innercontrol.dispose();
+				expandItem.dispose();
+			}
+				
+			}
+			bar.redraw();
+		}
+		
+	}
+
+

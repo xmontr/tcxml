@@ -1,9 +1,11 @@
 package tcxmlplugin.composite.stepViewer;
 
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.ExpandBar;
 import org.eclipse.swt.widgets.ExpandItem;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.custom.ScrolledComposite;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Label;
 
@@ -18,10 +20,18 @@ public class MainStepContainer extends Composite implements StepContainer {
 
 	public MainStepContainer(Composite parent, int style) {
 		super(parent, style);
-		setLayout(new FillLayout());
+		FillLayout layout = new FillLayout();
+	this.setLayout(layout);	
+	
+	
 		
-		bar = new ExpandBar(this, style);
 		
+
+		
+		
+		bar = new ExpandBar(this, SWT.V_SCROLL);
+		bar.setBackground( getDisplay().getSystemColor( SWT.COLOR_WHITE) );
+		bar.setSpacing(10);
 
 	}
 
@@ -53,10 +63,21 @@ public class MainStepContainer extends Composite implements StepContainer {
 	public void clean() {
 	ExpandItem[] li = bar.getItems();
 	for (ExpandItem expandItem : li) {
+	Control innercontrol = expandItem.getControl();
+	if( innercontrol instanceof StepContainer) {
+		
+		((StepContainer) innercontrol).clean();
 		expandItem.dispose();
-		bar.redraw();
+	}
+	
+		
+		
+	else {
+		innercontrol.dispose();
+		expandItem.dispose();
 	}
 		
 	}
-
+	bar.redraw();
+}
 }

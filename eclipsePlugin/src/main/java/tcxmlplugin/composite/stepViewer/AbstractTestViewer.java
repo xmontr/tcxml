@@ -56,6 +56,7 @@ public abstract class AbstractTestViewer extends Composite{
 		model.setSnapshotId(mo.getSnapshotId());
 		model.setStepId(mo.getStepId());
 		model.setTestObject(mo.getTestObject());
+		model.getStep().addAll(mo.getStep());
 		
 		
 	}

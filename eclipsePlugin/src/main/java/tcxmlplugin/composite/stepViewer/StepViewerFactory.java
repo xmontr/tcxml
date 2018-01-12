@@ -37,8 +37,9 @@ public class StepViewerFactory {
 	}
 
 	private static AbstractTestViewer getBlockViewer(Step step, StepContainer stepContainer) {
-		// TODO Auto-generated method stub
-		return null;
+		BlockViewer bw = new BlockViewer(stepContainer.getBar(), SWT.NONE);
+		bw.populate(step);
+		return bw;
 	}
 
 	private static AbstractTestViewer getDefaultViewer(Step step, StepContainer stepContainer) {

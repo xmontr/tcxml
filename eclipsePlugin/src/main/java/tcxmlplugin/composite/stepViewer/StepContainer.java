@@ -6,5 +6,7 @@ public interface StepContainer {
 	
 	
 	public ExpandBar getBar();
+	
+	 void clean() ;
 
 }
