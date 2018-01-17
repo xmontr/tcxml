@@ -186,6 +186,22 @@ private void parseXml() throws TcXmlException {
 	 
 	 
 }
+/****
+ *  play only one step 
+ * 
+ * 
+ * 
+ * @param theStep
+ * @throws TcXmlException
+ */
+
+public void playSingleStep( Step theStep) throws TcXmlException{
+	
+	StepRunner ru = StepRunnerFactory.getRunner(theStep);
+	ru.runStep();
+	
+}
+
 
 
 }

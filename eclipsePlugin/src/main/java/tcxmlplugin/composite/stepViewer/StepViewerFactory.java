@@ -8,9 +8,9 @@ import tcxml.model.Step;
 
 public class StepViewerFactory {
 
-	public static AbstractTestViewer getViewer(Step step, StepContainer stepContainer) {
+	public static AbstractStepViewer getViewer(Step step, StepContainer stepContainer) {
 		
-		AbstractTestViewer tv = null;
+		AbstractStepViewer tv = null;
 		
 		String typeOfStep = step.getType();
 		switch (typeOfStep) {
@@ -36,23 +36,23 @@ public class StepViewerFactory {
 		return tv;
 	}
 
-	private static AbstractTestViewer getBlockViewer(Step step, StepContainer stepContainer) {
+	private static AbstractStepViewer getBlockViewer(Step step, StepContainer stepContainer) {
 		BlockViewer bw = new BlockViewer(stepContainer.getBar(), SWT.NONE);
 		bw.populate(step);
 		return bw;
 	}
 
-	private static AbstractTestViewer getDefaultViewer(Step step, StepContainer stepContainer) {
+	private static AbstractStepViewer getDefaultViewer(Step step, StepContainer stepContainer) {
 		DefaultStepViewer stepviewer = new DefaultStepViewer(stepContainer.getBar(), SWT.NONE);
-		stepviewer.populate(step);
+	stepviewer.populate(step);
 		return stepviewer;
 	}
 	
 	
 
-	private static AbstractTestViewer getCallFunctionViewer(Step step, StepContainer stepContainer) {
+	private static AbstractStepViewer getCallFunctionViewer(Step step, StepContainer stepContainer) {
 		DefaultStepViewer stepviewer = new DefaultStepViewer(stepContainer.getBar(), SWT.NONE);
-		stepviewer.populate(step);
+	stepviewer.populate(step);
 		return stepviewer;
 	}
 

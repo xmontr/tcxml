@@ -2,12 +2,17 @@ package tcxmlplugin.composite.stepViewer;
 
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
+import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.ExpandBar;
 import org.eclipse.swt.widgets.ExpandItem;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.ScrolledComposite;
+import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Label;
+import org.eclipse.swt.widgets.Listener;
+import org.eclipse.ui.forms.widgets.FormToolkit;
+import org.eclipse.wb.swt.ResourceManager;
 
 import tcxml.model.Step;
 
@@ -37,7 +42,7 @@ public class MainStepContainer extends Composite implements StepContainer {
 
 	public void addStep(Step step) {
 		
-		 AbstractTestViewer tv = StepViewerFactory.getViewer(step,this);
+		 AbstractStepViewer tv = StepViewerFactory.getViewer(step,this);
 
 	
 			
@@ -51,6 +56,9 @@ public class MainStepContainer extends Composite implements StepContainer {
 		
 		xpndtmNewExpanditem.setHeight(tv.computeSize(SWT.DEFAULT, SWT.DEFAULT).y );
 		xpndtmNewExpanditem.setControl(tv);
+
+		
+		
 		
 		
 		
@@ -80,4 +88,6 @@ public class MainStepContainer extends Composite implements StepContainer {
 	}
 	bar.redraw();
 }
+
+
 }
