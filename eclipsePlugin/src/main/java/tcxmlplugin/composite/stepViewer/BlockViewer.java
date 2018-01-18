@@ -10,8 +10,6 @@ import org.eclipse.swt.widgets.ExpandItem;
 import com.kscs.util.jaxb.BoundList;
 
 import tcxml.model.Step;
-import tcxmlplugin.composite.BasicView;
-import tcxmlplugin.composite.BlockView;
 import tcxmlplugin.composite.StepViewer;
 
 public class BlockViewer extends AbstractStepViewer  {

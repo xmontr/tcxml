@@ -12,9 +12,16 @@ public class TcXmlDecorator implements ILabelDecorator  {
 	@Override
 	public Image decorateImage(Image image, Object element) {
 		
+	
+		
 		Image ret = PlatformUI.getWorkbench().getSharedImages().getImage(ISharedImages.IMG_OBJ_FOLDER);
 		
 	IFolder currentFolder = (IFolder)element;
+	if(currentFolder.getName()=="Test Cases") {
+	int i =0;
+		
+	}
+	
 	if( TcXmlPluginController.getInstance().isTypeFolder(currentFolder , TcXmlPluginController.TESTCASE_ROOT_FOLDER)){
 		ret = Activator.getDefault().getImageRegistry().get(Activator.TC_ROOT_FOLDER_IMG) ;
 	}

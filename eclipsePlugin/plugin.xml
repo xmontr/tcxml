@@ -48,11 +48,6 @@
    </extension>
    <extension
          point="org.eclipse.ui.decorators">
-      <decorator
-            class="tcxmlplugin.TcXmlDecorator"
-            id="tcxmlplugin.decorator1"
-            label="tcxml decorator">
-      </decorator>
    </extension>
    <extension
          point="org.eclipse.ui.newWizards">
@@ -99,6 +94,59 @@
             id="tcxmlplugin.editor1"
             name="tc xml editor">
       </editor>
+   </extension>
+   <extension
+         point="org.eclipse.ui.menus">
+      <menuContribution
+            allPopups="false"
+            locationURI="popup:tcxmlplugin.TcXmlExplorer.id?after=additions">
+         <menu
+               id="tcxml.menu.id"
+               label="tcxml">
+            <command
+                  commandId="tcxmlplugin.addtest"
+                  label="add test"
+                  style="push">
+            </command>
+         </menu>
+      </menuContribution>
+   </extension>
+   <extension
+         point="org.eclipse.ui.commands">
+      <command
+            id="tcxmlplugin.addtest"
+            name="add test">
+      </command>
+   </extension>
+   <extension
+         point="org.eclipse.ui.decorators">
+      <decorator
+            adaptable="true"
+            class="tcxmlplugin.TcXmlDecorator"
+            id="tcxmlplugin.decorator"
+            label="tcxml resource decorator "
+            objectClass="org.eclipse.core.resources.IFolder"
+            state="true">
+      </decorator>
+   </extension>
+   <extension
+         point="org.eclipse.ui.handlers">
+      <handler
+            class="tcxmlplugin.handler.addTestCaseHandler"
+            commandId="tcxmlplugin.addtest">
+         <activeWhen>
+            <with
+                  variable="selection">
+               <iterate
+                     ifEmpty="false">
+                  <test
+                        args="tcxmlplug.folderType,testcaseRootFolder"
+                        property="org.eclipse.core.resources.persistentProperty">
+                  </test>
+               </iterate>
+            </with>
+         </activeWhen>
+      </handler>
    </extension>
 
 </plugin>

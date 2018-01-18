@@ -1,4 +1,4 @@
-package tcxmlplugin.composite;
+package tcxmlplugin.composite.stepViewer;
 
 import org.eclipse.core.databinding.DataBindingContext;
 import org.eclipse.core.databinding.beans.BeanProperties;
@@ -12,6 +12,7 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
 
 import tcxml.model.Step;
+import tcxmlplugin.composite.StepViewer;
 
 public class BasicView   extends StepViewer {
 	

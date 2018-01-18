@@ -35,6 +35,8 @@ public class TcXmlPluginController
 
 	private static final String TEST_CASES_PATH = "/Test Cases";
 
+	private static final String TESTCASE_LIB = "testcaselib";
+
 	private static TcXmlPluginController instance = null;
 
 	
@@ -91,7 +93,7 @@ public class TcXmlPluginController
 	      //folder for test cases
 	      IFolder tcfolder = getTestcaseFolder(proj);
 	      tcfolder.create(true, true, monitor);
-	      QualifiedName key = new QualifiedName("montrigenplug", "folderType");
+	      QualifiedName key = new QualifiedName("tcxmlplug", "folderType");
 		tcfolder.setPersistentProperty(key , TESTCASE_ROOT_FOLDER);
 	      
 
@@ -107,7 +109,7 @@ public class TcXmlPluginController
     public boolean isTypeFolder( IFolder folder , String folderType){
     	
     	boolean ret= false;
-    	 QualifiedName key = new QualifiedName("montrigenplug", "folderType");
+    	 QualifiedName key = new QualifiedName("tcxmlplug", "folderType");
     	 String actualFolderType = null;
     try {
 		 actualFolderType = folder.getPersistentProperty(key);
@@ -313,11 +315,13 @@ public class TcXmlPluginController
 	public void addTestCase2project(IProject project, String name) {
 	IFolder	testcasefolder = getTestcaseFolder(project);
     IFolder newtc = testcasefolder.getFolder(name);
+    IFolder libfolder = newtc.getFolder("Libraries");
 	try {
 		newtc .create(true, true, null);
-	    QualifiedName key = new QualifiedName("montrigenplug", "folderType");
+		libfolder.create(true, true, null);
+	    QualifiedName key = new QualifiedName("tcxmlplug", "folderType");
 	    newtc.setPersistentProperty(key , TESTCASE_FOLDER);
-		
+	    libfolder.setPersistentProperty(key , TESTCASE_LIB);
 		
 		
 	} catch (CoreException e) {

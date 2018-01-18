@@ -1,4 +1,4 @@
-package tcxmlplugin.composite;
+package tcxmlplugin.composite.stepViewer;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.FillLayout;
@@ -10,9 +10,7 @@ import org.eclipse.swt.widgets.ExpandItem;
 import com.kscs.util.jaxb.BoundList;
 
 import tcxml.model.Step;
-import tcxmlplugin.composite.stepViewer.AbstractStepViewer;
-import tcxmlplugin.composite.stepViewer.StepContainer;
-import tcxmlplugin.composite.stepViewer.StepViewerFactory;
+import tcxmlplugin.composite.StepViewer;
 
 public class BlockView  extends StepViewer implements StepContainer {
 	private ExpandBar bar;

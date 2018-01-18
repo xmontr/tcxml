@@ -39,6 +39,7 @@ public abstract class AbstractStepViewer extends Composite{
 
 
 	protected StepRunner runner ;
+	private StepToolBar stepToolBar;
 	
 	
 	
@@ -49,7 +50,7 @@ public abstract class AbstractStepViewer extends Composite{
 		setLayout(new GridLayout(1, false));
 
 		
-		StepToolBar stepToolBar = new StepToolBar(this, SWT.NONE, this);
+		stepToolBar = new StepToolBar(this, SWT.NONE, this);
 		stepToolBar.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		this.viewer=viewer;
 		viewer.setParent(this);
@@ -83,6 +84,8 @@ public abstract class AbstractStepViewer extends Composite{
 		
 		
 		viewer.populate( mo  );
+		stepToolBar.setIndex(mo.getIndex());
+		
 	}
 	
 	

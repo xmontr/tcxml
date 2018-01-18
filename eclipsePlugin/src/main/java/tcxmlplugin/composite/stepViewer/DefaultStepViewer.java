@@ -3,7 +3,6 @@ package tcxmlplugin.composite.stepViewer;
 import org.eclipse.swt.widgets.Composite;
 
 import tcxml.model.Step;
-import tcxmlplugin.composite.BasicView;
 import tcxmlplugin.composite.StepViewer;
 
 import org.eclipse.swt.layout.GridLayout;
