@@ -17,7 +17,9 @@
 
     <complexType name="step">
     	<sequence>
-    		<element ref="tns:step" maxOccurs="unbounded" minOccurs="0"></element>
+    		<element ref="tns:step" maxOccurs="unbounded"
+    			minOccurs="0">
+    		</element>
     	</sequence>
     	<attribute name="type" type="string"></attribute>
     	<attribute name="stepId" type="string"></attribute>
@@ -43,6 +45,7 @@
     	<attribute name="name" type="string"></attribute>
     	<attribute name="overwriteUI" type="string"></attribute>
 
+    	<attribute name="argsSchema" type="string"></attribute>
     </complexType>
 
     <complexType name="testObjects">
@@ -123,4 +126,19 @@
 
     <element name="icon" type="string"></element>
 
+
+    <complexType name="truLibrary">
+    	<sequence>
+    		<element name="step" type="tns:step" maxOccurs="1" minOccurs="1"></element>
+    		<element name="testobjects" type="tns:testObjects" maxOccurs="1" minOccurs="1"></element>
+    		<element name="transaction" type="tns:transactions" maxOccurs="1" minOccurs="1"></element>
+    	</sequence>
+    	<attribute name="engineVersion" type="string"></attribute>
+    	<attribute name="timestamp" type="string"></attribute>
+    </complexType>
+
+    <attribute name="NewAttribute" type="string"></attribute>
+
+
+    <element name="truLibrary" type="tns:truLibrary"></element>
 </schema>

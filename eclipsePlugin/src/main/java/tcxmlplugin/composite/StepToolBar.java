@@ -32,14 +32,9 @@ public class StepToolBar extends Composite  {
 		Button playButton = new Button(this, SWT.NONE);
 		playButton.addMouseListener(new MouseAdapter() {
 			@Override
-			public void mouseDown(MouseEvent e) {
+			public void mouseDown(MouseEvent e) {				
+		
 				
-				try {
-					TcXmlController.getInstance().playSingleStep(step.getViewer().getModel());
-				} catch (TcXmlException e1) {
-					// TODO Auto-generated catch block
-					e1.printStackTrace();
-				}
 				
 			}
 		});

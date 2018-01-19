@@ -6,6 +6,7 @@ import java.io.InputStream;
 import java.util.Map;
 
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
@@ -15,6 +16,7 @@ import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.part.EditorPart;
 import org.eclipse.ui.part.FileEditorInput;
 
+import tcxml.core.TcXmlController;
 import tcxml.core.TcXmlException;
 import tcxml.model.Step;
 import tcxmlplugin.TcXmlPluginController;
@@ -25,6 +27,7 @@ public class TcXmlEditor  extends EditorPart   {
 
 	private TcViewer tcViewer;
 	private FileEditorInput fi;
+	private TcXmlController tccontroller;
 
 	@Override
 	public void doSave(IProgressMonitor monitor) {
@@ -61,20 +64,25 @@ public class TcXmlEditor  extends EditorPart   {
 	@Override
 	public void createPartControl(Composite parent) {
 		tcViewer = new TcViewer(parent, SWT.NONE);
-		// inputstrem for the file
+		
 		
 		 try {
-			 InputStream is = fi.getFile().getContents() ;
-			tcxml.core.TcXmlController.getInstance().loadXml(is);
+			 
+			 
+			 
+			IPath tcpath = fi.getFile().getParent().getFullPath(); 
+		String testcasename = tcpath.lastSegment();
+		tcpath=fi.getFile().getParent().getLocation();
+		tccontroller = new TcXmlController(testcasename);
+		tccontroller.loadFromDisk(tcpath.toOSString());
+			 
+
 		} catch (TcXmlException e) {
 		TcXmlPluginController.getInstance().error("error when editor is retriving content of the file", e);
-			
-		} catch (CoreException e) {
-			TcXmlPluginController.getInstance().error("error when editor is parsing the file ", e);
-			
-		}
+		}	
+		
 
-	Map<String, Step> actionmap = tcxml.core.TcXmlController.getInstance().getActionMap();
+	Map<String, Step> actionmap = tccontroller.getActionMap();
 		tcViewer.populateAction( actionmap);
 		
 	}

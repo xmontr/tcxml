@@ -3,6 +3,7 @@ package tcxml.test;
 import static org.junit.Assert.*;
 
 import java.io.InputStream;
+import java.net.URL;
 import java.util.Map;
 import java.util.Set;
 
@@ -16,13 +17,17 @@ public class ModelTest {
 
 	@Test
 	public void testLoadSMTSample() {
-		
-		InputStream in = ModelTest.class.getResourceAsStream("smt.xml")	;
-		TcXmlController controller = TcXmlController.getInstance();
+	URL p = this.getClass().getResource("/ScriptSample/SMT/");
+	
+
+		TcXmlController controller = new TcXmlController("SMT");
+			
 		try {
-			controller.loadXml(in);
+			controller.loadFromDisk(p.getPath());
 		} catch (TcXmlException e) {
-			fail("unable to load smt.xml");
+			e.printStackTrace();
+			fail("unable to load default.xml ");
+		
 		}
 		
 		
