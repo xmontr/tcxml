@@ -23,15 +23,19 @@ import org.eclipse.swt.widgets.ToolItem;
 import org.eclipse.wb.swt.ResourceManager;
 
 import tcxml.model.Step;
+import tcxml.model.TruLibrary;
 import tcxmlplugin.TcXmlPluginController;
 
 public class TcViewer extends Composite implements PropertyChangeListener  {
 	private ActionsViewer actionsViewer;
 	private Map<String, Step> actionMap;
+	private Map<String, TruLibrary> libraryMap;
+	private LibraryViewer libraryViewer;
 
 	public TcViewer(Composite parent, int style) {
 		super(parent, style);
 		setLayout(new GridLayout(1, false));
+		
 		
 		ToolBar toolBar = new ToolBar(this, SWT.FLAT | SWT.RIGHT);
 		
@@ -71,7 +75,12 @@ public class TcViewer extends Composite implements PropertyChangeListener  {
 		actionsViewer = new ActionsViewer(tabFolder, SWT.BORDER);
 		tbtmNewItem_1.setControl(actionsViewer);
 		
+		this.libraryViewer = new LibraryViewer(tabFolder, SWT.BORDER);
+		tbtmNewItem.setControl(libraryViewer);
+		
 		CTabItem tbtmNewItem_2 = new CTabItem(tabFolder, SWT.NONE);
+		
+		
 		tbtmNewItem_2.setText("Run Logic");
 		// TODO Auto-generated constructor stub
 	}
@@ -89,12 +98,29 @@ public class TcViewer extends Composite implements PropertyChangeListener  {
 		
 		actionsViewer.getModel().addPropertyChangeListener(ActionsModel.ACTION_SELECTED, this);
 		
-		
-		
-		
-		
-		
+			
 	}
+	
+	
+	public void populateLibrary(Map<String, TruLibrary> libmap) {
+	this.libraryMap = libmap;
+	List<String> allLib =    new ArrayList<String>(libmap.keySet())    ;
+	
+	 TcXmlPluginController.getInstance().info(("fouded libraries :" + allLib.size()  ))   ;
+	 
+	 libraryViewer.getModel().setAllLibraries(allLib);
+	 
+	 libraryViewer.getModel().addPropertyChangeListener(LibraryModel.LIBRARY_SELECTED, this);
+	
+	
+	 
+	}
+	
+	
+	
+	
+	
+	
 
 	@Override
 	public void propertyChange(PropertyChangeEvent evt) {
@@ -107,12 +133,30 @@ public class TcViewer extends Composite implements PropertyChangeListener  {
 			
 		}
 		
+		
+		if(evt.getPropertyName().equals(LibraryModel.LIBRARY_SELECTED)) {
+			
+			String  selection = (String) evt.getNewValue();
+			TcXmlPluginController.getInstance().info("selected library:" + selection);
+			this.showSelectedLibrary(libraryMap.get(selection));
+			
+			
+		}
+		
+		
+	}
+
+	private void showSelectedLibrary(TruLibrary lib) {
+		libraryViewer.showSelectedLibrary(lib);
+		
 	}
 
 	private void showSelectedAction(Step step) {
 		actionsViewer.showSelectedAction( step);
 		
 	}
+
+
 	
 	
 	

@@ -12,12 +12,15 @@ import org.junit.Test;
 import tcxml.core.TcXmlController;
 import tcxml.core.TcXmlException;
 import tcxml.model.Step;
+import tcxml.model.TruLibrary;
 
 public class ModelTest {
 
 	@Test
 	public void testLoadSMTSample() {
-	URL p = this.getClass().getResource("/ScriptSample/SMT/");
+		//C:\bin\eclipse\runtime-EclipseApplication\first project\Test Cases\SMT
+		//"/ScriptSample/SMT"
+	URL p = this.getClass().getResource("/ScriptSample/SMT");
 	
 
 		TcXmlController controller = new TcXmlController("SMT");
@@ -32,6 +35,17 @@ public class ModelTest {
 		
 		
 		Map<String, Step> actionmap = controller.getActionMap();
+		
+		Map<String, TruLibrary> libmap = controller.getLibraries();
+		Set<String> libs = libmap.keySet();
+		
+		String[] libraries = new String[] {
+				"SMT"
+				
+				
+		};
+		
+		
 		
 		Set<String> keys = actionmap.keySet();
 		
@@ -49,6 +63,11 @@ public class ModelTest {
 		
 		for (String act : action) {
 			checkPresence(act,keys);
+			
+		}
+		
+		for (String li : libraries) {
+			checkPresence(li,libs);
 			
 		}
 		

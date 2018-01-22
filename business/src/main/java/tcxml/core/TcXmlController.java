@@ -176,12 +176,13 @@ private  TruLibrary loadLibrary( InputStream inputStream) throws TcXmlException 
 public void loadFromDisk(String pathdir) throws TcXmlException {
 	FileInputStream in = null;
 	List<String> listing =null ;	
+	if(!pathdir.endsWith("/")) {pathdir+= "/" ;}
 	File file = new File(pathdir);
 	
 	
 	if ( !file.isDirectory()) {
 		
-		throw new TcXmlException("invalid path for script: found file but  directory extected " ,  new IllegalArgumentException());
+		throw new TcXmlException("invalid path " + pathdir + " for script: found file but  directory extected " ,  new IllegalArgumentException());
 		
 		
 	}
@@ -205,7 +206,7 @@ File libdir = new File(pathdir + "Libraries");
 try {
 	 in = new FileInputStream(mainscriptfile);
 } catch (FileNotFoundException e) {
-	 throw new TcXmlException("invalid  path for script script: no default.xml  founded" ,  new FileNotFoundException());
+	 throw new TcXmlException("invalid  path for script : no default.xml  founded in " + pathdir  ,  new FileNotFoundException());
 }
 
 loadScript(in);

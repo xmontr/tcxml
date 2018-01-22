@@ -19,6 +19,7 @@ import org.eclipse.ui.part.FileEditorInput;
 import tcxml.core.TcXmlController;
 import tcxml.core.TcXmlException;
 import tcxml.model.Step;
+import tcxml.model.TruLibrary;
 import tcxmlplugin.TcXmlPluginController;
 import tcxmlplugin.composite.TcViewer;
 
@@ -83,8 +84,9 @@ public class TcXmlEditor  extends EditorPart   {
 		
 
 	Map<String, Step> actionmap = tccontroller.getActionMap();
+						Map<String, TruLibrary> libmap = tccontroller.getLibraries();
 		tcViewer.populateAction( actionmap);
-		
+		tcViewer.populateLibrary(libmap);
 	}
 
 	@Override
