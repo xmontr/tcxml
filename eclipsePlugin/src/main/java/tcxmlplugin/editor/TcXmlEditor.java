@@ -64,7 +64,7 @@ public class TcXmlEditor  extends EditorPart   {
 
 	@Override
 	public void createPartControl(Composite parent) {
-		tcViewer = new TcViewer(parent, SWT.NONE);
+		
 		
 		
 		 try {
@@ -76,17 +76,16 @@ public class TcXmlEditor  extends EditorPart   {
 		tcpath=fi.getFile().getParent().getLocation();
 		tccontroller = new TcXmlController(testcasename);
 		tccontroller.loadFromDisk(tcpath.toOSString());
-			 
+			
+		tcViewer = new TcViewer(parent, SWT.NONE,tccontroller);
+		
 
 		} catch (TcXmlException e) {
 		TcXmlPluginController.getInstance().error("error when editor is retriving content of the file", e);
 		}	
 		
 
-	Map<String, Step> actionmap = tccontroller.getActionMap();
-						Map<String, TruLibrary> libmap = tccontroller.getLibraries();
-		tcViewer.populateAction( actionmap);
-		tcViewer.populateLibrary(libmap);
+
 	}
 
 	@Override

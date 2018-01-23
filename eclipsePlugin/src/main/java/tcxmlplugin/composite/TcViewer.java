@@ -22,6 +22,7 @@ import org.eclipse.swt.custom.CTabItem;
 import org.eclipse.swt.widgets.ToolItem;
 import org.eclipse.wb.swt.ResourceManager;
 
+import tcxml.core.TcXmlController;
 import tcxml.model.Step;
 import tcxml.model.TruLibrary;
 import tcxmlplugin.TcXmlPluginController;
@@ -31,8 +32,9 @@ public class TcViewer extends Composite implements PropertyChangeListener  {
 	private Map<String, Step> actionMap;
 	private Map<String, TruLibrary> libraryMap;
 	private LibraryViewer libraryViewer;
+	private TcXmlController controller;
 
-	public TcViewer(Composite parent, int style) {
+	public TcViewer(Composite parent, int style, TcXmlController tccontroller) {
 		super(parent, style);
 		setLayout(new GridLayout(1, false));
 		
@@ -72,20 +74,20 @@ public class TcViewer extends Composite implements PropertyChangeListener  {
 		tbtmNewItem_1.setImage(ResourceManager.getPluginImage("tcxmlplugin", "icons/script-icon_16.png"));
 		tbtmNewItem_1.setText("Actions");
 		
-		actionsViewer = new ActionsViewer(tabFolder, SWT.BORDER);
+		actionsViewer = new ActionsViewer(tabFolder, SWT.BORDER,controller);
 		tbtmNewItem_1.setControl(actionsViewer);
 		
-		this.libraryViewer = new LibraryViewer(tabFolder, SWT.BORDER);
+		this.libraryViewer = new LibraryViewer(tabFolder, SWT.BORDER,controller);
 		tbtmNewItem.setControl(libraryViewer);
 		
 		CTabItem tbtmNewItem_2 = new CTabItem(tabFolder, SWT.NONE);
 		
 		
 		tbtmNewItem_2.setText("Run Logic");
-		// TODO Auto-generated constructor stub
+		setController(tccontroller);
 	}
 
-	public void populateAction(Map<String, Step> actionmap) {
+	private void populateAction(Map<String, Step> actionmap) {
 		
 		this.actionMap = actionmap;
 		
@@ -102,7 +104,7 @@ public class TcViewer extends Composite implements PropertyChangeListener  {
 	}
 	
 	
-	public void populateLibrary(Map<String, TruLibrary> libmap) {
+	private void populateLibrary(Map<String, TruLibrary> libmap) {
 	this.libraryMap = libmap;
 	List<String> allLib =    new ArrayList<String>(libmap.keySet())    ;
 	
@@ -153,6 +155,14 @@ public class TcViewer extends Composite implements PropertyChangeListener  {
 
 	private void showSelectedAction(Step step) {
 		actionsViewer.showSelectedAction( step);
+		
+	}
+
+	public void setController(TcXmlController tccontroller) {
+		this.controller= tccontroller;		
+
+this.populateAction( tccontroller.getActionMap());
+this.populateLibrary(tccontroller.getLibraries());
 		
 	}
 
