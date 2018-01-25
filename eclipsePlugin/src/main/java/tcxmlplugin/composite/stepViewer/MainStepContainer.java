@@ -38,7 +38,7 @@ public class MainStepContainer extends Composite implements StepContainer {
 
 		
 		
-		bar = new ExpandBar(this, SWT.BORDER & SWT.V_SCROLL);
+		bar = new ExpandBar(this, SWT.V_SCROLL);
 		bar.setBackground( getDisplay().getSystemColor( SWT.COLOR_WHITE) );
 		bar.setSpacing(10);
 

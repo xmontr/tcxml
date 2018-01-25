@@ -148,5 +148,19 @@
          </activeWhen>
       </handler>
    </extension>
+   <extension
+         point="org.eclipse.ui.preferencePages">
+      <page
+            class="tcxmlplugin.composite.preference.TcXmlPreference"
+            id="tcxmlplugin.preferencepage"
+            name="tcxml preference">
+      </page>
+   </extension>
+   <extension
+         point="org.eclipse.core.runtime.preferences">
+      <initializer
+            class="tcxmlplugin.composite.preference.PreferenceInitializerTcXml">
+      </initializer>
+   </extension>
 
 </plugin>

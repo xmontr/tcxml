@@ -4,6 +4,8 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
+import java.io.Reader;
+import java.io.StringReader;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -13,6 +15,11 @@ import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import javax.json.Json;
+import javax.json.JsonNumber;
+import javax.json.JsonReader;
+import javax.json.JsonStructure;
+import javax.json.JsonValue;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBElement;
 import javax.xml.bind.JAXBException;
@@ -398,6 +405,22 @@ public void playSingleStep( Step theStep) throws TcXmlException{
 	
 	StepRunner ru = StepRunnerFactory.getRunner(theStep);
 	ru.runStep();
+	
+}
+
+
+public String JSCodefromJSON( String json) {
+	String ret = null;
+	
+	
+	Reader reader = new StringReader(json);
+			
+	JsonReader jr = Json.createReader(reader );
+	JsonStructure stru = jr.read();
+	String thpointer="Code/value";
+	JsonValue val = stru.getValue(thpointer);
+	ret = val.toString();
+	return ret;
 	
 }
 

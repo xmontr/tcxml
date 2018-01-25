@@ -25,6 +25,7 @@ public class StepViewerFactory {
 		case "callFunction":
 			tv = getCallFunctionViewer(step,stepContainer,controller)	;
 			break;
+		case "util":tv=getUtilViewer(step,stepContainer,controller,step.getAction());
 
 		default:
 			tv = getDefaultViewer(step,stepContainer,controller);
@@ -49,6 +50,26 @@ public class StepViewerFactory {
 		
 
 		return tv;
+	}
+
+	private static StepViewer getUtilViewer(Step step, StepContainer stepContainer, TcXmlController controller,
+			String action) throws TcXmlException {
+		StepViewer tv = null;
+		switch(action){
+		case"Evaluate JavaScript":tv = getEvaluateJavascriptViewer(step, stepContainer, controller); break;
+		default:tv = getDefaultViewer(step, stepContainer, controller);
+			
+		}
+		
+		return tv;
+	}
+	
+	
+
+	private static StepViewer getEvaluateJavascriptViewer(Step step, StepContainer stepContainer,
+			TcXmlController controller) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 	private static StepViewer getFunctionViewer(Step step, StepContainer stepContainer,
