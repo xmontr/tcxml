@@ -9,7 +9,7 @@ import org.eclipse.wb.swt.ResourceManager;
 
 import tcxml.core.TcXmlController;
 import tcxml.core.TcXmlException;
-import tcxmlplugin.composite.stepViewer.AbstractStepViewer;
+import tcxmlplugin.composite.stepViewer.StepViewer;
 
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.ProgressBar;
@@ -20,9 +20,9 @@ public class StepToolBar extends Composite  {
 	
 	
 	private Label indexLabel;
-	private AbstractStepViewer step;
+	private StepViewer step;
 
-	public StepToolBar(Composite parent, int style, AbstractStepViewer step) {
+	public StepToolBar(Composite parent, int style, StepViewer step) {
 		super(parent, style);
 		setLayout(new GridLayout(6, false));
 		this.step = step;

@@ -4,7 +4,10 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Label;
 
+import tcxml.core.TcXmlController;
+import tcxml.core.TcXmlException;
 import tcxml.model.Step;
+import tcxmlplugin.TcXmlPluginController;
 import tcxmlplugin.composite.stepViewer.MainStepContainer;
 
 import org.eclipse.swt.SWT;
@@ -38,8 +41,13 @@ public class ActionsViewer extends Composite  {
 
 	private MainStepContainer stepContainer;
 
-	public ActionsViewer(Composite parent, int style) {
+
+
+	private TcXmlController controller;
+
+	public ActionsViewer(Composite parent, int style, TcXmlController controller) {
 		super(parent, style);
+		this.controller =  controller ;
 		setLayout(new GridLayout(2, false));
 		
 		Label lblNewLabel = new Label(this, SWT.NONE);
@@ -55,7 +63,7 @@ public class ActionsViewer extends Composite  {
 		
 	
 	
-		stepContainer = new MainStepContainer(this, SWT.NONE);
+		stepContainer = new MainStepContainer(this, SWT.NONE,controller );
 		stepContainer.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 2, 1));
 
 	
@@ -90,7 +98,11 @@ public class ActionsViewer extends Composite  {
 		stepContainer.clean();
 		List<Step> list = step.getStep();
 		for (Step step2 : list) { // add the step
-			stepContainer.addStep(step2);
+			try {
+				stepContainer.addStep(step2);
+			} catch (TcXmlException e) {
+				TcXmlPluginController.getInstance().error("fail to show selected action", e);
+			}
 				
 			
 		}

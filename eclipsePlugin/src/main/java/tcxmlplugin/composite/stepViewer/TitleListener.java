@@ -8,9 +8,9 @@ import org.eclipse.swt.widgets.ExpandItem;
 public class TitleListener implements PropertyChangeListener {
 
 	private ExpandItem item;
-	private AbstractStepViewer viewer;
+	private StepViewer viewer;
 
-	public TitleListener(ExpandItem xpndtmNewExpanditem, AbstractStepViewer tv) {
+	public TitleListener(ExpandItem xpndtmNewExpanditem, StepViewer tv) {
 		this.item = xpndtmNewExpanditem;
 		this.viewer = tv ;
 		

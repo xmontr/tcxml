@@ -15,8 +15,11 @@ import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
 
+import tcxml.core.TcXmlController;
+import tcxml.core.TcXmlException;
 import tcxml.model.Step;
 import tcxml.model.TruLibrary;
+import tcxmlplugin.TcXmlPluginController;
 import tcxmlplugin.composite.stepViewer.MainStepContainer;
 
 public class LibraryViewer extends Composite {
@@ -28,11 +31,13 @@ public class LibraryViewer extends Composite {
 	private DataBindingContext m_bindingContext;
 	
 	private MainStepContainer functionContainer;
+	private TcXmlController controller;
 	
 
-	public LibraryViewer(Composite parent, int style) {
+	public LibraryViewer(Composite parent, int style, TcXmlController controller) {
 		super(parent, style);
 		setLayout(new GridLayout(2, false));
+		this.controller = controller;
 		
 		Label lblNewLabel = new Label(this, SWT.NONE);
 		lblNewLabel.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
@@ -47,7 +52,7 @@ public class LibraryViewer extends Composite {
 		
 	
 	
-		functionContainer = new MainStepContainer(this, SWT.NONE);
+		functionContainer = new MainStepContainer(this, SWT.NONE,controller);
 		functionContainer.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 2, 1));
 
 	
@@ -83,7 +88,11 @@ public class LibraryViewer extends Composite {
 		functionContainer.clean();
 		List<Step> list = step.getStep();
 		for (Step step2 : list) { // add the step
-			functionContainer.addStep(step2);
+			try {
+				functionContainer.addStep(step2);
+			} catch (TcXmlException e) {
+TcXmlPluginController.getInstance().error("fail to show selected action", e);
+			}
 				
 			
 		}
@@ -97,7 +106,12 @@ public class LibraryViewer extends Composite {
 		functionContainer.clean();
 		List<Step> list = lib.getStep().getStep();
 		for (Step step2 : list) { // add the step
-			functionContainer.addStep(step2);
+			try {
+				functionContainer.addStep(step2);
+			} catch (TcXmlException e) {
+				// TODO Auto-generated catch block
+				TcXmlPluginController.getInstance().error("fail to show selected library", e);
+			}
 				
 			
 		}

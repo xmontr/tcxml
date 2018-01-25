@@ -12,7 +12,7 @@ public class LibraryModel {
 
 
 	
-	public static final String ALL_LIBRARY = "alllibraries";
+	public static final String ALL_LIBRARY = "allLibraries";
 
 	public static final String LIBRARY_SELECTED = "librarySelected";
 
@@ -61,7 +61,7 @@ public class LibraryModel {
 
 
 
-	public List<String>getallLibraries() {
+	public List<String>getAllLibraries() {
 		return allLibraries;
 	}
 

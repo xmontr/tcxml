@@ -78,6 +78,7 @@ public class TcXmlEditor  extends EditorPart   {
 		tccontroller.loadFromDisk(tcpath.toOSString());
 			
 		tcViewer = new TcViewer(parent, SWT.NONE,tccontroller);
+		tcViewer.populate();
 		
 
 		} catch (TcXmlException e) {

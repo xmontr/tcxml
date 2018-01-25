@@ -14,6 +14,8 @@ import org.eclipse.swt.widgets.Listener;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.wb.swt.ResourceManager;
 
+import tcxml.core.TcXmlController;
+import tcxml.core.TcXmlException;
 import tcxml.model.Step;
 
 import org.eclipse.swt.layout.FillLayout;
@@ -22,11 +24,13 @@ import org.eclipse.swt.layout.GridData;
 public class MainStepContainer extends Composite implements StepContainer {
 
 	private ExpandBar bar;
+	private TcXmlController controller;
 
-	public MainStepContainer(Composite parent, int style) {
+	public MainStepContainer(Composite parent, int style, TcXmlController controller) {
 		super(parent, style);
 		FillLayout layout = new FillLayout();
 	this.setLayout(layout);	
+	this.controller= controller ;
 	
 	
 		
@@ -34,28 +38,31 @@ public class MainStepContainer extends Composite implements StepContainer {
 
 		
 		
-		bar = new ExpandBar(this, SWT.V_SCROLL);
+		bar = new ExpandBar(this, SWT.BORDER & SWT.V_SCROLL);
 		bar.setBackground( getDisplay().getSystemColor( SWT.COLOR_WHITE) );
 		bar.setSpacing(10);
 
 	}
 
-	public void addStep(Step step) {
+	public void addStep(Step step) throws TcXmlException {
 		
-		 AbstractStepViewer tv = StepViewerFactory.getViewer(step,this);
+		 StepViewer tv = StepViewerFactory.getViewer(step,this, controller);
 
 	
 			
 
 	
 		
-		ExpandItem xpndtmNewExpanditem = new ExpandItem(bar, SWT.NONE);
+		ExpandItem xpndtmNewExpanditem = new ExpandItem(bar, SWT.NONE);		
+		
 
 		xpndtmNewExpanditem.setExpanded(false);
+		
 		xpndtmNewExpanditem.setText(tv.getTitle());
 		
 		xpndtmNewExpanditem.setHeight(tv.computeSize(SWT.DEFAULT, SWT.DEFAULT).y );
 		xpndtmNewExpanditem.setControl(tv);
+		tv.addPropertyChangeListener("title", new TitleListener(xpndtmNewExpanditem , tv));
 
 		
 		

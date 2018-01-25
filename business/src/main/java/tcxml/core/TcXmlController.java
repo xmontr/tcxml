@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -16,6 +17,8 @@ import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBElement;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Unmarshaller;
+
+import com.kscs.util.jaxb.BoundList;
 
 import tcxml.model.ObjectFactory;
 import tcxml.model.Step;
@@ -79,7 +82,36 @@ public class TcXmlController {
     }
     
  
+    public BoundList<Step> getFunctionsForLib( String libname) throws TcXmlException {
+    TruLibrary lib = libraries.get(libname);	
+    if(lib == null) {
+    	
+    	throw new TcXmlException("library with name" + libname +" does not exist ", new IllegalStateException());
+    }
+    	
+    BoundList<Step> ret = lib.getStep().getStep();	
     
+    return ret;
+    	
+    }
+    
+    
+    
+    
+    public List<String> getFunctionsNameForLib(String libname) throws TcXmlException {
+    	ArrayList<String> ret = new ArrayList<String>();
+    	
+    	BoundList<Step> libs = getFunctionsForLib(libname);
+    	for (Step step : libs) {
+    		ret.add(step.getAction());
+			
+		}
+    	return ret;
+    	
+    	
+    	
+    	
+    }
 
 
 /***

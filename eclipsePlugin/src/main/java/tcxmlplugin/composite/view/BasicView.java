@@ -1,4 +1,4 @@
-package tcxmlplugin.composite.stepViewer;
+package tcxmlplugin.composite.view;
 
 import org.eclipse.core.databinding.DataBindingContext;
 import org.eclipse.core.databinding.beans.BeanProperties;
@@ -11,24 +11,26 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
 
+import tcxml.core.TcXmlController;
+import tcxml.core.TcXmlException;
 import tcxml.model.Step;
-import tcxmlplugin.composite.StepViewer;
+import tcxmlplugin.composite.StepView;
 
-public class BasicView   extends StepViewer {
+public class BasicView   extends StepView {
 	
 	
 	private DataBindingContext m_bindingContext;
 	
-	private Step model;
 
-	public BasicView(Composite parent, int style ) {
+
+	public BasicView(Composite parent, int style, TcXmlController controller ) {
 		
-	super(parent, style);
+	super(parent, style,controller);
 		this.setLayout(new GridLayout(2, false));
 		
 
 
-		this.model = new Step();
+	
 		
 		Label typelabel = new Label(this, SWT.NONE);
 		typelabel.setLayoutData(new GridData(SWT.RIGHT, SWT.FILL, false, false, 1, 1));
@@ -128,10 +130,14 @@ private Text categorynametext;
 
 
 
-	public String getTitle() {
-		// TODO Auto-generated method stub
-		return "step #" +  model.getStepId();
-	}
+
+	
+	
+	
+	
+	
+	
+	
 	protected DataBindingContext initDataBindings() {
 		DataBindingContext bindingContext = new DataBindingContext();
 		//
@@ -173,45 +179,23 @@ private Text categorynametext;
 		//
 		return bindingContext;
 	}
-	@Override
+	
+	
+/*	@Override
 	public Step getModel() {
 		// TODO Auto-generated method stub
 		return model;
-	}
+	}*/
 	
 	
 	
-	public void populate(Step mo  ) {
+	public void populate(Step mo  ) throws TcXmlException {	
+	
+super.populate(mo);		
+	
 		
-	
 		
-		
-		model.setAction(mo.getAction());
-		model.setActionName(mo.getActionName());
-		model.setActiveStep(mo.getActiveStep());
-		model.setArguments(mo.getArguments());
-		model.setAutoEndEventFF(mo.getAutoEndEventFF());
-		model.setCatch(mo.getCatch());
-		model.setCategoryName(mo.getCategoryName());
-		model.setEndEvent(mo.getEndEvent());
-		model.setFuncName(mo.getFuncName());
-		model.setIndex(mo.getIndex());
-		model.setLevel(mo.getLevel());
-		model.setLibName(mo.getLibName());
-		model.setMethodName(mo.getMethodName());
-		model.setName(mo.getName());
-		model.setNewAttribute(mo.getNewAttribute());
-		model.setObjectTimeout(mo.getObjectTimeout());
-		model.setOverwriteUI(mo.getOverwriteUI());
-		model.setTestObject(mo.getTestObject());
-		model.setType(mo.getType());
-		model.setObjectTimeout(mo.getObjectTimeout());
-		model.setRecDuration(mo.getRecDuration());
-		model.setSection(mo.getSection());
-		model.setSnapshotId(mo.getSnapshotId());
-		model.setStepId(mo.getStepId());
-		model.setTestObject(mo.getTestObject());
-		model.getStep().addAll(mo.getStep());
+		setTitle("step #" +  model.getStepId());
 		
 		
 	}

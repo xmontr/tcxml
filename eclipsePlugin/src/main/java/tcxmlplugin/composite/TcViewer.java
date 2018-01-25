@@ -36,9 +36,10 @@ public class TcViewer extends Composite implements PropertyChangeListener  {
 
 	public TcViewer(Composite parent, int style, TcXmlController tccontroller) {
 		super(parent, style);
+
 		setLayout(new GridLayout(1, false));
 		
-		
+		this.controller=tccontroller;
 		ToolBar toolBar = new ToolBar(this, SWT.FLAT | SWT.RIGHT);
 		
 		ToolItem recorditem = new ToolItem(toolBar, SWT.PUSH);
@@ -84,7 +85,9 @@ public class TcViewer extends Composite implements PropertyChangeListener  {
 		
 		
 		tbtmNewItem_2.setText("Run Logic");
-		setController(tccontroller);
+		
+		
+		
 	}
 
 	private void populateAction(Map<String, Step> actionmap) {
@@ -158,11 +161,11 @@ public class TcViewer extends Composite implements PropertyChangeListener  {
 		
 	}
 
-	public void setController(TcXmlController tccontroller) {
-		this.controller= tccontroller;		
+	public void populate() {
+			
 
-this.populateAction( tccontroller.getActionMap());
-this.populateLibrary(tccontroller.getLibraries());
+this.populateAction( controller.getActionMap());
+this.populateLibrary(controller.getLibraries());
 		
 	}
 
