@@ -20,28 +20,55 @@ public class EvaluateJavascriptView extends StepView{
 	private Text text;
 	
 	
-	private String code ;
+	private EvaluateJavascriptModel evaljsmodel;
 	
-	private PropertyChangeSupport propertyChangeSupport;
+		public static class EvaluateJavascriptModel {
+		
+		private String code ;
+		
+		private PropertyChangeSupport propertyChangeSupport;
+		
+		public EvaluateJavascriptModel() {
+			
+			propertyChangeSupport = new PropertyChangeSupport(this);	
+			
+		}
 
-	public String getCode() {
-		return code;
+		public String getCode() {
+			return code;
+		}
+
+
+
+
+		public void setCode(String code) {
+			propertyChangeSupport.firePropertyChange("code", this.code,
+					this.code = code);
+			this.code = code;
+		}
+		
+		public void addPropertyChangeListener(String propertyName,
+			      PropertyChangeListener listener) {
+			    propertyChangeSupport.addPropertyChangeListener(propertyName, listener);
+			  }
+
+			  public void removePropertyChangeListener(PropertyChangeListener listener) {
+			    propertyChangeSupport.removePropertyChangeListener(listener);
+			  }	
+		
+		
 	}
+	
+	
+	
 
-
-
-
-	public void setCode(String code) {
-		propertyChangeSupport.firePropertyChange("code", this.code,
-				this.code = code);
-		this.code = code;
-	}
 
 
 
 
 	public EvaluateJavascriptView(Composite parent, int style, TcXmlController controller) {
 		super(parent, style, controller);		
+		evaljsmodel = new EvaluateJavascriptModel();
 		this.setLayout(new GridLayout(2, false));
 		
 		Label codeLabel = new Label(this, SWT.NONE);
@@ -50,7 +77,7 @@ public class EvaluateJavascriptView extends StepView{
 		
 		text = new Text(this, SWT.BORDER);
 		text.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
-		propertyChangeSupport = new PropertyChangeSupport(this);
+		
 	}
 
 
@@ -58,27 +85,37 @@ public class EvaluateJavascriptView extends StepView{
 
 public void populate(Step mo  ) throws TcXmlException {	
 	
-super.populate(mo);		
+super.populate(mo);	
+evaljsmodel.setCode(controller.JSCodefromJSON(model.getArguments()));
 	setTitle("Evaluate Javascript code " +  getShortCode());
+	
 	
 	
 }
 
 
 private String getShortCode() {
-	// TODO Auto-generated method stub
-	return null;
+	
+	String co = evaljsmodel.getCode() ;
+	String ret= co ;
+	int size = co.length();
+	if(size > 10) {
+		StringBuffer sb = new StringBuffer();
+		sb.append(co.substring(0, 4));
+		sb.append(".......");
+		sb.append(co.substring( size -4 , size )) ;
+		ret = sb.toString();
+	}
+	
+
+
+
+
+	return ret;
 }
 
 
-public void addPropertyChangeListener(String propertyName,
-	      PropertyChangeListener listener) {
-	    propertyChangeSupport.addPropertyChangeListener(propertyName, listener);
-	  }
 
-	  public void removePropertyChangeListener(PropertyChangeListener listener) {
-	    propertyChangeSupport.removePropertyChangeListener(listener);
-	  }
 
 
 }

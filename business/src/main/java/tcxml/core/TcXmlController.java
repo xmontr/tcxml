@@ -417,7 +417,7 @@ public String JSCodefromJSON( String json) {
 			
 	JsonReader jr = Json.createReader(reader );
 	JsonStructure stru = jr.read();
-	String thpointer="Code/value";
+	String thpointer="/Code/value";
 	JsonValue val = stru.getValue(thpointer);
 	ret = val.toString();
 	return ret;

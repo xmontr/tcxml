@@ -1,0 +1,4 @@
+{"Code":{
+	"value":"var contextNode = document;\n\nvar xpathExpression =\"count(//div)\";\n\n\nvar nsResolver = document.createNSResolver( contextNode.ownerDocument == null ? contextNode.documentElement : contextNode.ownerDocument.documentElement );\n\nvar xpathResult = document.evaluate( xpathExpression, contextNode, nsResolver, Components.interfaces.nsIDOMXPathResult.ANY_TYPE, null );\n\n\nwindow.alert(xpathResult)"
+	}
+	}

@@ -12,6 +12,7 @@ import tcxml.model.Step;
 import tcxmlplugin.composite.view.BasicView;
 import tcxmlplugin.composite.view.BlockView;
 import tcxmlplugin.composite.view.CallFunctionView;
+import tcxmlplugin.composite.view.EvaluateJavascriptView;
 import tcxmlplugin.composite.view.FunctionView;
 
 public class StepViewerFactory {
@@ -26,7 +27,7 @@ public class StepViewerFactory {
 			tv = getCallFunctionViewer(step,stepContainer,controller)	;
 			break;
 		case "util":tv=getUtilViewer(step,stepContainer,controller,step.getAction());
-
+		break;
 		default:
 			tv = getDefaultViewer(step,stepContainer,controller);
 			break;
@@ -67,9 +68,11 @@ public class StepViewerFactory {
 	
 
 	private static StepViewer getEvaluateJavascriptViewer(Step step, StepContainer stepContainer,
-			TcXmlController controller) {
-		// TODO Auto-generated method stub
-		return null;
+			TcXmlController controller) throws TcXmlException {
+		EvaluateJavascriptView view = new EvaluateJavascriptView(stepContainer.getBar(), SWT.NONE,controller);
+		StepViewer stepviewer = new StepViewer(stepContainer.getBar(), SWT.NONE, view);
+		stepviewer.populate(step);
+		return stepviewer;
 	}
 
 	private static StepViewer getFunctionViewer(Step step, StepContainer stepContainer,
