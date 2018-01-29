@@ -14,6 +14,7 @@ import tcxmlplugin.composite.view.BlockView;
 import tcxmlplugin.composite.view.CallFunctionView;
 import tcxmlplugin.composite.view.EvaluateJavascriptView;
 import tcxmlplugin.composite.view.FunctionView;
+import tcxmlplugin.composite.view.WaitView;
 
 public class StepViewerFactory {
 
@@ -58,6 +59,7 @@ public class StepViewerFactory {
 		StepViewer tv = null;
 		switch(action){
 		case"Evaluate JavaScript":tv = getEvaluateJavascriptViewer(step, stepContainer, controller); break;
+		case "Wait": tv = getWaitViewer(step, stepContainer, controller) ;  break;
 		default:tv = getDefaultViewer(step, stepContainer, controller);
 			
 		}
@@ -66,6 +68,13 @@ public class StepViewerFactory {
 	}
 	
 	
+
+	private static StepViewer getWaitViewer(Step step, StepContainer stepContainer, TcXmlController controller) throws TcXmlException {
+		WaitView view = new WaitView(stepContainer.getBar(), SWT.NONE,controller);
+		StepViewer stepviewer = new StepViewer(stepContainer.getBar(), SWT.NONE, view);
+		stepviewer.populate(step);
+		return stepviewer;
+	}
 
 	private static StepViewer getEvaluateJavascriptViewer(Step step, StepContainer stepContainer,
 			TcXmlController controller) throws TcXmlException {

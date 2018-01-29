@@ -15,8 +15,13 @@ import java.beans.PropertyChangeSupport;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.swt.layout.GridData;
+import org.eclipse.core.databinding.DataBindingContext;
+import org.eclipse.core.databinding.observable.value.IObservableValue;
+import org.eclipse.jface.databinding.swt.WidgetProperties;
+import org.eclipse.core.databinding.beans.BeanProperties;
 
 public class EvaluateJavascriptView extends StepView{
+	private DataBindingContext m_bindingContext;
 	private Text text;
 	
 	
@@ -77,6 +82,7 @@ public class EvaluateJavascriptView extends StepView{
 		
 		text = new Text(this, SWT.BORDER);
 		text.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
+		m_bindingContext = initDataBindings();
 		
 	}
 
@@ -87,7 +93,7 @@ public void populate(Step mo  ) throws TcXmlException {
 	
 super.populate(mo);	
 evaljsmodel.setCode(controller.JSCodefromJSON(model.getArguments()));
-	setTitle("Evaluate Javascript code " +  getShortCode());
+	setTitle("" + model.getIndex() + "Evaluate Javascript code " +  getShortCode());
 	
 	
 	
@@ -99,11 +105,11 @@ private String getShortCode() {
 	String co = evaljsmodel.getCode() ;
 	String ret= co ;
 	int size = co.length();
-	if(size > 10) {
+	if(size > 30) {
 		StringBuffer sb = new StringBuffer();
-		sb.append(co.substring(0, 4));
+		sb.append(co.substring(0, 15));
 		sb.append(".......");
-		sb.append(co.substring( size -4 , size )) ;
+		sb.append(co.substring( size -15 , size )) ;
 		ret = sb.toString();
 	}
 	
@@ -118,4 +124,13 @@ private String getShortCode() {
 
 
 
+	protected DataBindingContext initDataBindings() {
+		DataBindingContext bindingContext = new DataBindingContext();
+		//
+		IObservableValue observeTextTextObserveWidget = WidgetProperties.text(SWT.Modify).observe(text);
+		IObservableValue codeEvaljsmodelObserveValue = BeanProperties.value("code").observe(evaljsmodel);
+		bindingContext.bindValue(observeTextTextObserveWidget, codeEvaljsmodelObserveValue, null, null);
+		//
+		return bindingContext;
+	}
 }

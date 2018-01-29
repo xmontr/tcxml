@@ -17,9 +17,11 @@ import java.util.logging.Logger;
 
 import javax.json.Json;
 import javax.json.JsonNumber;
+import javax.json.JsonObject;
 import javax.json.JsonReader;
 import javax.json.JsonStructure;
 import javax.json.JsonValue;
+import javax.json.JsonValue.ValueType;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBElement;
 import javax.xml.bind.JAXBException;
@@ -409,19 +411,35 @@ public void playSingleStep( Step theStep) throws TcXmlException{
 }
 
 
-public String JSCodefromJSON( String json) {
+public String JSCodefromJSON( String json) throws TcXmlException {
 	String ret = null;
 	
 	
+	JsonValue codeobj = readJsonObject(json, "Code");
+
+ret = ((JsonObject)codeobj).get("value").toString();
+	
+
+
+	return ret;
+	
+}
+
+private JsonObject readJsonObject(String json , String rootKey) throws TcXmlException {
 	Reader reader = new StringReader(json);
 			
 	JsonReader jr = Json.createReader(reader );
-	JsonStructure stru = jr.read();
-	String thpointer="/Code/value";
-	JsonValue val = stru.getValue(thpointer);
-	ret = val.toString();
-	return ret;
+	JsonObject stru = jr.readObject();
+	jr.close();
 	
+JsonValue codeobj = stru.get(rootKey);
+
+if(!codeobj.getValueType().equals(ValueType.OBJECT)) {
+	
+	throw new TcXmlException(" invalid structure  of json: expected object but found  " + codeobj.getValueType(),  new IllegalStateException());
+	
+}
+	return (JsonObject) codeobj;
 }
 
 

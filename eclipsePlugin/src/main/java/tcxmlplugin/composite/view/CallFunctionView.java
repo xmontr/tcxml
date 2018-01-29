@@ -148,7 +148,7 @@ public static class CallFunctionViewModel {
 		
 		
 		
-		setTitle("Call Function " + model.getLibName() + "." + model.getFuncName());
+		setTitle("" + model.getIndex() + " Call Function " + model.getLibName() + "." + model.getFuncName());
 		
 		callfunctmodel.setAllLibs(li);
 		

@@ -1,5 +1,7 @@
 package tcxml.test;
 
+import static org.hamcrest.Matchers.arrayContainingInAnyOrder;
+import static org.hamcrest.Matchers.arrayWithSize;
 import static org.junit.Assert.*;
 
 import java.io.InputStream;
@@ -64,23 +66,17 @@ public class ModelTest {
 		};
 		
 		
-		for (String act : action) {
-			checkPresence(act,keys);
-			
-		}
-		
-		for (String li : libraries) {
-			checkPresence(li,libs);
-			
-		}
+assertThat(keys.toArray(new String[keys.size()]), arrayContainingInAnyOrder(action));
 		
 
 		
 	try {
 		BoundList<Step> lif = controller.getFunctionsForLib("SMT");
 		
+		assertThat(lif.toArray(), arrayWithSize(9));
 		
-	assertSame("should find 9 function in SMT lib",9, lif.size());
+		
+	
 	
 	
 	List<String> lifunctname = controller.getFunctionsNameForLib("SMT");
@@ -95,15 +91,15 @@ public class ModelTest {
 			"Business_Servive",
 			
 			"CallCodeTime_OTHER",
+				"Resolution"
 			
 			
 	};
 	
+	assertThat(lifunctname.toArray(new String[lifunctname.size()]), arrayContainingInAnyOrder(liname));
 	
-	for (String li : liname) {
-		checkPresence(li,lifunctname);
-		
-	}
+	
+
 	
 	
 		
@@ -119,21 +115,9 @@ public class ModelTest {
 	
 	}
 
-	private void checkPresence(String action, List<String> keys) {
-		boolean hasinit = keys.contains(action);
-		
-		assertTrue("found key:"+action, hasinit);
-		
-	}
-	
-	
-	private void checkPresence(String action, Set<String> keys) {
-		boolean hasinit = keys.contains(action);
-		
-		assertTrue("found key:"+action, hasinit);
-		
+
 	}
 	
 	
 
-}
+
