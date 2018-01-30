@@ -33,6 +33,7 @@ import com.kscs.util.jaxb.BoundList;
 
 import tcxml.model.ObjectFactory;
 import tcxml.model.Step;
+import tcxml.model.TestObject;
 import tcxml.model.TruLibrary;
 import tcxml.model.TruScript;
 
@@ -122,6 +123,26 @@ public class TcXmlController {
     	
     	
     	
+    }
+    
+    
+    public TestObject getTestObjectById( String id) throws TcXmlException {
+    	TestObject ret = null;
+    	BoundList<TestObject> li = script.getTestObjects().getTestObject();
+    	for (TestObject testObject : li) {
+    		if (testObject.getTestObjId().equals(id) ){
+    			
+    			ret=testObject;break;
+    		}
+			
+		}
+    	
+    	if(ret == null) {
+    		
+			throw new TcXmlException( " testobject with id " + id +  " not found" ,new IllegalStateException()  );
+    	}
+    	
+    	return ret;
     }
 
 

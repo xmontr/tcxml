@@ -2,6 +2,7 @@ package tcxml.test;
 
 import static org.hamcrest.Matchers.arrayContainingInAnyOrder;
 import static org.hamcrest.Matchers.arrayWithSize;
+import static org.hamcrest.Matchers.equalToIgnoringWhiteSpace;
 import static org.junit.Assert.*;
 
 import java.io.InputStream;
@@ -17,6 +18,7 @@ import com.kscs.util.jaxb.BoundList;
 import tcxml.core.TcXmlController;
 import tcxml.core.TcXmlException;
 import tcxml.model.Step;
+import tcxml.model.TestObject;
 import tcxml.model.TruLibrary;
 
 public class ModelTest {
@@ -99,6 +101,17 @@ assertThat(keys.toArray(new String[keys.size()]), arrayContainingInAnyOrder(acti
 	assertThat(lifunctname.toArray(new String[lifunctname.size()]), arrayContainingInAnyOrder(liname));
 	
 	
+String testobjectid = "testObj:{fa62753e-076f-4b9a-a014-ffd403ce666c}";
+
+
+TestObject sampletestobject = controller.getTestObjectById(testobjectid);
+
+String samplename = sampletestobject.getManualName();
+
+
+assertThat(samplename, equalToIgnoringWhiteSpace("Image Link Urgency"));
+
+
 
 	
 	
