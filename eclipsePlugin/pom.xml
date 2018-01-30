@@ -64,7 +64,7 @@
             </goals>
             <configuration>
            
-<includeArtifactIds>tcxmlBusiness,mapping,javax.json-api,javax.json</includeArtifactIds>
+<includeArtifactIds>tcxmlBusiness,mapping,javax.json-api,javax.json,commons-lang</includeArtifactIds>
               <outputDirectory>${project.basedir}/lib</outputDirectory>
               <overWriteReleases>false</overWriteReleases>
               <overWriteSnapshots>false</overWriteSnapshots>

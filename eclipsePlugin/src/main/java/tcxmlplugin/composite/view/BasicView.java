@@ -192,7 +192,7 @@ private Text categorynametext;
 	public void populate(Step mo  ) throws TcXmlException {	
 	
 super.populate(mo);		
-		setTitle("step #" +  model.getStepId());
+		setTitle(formatTitle(model.getIndex(), "step #" +  model.getStepId()));
 		
 		
 	}

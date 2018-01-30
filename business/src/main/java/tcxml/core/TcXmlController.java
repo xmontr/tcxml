@@ -27,6 +27,8 @@ import javax.xml.bind.JAXBElement;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Unmarshaller;
 
+import org.apache.commons.lang.StringEscapeUtils;
+
 import com.kscs.util.jaxb.BoundList;
 
 import tcxml.model.ObjectFactory;
@@ -425,13 +427,16 @@ ret = ((JsonObject)codeobj).get("value").toString();
 	
 }
 
-private JsonObject readJsonObject(String json , String rootKey) throws TcXmlException {
-	Reader reader = new StringReader(json);
-			
-	JsonReader jr = Json.createReader(reader );
-	JsonObject stru = jr.readObject();
-	jr.close();
+public JsonObject readJsonObject(String json , String rootKey) throws TcXmlException {
 	
+
+	JsonObject stru = readJsonObject(json);
+
+if(!stru.containsKey(rootKey))	{
+	
+	throw new TcXmlException("key:" + rootKey + " not found in json:" + json, new IllegalStateException());
+	
+}
 JsonValue codeobj = stru.get(rootKey);
 
 if(!codeobj.getValueType().equals(ValueType.OBJECT)) {
@@ -440,6 +445,28 @@ if(!codeobj.getValueType().equals(ValueType.OBJECT)) {
 	
 }
 	return (JsonObject) codeobj;
+}
+
+
+
+
+public JsonObject readJsonObject(String json ) throws TcXmlException {
+	
+json=	StringEscapeUtils.unescapeHtml(json);
+	Reader reader = new StringReader(json);
+			
+	JsonReader jr = Json.createReader(reader );
+	JsonObject stru = jr.readObject();
+	jr.close();
+	
+
+
+if(!stru.getValueType().equals(ValueType.OBJECT)) {
+	
+	throw new TcXmlException(" invalid structure  of json: expected object but found  " + stru.getValueType(),  new IllegalStateException());
+	
+}
+	return  stru;
 }
 
 

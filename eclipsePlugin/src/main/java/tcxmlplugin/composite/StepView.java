@@ -95,6 +95,13 @@ public abstract class StepView extends Composite  {
 		
 		}
 	
-	
+	protected String formatTitle (String index , String txt) {
+		
+		StringBuffer sb = new StringBuffer();
+		
+		sb.append(" ").append(index).append(txt);
+		return sb.toString();
+		
+	}
 
 }

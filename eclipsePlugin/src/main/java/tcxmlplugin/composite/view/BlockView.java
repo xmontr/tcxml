@@ -102,7 +102,7 @@ public class BlockView  extends StepView implements StepContainer {
 		}
 				
 	
-		setTitle("Group" +  model.getAction());
+		setTitle(formatTitle(model.getIndex(), "Group " +  model.getAction()));
 		
 	}
 

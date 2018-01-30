@@ -93,7 +93,7 @@ public void populate(Step mo  ) throws TcXmlException {
 	
 super.populate(mo);	
 evaljsmodel.setCode(controller.JSCodefromJSON(model.getArguments()));
-	setTitle("" + model.getIndex() + "Evaluate Javascript code " +  getShortCode());
+	setTitle( formatTitle(model.getIndex(), "Evaluate Javascript code " +  getShortCode()));
 	
 	
 	
