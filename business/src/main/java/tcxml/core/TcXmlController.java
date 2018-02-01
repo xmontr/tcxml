@@ -570,4 +570,23 @@ public List<String> getAvailableActionForTestobject(TestObject obj){
 return ret;	
 }
 
+
+
+public List<String> getActionsForBrowser() {
+	ArrayList<String> ret = new ArrayList<String>();
+	
+	ret.add("navigate");
+	
+	
+return ret;	
+	
+	
+	
+}
+
+
+
+
+
+
 }
