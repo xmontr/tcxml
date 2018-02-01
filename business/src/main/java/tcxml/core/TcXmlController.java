@@ -31,6 +31,7 @@ import org.apache.commons.lang.StringEscapeUtils;
 
 import com.kscs.util.jaxb.BoundList;
 
+import tcxml.model.Ident;
 import tcxml.model.ObjectFactory;
 import tcxml.model.Step;
 import tcxml.model.TestObject;
@@ -125,10 +126,44 @@ public class TcXmlController {
     	
     }
     
+    public boolean isBrowserStep(Step step) {
+    	boolean ret = false;
+    	
+    	if(step.getTestObject().equals("testObj:{00000000-0000-0000-0000-000000000001}")) {
+    		ret =true;
+    		
+    		
+    	}
+    	
+    return ret;	
+    	
+    }
+    
+    
+    
     
     public TestObject getTestObjectById( String id) throws TcXmlException {
+    	BoundList<TestObject> li = script.getTestObjects().getTestObject();	
+    	return getTestObjectById(id,li);
+    }
+    
+    
+    public TestObject getTestObjectById( String id, TruLibrary lib) throws TcXmlException {
+    	if(lib == null) {
+    		
+    		throw new TcXmlException("cannot find testobject : library is null", new IllegalArgumentException());
+    	}
+    	BoundList<TestObject> li = lib.getTestObjects().getTestObject();
+    	return getTestObjectById(id,li);
+    }
+    
+    
+    
+    
+    
+    private TestObject getTestObjectById( String id, BoundList<TestObject> li) throws TcXmlException {
     	TestObject ret = null;
-    	BoundList<TestObject> li = script.getTestObjects().getTestObject();
+    	
     	for (TestObject testObject : li) {
     		if (testObject.getTestObjId().equals(id) ){
     			
@@ -491,5 +526,48 @@ if(!stru.getValueType().equals(ValueType.OBJECT)) {
 }
 
 
+
+public String getXpathForTestObject( TestObject obj) throws TcXmlException {
+	String ret =null;
+	boolean isXpathDefined = false;
+	
+	BoundList<Ident> identificators = obj.getIdents().getIdent();
+	
+	
+	for (Ident ident : identificators) {
+		if(ident.getType().equals("XPath")){
+			isXpathDefined =true;
+			String json= ident.getValue();
+			JsonObject arg = readJsonObject(json) ;
+			arg = arg.getJsonObject("implData");
+			ret =arg.getJsonString("value").toString();
+			
+		}
+		
+	}
+	
+	if(!isXpathDefined) {
+		
+		throw new TcXmlException("no xpath defined to identify testobject id:" + obj.getTestObjId(), new IllegalStateException());
+		
+		
+		
+	}
+	
+	return ret;
+	
+	
+}
+
+
+
+public List<String> getAvailableActionForTestobject(TestObject obj){
+	ArrayList<String> ret = new ArrayList<String>();
+	
+	ret.add("click");
+	ret.add("dbl click");
+	
+return ret;	
+}
 
 }

@@ -130,7 +130,7 @@
     <complexType name="truLibrary">
     	<sequence>
     		<element name="step" type="tns:step" maxOccurs="1" minOccurs="1"></element>
-    		<element name="testobjects" type="tns:testObjects" maxOccurs="1" minOccurs="1"></element>
+    		<element name="testObjects" type="tns:testObjects" maxOccurs="1" minOccurs="0"></element>
     		<element name="transaction" type="tns:transactions" maxOccurs="1" minOccurs="1"></element>
     	</sequence>
     	<attribute name="engineVersion" type="string"></attribute>

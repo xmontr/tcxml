@@ -20,6 +20,7 @@ import tcxml.core.TcXmlException;
 import tcxml.model.Step;
 import tcxml.model.TruLibrary;
 import tcxmlplugin.TcXmlPluginController;
+import tcxmlplugin.composite.stepViewer.FunctionContainer;
 import tcxmlplugin.composite.stepViewer.MainStepContainer;
 
 public class LibraryViewer extends Composite {
@@ -30,7 +31,7 @@ public class LibraryViewer extends Composite {
 	
 	private DataBindingContext m_bindingContext;
 	
-	private MainStepContainer functionContainer;
+	private FunctionContainer functionContainer;
 	private TcXmlController controller;
 	
 
@@ -52,7 +53,7 @@ public class LibraryViewer extends Composite {
 		
 	
 	
-		functionContainer = new MainStepContainer(this, SWT.NONE,controller);
+		functionContainer = new FunctionContainer(this, SWT.NONE,controller);
 		functionContainer.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 2, 1));
 
 	
@@ -104,6 +105,7 @@ TcXmlPluginController.getInstance().error("fail to show selected action", e);
 	public void showSelectedLibrary(TruLibrary lib) {
 		//clean old one
 		functionContainer.clean();
+		functionContainer.setLibrary(lib);
 		List<Step> list = lib.getStep().getStep();
 		for (Step step2 : list) { // add the step
 			try {

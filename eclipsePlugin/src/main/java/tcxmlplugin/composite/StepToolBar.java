@@ -30,6 +30,7 @@ public class StepToolBar extends Composite  {
 		 indexLabel = new Label(this, SWT.NONE);
 		
 		Button playButton = new Button(this, SWT.NONE);
+		playButton.setToolTipText("play");
 		playButton.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseDown(MouseEvent e) {				
@@ -39,7 +40,10 @@ public class StepToolBar extends Composite  {
 			}
 		});
 		playButton.setImage(ResourceManager.getPluginImage("tcxmlplugin", "icons/media-playback-start-2.png"));
-		new Label(this, SWT.NONE);
+		
+		Button highlightbutton = new Button(this, SWT.NONE);
+		highlightbutton.setToolTipText("highlight");
+		highlightbutton.setImage(ResourceManager.getPluginImage("tcxmlplugin", "icons/system-search-6.png"));
 		
 		Button okbutton = new Button(this, SWT.NONE);
 		okbutton.setImage(ResourceManager.getPluginImage("tcxmlplugin", "icons/dialog-accept.png"));

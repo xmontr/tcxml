@@ -12,6 +12,7 @@ import com.kscs.util.jaxb.BoundList;
 import tcxml.core.TcXmlController;
 import tcxml.core.TcXmlException;
 import tcxml.model.Step;
+import tcxml.model.TruLibrary;
 import tcxmlplugin.TcXmlPluginController;
 import tcxmlplugin.composite.StepView;
 import tcxmlplugin.composite.stepViewer.StepViewer;
@@ -20,6 +21,16 @@ import tcxmlplugin.composite.stepViewer.StepViewerFactory;
 
 public class FunctionView extends  StepView implements StepContainer {
 	private ExpandBar bar;
+	
+	private TruLibrary Library;
+
+	public TruLibrary getLibrary() {
+		return Library;
+	}
+
+	public void setLibrary(TruLibrary library) {
+		Library = library;
+	}
 	
 	
 

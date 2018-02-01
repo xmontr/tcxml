@@ -9,8 +9,10 @@ import org.eclipse.swt.SWT;
 import tcxml.core.TcXmlController;
 import tcxml.core.TcXmlException;
 import tcxml.model.Step;
+import tcxml.model.TruLibrary;
 import tcxmlplugin.composite.view.BasicView;
 import tcxmlplugin.composite.view.BlockView;
+import tcxmlplugin.composite.view.BrowserActionView;
 import tcxmlplugin.composite.view.CallFunctionView;
 import tcxmlplugin.composite.view.EvaluateJavascriptView;
 import tcxmlplugin.composite.view.FunctionView;
@@ -40,11 +42,24 @@ public class StepViewerFactory {
 			
 		
 		case "function":
-		tv=getFunctionViewer(step,stepContainer,controller);
+			if(!(stepContainer instanceof FunctionContainer)) {
+				
+			throw new TcXmlException("cannot view a function outside of a functioncontainer", new IllegalStateException())	;
+			}
+		tv=getFunctionViewer(step,(FunctionContainer)stepContainer,controller);
 		break;	
 		case "testObject":
+			if(controller.isBrowserStep(step)) {
+				tv= getBrowserViewer(step,stepContainer,controller);
+				
+			}else {
+				
+				tv=getTestObjectViewer(step,stepContainer,controller);	
+			}
 			
-		tv=getTestObjectViewer(step,stepContainer,controller);
+			
+			
+		
 		break;
 			
 		}
@@ -59,9 +74,24 @@ public class StepViewerFactory {
 		return tv;
 	}
 
+	private static StepViewer getBrowserViewer(Step step, StepContainer stepContainer, TcXmlController controller) throws TcXmlException {
+		BrowserActionView view = new BrowserActionView(stepContainer.getBar(), SWT.NONE,controller);
+		
+			StepViewer stepviewer = new StepViewer(stepContainer.getBar(), SWT.NONE, view);
+			stepviewer.populate(step);
+			return stepviewer;
+	}
+
 	private static StepViewer getTestObjectViewer(Step step, StepContainer stepContainer, TcXmlController controller) throws TcXmlException {
 		StepViewer tv = null;
-		TestObjectView view = new TestObjectView(stepContainer.getBar(), SWT.NONE,controller);
+		TruLibrary lib = null;
+		//testobject can be referenced in the script or in a library !!!
+		if(stepContainer  instanceof  FunctionView) {
+			FunctionView funccont = (FunctionView)stepContainer;
+			 lib = funccont.getLibrary();			
+		}
+	TestObjectView view = new TestObjectView(stepContainer.getBar(), SWT.NONE,controller);
+	view.setLibrary(lib);
 		StepViewer stepviewer = new StepViewer(stepContainer.getBar(), SWT.NONE, view);
 		stepviewer.populate(step);
 		return stepviewer;
@@ -97,10 +127,11 @@ public class StepViewerFactory {
 		return stepviewer;
 	}
 
-	private static StepViewer getFunctionViewer(Step step, StepContainer stepContainer,
+	private static StepViewer getFunctionViewer(Step step, FunctionContainer stepContainer,
 			TcXmlController controller)  throws TcXmlException {
 		
 		FunctionView view = new FunctionView(stepContainer.getBar(), SWT.NONE,controller);
+		view.setLibrary(stepContainer.getLibrary());
 		StepViewer stepviewer = new StepViewer(stepContainer.getBar(), SWT.NONE, view); 		
 		stepviewer.populate(step);
 		return stepviewer;

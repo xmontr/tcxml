@@ -99,7 +99,7 @@ public abstract class StepView extends Composite  {
 		
 		StringBuffer sb = new StringBuffer();
 		
-		sb.append(" ").append(index).append(txt);
+		sb.append(" ").append(index).append(" ").append(txt);
 		return sb.toString();
 		
 	}

@@ -2,7 +2,11 @@ package tcxml.test;
 
 import static org.hamcrest.Matchers.arrayContainingInAnyOrder;
 import static org.hamcrest.Matchers.arrayWithSize;
+import static org.hamcrest.Matchers.equalToIgnoringCase;
 import static org.hamcrest.Matchers.equalToIgnoringWhiteSpace;
+import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.notNullValue;
+import static org.hamcrest.Matchers.nullValue;
 import static org.junit.Assert.*;
 
 import java.io.InputStream;
@@ -11,6 +15,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import org.hamcrest.core.IsNot;
 import org.junit.Test;
 
 import com.kscs.util.jaxb.BoundList;
@@ -19,6 +24,7 @@ import tcxml.core.TcXmlController;
 import tcxml.core.TcXmlException;
 import tcxml.model.Step;
 import tcxml.model.TestObject;
+import tcxml.model.TestObjects;
 import tcxml.model.TruLibrary;
 
 public class ModelTest {
@@ -112,6 +118,12 @@ String samplename = sampletestobject.getManualName();
 assertThat(samplename, equalToIgnoringWhiteSpace("Image Link Urgency"));
 
 
+String xp = controller.getXpathForTestObject(sampletestobject);
+System.out.println(xp);
+
+assertThat(xp, equalToIgnoringCase("\"//span/label[text()=\\\"Urgency\\\"]/following::div[1]/div/div/a/img\""));
+
+
 
 	
 	
@@ -123,7 +135,16 @@ assertThat(samplename, equalToIgnoringWhiteSpace("Image Link Urgency"));
 	}	
 		
 		
-		
+	TruLibrary libsmt = controller.getLibraries().get("SMT")	;
+	
+	assertThat(libsmt, is(notNullValue()));
+	
+	
+	TestObjects toto = libsmt.getTestObjects();
+	
+	BoundList<TestObject> toinsmt = toto.getTestObject();
+	
+	assertThat(toinsmt.toArray(), arrayWithSize(45));
 		
 	
 	}
