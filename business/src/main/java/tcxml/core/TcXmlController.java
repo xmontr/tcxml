@@ -575,7 +575,26 @@ return ret;
 public List<String> getActionsForBrowser() {
 	ArrayList<String> ret = new ArrayList<String>();
 	
-	ret.add("navigate");
+	ret.add("Activate");
+	ret.add("Activate Tab");
+	ret.add("Add Tab");
+	ret.add("Close");
+	ret.add("Close Html Dialog");
+	ret.add("Close Tab");
+	ret.add("Dialog - Alert");
+	ret.add("Dialog - Authenticate");
+	ret.add("Dialog - Confirm");
+	ret.add("Dialog - Prompt");
+	ret.add("Dialog - Prompt Password");
+	ret.add("Get Property");
+	ret.add("Go Back");
+	ret.add("Go Forward");
+	ret.add("Navigate");
+	ret.add("Reload");
+	ret.add("Resize");
+	ret.add("Scroll");
+	ret.add("Stop");
+	ret.add("Verfify");
 	
 	
 return ret;	

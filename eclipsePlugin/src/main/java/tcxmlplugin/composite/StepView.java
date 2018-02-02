@@ -11,6 +11,10 @@ import tcxml.model.Step;
 
 public abstract class StepView extends Composite  {
 	
+	public TcXmlController getController() {
+		return controller;
+	}
+
 	private PropertyChangeSupport propertyChangeSupport;
 	
 	protected Step model;

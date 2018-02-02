@@ -1,5 +1,6 @@
 package tcxmlplugin.composite.view.arguments;
 
+import tcxml.core.TcXmlException;
 import tcxmlplugin.composite.StepView;
 import tcxmlplugin.composite.view.BrowserActionView;
 
@@ -7,7 +8,7 @@ public class ArgumentFactory {
 	
 	
 	
-	public static StepArgument getArgument(String newAction, StepView view) {
+	public static StepArgument getArgument(String newAction, StepView view) throws TcXmlException {
 		StepArgument ret = null;	
 		
 		switch(newAction) {
@@ -36,7 +37,7 @@ public class ArgumentFactory {
 		return ret;
 	}
 
-	private static StepArgument getNavigateArgument(StepView view) {
+	private static StepArgument getNavigateArgument(StepView view) throws TcXmlException {
 		StepArgument ret = new NavigateArgs(view, view.getStyle());
 		ret.populate(view.getModel());
 		

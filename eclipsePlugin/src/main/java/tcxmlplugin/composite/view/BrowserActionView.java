@@ -5,12 +5,15 @@ import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
 import java.util.List;
 
+import javax.swing.text.View;
+
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 
 import tcxml.core.TcXmlController;
 import tcxml.core.TcXmlException;
 import tcxml.model.Step;
+import tcxmlplugin.TcXmlPluginController;
 import tcxmlplugin.composite.StepView;
 import tcxmlplugin.composite.view.arguments.ArgumentFactory;
 import tcxmlplugin.composite.view.arguments.StepArgument;
@@ -23,15 +26,23 @@ import org.eclipse.core.databinding.observable.list.IObservableList;
 import org.eclipse.jface.databinding.swt.WidgetProperties;
 import org.eclipse.core.databinding.beans.BeanProperties;
 import org.eclipse.core.databinding.observable.value.IObservableValue;
+import org.eclipse.swt.widgets.Group;
+import org.eclipse.swt.layout.FillLayout;
 
 public class BrowserActionView extends StepView implements PropertyChangeListener{
 	private DataBindingContext m_bindingContext;
+	
+	private StepArgument theArgument;
 	
 	
 	private BrowserActionModel browseractionmodel ;
 	private Combo actionCombo;
 
+	private Group grpArguments;
+
 	public BrowserActionView(Composite parent, int style, TcXmlController controller) {
+		
+		
 		
 
 		super(parent, style, controller);
@@ -46,6 +57,13 @@ public class BrowserActionView extends StepView implements PropertyChangeListene
 		
 		actionCombo = new Combo(this, SWT.NONE);
 		actionCombo.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
+		
+		grpArguments = new Group(this, SWT.SHADOW_ETCHED_IN);
+		grpArguments.setLayout(new FillLayout(SWT.HORIZONTAL));
+		grpArguments.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 2, 1));
+		grpArguments.setText("arguments");
+		new Label(this, SWT.NONE);
+		new Label(this, SWT.NONE);
 		m_bindingContext = initDataBindings();
 		
 		}
@@ -108,21 +126,43 @@ public class BrowserActionView extends StepView implements PropertyChangeListene
 		super.populate(mo);
 		
 		setTitle(formatTitle(mo.getIndex(), mo.getAction()));
+		browseractionmodel.setAllActions(getController().getActionsForBrowser());
+		browseractionmodel.setActionSelected(mo.getAction());
 	}
 
 
 	@Override
 	public void propertyChange(PropertyChangeEvent evt) {
 	String newAction = (String)	evt.getNewValue();
-	StepArgument ar = ArgumentFactory.getArgument(newAction ,this);
-	setArgumentView(ar);
+	StepArgument ar;
+	try {
+		ar = ArgumentFactory.getArgument(newAction ,this);
+		
+		
+		setArgumentView(ar);
+		TcXmlPluginController.getInstance().info("setting nw action for step : " + newAction );
+		
+	} catch (TcXmlException e) {
+		TcXmlPluginController.getInstance().error("fail to create argument view for step", e);
+		
+	}
+	
 	
 		
 	}
 
 
 	private void setArgumentView(StepArgument ar) {
-		// TODO Auto-generated method stub
+		// remove oldone if necessary
+		if(theArgument != null) {
+			theArgument.dispose();
+			
+		}
+	theArgument =ar;
+	// GridData layoutData = new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1);
+	//ar.setLayoutData(layoutData);
+		ar.setParent(grpArguments);
+		
 		
 	}
 	protected DataBindingContext initDataBindings() {

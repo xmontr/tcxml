@@ -1,18 +1,35 @@
 package tcxmlplugin.composite.view.arguments;
 
+import javax.json.JsonObject;
+import javax.sound.midi.ControllerEventListener;
+
 import org.eclipse.swt.widgets.Composite;
 
+import tcxml.core.TcXmlController;
+import tcxml.core.TcXmlException;
 import tcxml.model.Step;
+import tcxmlplugin.composite.StepView;
 
 public abstract class StepArgument  extends Composite {
+	
+	
+	protected  StepView view;
+	protected JsonObject arg;
 
 	public StepArgument(Composite parent, int style) {
 		super(parent, style);
-		// TODO Auto-generated constructor stub
+		if(parent instanceof StepView) {
+		this.view = (StepView)parent;
+		}
 	}
 
-	public void populate(Step model) {
-		// TODO Auto-generated method stub
+	public void populate(Step model) throws TcXmlException {
+
+String rawdata = model.getArguments();
+TcXmlController controller = view.getController();
+arg = controller.readJsonObject(model.getArguments());
+
+		
 		
 	}
 
