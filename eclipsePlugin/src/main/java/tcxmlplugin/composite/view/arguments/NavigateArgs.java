@@ -14,12 +14,13 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.swt.layout.GridData;
+import tcxmlplugin.composite.view.TextInputView;
 
 public class NavigateArgs extends StepArgument{
 	
 	
 	private NavigateArgsModel navmodel;
-	private Text text;
+	private TextInputView textInputView;
 	
 	public static class NavigateArgsModel {
 		
@@ -81,8 +82,8 @@ public class NavigateArgs extends StepArgument{
 		lblLocation.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
 		lblLocation.setText("Location");
 		
-		text = new Text(this, SWT.BORDER);
-		text.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
+		textInputView = new TextInputView(this, SWT.NONE);
+		textInputView.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		
 	}
 	
@@ -97,6 +98,8 @@ public class NavigateArgs extends StepArgument{
 		navmodel.setLocation(location);
 	 boolean isj = locobj.getBoolean("evalJavaScript");
 	navmodel.setJavascript(isj);
+	textInputView.setJavascript(isj);
+	textInputView.setInputData(location);
 	}
 	
 	

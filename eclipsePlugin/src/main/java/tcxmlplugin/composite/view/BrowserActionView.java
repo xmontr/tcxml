@@ -157,12 +157,15 @@ public class BrowserActionView extends StepView implements PropertyChangeListene
 		if(theArgument != null) {
 			theArgument.dispose();
 			
+			
 		}
 	theArgument =ar;
 	// GridData layoutData = new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1);
 	//ar.setLayoutData(layoutData);
 		ar.setParent(grpArguments);
 		
+		grpArguments.layout();
+	
 		
 	}
 	protected DataBindingContext initDataBindings() {
