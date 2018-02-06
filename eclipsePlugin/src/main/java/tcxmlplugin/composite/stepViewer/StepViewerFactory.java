@@ -48,16 +48,8 @@ public class StepViewerFactory {
 			}
 		tv=getFunctionViewer(step,(FunctionContainer)stepContainer,controller);
 		break;	
-		case "testObject":
-			if(controller.isBrowserStep(step)) {
-				tv= getBrowserViewer(step,stepContainer,controller);
-				
-			}else {
-				
-				tv=getTestObjectViewer(step,stepContainer,controller);	
-			}
-			
-			
+		case "testObject":				
+				tv=getTestObjectViewer(step,stepContainer,controller);
 			
 		
 		break;
@@ -74,13 +66,7 @@ public class StepViewerFactory {
 		return tv;
 	}
 
-	private static StepViewer getBrowserViewer(Step step, StepContainer stepContainer, TcXmlController controller) throws TcXmlException {
-		BrowserActionView view = new BrowserActionView(stepContainer.getBar(), SWT.NONE,controller);
-		
-			StepViewer stepviewer = new StepViewer(stepContainer.getBar(), SWT.NONE, view);
-			stepviewer.populate(step);
-			return stepviewer;
-	}
+
 
 	private static StepViewer getTestObjectViewer(Step step, StepContainer stepContainer, TcXmlController controller) throws TcXmlException {
 		StepViewer tv = null;

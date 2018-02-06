@@ -559,6 +559,25 @@ public String getXpathForTestObject( TestObject obj) throws TcXmlException {
 	
 }
 
+public List<String> getAvailableActionForStep( Step s , TruLibrary lib) throws TcXmlException{
+	ArrayList<String> ret = new ArrayList<String>();
+	if(isBrowserStep(s)) {
+		
+	ret.addAll(getActionsForBrowser()) ;
+		
+
+	} else {
+		
+		String tid = s.getTestObject();
+		 TestObject to = getTestObjectById(tid, lib);
+		ret.addAll(getAvailableActionForTestobject(to)) ;
+		
+	}
+
+	return ret;
+}
+
+
 
 
 public List<String> getAvailableActionForTestobject(TestObject obj){

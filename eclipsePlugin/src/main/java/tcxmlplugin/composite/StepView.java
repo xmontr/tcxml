@@ -8,6 +8,7 @@ import org.eclipse.swt.widgets.Composite;
 import tcxml.core.TcXmlController;
 import tcxml.core.TcXmlException;
 import tcxml.model.Step;
+import tcxmlplugin.composite.view.arguments.StepArgument;
 
 public abstract class StepView extends Composite  {
 	
@@ -19,6 +20,18 @@ public abstract class StepView extends Composite  {
 	
 	protected Step model;
 	
+	protected StepArgument theArgument;
+	
+	public StepArgument getTheArgument() {
+		return theArgument;
+	}
+
+	protected void setTheArgument(StepArgument theArgument) {
+		propertyChangeSupport.firePropertyChange("theArgument", this.theArgument ,
+				this.theArgument = theArgument );
+		
+	}
+
 	private String title ;
 
 	protected TcXmlController controller;

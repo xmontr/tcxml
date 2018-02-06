@@ -21,6 +21,7 @@ import org.eclipse.core.databinding.DataBindingContext;
 import org.eclipse.core.databinding.observable.value.IObservableValue;
 import org.eclipse.jface.databinding.swt.WidgetProperties;
 import org.eclipse.core.databinding.beans.PojoProperties;
+import org.eclipse.core.databinding.beans.BeanProperties;
 
 public class TextInputView extends Composite implements SelectionListener{
 	private DataBindingContext m_bindingContext;
@@ -28,17 +29,74 @@ public class TextInputView extends Composite implements SelectionListener{
 	private MenuItem mntmTxt;
 	private MenuItem mntmJs;
 	private Button displayButton;
-	private boolean isJavascript;
-	private String inputData;
 	
-	private PropertyChangeSupport propertyChangeSupport;
+	private TextInputViewModel inputtextmodel;
+
+	
+
+	
+	
+	
+	
+ 	public static class TextInputViewModel {
+		
+		private boolean javascript;
+		private String inputData;
+		
+		
+		private PropertyChangeSupport propertyChangeSupport;
+		
+		public TextInputViewModel() {
+			propertyChangeSupport = new PropertyChangeSupport(this);
+			
+		}
+		
+		public  void setJavascript(boolean isj) {
+			propertyChangeSupport.firePropertyChange("javascript", this.javascript,
+					this.javascript = isj);		
+
+			
+		}
+		
+		
+		public boolean getJavascript() {
+			
+			return this.javascript;
+		}
+
+		public void setInputData(String inputData) {
+			propertyChangeSupport.firePropertyChange("inputData", this.inputData,
+					this.inputData = inputData);
+			
+			
+			
+		}
+
+		public String getInputData() {
+			return inputData;
+		}
+		
+		
+		public void addPropertyChangeListener(String propertyName,
+			      PropertyChangeListener listener) {
+			    propertyChangeSupport.addPropertyChangeListener(propertyName, listener);
+			  }
+
+			  public void removePropertyChangeListener(PropertyChangeListener listener) {
+			    propertyChangeSupport.removePropertyChangeListener(listener);
+			  }
+
+		
+		
+	}
+	
 	
 	
 
 	public TextInputView(Composite parent, int style) {
 		super(parent, style);
 		setLayout(new GridLayout(2, false));
-		propertyChangeSupport = new PropertyChangeSupport(this);
+		inputtextmodel = new TextInputViewModel();
 		displayButton = new Button(this, SWT.NONE);
 		displayButton.setText("TXT");
 		
@@ -64,12 +122,13 @@ public class TextInputView extends Composite implements SelectionListener{
 	public void widgetSelected(SelectionEvent e) {
 		if(e.widget == mntmTxt ) {
 			displayButton.setText(mntmTxt.getText());
+			inputtextmodel.setJavascript(false);
 			
 		}
 		
 		if(e.widget == mntmJs ) {
 			displayButton.setText(mntmJs.getText());
-			
+			inputtextmodel.setJavascript(true);	
 		}
 		
 	}
@@ -80,47 +139,35 @@ public class TextInputView extends Composite implements SelectionListener{
 		
 	}
 
-	public  void setJavascript(boolean isj) {
-		this.isJavascript = isj;
-		if(isJavascript == true) {
-			
+	public void setJavascript(boolean isj) {
+		inputtextmodel.setJavascript(isj);
+		if(isj == true) {
 			displayButton.setText(mntmJs.getText());
-		} else {
+		}
+		else {
 			
-			displayButton.setText(mntmTxt.getText());	
+			displayButton.setText(mntmTxt.getText());
 		}
 		
 	}
 
 	public void setInputData(String inputData) {
-		propertyChangeSupport.firePropertyChange("inputData", this.inputData,
-				this.inputData = inputData);
+		inputtextmodel.setInputData(inputData);
 		
-		
-		
-	}
-
-	public String getInputData() {
-		return inputData;
 	}
 	
 	
-	public void addPropertyChangeListener(String propertyName,
-		      PropertyChangeListener listener) {
-		    propertyChangeSupport.addPropertyChangeListener(propertyName, listener);
-		  }
-
-		  public void removePropertyChangeListener(PropertyChangeListener listener) {
-		    propertyChangeSupport.removePropertyChangeListener(listener);
-		  }
-
-
+	public boolean getJavascript() {
+		
+		return inputtextmodel.getJavascript();
+		
+	}
 	protected DataBindingContext initDataBindings() {
 		DataBindingContext bindingContext = new DataBindingContext();
 		//
 		IObservableValue observeTextTextObserveWidget = WidgetProperties.text(SWT.Modify).observe(text);
-		IObservableValue bytesInputDataObserveValue = PojoProperties.value("bytes").observe(inputData);
-		bindingContext.bindValue(observeTextTextObserveWidget, bytesInputDataObserveValue, null, null);
+		IObservableValue inputDataInputtextmodelObserveValue = BeanProperties.value("inputData").observe(inputtextmodel);
+		bindingContext.bindValue(observeTextTextObserveWidget, inputDataInputtextmodelObserveValue, null, null);
 		//
 		return bindingContext;
 	}
