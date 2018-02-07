@@ -38,8 +38,9 @@ public class FunctionView extends StepView implements StepContainer {
 		setLayout(new FillLayout());
 
 		bar = new ExpandBar(this, SWT.V_SCROLL);
-		bar.setBackground(getDisplay().getSystemColor(SWT.COLOR_GRAY));
+		bar.setBackground(getDisplay().getSystemColor(SWT.COLOR_WHITE));
 		bar.setSpacing(10);
+		
 
 		// TODO Auto-generated constructor stub
 	}
@@ -55,10 +56,10 @@ public class FunctionView extends StepView implements StepContainer {
 
 		xpndtmNewExpanditem.setHeight(tv.computeSize(SWT.DEFAULT, SWT.DEFAULT).y );
 		xpndtmNewExpanditem.setControl(tv);
-		tv.addPropertyChangeListener("theArgument", new StepArgumentListener(xpndtmNewExpanditem,tv));
 		
 		
-pack();
+		setSize(bar.computeSize(SWT.DEFAULT, SWT.DEFAULT, true));
+
 	}
 
 	@Override

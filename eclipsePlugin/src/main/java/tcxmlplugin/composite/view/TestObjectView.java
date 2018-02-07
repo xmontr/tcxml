@@ -31,6 +31,7 @@ import org.eclipse.jface.databinding.swt.WidgetProperties;
 import org.eclipse.core.databinding.beans.BeanProperties;
 import org.eclipse.core.databinding.observable.value.IObservableValue;
 import org.eclipse.wb.swt.SWTResourceManager;
+import org.eclipse.swt.graphics.Point;
 
 public class TestObjectView extends StepView implements PropertyChangeListener {
 	private DataBindingContext m_bindingContext;
@@ -83,10 +84,9 @@ public class TestObjectView extends StepView implements PropertyChangeListener {
 		grpArguments.setText("arguments");
 		new Label(this, SWT.NONE);
 		
-		lblTamere = new Label(this, SWT.NONE);
-		lblTamere.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
-		lblTamere.setBackground(SWTResourceManager.getColor(SWT.COLOR_RED));
-		lblTamere.setText("tamere");
+		label = new Label(this, SWT.SEPARATOR | SWT.HORIZONTAL);
+		label.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, false, false, 1, 1));
+		label.setBackground(SWTResourceManager.getColor(SWT.COLOR_DARK_RED));
 
 		m_bindingContext = initDataBindings();
 	}
@@ -148,7 +148,7 @@ public class TestObjectView extends StepView implements PropertyChangeListener {
 	private Text text;
 	private Combo combo;
 	private Group grpIdentification;
-	private Label lblTamere;
+	private Label label;
 
 	@Override
 	public void propertyChange(PropertyChangeEvent evt) {
@@ -213,12 +213,12 @@ public class TestObjectView extends StepView implements PropertyChangeListener {
 	}
 
 	private void hideXpath() {
-		grpIdentification.setEnabled(false);
+		grpIdentification.setVisible(false);
 
 	}
 
 	private void showXpath() {
-		grpIdentification.setEnabled(true);
+		grpIdentification.setVisible(true);
 
 	}
 

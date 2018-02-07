@@ -1,6 +1,7 @@
 package tcxml.core;
 
 import java.io.File;
+import org.apache.commons.configuration.*;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
@@ -12,6 +13,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -22,6 +24,11 @@ import javax.json.JsonReader;
 import javax.json.JsonStructure;
 import javax.json.JsonValue;
 import javax.json.JsonValue.ValueType;
+import javax.script.ScriptContext;
+import javax.script.ScriptEngine;
+import javax.script.ScriptEngineManager;
+import javax.script.ScriptException;
+import javax.script.SimpleScriptContext;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBElement;
 import javax.xml.bind.JAXBException;
@@ -31,6 +38,7 @@ import org.apache.commons.lang.StringEscapeUtils;
 
 import com.kscs.util.jaxb.BoundList;
 
+import parameter.StepParameter;
 import tcxml.model.Ident;
 import tcxml.model.ObjectFactory;
 import tcxml.model.Step;
@@ -44,6 +52,9 @@ public class TcXmlController {
     private String name;
     
     private File path ;
+    
+    
+    private Map<String,StepParameter> parameters;
     
     
     private Map<String, TruLibrary> libraries ;
@@ -293,14 +304,20 @@ public void loadFromDisk(String pathdir) throws TcXmlException {
 		 
 		 throw new TcXmlException("invalid  script: no default.xml founded in " + pathdir ,  new IllegalArgumentException());	 
 	 }
-	 
+//search lib folder 	 
  if ( !listing.contains("Libraries")) {
 		 
 	 throw new TcXmlException("invalid  script: no Libraries folder founded" ,  new IllegalArgumentException());	 
 	 }
+ 
+ //search parameter file
+ if ( !listing.contains(name + ".prm")) {
 	 
+	 throw new TcXmlException("invalid  script: no parameter filr .prm founded in " + pathdir ,  new IllegalArgumentException());	 
+ }	 
 	
 File mainscriptfile = new File(pathdir + "default.xml");
+File parameterFile = new File(pathdir + name + ".prm");
 File libdir = new File(pathdir + "Libraries");
 try {
 	 in = new FileInputStream(mainscriptfile);
@@ -327,18 +344,62 @@ for (File file2 : libfiles) {
 		 throw new TcXmlException("exception when loading library" ,  new FileNotFoundException());
 	}
 	
+
 	
-	
-	
-}
-
-
-
-
 	
 }
 
+//load parameters
+loadParameters(parameterFile);
 
+
+	
+}
+
+/***
+ *  parse the parameter file and populate the parameters map
+ * 
+ * @param parameterFile
+ */
+
+private void loadParameters(File parameterFile) {
+	
+	
+
+	
+	
+	
+	HierarchicalINIConfiguration conf;
+	try {
+				
+		conf = new HierarchicalINIConfiguration(parameterFile);
+		Set lisection = conf.getSections();
+		Iterator it = lisection.iterator();
+		while (it.hasNext()) {
+			String  type = (String ) it.next();
+			
+	SubnodeConfiguration se = conf.getSection(type);
+		Iterator keys = se.getKeys();
+		while (keys.hasNext()) {
+			String key = (String) keys.next();
+		//String val = 	type.getString(key);
+			
+		}
+		
+		
+		}
+		
+	} catch (ConfigurationException e) {
+		// TODO Auto-generated catch block
+		e.printStackTrace();
+	}
+
+	
+
+
+	
+	
+}
 
 public File getPath() {
 	return path;
@@ -617,6 +678,32 @@ public List<String> getActionsForBrowser() {
 	
 	
 return ret;	
+	
+	
+
+
+
+	
+}
+
+public Object evaluateJS(String code) throws TcXmlException {
+	
+	   ScriptEngineManager m = new ScriptEngineManager();
+	   ScriptEngine engine = m.getEngineByName("nashorn");
+	   ScriptContext context = new SimpleScriptContext();
+	   
+	   Object api = new LrAPI();
+	   
+	   context.setBindings(engine.createBindings(), ScriptContext.ENGINE_SCOPE);
+	   context.setAttribute("LR", api, ScriptContext.ENGINE_SCOPE);
+	try {
+		Object ret = engine.eval(code, context);
+		return ret;
+	} catch (ScriptException e) {
+		throw new TcXmlException("fail to evaluate js code ", e);
+	
+	}
+	
 	
 	
 	

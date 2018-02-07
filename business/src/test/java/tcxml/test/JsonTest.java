@@ -42,7 +42,7 @@ public class JsonTest {
 	 */
 	
 	
-	private String fileResourceToString(String fileresource) throws IOException {
+	protected  String fileResourceToString(String fileresource) throws IOException {
 		
 		  URL p = this.getClass().getResource(fileresource);
 			
@@ -132,7 +132,7 @@ assertThat(loc, is(notNullValue()));
 JsonString val = loc.getJsonString("value");
 boolean isjs = loc.getBoolean("evalJavaScript");
 
-System.out.println(val.toString());
+//System.out.println(val.toString());
 String expected ="\"LR.getParam(\"URL_Base\");\n//\"https://intragate.training.ec.europa.eu/smtweb/index.do\"\n//\"https://intragate.development.ec.europa.eu/smtweb/index.do\"\"";
 
 //assertThat(val.toString(), equalToIgnoringCase(expected));
