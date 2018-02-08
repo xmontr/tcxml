@@ -38,7 +38,7 @@ import org.apache.commons.lang.StringEscapeUtils;
 
 import com.kscs.util.jaxb.BoundList;
 
-import parameter.StepParameter;
+import tcxml.core.parameter.StepParameter;
 import tcxml.model.Ident;
 import tcxml.model.ObjectFactory;
 import tcxml.model.Step;
@@ -362,29 +362,21 @@ loadParameters(parameterFile);
  * @param parameterFile
  */
 
-private void loadParameters(File parameterFile) {
-	
-	
-
-	
-	
+private void loadParameters(File parameterFile) {	
 	
 	HierarchicalINIConfiguration conf;
-	try {
-				
+	SubnodeConfiguration se;
+	try {				
 		conf = new HierarchicalINIConfiguration(parameterFile);
+		log.fine("analysing parameter file " + parameterFile.getPath());
 		Set lisection = conf.getSections();
 		Iterator it = lisection.iterator();
 		while (it.hasNext()) {
-			String  type = (String ) it.next();
-			
-	SubnodeConfiguration se = conf.getSection(type);
-		Iterator keys = se.getKeys();
-		while (keys.hasNext()) {
-			String key = (String) keys.next();
-		//String val = 	type.getString(key);
-			
-		}
+			String  secname = (String ) it.next();	
+			log.fine("found section" + secname);
+			StepParameter para = StepParameter.buildParameter(conf,secname);
+			parameters.put(para.getName(), para);
+
 		
 		
 		}
@@ -400,6 +392,8 @@ private void loadParameters(File parameterFile) {
 	
 	
 }
+
+
 
 public File getPath() {
 	return path;
