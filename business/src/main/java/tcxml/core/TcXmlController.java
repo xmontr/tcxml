@@ -98,7 +98,7 @@ public class TcXmlController {
     	log.setLevel(Level.ALL);
     	
     actionMap = new HashMap<String, Step>();
-    
+    parameters = new HashMap<String,StepParameter>();
     
     libraries = new HashMap<String,TruLibrary>();
     	
@@ -394,6 +394,10 @@ private void loadParameters(File parameterFile) {
 }
 
 
+
+public Map<String, StepParameter> getParameters() {
+	return parameters;
+}
 
 public File getPath() {
 	return path;

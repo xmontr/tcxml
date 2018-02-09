@@ -22,6 +22,7 @@ import com.kscs.util.jaxb.BoundList;
 
 import tcxml.core.TcXmlController;
 import tcxml.core.TcXmlException;
+import tcxml.core.parameter.StepParameter;
 import tcxml.model.Step;
 import tcxml.model.TestObject;
 import tcxml.model.TestObjects;
@@ -145,7 +146,29 @@ assertThat(xp, equalToIgnoringCase("\"//span/label[text()=\\\"Urgency\\\"]/follo
 	BoundList<TestObject> toinsmt = toto.getTestObject();
 	
 	assertThat(toinsmt.toArray(), arrayWithSize(45));
+	
+	
+	// check parameter 
+	
+Map<String, StepParameter> params = controller.getParameters();
+
+Set<String> liparam = params.keySet();
+
+
+String[] paramname = new String[] {
+		"Iter_p",
+		"Random_p",
+		"URL_Base",
+		"Vuid_p"
+	
 		
+		
+};
+
+assertThat(liparam.toArray(new String[liparam.size()]), arrayContainingInAnyOrder(paramname));
+	
+	
+	
 	
 	}
 
