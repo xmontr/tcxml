@@ -690,7 +690,7 @@ public Object evaluateJS(String code) throws TcXmlException {
 	   ScriptEngine engine = m.getEngineByName("nashorn");
 	   ScriptContext context = new SimpleScriptContext();
 	   
-	   Object api = new LrAPI();
+	   Object api = new LrAPI(this);
 	   
 	   context.setBindings(engine.createBindings(), ScriptContext.ENGINE_SCOPE);
 	   context.setAttribute("LR", api, ScriptContext.ENGINE_SCOPE);
@@ -703,6 +703,20 @@ public Object evaluateJS(String code) throws TcXmlException {
 	}
 	
 	
+	
+	
+}
+
+
+public StepParameter getParameterByName ( String name) throws TcXmlException  {
+	
+	StepParameter ret = this.parameters.get(name) ;
+	if(ret== null) {
+		
+		throw new TcXmlException("unknown parameter "+name, new IllegalArgumentException("name"));
+	}
+	
+	return ret;
 	
 	
 }

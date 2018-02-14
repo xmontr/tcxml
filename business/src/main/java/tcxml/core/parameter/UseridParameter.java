@@ -1,5 +1,6 @@
 package tcxml.core.parameter;
 
+import org.apache.commons.configuration.HierarchicalINIConfiguration;
 import org.apache.commons.configuration.SubnodeConfiguration;
 
 public class UseridParameter extends StepParameter {
@@ -13,8 +14,8 @@ public class UseridParameter extends StepParameter {
 	
 	
 
-	protected UseridParameter(SubnodeConfiguration c) {
-		super(c);
+	protected UseridParameter(HierarchicalINIConfiguration conf ,String  secname) {
+		super(conf,secname);
 	format = config.getString("Format");
 	originalValue = config.getString("OriginalValue");
 	}

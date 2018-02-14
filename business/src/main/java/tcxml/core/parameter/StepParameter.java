@@ -17,15 +17,26 @@ public abstract  class StepParameter {
 	
 	protected String paramName;
 	
+	protected HierarchicalINIConfiguration conf;
 	
+	protected String secname ;
 	
-	protected StepParameter ( SubnodeConfiguration c ) {
+	protected StepParameter (HierarchicalINIConfiguration conf ,String  secname ) {
 		
-		this.config = c;
-		type=config.getString("Type");
-		this.paramName = config.getString("ParamName");
-		this.setName(paramName);
+		 config = conf.getSection(secname);
+		 this.secname = secname;
+		 this.conf = conf;
+		 
+		 
+			type=config.getString("Type");
+			this.paramName = config.getString("ParamName");
+			this.setName(paramName);
+		
 	}
+	
+	
+	
+
 	
 	
 	
@@ -51,15 +62,16 @@ public abstract  class StepParameter {
 	public static StepParameter buildParameter(HierarchicalINIConfiguration conf, String secname) {
 
 		StepParameter ret = null ;
-		 SubnodeConfiguration se = conf.getSection(secname);	
+			
+		 SubnodeConfiguration se = conf.getSection(secname);
 		String type = se.getString("Type");	
 		
 		switch(type) {
-		case "CurrentIteration":ret = getCurrentIterationParameter( se, secname); break;
-		case "Random": ret = getRandomParameter( se, secname); break;
-		case "Table": ret = getTableParameter( se, secname); break;
-		case "Userid": ret = getUserIdParameter( se, secname) ; break;
-		default: ret = getDefaultParameter( se, secname); break;
+		case "CurrentIteration":ret = getCurrentIterationParameter( conf, secname); break;
+		case "Random": ret = getRandomParameter( conf, secname); break;
+		case "Table": ret = getTableParameter( conf, secname); break;
+		case "Userid": ret = getUserIdParameter( conf, secname) ; break;
+		default: ret = getDefaultParameter( conf, secname); break;
 		
 		}
 
@@ -72,29 +84,29 @@ public abstract  class StepParameter {
 		
 	}
 	
-	private static StepParameter getDefaultParameter(SubnodeConfiguration se, String secname) {
+	private static StepParameter getDefaultParameter(HierarchicalINIConfiguration conf, String secname) {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
-	private static StepParameter getUserIdParameter(SubnodeConfiguration se, String secname) {
-		UseridParameter up = new UseridParameter(se);
+	private static StepParameter getUserIdParameter(HierarchicalINIConfiguration conf, String secname) {
+		UseridParameter up = new UseridParameter(conf,secname);
 		return up;
 	}
 
-	private static StepParameter getTableParameter(SubnodeConfiguration se, String secname) {
-		TableParameter tp = new TableParameter(se);
+	private static StepParameter getTableParameter(HierarchicalINIConfiguration conf, String secname) {
+		TableParameter tp = new TableParameter(conf,secname);
 		
 		return tp;
 	}
 
-	private static StepParameter getRandomParameter(SubnodeConfiguration se, String secname) {
-		RandomParameter rp = new RandomParameter(se);
+	private static StepParameter getRandomParameter(HierarchicalINIConfiguration conf, String secname) {
+		RandomParameter rp = new RandomParameter(conf,secname);
 		return rp;
 	}
 
-	private static StepParameter getCurrentIterationParameter(SubnodeConfiguration se, String secname) {
-		   CurrentIterationParameter cp = new CurrentIterationParameter(se);
+	private static StepParameter getCurrentIterationParameter(HierarchicalINIConfiguration conf, String secname) {
+		   CurrentIterationParameter cp = new CurrentIterationParameter(conf,secname);
 		return cp;
 	}
 
@@ -109,7 +121,7 @@ public abstract  class StepParameter {
 	}
 
 	
-		public abstract String evalParameter();
+		public abstract String evalParameter  ()   throws TcXmlException ;
 	
 
 }

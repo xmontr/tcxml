@@ -1,5 +1,6 @@
 package tcxml.core.parameter;
 
+import org.apache.commons.configuration.HierarchicalINIConfiguration;
 import org.apache.commons.configuration.SubnodeConfiguration;
 
 public class RandomParameter extends StepParameter {
@@ -18,8 +19,8 @@ public class RandomParameter extends StepParameter {
 
 	
 
-	protected RandomParameter(SubnodeConfiguration c) {
-		super(c);
+	protected RandomParameter(HierarchicalINIConfiguration conf ,String  secname) {
+		super(conf,secname);
 	format = config.getString("Format");
 	generateNewVal = config.getString("GenerateNewVal");
 	maxValue = config.getString("MaxValue");

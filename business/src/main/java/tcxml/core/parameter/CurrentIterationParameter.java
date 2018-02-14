@@ -1,5 +1,6 @@
 package tcxml.core.parameter;
 
+import org.apache.commons.configuration.HierarchicalINIConfiguration;
 import org.apache.commons.configuration.SubnodeConfiguration;
 
 public class CurrentIterationParameter extends StepParameter{
@@ -12,8 +13,8 @@ public class CurrentIterationParameter extends StepParameter{
 	
 	
 
-	protected CurrentIterationParameter(SubnodeConfiguration c) {
-		super(c);
+	protected CurrentIterationParameter(HierarchicalINIConfiguration conf ,String  secname) {
+		super(conf,secname);
 		format = config.getString("Format");
 		originalValue = config.getString("OriginalValue");
 		paramName = config.getString("ParamName");
