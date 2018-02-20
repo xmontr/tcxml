@@ -2,10 +2,12 @@ package tcxml.test;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.notNullValue;
+import static org.hamcrest.Matchers.equalTo;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.fail;
 
 import java.io.IOException;
+import java.net.URL;
 
 import javax.json.JsonObject;
 import javax.json.JsonString;
@@ -24,8 +26,21 @@ public class JavascriptEvalTest extends JsonTest{
 	@Test
 	public void TestEvaluateLocationInNavigateArg() {
 		
-		
+		URL p = this.getClass().getResource("/ScriptSample/SMT");
 		TcXmlController controller = new TcXmlController("SMT");
+		
+		
+		try {
+			controller.loadFromDisk(p.getPath());
+		} catch (TcXmlException e) {
+			e.printStackTrace();
+			fail("unable to load default.xml ");
+		
+		}
+		
+		
+		
+		
 	
 			String json;
 			try {
@@ -41,7 +56,7 @@ public class JavascriptEvalTest extends JsonTest{
 			Object location = controller.evaluateJS(val.getString());
 			System.out.println("location :" + location);
 				
-				
+			assertThat(location, equalTo("https://intragate.stress.ec.europa.eu/smtweb"));	
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();

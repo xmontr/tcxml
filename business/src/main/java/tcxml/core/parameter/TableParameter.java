@@ -7,8 +7,11 @@ import java.io.FileNotFoundException;
 import java.io.InputStreamReader;
 import java.security.GeneralSecurityException;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import org.apache.commons.configuration.HierarchicalINIConfiguration;
 import org.apache.commons.configuration.SubnodeConfiguration;
@@ -41,6 +44,8 @@ public class TableParameter extends StepParameter {
 	
 	
 	private FileInputStream inputstream;
+	
+	private HashMap<String, String>[]  values;
 
 	protected TableParameter(HierarchicalINIConfiguration conf ,String  secname) {
 		super(conf,secname);
@@ -57,6 +62,8 @@ public class TableParameter extends StepParameter {
 		this.valueForEachUser = config.getString("value_for_each_vuser");
 		this.tableLocation = config.getString("TableLocation");
 		this.setName(paramName);
+		
+		
 
 	}
 
@@ -152,7 +159,7 @@ public class TableParameter extends StepParameter {
 	private FileInputStream getFileStream() throws FileNotFoundException {
 		FileInputStream ret = null;
 		if(isLocalFile()) {
-			String path2file = conf.getBasePath()	 + table;
+			String path2file = conf.getBasePath()	 +File.separator +  table;
 			File file = new File(path2file);
 			ret = new FileInputStream(file);
 		} else {//remote file
@@ -187,15 +194,19 @@ if(inputstream == null) {
 }
 
 //file is there
-BufferedReader br = new BufferedReader(new InputStreamReader(inputstream));
-Function<String,HashMap<String,String>> mapToParamValue= (String line ) ->{
-	HashMap<String, String> re = new HashMap<String, String>();
-	
-	
-	return re;
-};
 
-br.lines().skip(getAlreadyReadLine()).map(mapToParamValue);
+
+if(values == null) {
+	
+	values = readAllLines();
+}
+
+
+// values are there
+
+ret = values[getCurrentLine()].get(getColumn());
+
+
 
 return ret;
 	}
@@ -207,9 +218,33 @@ return ret;
 	
 	
 
-	private long getAlreadyReadLine() {
+	private Object getColumn() {
+		// TODO Auto-generated method stub
+		return columnName;
+	}
+
+	private int getCurrentLine() {
 		// TODO Auto-generated method stub
 		return 0;
 	}
+
+	private HashMap<String, String>[] readAllLines() {
+		BufferedReader br = new BufferedReader(new InputStreamReader(inputstream));
+		Function<String,HashMap<String,String>> mapToParamValue= (String line ) ->{
+			HashMap<String, String> re = new HashMap<String, String>();
+			String[] data = line.split(delimiter);
+			for (int i = 0; i < data.length; i++) {
+				re.put("Col "+(i +1), data[i]);
+			}
+			
+			return re;
+		};
+
+		List<HashMap<String, String>> val = br.lines().skip(1).map(mapToParamValue).collect(Collectors.toList());
+		HashMap<String, String>[] ar =  (HashMap<String, String>[] )val.toArray( new HashMap[val.size()]);
+		return ar;
+	}
+
+
 
 }
