@@ -35,6 +35,9 @@ import javax.xml.bind.JAXBException;
 import javax.xml.bind.Unmarshaller;
 
 import org.apache.commons.lang.StringEscapeUtils;
+import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.chrome.ChromeOptions;
+import org.openqa.selenium.remote.DesiredCapabilities;
 
 import com.kscs.util.jaxb.BoundList;
 
@@ -91,6 +94,8 @@ public class TcXmlController {
      */
     
     private Step runLogic;
+
+	private ChromeDriver driver;
     
     public TcXmlController(String name){
     	
@@ -719,6 +724,32 @@ public StepParameter getParameterByName ( String name) throws TcXmlException  {
 	return ret;
 	
 	
+}
+
+
+public void openBrowser (String type, String driverPath) {
+	// only chrome at this point
+	System.setProperty("webdriver.chrome.driver", "C:/bin/selenium/driver/2.33/chromedriver.exe");
+	ChromeOptions options = new ChromeOptions();
+	DesiredCapabilities caps = DesiredCapabilities.chrome();
+	caps.setCapability(ChromeOptions.CAPABILITY, options);
+	
+	options.addArguments("disable-infobars");
+	options.addArguments("start-maximized");
+	// File pathtohighlighter = new File("jqueryHighlighter.crx");
+	// options.addExtensions(pathtohighlighter);
+
+	options.setExperimentalOption("useAutomationExtension", false);
+	driver = new ChromeDriver(options);
+	
+	
+	
+	
+}
+
+public void closeBrowser() {
+	
+	driver.close();
 }
 
 

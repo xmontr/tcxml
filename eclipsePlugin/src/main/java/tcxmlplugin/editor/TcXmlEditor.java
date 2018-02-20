@@ -76,6 +76,7 @@ public class TcXmlEditor  extends EditorPart   {
 		tcpath=fi.getFile().getParent().getLocation();
 		tccontroller = new TcXmlController(testcasename);
 		tccontroller.loadFromDisk(tcpath.toOSString());
+		tccontroller.openBrowser("firefox", "pathtofirefox");
 			
 		tcViewer = new TcViewer(parent, SWT.NONE,tccontroller);
 		tcViewer.populate();
