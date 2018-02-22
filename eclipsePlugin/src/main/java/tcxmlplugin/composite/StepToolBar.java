@@ -9,6 +9,8 @@ import org.eclipse.wb.swt.ResourceManager;
 
 import tcxml.core.TcXmlController;
 import tcxml.core.TcXmlException;
+import tcxml.model.Step;
+import tcxmlplugin.TcXmlPluginController;
 import tcxmlplugin.composite.stepViewer.StepViewer;
 
 import org.eclipse.swt.layout.GridData;
@@ -20,12 +22,12 @@ public class StepToolBar extends Composite  {
 	
 	
 	private Label indexLabel;
-	private StepViewer step;
+	private StepViewer stepviewer;
 
 	public StepToolBar(Composite parent, int style, StepViewer step) {
 		super(parent, style);
 		setLayout(new GridLayout(6, false));
-		this.step = step;
+		this.stepviewer = step;
 		
 		 indexLabel = new Label(this, SWT.NONE);
 		
@@ -35,7 +37,16 @@ public class StepToolBar extends Composite  {
 			@Override
 			public void mouseDown(MouseEvent e) {				
 		
-				
+			TcXmlController ct = stepviewer.getViewer().getController()	;
+		Step st = stepviewer.getViewer().getModel();
+		
+		try {
+			ct.playSingleStep(st);
+		} catch (TcXmlException e1) {
+			TcXmlPluginController.getInstance().error("fail to play step", e1);
+			
+		
+		}
 				
 			}
 		});
