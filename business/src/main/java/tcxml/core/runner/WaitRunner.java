@@ -7,7 +7,7 @@ import tcxml.model.Step;
 
 public class WaitRunner extends StepRunner{
 
-	public WaitRunner(Step step, TcXmlController tcXmlController) {
+	public WaitRunner(Step step, TcXmlController tcXmlController) throws TcXmlException {
 		super(step, tcXmlController);
 		// TODO Auto-generated constructor stub
 	}

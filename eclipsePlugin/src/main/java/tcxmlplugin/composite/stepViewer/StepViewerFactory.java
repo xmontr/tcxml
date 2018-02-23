@@ -12,7 +12,6 @@ import tcxml.model.Step;
 import tcxml.model.TruLibrary;
 import tcxmlplugin.composite.view.BasicView;
 import tcxmlplugin.composite.view.BlockView;
-import tcxmlplugin.composite.view.BrowserActionView;
 import tcxmlplugin.composite.view.CallFunctionView;
 import tcxmlplugin.composite.view.EvaluateJavascriptView;
 import tcxmlplugin.composite.view.FunctionView;

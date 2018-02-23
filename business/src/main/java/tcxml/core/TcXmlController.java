@@ -527,7 +527,7 @@ private void parseMainXml() throws TcXmlException {
 
 public void playSingleStep( Step theStep) throws TcXmlException{
 	
-	StepRunner ru = StepRunnerFactory.getRunner(theStep);
+	StepRunner ru = StepRunnerFactory.getRunner(theStep, this);
 	ru.runStep();
 	
 }

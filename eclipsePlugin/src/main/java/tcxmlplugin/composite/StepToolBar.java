@@ -23,6 +23,10 @@ public class StepToolBar extends Composite  {
 	
 	private Label indexLabel;
 	private StepViewer stepviewer;
+	private Button highlightbutton;
+	private Button okbutton;
+	private Button nookbutton;
+	private ProgressBar progressBar;
 
 	public StepToolBar(Composite parent, int style, StepViewer step) {
 		super(parent, style);
@@ -37,33 +41,24 @@ public class StepToolBar extends Composite  {
 			@Override
 			public void mouseDown(MouseEvent e) {				
 		
-			TcXmlController ct = stepviewer.getViewer().getController()	;
-		Step st = stepviewer.getViewer().getModel();
-		
-		try {
-			ct.playSingleStep(st);
-		} catch (TcXmlException e1) {
-			TcXmlPluginController.getInstance().error("fail to play step", e1);
-			
-		
-		}
+play();
 				
 			}
 		});
 		playButton.setImage(ResourceManager.getPluginImage("tcxmlplugin", "icons/media-playback-start-2.png"));
 		
-		Button highlightbutton = new Button(this, SWT.NONE);
+		highlightbutton = new Button(this, SWT.NONE);
 		highlightbutton.setToolTipText("highlight");
 		highlightbutton.setImage(ResourceManager.getPluginImage("tcxmlplugin", "icons/system-search-6.png"));
 		
-		Button okbutton = new Button(this, SWT.NONE);
+		okbutton = new Button(this, SWT.NONE);
 		okbutton.setImage(ResourceManager.getPluginImage("tcxmlplugin", "icons/dialog-accept.png"));
 		
-		Button nookbutton = new Button(this, SWT.NONE);
+		nookbutton = new Button(this, SWT.NONE);
 		nookbutton.setImage(ResourceManager.getPluginImage("tcxmlplugin", "icons/dialog-cancel.png"));
 		nookbutton.setLayoutData(new GridData(SWT.FILL, SWT.FILL, false, false, 1, 1));
 		
-		ProgressBar progressBar = new ProgressBar(this, SWT.NONE);
+		progressBar = new ProgressBar(this, SWT.NONE);
 		progressBar.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		
 		
@@ -71,6 +66,23 @@ public class StepToolBar extends Composite  {
 
 	}
 	
+	protected void play() {
+
+		TcXmlController ct = stepviewer.getViewer().getController()	;
+	Step st = stepviewer.getViewer().getModel();
+	
+	try {
+		ct.playSingleStep(st);
+	} catch (TcXmlException e1) {
+		TcXmlPluginController.getInstance().error("fail to play step", e1);
+		
+	
+	}
+		
+		
+		
+	}
+
 	public void setIndex(String  index) {
 		
 		this.indexLabel.setText(index);
