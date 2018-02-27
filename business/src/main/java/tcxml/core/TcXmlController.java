@@ -52,7 +52,49 @@ import tcxml.model.TruScript;
 public class TcXmlController {
 	
 	
-    private String name;
+	 public static final String ACTION_VERFIFY = "Verfify";
+
+	    public static final String ACTION_STOP = "Stop";
+
+	    public static final String ACTION_SCROLL = "Scroll";
+
+	    public static final String ACTION_RESIZE = "Resize";
+
+	    public static final String ACTION_RELOAD = "Reload";
+
+	    public static final String ACTION_NAVIGATE = "Navigate";
+
+	    public static final String ACTION_GO_FORWARD = "Go Forward";
+
+	    public static final String ACTION_GO_BACK = "Go Back";
+
+	    public static final String ACTION_GET_PROPERTY = "Get Property";
+
+	    public static final String ACTION_DIALOG_PROMPT_PASSWORD = "Dialog - Prompt Password";
+
+	    public static final String ACTION_DIALOG_PROMPT = "Dialog - Prompt";
+
+	    public static final String ACTION_DIALOG_CONFIRM = "Dialog - Confirm";
+
+	    public static final String ACTION_DIALOG_AUTHENTICATE = "Dialog - Authenticate";
+
+	    public static final String ACTION_DIALOG_ALERT = "Dialog - Alert";
+
+	    public static final String ACTION_CLOSE_TAB = "Close Tab";
+
+	    public static final String ACTION_CLOSE_HTML_DIALOG = "Close Html Dialog";
+
+	    public static final String ACTION_CLOSE = "Close";
+
+	    public static final String ACTION_ADD_TAB = "Add Tab";
+
+	    public static final String ACTION_ACTIVATE_TAB = "Activate Tab";
+
+	    public static final String ACTION_ACTIVATE = "Activate";
+	
+	
+   
+	private String name;
     
     private File path ;
     
@@ -525,9 +567,10 @@ private void parseMainXml() throws TcXmlException {
  * @throws TcXmlException
  */
 
-public void playSingleStep( Step theStep) throws TcXmlException{
+public void playSingleStep( Step theStep, TruLibrary lib) throws TcXmlException{
 	
-	StepRunner ru = StepRunnerFactory.getRunner(theStep, this);
+	log.fine("start running step " +theStep.getStepId() + " type is " + theStep.getType());
+	StepRunner ru = StepRunnerFactory.getRunner(theStep, this, lib);
 	ru.runStep();
 	
 }
@@ -658,26 +701,26 @@ return ret;
 public List<String> getActionsForBrowser() {
 	ArrayList<String> ret = new ArrayList<String>();
 	
-	ret.add("Activate");
-	ret.add("Activate Tab");
-	ret.add("Add Tab");
-	ret.add("Close");
-	ret.add("Close Html Dialog");
-	ret.add("Close Tab");
-	ret.add("Dialog - Alert");
-	ret.add("Dialog - Authenticate");
-	ret.add("Dialog - Confirm");
-	ret.add("Dialog - Prompt");
-	ret.add("Dialog - Prompt Password");
-	ret.add("Get Property");
-	ret.add("Go Back");
-	ret.add("Go Forward");
-	ret.add("Navigate");
-	ret.add("Reload");
-	ret.add("Resize");
-	ret.add("Scroll");
-	ret.add("Stop");
-	ret.add("Verfify");
+	ret.add(ACTION_ACTIVATE);
+	ret.add(ACTION_ACTIVATE_TAB);
+	ret.add(ACTION_ADD_TAB);
+	ret.add(ACTION_CLOSE);
+	ret.add(ACTION_CLOSE_HTML_DIALOG);
+	ret.add(ACTION_CLOSE_TAB);
+	ret.add(ACTION_DIALOG_ALERT);
+	ret.add(ACTION_DIALOG_AUTHENTICATE);
+	ret.add(ACTION_DIALOG_CONFIRM);
+	ret.add(ACTION_DIALOG_PROMPT);
+	ret.add(ACTION_DIALOG_PROMPT_PASSWORD);
+	ret.add(ACTION_GET_PROPERTY);
+	ret.add(ACTION_GO_BACK);
+	ret.add(ACTION_GO_FORWARD);
+	ret.add(ACTION_NAVIGATE);
+	ret.add(ACTION_RELOAD);
+	ret.add(ACTION_RESIZE);
+	ret.add(ACTION_SCROLL);
+	ret.add(ACTION_STOP);
+	ret.add(ACTION_VERFIFY);
 	
 	
 return ret;	
@@ -745,6 +788,10 @@ public void openBrowser (String type, String driverPath) {
 	
 	
 	
+}
+
+public ChromeDriver getDriver() {
+	return driver;
 }
 
 public void closeBrowser() {

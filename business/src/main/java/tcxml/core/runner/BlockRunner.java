@@ -4,11 +4,12 @@ import tcxml.core.StepRunner;
 import tcxml.core.TcXmlController;
 import tcxml.core.TcXmlException;
 import tcxml.model.Step;
+import tcxml.model.TruLibrary;
 
 public class BlockRunner extends StepRunner {
 
-	public BlockRunner(Step step, TcXmlController tcXmlController) {
-		super(step, tcXmlController);
+	public BlockRunner(Step step, TruLibrary lib, TcXmlController tcXmlController) throws TcXmlException {
+		super(step,lib, tcXmlController);
 		// TODO Auto-generated constructor stub
 	}
 

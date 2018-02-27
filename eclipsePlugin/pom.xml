@@ -43,7 +43,7 @@
         	<version>1.0.0</version>
         	<configuration>
         	                    <resolver>p2</resolver>
-                    <pomDependencies>consider</pomDependencies>
+                     <!-- <pomDependencies>consider</pomDependencies>  -->
         	</configuration>
         </plugin>
         <plugin>
@@ -51,29 +51,24 @@
         	<artifactId>tycho-packaging-plugin</artifactId>
         	<version>1.0.0</version>
         </plugin>
-              <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-dependency-plugin</artifactId>
-        <version>3.0.2</version>
-        <executions>
-          <execution>
-            <id>copy-dependencies</id>
-            <phase>package</phase>
-            <goals>
-              <goal>copy-dependencies</goal>
-            </goals>
-            <configuration>
-           
-<includeArtifactIds>tcxmlBusiness,mapping,javax.json-api,javax.json,commons-lang</includeArtifactIds>
-              <outputDirectory>${project.basedir}/lib</outputDirectory>
-              <overWriteReleases>false</overWriteReleases>
-              <overWriteSnapshots>false</overWriteSnapshots>
-              <overWriteIfNewer>true</overWriteIfNewer>
-             
-            </configuration>
-          </execution>
-        </executions>
-      </plugin>
+              
+        <plugin>
+    <artifactId>maven-clean-plugin</artifactId>
+    <version>3.0.0</version>
+    <configuration>
+      <filesets>
+        <fileset>
+        
+          <directory>${project.basedir}/lib/</directory>
+          <includes>**/*</includes>
+          <followSymlinks>false</followSymlinks>
+        </fileset>
+      </filesets>
+    </configuration>
+  </plugin>
+      
+      
+      
     </plugins>
   </build>
   <dependencies>

@@ -2,7 +2,7 @@ package tcxmlplugin.composite.view.arguments;
 
 import tcxml.core.TcXmlException;
 import tcxmlplugin.composite.StepView;
-import tcxmlplugin.composite.view.BrowserActionView;
+
 
 public class ArgumentFactory {
 	
@@ -14,6 +14,7 @@ public class ArgumentFactory {
 		switch(newAction) {
 		
 		case "Navigate":ret = getNavigateArgument(view); break;
+		case "Type":ret = getTypeTextArgument(view);break;
 		
 		default: ret=getDefaultArgument(view); break;
 		
@@ -30,6 +31,11 @@ public class ArgumentFactory {
 		
 		
 		
+	}
+
+	private static StepArgument getTypeTextArgument(StepView view) {
+		StepArgument ret = new TypeTextArgs(view, view.getStyle());
+		return ret;
 	}
 
 	private static StepArgument getDefaultArgument(StepView view) {

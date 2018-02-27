@@ -10,8 +10,10 @@ import org.eclipse.wb.swt.ResourceManager;
 import tcxml.core.TcXmlController;
 import tcxml.core.TcXmlException;
 import tcxml.model.Step;
+import tcxml.model.TruLibrary;
 import tcxmlplugin.TcXmlPluginController;
 import tcxmlplugin.composite.stepViewer.StepViewer;
+import tcxmlplugin.composite.view.TestObjectView;
 
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.ProgressBar;
@@ -67,12 +69,18 @@ play();
 	}
 	
 	protected void play() {
-
+		TruLibrary lib = null;
 		TcXmlController ct = stepviewer.getViewer().getController()	;
 	Step st = stepviewer.getViewer().getModel();
 	
+	if(stepviewer.getViewer() instanceof TestObjectView ) {
+		
+		 lib = ((TestObjectView)stepviewer.getViewer()).getLibrary() ;
+	}
+	
+	
 	try {
-		ct.playSingleStep(st);
+		ct.playSingleStep(st, lib);
 	} catch (TcXmlException e1) {
 		TcXmlPluginController.getInstance().error("fail to play step", e1);
 		
