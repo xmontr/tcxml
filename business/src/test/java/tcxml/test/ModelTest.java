@@ -122,7 +122,7 @@ assertThat(samplename, equalToIgnoringWhiteSpace("Image Link Urgency"));
 String xp = controller.getXpathForTestObject(sampletestobject);
 System.out.println(xp);
 
-assertThat(xp, equalToIgnoringCase("\"//span/label[text()=\\\"Urgency\\\"]/following::div[1]/div/div/a/img\""));
+assertThat(xp, equalToIgnoringCase("//span/label[text()=\"Urgency\"]/following::div[1]/div/div/a/img"));
 
 
 

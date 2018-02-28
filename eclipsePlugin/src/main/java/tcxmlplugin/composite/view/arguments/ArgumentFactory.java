@@ -33,8 +33,9 @@ public class ArgumentFactory {
 		
 	}
 
-	private static StepArgument getTypeTextArgument(StepView view) {
+	private static StepArgument getTypeTextArgument(StepView view) throws TcXmlException {
 		StepArgument ret = new TypeTextArgs(view, view.getStyle());
+		ret.populate(view.getModel());
 		return ret;
 	}
 

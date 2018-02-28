@@ -84,12 +84,8 @@ public class TestObjectRunner extends StepRunner{
 		
 		
 		
-		ChromeDriver dr = tcXmlController.getDriver();
-		if(dr == null) {
-			
-			throw new TcXmlException("no driver found- browser is maybe not opened", new IllegalStateException());
-			
-		}
+		WebDriver dr = tcXmlController.getDriver();
+		tcXmlController.ensureDriver();
 		
 		JsonObject locobj = arg.getJsonObject("Location");
 		String location = locobj.getJsonString("value").getString();
@@ -105,7 +101,7 @@ public class TestObjectRunner extends StepRunner{
 		 try {
 		 dr.get(location);
 		 }catch (Exception e) {
-			throw new TcXmlException("driver fzil to get url " + location, e);
+			throw new TcXmlException("driver fail to get url " + location, e);
 		} 
 		 
 		 stat.setTimeLoaded(System.currentTimeMillis());

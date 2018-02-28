@@ -115,7 +115,7 @@ public class TextInputView extends Composite implements SelectionListener{
 		
 		text = new Text(this, SWT.BORDER);
 		text.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
-		//m_bindingContext = initDataBindings();
+		m_bindingContext = initDataBindings();
 		// TODO Auto-generated constructor stub
 	}
 

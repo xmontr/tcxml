@@ -32,6 +32,10 @@ import org.eclipse.core.databinding.beans.BeanProperties;
 import org.eclipse.core.databinding.observable.value.IObservableValue;
 import org.eclipse.wb.swt.SWTResourceManager;
 import org.eclipse.swt.graphics.Point;
+import org.eclipse.swt.widgets.Button;
+import org.eclipse.wb.swt.ResourceManager;
+import org.eclipse.swt.events.MouseAdapter;
+import org.eclipse.swt.events.MouseEvent;
 
 public class TestObjectView extends StepView implements PropertyChangeListener {
 	private DataBindingContext m_bindingContext;
@@ -68,14 +72,29 @@ public class TestObjectView extends StepView implements PropertyChangeListener {
 
 		grpIdentification = new Group(this, SWT.NONE);
 		grpIdentification.setText("identification");
-		grpIdentification.setLayout(new GridLayout(2, false));
+		grpIdentification.setLayout(new GridLayout(3, false));
 		grpIdentification.setLayoutData(new GridData(SWT.FILL, SWT.TOP, true, false, 2, 1));
 
 		Label xpathLabel = new Label(grpIdentification, SWT.NONE);
 		xpathLabel.setText("Xpath");
+		
+		HighLightButton = new Button(grpIdentification, SWT.NONE);
+		HighLightButton.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseDown(MouseEvent e) {
+				try {
+					highlightXpath();
+				} catch (TcXmlException e1) {
+					TcXmlPluginController.getInstance().error("fail to highlight xpath " + testobjectmodel.getXpath() , e1);
+				}
+			}
+		});
+		HighLightButton.setToolTipText("HighLight element");
+		HighLightButton.setImage(ResourceManager.getPluginImage("tcxmlplugin", "icons/system-search-6.png"));
+		HighLightButton.setLayoutData(new GridData(SWT.FILL, SWT.FILL, false, true, 1, 1));
 
-		text = new Text(grpIdentification, SWT.BORDER);
-		text.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
+		xpathText = new Text(grpIdentification, SWT.BORDER);
+		xpathText.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 
 		grpArguments = new Group(this, SWT.SHADOW_ETCHED_IN);
 		grpArguments.setLayout(new FillLayout());
@@ -89,6 +108,16 @@ public class TestObjectView extends StepView implements PropertyChangeListener {
 		label.setBackground(SWTResourceManager.getColor(SWT.COLOR_DARK_RED));
 
 		m_bindingContext = initDataBindings();
+	}
+
+	protected void highlightXpath() throws TcXmlException {
+
+		
+		
+		String xpath = testobjectmodel.getXpath();
+		controller.highLightXpath(xpath );
+		
+		
 	}
 
 	public static class TestObjectModel {
@@ -145,10 +174,11 @@ public class TestObjectView extends StepView implements PropertyChangeListener {
 	}
 
 	private TestObjectModel testobjectmodel;
-	private Text text;
+	private Text xpathText;
 	private Combo combo;
 	private Group grpIdentification;
 	private Label label;
+	private Button HighLightButton;
 
 	@Override
 	public void propertyChange(PropertyChangeEvent evt) {
@@ -221,20 +251,20 @@ public class TestObjectView extends StepView implements PropertyChangeListener {
 		grpIdentification.setVisible(true);
 
 	}
-
 	protected DataBindingContext initDataBindings() {
 		DataBindingContext bindingContext = new DataBindingContext();
 		//
 		IObservableList itemsComboObserveWidget = WidgetProperties.items().observe(combo);
-		IObservableList allActionsTestobjectmodelObserveList = BeanProperties.list("allActions")
-				.observe(testobjectmodel);
+		IObservableList allActionsTestobjectmodelObserveList = BeanProperties.list("allActions").observe(testobjectmodel);
 		bindingContext.bindList(itemsComboObserveWidget, allActionsTestobjectmodelObserveList, null, null);
 		//
 		IObservableValue observeSelectionComboObserveWidget = WidgetProperties.selection().observe(combo);
-		IObservableValue selectedActionTestobjectmodelObserveValue = BeanProperties.value("selectedAction")
-				.observe(testobjectmodel);
-		bindingContext.bindValue(observeSelectionComboObserveWidget, selectedActionTestobjectmodelObserveValue, null,
-				null);
+		IObservableValue selectedActionTestobjectmodelObserveValue = BeanProperties.value("selectedAction").observe(testobjectmodel);
+		bindingContext.bindValue(observeSelectionComboObserveWidget, selectedActionTestobjectmodelObserveValue, null, null);
+		//
+		IObservableValue observeTextXpathTextObserveWidget = WidgetProperties.text(SWT.Modify).observe(xpathText);
+		IObservableValue xpathTestobjectmodelObserveValue = BeanProperties.value("xpath").observe(testobjectmodel);
+		bindingContext.bindValue(observeTextXpathTextObserveWidget, xpathTestobjectmodelObserveValue, null, null);
 		//
 		return bindingContext;
 	}

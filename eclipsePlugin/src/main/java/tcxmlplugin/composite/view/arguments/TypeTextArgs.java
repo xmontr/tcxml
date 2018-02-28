@@ -1,30 +1,27 @@
 package tcxmlplugin.composite.view.arguments;
 
+import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.layout.GridLayout;
+import org.eclipse.swt.widgets.Label;
+
+import tcxml.core.TcXmlException;
+import tcxml.model.Step;
+
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
 
 import javax.json.JsonObject;
 
-import org.eclipse.swt.widgets.Composite;
-
-import tcxml.core.TcXmlException;
-import tcxml.model.Step;
-import org.eclipse.swt.layout.GridLayout;
-import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.widgets.Text;
-import org.eclipse.swt.layout.GridData;
 import tcxmlplugin.composite.view.TextInputView;
+import org.eclipse.swt.layout.GridData;
 
-public class NavigateArgs extends StepArgument{
+public class TypeTextArgs extends StepArgument {
 	
 	
-	private NavigateArgsModel navmodel;
-	private TextInputView textInputView;
-	
-	public static class NavigateArgsModel {
+	public static class TypeTextArgsModel {
 		
-		private String location;
+		private String text;
 		
 		private boolean isJavascript;
 		
@@ -43,7 +40,7 @@ public class NavigateArgs extends StepArgument{
 		private PropertyChangeSupport propertyChangeSupport;
 		
 		
-		public NavigateArgsModel() {
+		public TypeTextArgsModel() {
 			
 			propertyChangeSupport = new PropertyChangeSupport(this);
 			
@@ -58,54 +55,45 @@ public class NavigateArgs extends StepArgument{
 			    propertyChangeSupport.removePropertyChangeListener(listener);
 			  }
 
-			public String getLocation() {
-				return location;
+			public String getText() {
+				return text;
 			}
 
-			public void setLocation(String location) {
-				propertyChangeSupport.firePropertyChange("location", this.location,
-						this.location = location);
+			public void setText(String text) {
+				propertyChangeSupport.firePropertyChange("text", this.text,
+						this.text = text);
 				
 			}	
 		
 	}
 	
-	
+	private TypeTextArgsModel typemodel;
+	private TextInputView textInputView;
 	
 
-	public NavigateArgs(Composite parent, int style) {
+	public TypeTextArgs(Composite parent, int style) {
 		super(parent, style);
-		this.navmodel = new NavigateArgsModel();
 		setLayout(new GridLayout(2, false));
 		
-		Label lblLocation = new Label(this, SWT.NONE);
-		lblLocation.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
-		lblLocation.setText("Location");
+		Label lblText = new Label(this, SWT.NONE);
+		lblText.setText("Text");
 		
 		textInputView = new TextInputView(this, SWT.NONE);
 		textInputView.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
-		
+		typemodel = new  TypeTextArgsModel() ;
 	}
-	
-	
 	
 	@Override
 	public void populate(Step model) throws TcXmlException {
 		
 		super.populate(model);
-	JsonObject locobj = arg.getJsonObject("Location");
-		String location = locobj.getJsonString("value").getString();
-		navmodel.setLocation(location);
-	 boolean isj = locobj.getBoolean("evalJavaScript");
-	navmodel.setJavascript(isj);
+	JsonObject val = arg.getJsonObject("Value");
+		String txt = val.getJsonString("value").getString();
+		typemodel.setText(txt);
+	 boolean isj = val.getBoolean("evalJavaScript",false);
+	 typemodel.setJavascript(isj);
 	textInputView.setJavascript(isj);
-	textInputView.setInputData(location);
+	textInputView.setInputData(txt);
 	}
-	
-	
-	
-	
-	
-	
 
 }

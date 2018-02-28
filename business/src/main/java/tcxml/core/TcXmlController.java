@@ -7,12 +7,15 @@ import java.io.FileNotFoundException;
 import java.io.InputStream;
 import java.io.Reader;
 import java.io.StringReader;
+import java.net.URISyntaxException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -35,6 +38,10 @@ import javax.xml.bind.JAXBException;
 import javax.xml.bind.Unmarshaller;
 
 import org.apache.commons.lang.StringEscapeUtils;
+import org.openqa.selenium.By.ByXPath;
+import org.openqa.selenium.JavascriptExecutor;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.remote.DesiredCapabilities;
@@ -137,7 +144,7 @@ public class TcXmlController {
     
     private Step runLogic;
 
-	private ChromeDriver driver;
+	private WebDriver driver;
     
     public TcXmlController(String name){
     	
@@ -647,7 +654,8 @@ public String getXpathForTestObject( TestObject obj) throws TcXmlException {
 			String json= ident.getValue();
 			JsonObject arg = readJsonObject(json) ;
 			arg = arg.getJsonObject("implData");
-			ret =arg.getJsonString("value").toString();
+			ret =arg.getJsonString("value").getString();
+			ret=StringEscapeUtils.unescapeJavaScript(ret);
 			
 		}
 		
@@ -770,7 +778,10 @@ public StepParameter getParameterByName ( String name) throws TcXmlException  {
 }
 
 
-public void openBrowser (String type, String driverPath) {
+public void openBrowser (String type, String driverPath) throws TcXmlException {
+	 String extpath = getClass().getClassLoader().getResource("jqueryHighlighter.crx").getFile();
+	File extfile = new File(extpath);
+
 	// only chrome at this point
 	System.setProperty("webdriver.chrome.driver", "C:/bin/selenium/driver/2.33/chromedriver.exe");
 	ChromeOptions options = new ChromeOptions();
@@ -779,18 +790,66 @@ public void openBrowser (String type, String driverPath) {
 	
 	options.addArguments("disable-infobars");
 	options.addArguments("start-maximized");
-	// File pathtohighlighter = new File("jqueryHighlighter.crx");
-	// options.addExtensions(pathtohighlighter);
+	 File pathtohighlighter = new File("jqueryHighlighter.crx");
+	 options.addExtensions(extfile);
 
 	options.setExperimentalOption("useAutomationExtension", false);
 	driver = new ChromeDriver(options);
 	
+
+}	
+	
+	public void highLightXpath(String xpath) throws TcXmlException {
+		final ByXPath xp2 = new ByXPath(xpath);
+		List<WebElement> elements = driver.findElements(xp2);
+		for (WebElement webElement : elements) {
+			highlight(webElement);
+			
+		}
+		
+		
+	}
 	
 	
 	
+	public void ensureDriver () throws TcXmlException {
+		
+		if(driver == null) {
+			
+			throw new TcXmlException("no driver found- browser is maybe not opened", new IllegalStateException());
+			
+		}
+		
+		
+		
+		
+	}
+	
+	
+	private void checkUnicity(final List<WebElement> list, final String xp) throws Exception {
+		if (Objects.isNull(list) || list.isEmpty()) {
+			throw new TcXmlException("No item found for xpath: " + xp ,new IllegalStateException());
+		}
+		if ((list).size() > 1) {
+			throw new TcXmlException("Multiple items found for xpath: " + xp, new IllegalStateException());
+		}
+	}
+	
+	
+
+
+
+private void highlight(final WebElement webElement) throws TcXmlException {
+	
+	ensureDriver();
+	// store the webelement in the dom and call the highlighter extension
+
+	final JavascriptExecutor js = (JavascriptExecutor) driver;
+	final String scriptSetAttrValue = "var event = new CustomEvent('highlight', { detail: 'xa' });arguments[0].dispatchEvent(event);";
+	js.executeScript(scriptSetAttrValue, webElement);
 }
 
-public ChromeDriver getDriver() {
+public WebDriver getDriver() {
 	return driver;
 }
 

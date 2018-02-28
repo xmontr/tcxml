@@ -25,14 +25,13 @@ public class StepToolBar extends Composite  {
 	
 	private Label indexLabel;
 	private StepViewer stepviewer;
-	private Button highlightbutton;
 	private Button okbutton;
 	private Button nookbutton;
 	private ProgressBar progressBar;
 
 	public StepToolBar(Composite parent, int style, StepViewer step) {
 		super(parent, style);
-		setLayout(new GridLayout(6, false));
+		setLayout(new GridLayout(5, false));
 		this.stepviewer = step;
 		
 		 indexLabel = new Label(this, SWT.NONE);
@@ -48,10 +47,6 @@ play();
 			}
 		});
 		playButton.setImage(ResourceManager.getPluginImage("tcxmlplugin", "icons/media-playback-start-2.png"));
-		
-		highlightbutton = new Button(this, SWT.NONE);
-		highlightbutton.setToolTipText("highlight");
-		highlightbutton.setImage(ResourceManager.getPluginImage("tcxmlplugin", "icons/system-search-6.png"));
 		
 		okbutton = new Button(this, SWT.NONE);
 		okbutton.setImage(ResourceManager.getPluginImage("tcxmlplugin", "icons/dialog-accept.png"));
