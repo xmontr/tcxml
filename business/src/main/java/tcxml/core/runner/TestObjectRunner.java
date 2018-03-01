@@ -1,10 +1,15 @@
 package tcxml.core.runner;
 
+import java.util.List;
+
 import javax.json.JsonObject;
 
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.By.ByXPath;
 import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.ui.ExpectedCondition;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
@@ -65,9 +70,51 @@ public class TestObjectRunner extends StepRunner{
 		switch (step.getAction()) {
 			
 		case "Type": typeText( thexpath);
+		break;
+		case "Click":click(thexpath);
+		break;
+		default: notImplemented();
 		}
 		
 		
+		
+	}
+
+	private void click(String thexpath) throws TcXmlException {
+		
+		String button ="left";
+		
+		if(arg.containsKey("Button")) {
+			 button = arg.getJsonObject("Button").getJsonString("value").getString() ;
+	}
+	
+		 switch (button) {
+		case "left":
+			clickLeft(thexpath);
+			break;
+		case "right":
+			clickRight(thexpath);
+			break;
+
+		default:notImplemented();
+			break;
+		}
+		
+	}
+
+	private void clickRight(String thexpath) throws TcXmlException {
+		notImplemented();
+		
+	}
+
+	private void clickLeft(String thexpath) throws TcXmlException {
+		clickByXpath(thexpath);
+		
+		
+	}
+
+	private void notImplemented() throws TcXmlException {
+		throw new TcXmlException("action not imemented " + step.getAction(), new IllegalStateException());
 		
 	}
 
@@ -138,6 +185,22 @@ public class TestObjectRunner extends StepRunner{
 		 
 		 
 		 
+		
+	}
+	
+	
+	public void clickByXpath(String xpath) throws TcXmlException {
+		tcXmlController.ensureDriver();
+		WebDriver driver = tcXmlController.getDriver();
+		final ByXPath xp2 = new ByXPath(xpath);	
+		List<WebElement> elements = driver.findElements(xp2);
+		tcXmlController.checkUnicity(elements, xpath);
+
+		tcXmlController.highlight(driver.findElements(xp2).get(0));
+			final Actions actions = new Actions(driver);
+			actions.moveToElement(driver.findElements(xp2).get(0)).click().perform();
+		 
+
 		
 	}
 

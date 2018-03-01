@@ -17,6 +17,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
+import java.util.UUID;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -41,10 +42,14 @@ import org.apache.commons.lang.StringEscapeUtils;
 import org.apache.commons.lang.StringUtils;
 import org.openqa.selenium.By.ByXPath;
 import org.openqa.selenium.JavascriptExecutor;
+import org.openqa.selenium.OutputType;
+import org.openqa.selenium.TakesScreenshot;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
+import org.openqa.selenium.interactions.Actions;
+import org.openqa.selenium.remote.Augmenter;
 import org.openqa.selenium.remote.DesiredCapabilities;
 
 import com.kscs.util.jaxb.BoundList;
@@ -853,6 +858,10 @@ public StepParameter getParameterByName ( String name) throws TcXmlException  {
  */
 
 public void openBrowser (String type, String driverPath) throws TcXmlException {
+	
+	
+	//policy to destroy HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Google\Chrome
+	
 	 String extpath = getClass().getClassLoader().getResource("jqueryHighlighter.crx").getFile();
 	File extfile = new File(extpath);
 
@@ -951,7 +960,7 @@ public void openBrowser (String type, String driverPath) throws TcXmlException {
 	}
 	
 	
-	private void checkUnicity(final List<WebElement> list, final String xp) throws TcXmlException {
+	public void checkUnicity(final List<WebElement> list, final String xp) throws TcXmlException {
 		if (Objects.isNull(list) || list.isEmpty()) {
 			throw new TcXmlException("No item found for xpath: " + xp ,new IllegalStateException());
 		}
@@ -964,7 +973,7 @@ public void openBrowser (String type, String driverPath) throws TcXmlException {
 
 
 
-private void highlight(final WebElement webElement) throws TcXmlException {
+public void highlight(final WebElement webElement) throws TcXmlException {
 	
 	
 	// store the webelement in the dom and call the highlighter extension
@@ -982,6 +991,34 @@ public void closeBrowser() {
 	
 	driver.close();
 }
+
+
+
+
+protected void generateSnapshotOnError(final Exception e) {
+	screenshot("error-" + UUID.randomUUID().toString() + ".png");
+}
+
+
+
+
+/**
+ * 
+ * @param filename
+ */
+protected void screenshot(final String filename) {
+	final WebDriver augmentedDriver = new Augmenter().augment(driver);
+	final File screenshot = ((TakesScreenshot) augmentedDriver).getScreenshotAs(OutputType.FILE);
+
+	final File dest = new File(getSnapshotDir() + filename);
+	screenshot.renameTo(dest);
+}
+
+private String getSnapshotDir() {
+	// TODO Auto-generated method stub
+	return "C:\\tmp\\";
+}
+
 
 
 

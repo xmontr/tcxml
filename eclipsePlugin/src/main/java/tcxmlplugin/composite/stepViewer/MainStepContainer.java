@@ -28,8 +28,10 @@ public class MainStepContainer extends Composite implements StepContainer {
 
 	public MainStepContainer(Composite parent, int style, TcXmlController controller) {
 		super(parent, style);
-		FillLayout layout = new FillLayout();
-	this.setLayout(layout);	
+	//	FillLayout filllayout = new FillLayout();
+		
+		GridLayout gridlayout = new GridLayout(1, false);
+	this.setLayout(gridlayout);	
 	this.controller= controller ;
 	
 	
@@ -39,6 +41,7 @@ public class MainStepContainer extends Composite implements StepContainer {
 		
 		
 		bar = new ExpandBar(this, SWT.V_SCROLL);
+		bar.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 		bar.setBackground( getDisplay().getSystemColor( SWT.COLOR_WHITE) );
 		bar.setSpacing(10);
 

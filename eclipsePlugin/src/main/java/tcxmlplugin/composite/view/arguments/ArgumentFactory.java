@@ -15,6 +15,7 @@ public class ArgumentFactory {
 		
 		case "Navigate":ret = getNavigateArgument(view); break;
 		case "Type":ret = getTypeTextArgument(view);break;
+		case "Click":ret=getClickArgument(view);break;
 		
 		default: ret=getDefaultArgument(view); break;
 		
@@ -31,6 +32,12 @@ public class ArgumentFactory {
 		
 		
 		
+	}
+
+	private static StepArgument getClickArgument(StepView view) throws TcXmlException {
+		StepArgument ret = new ClickArgs(view, view.getStyle());
+		ret.populate(view.getModel());
+		return ret;
 	}
 
 	private static StepArgument getTypeTextArgument(StepView view) throws TcXmlException {

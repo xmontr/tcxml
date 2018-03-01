@@ -2,6 +2,7 @@ package tcxmlplugin.composite.view;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.FillLayout;
+import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.ExpandBar;
@@ -18,6 +19,7 @@ import tcxmlplugin.composite.StepView;
 import tcxmlplugin.composite.stepViewer.StepViewer;
 import tcxmlplugin.composite.stepViewer.StepContainer;
 import tcxmlplugin.composite.stepViewer.StepViewerFactory;
+import org.eclipse.swt.layout.GridData;
 
 public class FunctionView extends StepView implements StepContainer {
 	private ExpandBar bar;
@@ -35,11 +37,14 @@ public class FunctionView extends StepView implements StepContainer {
 	public FunctionView(Composite parent, int style, TcXmlController controller) {
 
 		super(parent, style, controller);
-		setLayout(new FillLayout());
+		GridLayout gridlayout = new GridLayout(1, false);
+		setLayout(gridlayout);
 
 		bar = new ExpandBar(this, SWT.V_SCROLL);
+		bar.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 		bar.setBackground(getDisplay().getSystemColor(SWT.COLOR_WHITE));
 		bar.setSpacing(10);
+		
 		
 
 		// TODO Auto-generated constructor stub
