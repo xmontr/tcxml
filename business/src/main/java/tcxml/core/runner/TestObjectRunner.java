@@ -60,6 +60,31 @@ public class TestObjectRunner extends StepRunner{
 
 		}
 		
+		String thexpath = tcXmlController.getXpathForTestObject(to);
+	
+		switch (step.getAction()) {
+			
+		case "Type": typeText( thexpath);
+		}
+		
+		
+		
+	}
+
+	private void typeText(String thexpath) throws TcXmlException {
+		JsonObject val = arg.getJsonObject("Value");
+		String txt = val.getJsonString("value").getString();
+			 boolean isj = val.getBoolean("evalJavaScript",false);
+			 
+			 
+	/// if argument is in js it should be evaluated before
+			 if(isj) {
+				 
+			txt =(String) tcXmlController.evaluateJS(txt);	 
+			 }
+			 
+			 tcXmlController.typeTextXpath(thexpath, txt, 20);
+		
 	}
 
 	private void runBrowserStep() throws TcXmlException {

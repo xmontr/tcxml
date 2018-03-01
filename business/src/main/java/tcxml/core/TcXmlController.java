@@ -38,6 +38,7 @@ import javax.xml.bind.JAXBException;
 import javax.xml.bind.Unmarshaller;
 
 import org.apache.commons.lang.StringEscapeUtils;
+import org.apache.commons.lang.StringUtils;
 import org.openqa.selenium.By.ByXPath;
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
@@ -100,15 +101,31 @@ public class TcXmlController {
 	    public static final String ACTION_ACTIVATE = "Activate";
 	
 	
-   
+   /***
+    * 
+    *  the name of the controller - basicaly the directory's name containig all the file of the script ( default.xml,*;dat, , .prm , libraries/**
+    * 
+    */
 	private String name;
+	
+	/**
+	 * 
+	 * 
+	 *  path of the directory containg all files of the script
+	 */
     
     private File path ;
     
-    
+    /**
+     *  map for the parameters of the script
+     * 
+     */
     private Map<String,StepParameter> parameters;
     
-    
+    /**
+     * 
+     *  map for the librries of the script path/libraries/*
+     */
     private Map<String, TruLibrary> libraries ;
     
     
@@ -406,7 +423,7 @@ for (File file2 : libfiles) {
 //load parameters
 loadParameters(parameterFile);
 
-
+setPath(file);
 	
 }
 
@@ -618,7 +635,15 @@ if(!codeobj.getValueType().equals(ValueType.OBJECT)) {
 }
 
 
-
+/***
+ * 
+ *  read the Json of the persistence model (default.xml)
+ * 
+ * 
+ * @param json
+ * @return
+ * @throws TcXmlException
+ */
 
 public JsonObject readJsonObject(String json ) throws TcXmlException {
 	
@@ -639,7 +664,14 @@ if(!stru.getValueType().equals(ValueType.OBJECT)) {
 	return  stru;
 }
 
-
+/***
+ * 
+ *   as object identification is multiple : xpath, js, automatic, return the xpath one if defined, exception if not.
+ * 
+ * @param obj
+ * @return
+ * @throws TcXmlException
+ */
 
 public String getXpathForTestObject( TestObject obj) throws TcXmlException {
 	String ret =null;
@@ -674,6 +706,18 @@ public String getXpathForTestObject( TestObject obj) throws TcXmlException {
 	
 }
 
+
+/**
+ * 
+ * 
+ *   gives available action for a step whether it is a browser step or testobject step
+ * 
+ * 
+ * @param s
+ * @param lib
+ * @return
+ * @throws TcXmlException
+ */
 public List<String> getAvailableActionForStep( Step s , TruLibrary lib) throws TcXmlException{
 	ArrayList<String> ret = new ArrayList<String>();
 	if(isBrowserStep(s)) {
@@ -694,10 +738,16 @@ public List<String> getAvailableActionForStep( Step s , TruLibrary lib) throws T
 
 
 
-
+/**
+ * 
+ *  list all available action for a test object 
+ * 
+ * @param obj
+ * @return
+ */
 public List<String> getAvailableActionForTestobject(TestObject obj){
 	ArrayList<String> ret = new ArrayList<String>();
-	
+	ret.add("Type");
 	ret.add("click");
 	ret.add("dbl click");
 	
@@ -705,7 +755,12 @@ return ret;
 }
 
 
-
+/**
+ * 
+ *  gives the available actions for the browser i.e : add a tab ...
+ * 
+ * @return
+ */
 public List<String> getActionsForBrowser() {
 	ArrayList<String> ret = new ArrayList<String>();
 	
@@ -739,6 +794,17 @@ return ret;
 
 	
 }
+
+/***
+ * 
+ *  evaluate the javascript code. 
+ *  LR object of type LrApi is in the context for the evaluation
+ * 
+ * 
+ * @param code
+ * @return
+ * @throws TcXmlException
+ */
 
 public Object evaluateJS(String code) throws TcXmlException {
 	
@@ -776,7 +842,15 @@ public StepParameter getParameterByName ( String name) throws TcXmlException  {
 	
 	
 }
-
+/**
+ * 
+ * open the browser relative to the driver chosen firefox / chrome
+ * 
+ * 
+ * @param type
+ * @param driverPath
+ * @throws TcXmlException
+ */
 
 public void openBrowser (String type, String driverPath) throws TcXmlException {
 	 String extpath = getClass().getClassLoader().getResource("jqueryHighlighter.crx").getFile();
@@ -798,14 +872,65 @@ public void openBrowser (String type, String driverPath) throws TcXmlException {
 	
 
 }	
+
+
+
+
+
+
+/**
+ *  visual effect on the element before acting to 
+ * 
+ * 
+ * 
+ * @param xpath
+ * @throws TcXmlException
+ */
 	
 	public void highLightXpath(String xpath) throws TcXmlException {
+		ensureDriver();
 		final ByXPath xp2 = new ByXPath(xpath);
 		List<WebElement> elements = driver.findElements(xp2);
 		for (WebElement webElement : elements) {
 			highlight(webElement);
 			
 		}
+		
+		
+	}
+	/***
+	 *  type text in a input
+	 * 
+	 * 
+	 * 
+	 * @param xpath loaction of input
+	 * @param text  text to type
+	 * @param typingInterval  interval in millisecond between each letter
+	 * @throws TcXmlException
+	 */
+	
+	public void typeTextXpath(String xpath,String text, long typingInterval) throws TcXmlException {
+		ensureDriver();
+		final ByXPath xp2 = new ByXPath(xpath);
+		List<WebElement> elements = driver.findElements(xp2);
+		checkUnicity(elements, xpath);
+		
+		 highlight(driver.findElements(xp2).get(0));
+
+			final String[] aletter = text.split(StringUtils.EMPTY);
+			for(int i = 0 ; i < aletter.length ; i++) {
+				elements.get(0).sendKeys(aletter[i]);
+				try {
+					Thread.sleep(typingInterval);
+				} catch (InterruptedException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				
+			}
+
+		
+		
 		
 		
 	}
@@ -826,7 +951,7 @@ public void openBrowser (String type, String driverPath) throws TcXmlException {
 	}
 	
 	
-	private void checkUnicity(final List<WebElement> list, final String xp) throws Exception {
+	private void checkUnicity(final List<WebElement> list, final String xp) throws TcXmlException {
 		if (Objects.isNull(list) || list.isEmpty()) {
 			throw new TcXmlException("No item found for xpath: " + xp ,new IllegalStateException());
 		}
@@ -841,7 +966,7 @@ public void openBrowser (String type, String driverPath) throws TcXmlException {
 
 private void highlight(final WebElement webElement) throws TcXmlException {
 	
-	ensureDriver();
+	
 	// store the webelement in the dom and call the highlighter extension
 
 	final JavascriptExecutor js = (JavascriptExecutor) driver;
