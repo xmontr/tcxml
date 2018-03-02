@@ -119,6 +119,7 @@ public class StepViewerFactory {
 		view.setLibrary(stepContainer.getLibrary());
 		StepViewer stepviewer = new StepViewer(stepContainer.getBar(), SWT.NONE, view); 		
 		stepviewer.populate(step);
+		stepviewer.hideToolbar();
 		return stepviewer;
 	}
 

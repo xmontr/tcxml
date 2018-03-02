@@ -100,6 +100,14 @@ public  class StepViewer extends Composite{
 		  public void removePropertyChangeListener(PropertyChangeListener listener) {
 			  view.removePropertyChangeListener(listener);
 		  }
+		  
+		  
+		  
+		  public void hideToolbar() {
+			  
+			 stepToolBar.setVisible(false); 
+			  
+		  }
 	
 	
 	

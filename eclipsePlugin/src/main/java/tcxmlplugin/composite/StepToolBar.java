@@ -1,8 +1,18 @@
 package tcxmlplugin.composite;
 
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Label;
+
+import javax.inject.Inject;
+
+import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
+import org.eclipse.core.runtime.jobs.IJobChangeEvent;
+import org.eclipse.core.runtime.jobs.IJobChangeListener;
+import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.wb.swt.ResourceManager;
@@ -20,9 +30,11 @@ import org.eclipse.swt.widgets.ProgressBar;
 import org.eclipse.swt.events.MouseAdapter;
 import org.eclipse.swt.events.MouseEvent;
 
-public class StepToolBar extends Composite  {
+public class StepToolBar extends Composite implements IJobChangeListener   {
 	
 	
+	
+
 	private Label indexLabel;
 	private StepViewer stepviewer;
 	private Button okbutton;
@@ -50,47 +62,166 @@ play();
 		
 		okbutton = new Button(this, SWT.NONE);
 		okbutton.setImage(ResourceManager.getPluginImage("tcxmlplugin", "icons/dialog-accept.png"));
+		okbutton.setVisible(false);
 		
 		nookbutton = new Button(this, SWT.NONE);
 		nookbutton.setImage(ResourceManager.getPluginImage("tcxmlplugin", "icons/dialog-cancel.png"));
 		nookbutton.setLayoutData(new GridData(SWT.FILL, SWT.FILL, false, false, 1, 1));
+		nookbutton.setVisible(false);
 		
-		progressBar = new ProgressBar(this, SWT.NONE);
+
+		progressBar = new ProgressBar(this , SWT.INDETERMINATE);
 		progressBar.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
-		
-		
+		progressBar.setVisible(false);
+
 		
 
 	}
+	
+	
+
+	
+	
+	
+
+	
 	
 	protected void play() {
-		TruLibrary lib = null;
+		final TruLibrary lib  =  (stepviewer.getViewer() instanceof TestObjectView ) ?   ((TestObjectView)stepviewer.getViewer()).getLibrary() : null ;
 		TcXmlController ct = stepviewer.getViewer().getController()	;
-	Step st = stepviewer.getViewer().getModel();
+	Step st = stepviewer.getViewer().getModel();		
+	Job jobplay = new Job("playstep") {
+		
+		@Override
+		protected IStatus run(IProgressMonitor monitor) {
+			IStatus ret = Status.OK_STATUS;
+	try {		
+	ct.playSingleStep(st, lib);
+	ret = Status.OK_STATUS;
+		} catch (TcXmlException e1) {
+			ret=Status.CANCEL_STATUS;
+			TcXmlPluginController.getInstance().error("fail to play step", e1);
+			
+		
+		}
 	
-	if(stepviewer.getViewer() instanceof TestObjectView ) {
+	return ret;		
 		
-		 lib = ((TestObjectView)stepviewer.getViewer()).getLibrary() ;
-	}
-	
-	
-	try {
-		ct.playSingleStep(st, lib);
-	} catch (TcXmlException e1) {
-		TcXmlPluginController.getInstance().error("fail to play step", e1);
-		
-	
-	}
-		
-		
-		
-	}
+	}	
 
+};
+
+jobplay.addJobChangeListener(this);
+
+jobplay.schedule();
+	
+	}
+	
+	
 	public void setIndex(String  index) {
 		
 		this.indexLabel.setText(index);
 		
 	}
-	
 
+
+
+	@Override
+	public void aboutToRun(IJobChangeEvent event) {
+		
+	getDisplay().asyncExec(new Runnable() {
+		
+		@Override
+		public void run() {
+		progressBar.setVisible(true);	
+		hideStatus();
+			
+		}
+
+		private void hideStatus() {
+			nookbutton.setVisible(false);
+			okbutton.setVisible(false);
+			
+		}
+	});
+		
+
+
+	
+		
+	}
+
+
+
+	@Override
+	public void awake(IJobChangeEvent event) {
+		// TODO Auto-generated method stub
+		
+	}
+
+
+
+	@Override
+	public void done(IJobChangeEvent event) {
+		
+		
+		getDisplay().asyncExec(new Runnable() {
+			
+			@Override
+			public void run() {
+				progressBar.setVisible(false);
+				showStatus(event.getResult());
+				
+			}
+		});
+		
+	
+	
+		
+		
+	}
+
+
+
+	private void showStatus(IStatus result) {
+		if(result == Status.OK_STATUS) {
+		okbutton.setVisible(true);	
+			
+		}else {
+			
+			
+		}
+		
+	}
+
+
+
+
+
+
+
+
+
+	@Override
+	public void running(IJobChangeEvent event) {
+		// TODO Auto-generated method stub
+		
+	}
+
+
+
+	@Override
+	public void scheduled(IJobChangeEvent event) {
+		// TODO Auto-generated method stub
+		
+	}
+
+
+
+	@Override
+	public void sleeping(IJobChangeEvent event) {
+		// TODO Auto-generated method stub
+		
+	}
+	
 }

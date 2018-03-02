@@ -47,7 +47,7 @@ public class FunctionView extends StepView implements StepContainer {
 		
 		
 
-		// TODO Auto-generated constructor stub
+	
 	}
 
 	public void addStep(Step step) throws TcXmlException {
