@@ -196,6 +196,13 @@ super.populate(mo);
 		
 		
 	}
+
+
+	@Override
+	public void playInteractive() throws TcXmlException {
+		throw new TcXmlException("not implemented", new IllegalAccessException());
+		
+	}
 	
 	
 	

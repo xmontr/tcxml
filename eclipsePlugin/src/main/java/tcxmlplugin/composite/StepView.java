@@ -121,4 +121,6 @@ public abstract class StepView extends Composite  {
 		
 	}
 
+	public abstract  void playInteractive() throws TcXmlException  ;
+
 }
