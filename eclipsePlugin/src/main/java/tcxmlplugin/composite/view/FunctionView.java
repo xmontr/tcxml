@@ -119,4 +119,10 @@ public class FunctionView extends StepView implements StepContainer {
 
 	}
 
+	@Override
+	public void playInteractive() throws TcXmlException {
+		throw new TcXmlException("not implemented", new IllegalAccessException());
+		
+	}
+
 }

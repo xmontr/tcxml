@@ -11,6 +11,7 @@ import org.eclipse.swt.widgets.Group;
 
 import tcxml.core.TcXmlController;
 import tcxml.core.TcXmlException;
+import tcxml.core.runner.TestObjectRunner;
 import tcxml.model.Step;
 import tcxml.model.TestObject;
 import tcxml.model.TruLibrary;
@@ -267,5 +268,13 @@ public class TestObjectView extends StepView implements PropertyChangeListener {
 		bindingContext.bindValue(observeTextXpathTextObserveWidget, xpathTestobjectmodelObserveValue, null, null);
 		//
 		return bindingContext;
+	}
+
+	@Override
+	public void playInteractive() throws TcXmlException {
+		TestObjectRunner runner = new TestObjectRunner(model,library, controller);
+		
+		runner.runStep();
+		
 	}
 }

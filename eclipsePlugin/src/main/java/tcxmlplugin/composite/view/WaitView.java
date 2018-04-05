@@ -184,4 +184,12 @@ waitmodel.setUnit("seconds");
 		//
 		return bindingContext;
 	}
+
+
+
+	@Override
+	public void playInteractive() throws TcXmlException {
+		throw new TcXmlException("not implemented", new IllegalAccessException());
+		
+	}
 }

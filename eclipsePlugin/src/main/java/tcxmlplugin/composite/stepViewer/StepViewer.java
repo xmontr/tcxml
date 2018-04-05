@@ -6,11 +6,17 @@ import tcxml.core.StepRunner;
 import tcxml.core.TcXmlException;
 import tcxml.model.Step;
 import org.eclipse.swt.layout.GridLayout;
+
+import tcxmlplugin.TcXmlPluginController;
 import tcxmlplugin.composite.StepToolBar;
 import tcxmlplugin.composite.StepView;
 
 import java.beans.PropertyChangeListener;
 
+import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
+import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Layout;
@@ -108,6 +114,47 @@ public  class StepViewer extends Composite{
 			 stepToolBar.setVisible(false); 
 			  
 		  }
+
+
+
+
+
+
+		public void playInteractive()  {
+			
+			Job jobplay = new Job("playstep") {
+				
+				@Override
+				protected IStatus run(IProgressMonitor monitor) {
+					IStatus ret = Status.OK_STATUS;
+			try {	
+				
+			
+				view.playInteractive();
+			
+			ret = Status.OK_STATUS;
+				} catch (TcXmlException e1) {
+					ret=Status.CANCEL_STATUS;
+					TcXmlPluginController.getInstance().error("fail to play step", e1);
+					
+				
+				}
+			
+			return ret;		
+				
+			}	
+
+		};
+
+		jobplay.addJobChangeListener(stepToolBar);
+
+		jobplay.schedule();		
+			
+			
+			
+			
+			
+		}
 	
 	
 	

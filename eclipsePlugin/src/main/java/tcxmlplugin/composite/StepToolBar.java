@@ -87,33 +87,9 @@ play();
 	
 	
 	protected void play() {
-		final TruLibrary lib  =  (stepviewer.getViewer() instanceof TestObjectView ) ?   ((TestObjectView)stepviewer.getViewer()).getLibrary() : null ;
-		TcXmlController ct = stepviewer.getViewer().getController()	;
-	Step st = stepviewer.getViewer().getModel();		
-	Job jobplay = new Job("playstep") {
 		
-		@Override
-		protected IStatus run(IProgressMonitor monitor) {
-			IStatus ret = Status.OK_STATUS;
-	try {		
-	ct.playSingleStep(st, lib);
-	ret = Status.OK_STATUS;
-		} catch (TcXmlException e1) {
-			ret=Status.CANCEL_STATUS;
-			TcXmlPluginController.getInstance().error("fail to play step", e1);
-			
 		
-		}
-	
-	return ret;		
-		
-	}	
-
-};
-
-jobplay.addJobChangeListener(this);
-
-jobplay.schedule();
+stepviewer.playInteractive();
 	
 	}
 	
@@ -184,11 +160,15 @@ jobplay.schedule();
 
 
 	private void showStatus(IStatus result) {
+		TcXmlPluginController.getInstance().info("playing job ended with status" + result);
 		if(result == Status.OK_STATUS) {
 		okbutton.setVisible(true);	
+		nookbutton.setVisible(false);
 			
 		}else {
 			
+			okbutton.setVisible(false);	
+			nookbutton.setVisible(true);
 			
 		}
 		

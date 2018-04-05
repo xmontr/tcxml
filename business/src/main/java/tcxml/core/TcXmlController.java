@@ -236,12 +236,16 @@ public class TcXmlController {
     
     
     public TestObject getTestObjectById( String id, TruLibrary lib) throws TcXmlException {
-    	if(lib == null) {
+    	if(lib == null) { // no lib , look in the script
+    		return getTestObjectById(id);
     		
-    		throw new TcXmlException("cannot find testobject : library is null", new IllegalArgumentException());
     	}
-    	BoundList<TestObject> li = lib.getTestObjects().getTestObject();
-    	return getTestObjectById(id,li);
+    	else { // look in the lib
+    		
+    	   	BoundList<TestObject> li = lib.getTestObjects().getTestObject();
+        	return getTestObjectById(id,li);	
+    	}
+ 
     }
     
     
@@ -866,7 +870,7 @@ public void openBrowser (String type, String driverPath) throws TcXmlException {
 	File extfile = new File(extpath);
 
 	// only chrome at this point
-	System.setProperty("webdriver.chrome.driver", "C:/bin/selenium/driver/2.33/chromedriver.exe");
+	System.setProperty("webdriver.chrome.driver", "C:/bin/selenium/driver/2.37/chromedriver.exe");
 	ChromeOptions options = new ChromeOptions();
 	DesiredCapabilities caps = DesiredCapabilities.chrome();
 	caps.setCapability(ChromeOptions.CAPABILITY, options);
