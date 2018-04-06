@@ -162,5 +162,13 @@
             class="tcxmlplugin.composite.preference.PreferenceInitializerTcXml">
       </initializer>
    </extension>
+   <extension
+         point="org.eclipse.ui.importWizards">
+      <wizard
+            class="tcxmlplugin.wizzard.ImportProjectTcxmlWizzard"
+            id="tcxmlplugin.wizard1"
+            name="import wizzard for TCXML">
+      </wizard>
+   </extension>
 
 </plugin>
