@@ -1,20 +1,40 @@
 package tcxmlplugin.wizzard;
 
+import org.eclipse.core.resources.IFolder;
+import org.eclipse.core.resources.IProject;
 import org.eclipse.jface.viewers.IStructuredSelection;
+import org.eclipse.jface.wizard.IWizardPage;
 import org.eclipse.jface.wizard.Wizard;
 import org.eclipse.ui.IImportWizard;
 import org.eclipse.ui.IWorkbench;
 
-public class ImportProjectTcxmlWizzard  extends  Wizard implements IImportWizard {
+public class ImportScriptTcxmlWizzard  extends  Wizard implements IImportWizard {
 	
 	
-	private ImportScriptPage formpage;
+	private ChooseScriptPage chooseScriptPage;
+	
+	
+	private IProject currentProject;
+	
+	
+	private IFolder testCaseFolder ;
+
+
+	private ValidateImportPage validateImportPage;
+	
+	
+	
 
 
 
-	public ImportProjectTcxmlWizzard() {
+	public ImportScriptTcxmlWizzard() {
 		
 		setWindowTitle("Import truclient script");
+		
+		
+		
+		
+		
 		
 		
 	}
@@ -23,22 +43,61 @@ public class ImportProjectTcxmlWizzard  extends  Wizard implements IImportWizard
 
 	@Override
 	public void init(IWorkbench workbench, IStructuredSelection selection) {
-		// TODO Auto-generated method stub
+		if(selection instanceof IStructuredSelection){
+			
+			IFolder testCaseFolder =(IFolder)((IStructuredSelection) selection).getFirstElement();
+			   this.currentProject = testCaseFolder.getProject();
 		
 	}
 	
-	
+	}
 	
 	
 	@Override
 	public void addPages() {
 		
-		formpage = new ImportScriptPage("choose the script");
+		chooseScriptPage = new ChooseScriptPage("choose the script");
 		
-		addPage(formpage);
+		addPage(chooseScriptPage);
+		
+		
+		
+		validateImportPage = new ValidateImportPage("validate import");
+		
+		
+		
+		addPage(validateImportPage);
+		
+		
+	}
+	
+	@Override
+	public IWizardPage getNextPage(IWizardPage page) {
+		
+		if(page == chooseScriptPage) {
+			
+			validateImportPage.showValidationData(chooseScriptPage.getSelectedDirectory());
+			
+			
+			return validateImportPage;
+		}
+		
+		return null;
+		
+		
+	
 
 	}
 	
+	
+	
+	@Override
+	public boolean canFinish() {
+		
+		
+		return false;
+		
+	}
 	
 
 	@Override
