@@ -4,6 +4,10 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.DirectoryDialog;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Label;
+
+import java.beans.PropertyChangeListener;
+import java.beans.PropertyChangeSupport;
+
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Text;
 import org.openqa.selenium.interactions.internal.DisplayAction;
@@ -12,13 +16,34 @@ import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.events.MouseAdapter;
 import org.eclipse.swt.events.MouseEvent;
 
-public class ImportScriptComposite extends Composite{
+public class ChoosecriptComposite extends Composite{
+	
+	
+	
+	private PropertyChangeSupport propertyChangeSupport = new PropertyChangeSupport(this);
+	
+
+
+	private String dirPath ;
+
+
+	public String getDirPath() {
+		return dirPath;
+	}
+
+
+
+	public void setDirPath(String dirPath) {
+		propertyChangeSupport.firePropertyChange("dirPath", this.dirPath,this.dirPath = dirPath);
+		
+	}
+
 	private Text selectedDir;
 	
 	
 	
 
-	public ImportScriptComposite(Composite parent, int style) {
+	public ChoosecriptComposite(Composite parent, int style) {
 		super(parent, style);
 		setLayout(new GridLayout(2, false));
 		
@@ -32,7 +57,7 @@ public class ImportScriptComposite extends Composite{
 		
 		Button btnChoose = new Button(this, SWT.NONE);
 		btnChoose.addMouseListener(new MouseAdapter() {
-			private String dirpath;
+		
 
 			@Override
 			public void mouseDown(MouseEvent e) {
@@ -41,14 +66,7 @@ public class ImportScriptComposite extends Composite{
 				
 			}
 
-			private void showDirectorySelection() {
-				
-				DirectoryDialog dialog = new DirectoryDialog(getShell(), SWT.NONE );
-				dirpath = dialog.open();
-				selectedDir.setText(dirpath);
-				
-				
-			}
+	
 		});
 		btnChoose.setText("choose");
 		// TODO Auto-generated constructor stub
@@ -68,5 +86,32 @@ public class ImportScriptComposite extends Composite{
 		
 		
 	}
+	
+	
+	
+	private void showDirectorySelection() {
+		
+		DirectoryDialog dialog = new DirectoryDialog(getShell(), SWT.NONE );
+		String dirpath = dialog.open();
+		
+		setDirPath(dirpath);
+		selectedDir.setText(dirpath);
+		
+		
+		
+	}
+	
+	
+	
+	
+	public void addPropertyChangeListener(String propertyName,
+		      PropertyChangeListener listener) {
+		    propertyChangeSupport.addPropertyChangeListener(propertyName, listener);
+		  }
+
+		  public void removePropertyChangeListener(PropertyChangeListener listener) {
+		    propertyChangeSupport.removePropertyChangeListener(listener);
+		  }
+	
 
 }
