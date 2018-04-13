@@ -108,6 +108,11 @@
                   label="add test"
                   style="push">
             </command>
+            <command
+                  commandId="tcxmlplugin.importtest"
+                  label="import test"
+                  style="push">
+            </command>
          </menu>
       </menuContribution>
    </extension>
@@ -116,6 +121,10 @@
       <command
             id="tcxmlplugin.addtest"
             name="add test">
+      </command>
+      <command
+            id="tcxmlplugin.importtest"
+            name="import test">
       </command>
    </extension>
    <extension
@@ -147,6 +156,22 @@
             </with>
          </activeWhen>
       </handler>
+      <handler
+            class="tcxmlplugin.handler.ImportTestCaseHandler"
+            commandId="tcxmlplugin.importtest">
+         <activeWhen>
+            <with
+                  variable="selection">
+               <iterate
+                     ifEmpty="false">
+                  <test
+                        args="tcxmlplug.folderType,testcaseRootFolder"
+                        property="org.eclipse.core.resources.persistentProperty">
+                  </test>
+               </iterate>
+            </with>
+         </activeWhen>
+      </handler>
    </extension>
    <extension
          point="org.eclipse.ui.preferencePages">
@@ -164,11 +189,6 @@
    </extension>
    <extension
          point="org.eclipse.ui.importWizards">
-      <wizard
-            class="tcxmlplugin.wizzard.ImportProjectTcxmlWizzard"
-            id="tcxmlplugin.wizard1"
-            name="import wizzard for TCXML">
-      </wizard>
    </extension>
 
 </plugin>

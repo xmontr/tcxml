@@ -7,6 +7,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.List;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
@@ -16,8 +17,10 @@ import org.eclipse.core.resources.IWorkspace;
 import org.eclipse.core.resources.IWorkspaceRoot;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.QualifiedName;
 
 import tcxmlplugin.nature.NatureTcXml;
@@ -360,10 +363,57 @@ public class TcXmlPluginController
 		
 		
 	}
+	
+	
+	
+	
+	public IPath findParameterFile(String rootdir) {
+		IPath ret = null;
+		IPath mainpath = new Path(rootdir);
+		String dirname = mainpath.lastSegment();
+		IPath parampath = mainpath.append("/").append(dirname  + ".prm");
+		if(parampath.toFile().exists()) {
+			ret= parampath;
+			
+		}
+		
+		
+		
+		return ret;
+	}
 
     
     
+    public IPath findMainFile( String rootdir ) {
+    	IPath ret = null;
     
+   
+    IPath mainpath = new Path(rootdir).append("/default.xml");
+   if(mainpath.toFile().exists()) {
+	   ret = mainpath; 
+	   
+   }
+ 
+   return ret;
+    	
+    }
+    
+    
+    public List<String> getLibraries (  String rootdir) {
+    	
+    	List<String> ret = new ArrayList<String>() ;
+    IPath libdirpath = new Path(rootdir).append("/Libraries");	
+    File libdir = new File(libdirpath.toOSString());
+    File[] libfiles = libdir.listFiles();
+    for (File file2 : libfiles) {
+ 
+ 
+ ret.add(file2.getAbsolutePath());
+    	
+    	
+    }
+return ret;
+    }
 	
 
 	

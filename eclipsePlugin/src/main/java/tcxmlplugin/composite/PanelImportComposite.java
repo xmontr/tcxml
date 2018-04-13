@@ -5,11 +5,18 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Text;
+
+import tcxmlplugin.TcXmlPluginController;
+
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.List;
 import org.eclipse.swt.widgets.Button;
+
+import java.util.ArrayList;
+
 import org.eclipse.core.databinding.DataBindingContext;
 import org.eclipse.core.databinding.observable.value.IObservableValue;
+import org.eclipse.core.runtime.IPath;
 import org.eclipse.jface.databinding.swt.WidgetProperties;
 import org.eclipse.core.databinding.beans.BeanProperties;
 import org.eclipse.core.databinding.observable.list.IObservableList;
@@ -23,9 +30,9 @@ public class PanelImportComposite extends Composite {
 	
 
 	
-	private  ImportModel mo= new ImportModel();
+	private  ImportModel model= new ImportModel();
 	private Text scriptText;
-	private Text text;
+	private Text messageText;
 	private List librarieslist;
 	private List parametersList;
 	
@@ -74,10 +81,10 @@ public class PanelImportComposite extends Composite {
 		lblMessages.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
 		lblMessages.setText("messages");
 		
-		text = new Text(this, SWT.BORDER);
+		messageText = new Text(this, SWT.BORDER);
 		GridData gd_text = new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1);
 		gd_text.heightHint = 63;
-		text.setLayoutData(gd_text);
+		messageText.setLayoutData(gd_text);
 		m_bindingContext = initDataBindings();
 		// TODO Auto-generated constructor stub
 	}
@@ -85,17 +92,35 @@ public class PanelImportComposite extends Composite {
 		DataBindingContext bindingContext = new DataBindingContext();
 		//
 		IObservableValue observeTextScriptTextObserveWidget = WidgetProperties.text(SWT.Modify).observe(scriptText);
-		IObservableValue mainScriptMoObserveValue = BeanProperties.value("mainScript").observe(mo);
+		IObservableValue mainScriptMoObserveValue = BeanProperties.value("mainScript").observe(model);
 		bindingContext.bindValue(observeTextScriptTextObserveWidget, mainScriptMoObserveValue, null, null);
 		//
 		IObservableList itemsLibrarieslistObserveWidget = WidgetProperties.items().observe(librarieslist);
-		IObservableList librariesMoObserveList = BeanProperties.list("libraries").observe(mo);
+		IObservableList librariesMoObserveList = BeanProperties.list("libraries").observe(model);
 		bindingContext.bindList(itemsLibrarieslistObserveWidget, librariesMoObserveList, null, null);
 		//
 		IObservableList itemsParametersListObserveWidget = WidgetProperties.items().observe(parametersList);
-		IObservableList parametersMoObserveList = BeanProperties.list("parameters").observe(mo);
+		IObservableList parametersMoObserveList = BeanProperties.list("parameters").observe(model);
 		bindingContext.bindList(itemsParametersListObserveWidget, parametersMoObserveList, null, null);
 		//
 		return bindingContext;
+	}
+	public void populate(String selectedDirectory) {
+	IPath mainfilpath = TcXmlPluginController.getInstance().findMainFile(selectedDirectory);
+	if(mainfilpath != null) {
+		model.setMainScript(mainfilpath.toOSString());		
+
+	}
+	java.util.List<String> parlist = new ArrayList<String>();
+	IPath parafilepath = TcXmlPluginController.getInstance().findParameterFile(selectedDirectory);
+	if(parafilepath != null) {
+		parlist.add(parafilepath.toOSString());
+
+	}
+	
+	
+	java.util.List<String> listlib = TcXmlPluginController.getInstance().getLibraries(selectedDirectory);
+		model.setLibraries(listlib);
+		model.setParameters(parlist);
 	}
 }

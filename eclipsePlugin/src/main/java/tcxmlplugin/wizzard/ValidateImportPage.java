@@ -11,6 +11,8 @@ import tcxmlplugin.composite.PanelImportComposite;
 
 public class ValidateImportPage extends WizardPage implements  IWizardPage {
 
+	private PanelImportComposite compo;
+
 	protected ValidateImportPage(String pageName) {
 		super(pageName);
 		// TODO Auto-generated constructor stub
@@ -18,12 +20,14 @@ public class ValidateImportPage extends WizardPage implements  IWizardPage {
 
 	@Override
 	public void createControl(Composite parent) {
-	PanelImportComposite compo = new PanelImportComposite(parent, SWT.NONE);
+	compo = new PanelImportComposite(parent, SWT.NONE);
 	setControl(compo);
 		
 	}
 
 	public void showValidationData(String selectedDirectory) {
+		setMessage("the follwing file will be imported, click proceed to start to the import");
+		compo.populate(selectedDirectory);
 		// list file to import
 		
 	}

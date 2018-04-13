@@ -1,14 +1,11 @@
 package tcxml.core;
 
 import java.io.File;
-import org.apache.commons.configuration.*;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
 import java.io.Reader;
 import java.io.StringReader;
-import java.net.URISyntaxException;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -22,10 +19,8 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import javax.json.Json;
-import javax.json.JsonNumber;
 import javax.json.JsonObject;
 import javax.json.JsonReader;
-import javax.json.JsonStructure;
 import javax.json.JsonValue;
 import javax.json.JsonValue.ValueType;
 import javax.script.ScriptContext;
@@ -38,6 +33,9 @@ import javax.xml.bind.JAXBElement;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Unmarshaller;
 
+import org.apache.commons.configuration.ConfigurationException;
+import org.apache.commons.configuration.HierarchicalINIConfiguration;
+import org.apache.commons.configuration.SubnodeConfiguration;
 import org.apache.commons.lang.StringEscapeUtils;
 import org.apache.commons.lang.StringUtils;
 import org.openqa.selenium.By.ByXPath;
@@ -48,7 +46,6 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
-import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.remote.Augmenter;
 import org.openqa.selenium.remote.DesiredCapabilities;
 
@@ -393,7 +390,7 @@ public void loadFromDisk(String pathdir) throws TcXmlException {
  //search parameter file
  if ( !listing.contains(name + ".prm")) {
 	 
-	 throw new TcXmlException("invalid  script: no parameter filr .prm founded in " + pathdir ,  new IllegalArgumentException());	 
+	 throw new TcXmlException("invalid  script: no parameter file .prm founded in " + pathdir ,  new IllegalArgumentException());	 
  }	 
 	
 File mainscriptfile = new File(pathdir + "default.xml");
