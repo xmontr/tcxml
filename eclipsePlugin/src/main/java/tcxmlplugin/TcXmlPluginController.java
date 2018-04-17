@@ -23,7 +23,10 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.QualifiedName;
 
+import tcxml.core.TcXmlException;
+import tcxmlplugin.composite.ImportModel;
 import tcxmlplugin.nature.NatureTcXml;
+import util.TcxmlUtils;
 
 public class TcXmlPluginController 
 
@@ -218,20 +221,7 @@ public class TcXmlPluginController
      * @throws CoreException 
      */
     
-	public boolean importNewProject(String project2create, String path2import, IProgressMonitor monitor) {
-		
-		 try {
-			 
-			IProject newproject = this.createSkeletonProject(project2create , monitor);
-			this.importMainFile(newproject , path2import,null);
-	
-			
-			
-		} catch (Exception e) {
-			this.error("Exception during import", e);
-		}
-		return true;
-	}
+
 	
 
 	
@@ -239,25 +229,30 @@ public class TcXmlPluginController
 
 	/**
 	 * 
-	 *  import the main file from path2import
+	 *  import the  file from path2import to the root of the project
 	 * 
 	 * 
 	 * @param newproject
+	 * @param testCaseFolder 
 	 * @param path2import
 	 * @param monitor 
 	 * @throws CoreException 
 	 * @throws FileNotFoundException 
 	 */
 	
-	private void importMainFile(IProject newproject, String path2import, IProgressMonitor monitor) throws CoreException, FileNotFoundException {
-		IFile mainFile = newproject.getFile("main.xml");		
+	private void importFile(IProject newproject, IFolder testCaseFolder, String path2import, IProgressMonitor monitor) throws CoreException, FileNotFoundException {
+		
+		String filename = new Path(path2import).lastSegment();		
+		
+		IFile thefile = testCaseFolder.getFile(filename);		
 		File inputFile = new File(path2import);
 		InputStream in = new FileInputStream(inputFile);
-		mainFile.create(in, true, monitor);
-		this.info("main.xml imported");
+		thefile.create(in, true, monitor);
+		this.info("import " + filename +  " ok ");
 		
 	}
 	
+
 
 
 
@@ -313,9 +308,10 @@ public class TcXmlPluginController
 	 * 
 	 * @param project
 	 * @param string 
+	 * @return 
 	 */
 	
-	public void addTestCase2project(IProject project, String name) {
+	public IFolder addTestCase2project(IProject project, String name) {
 	IFolder	testcasefolder = getTestcaseFolder(project);
     IFolder newtc = testcasefolder.getFolder(name);
     IFolder libfolder = newtc.getFolder("Libraries");
@@ -325,10 +321,11 @@ public class TcXmlPluginController
 	    QualifiedName key = new QualifiedName("tcxmlplug", "folderType");
 	    newtc.setPersistentProperty(key , TESTCASE_FOLDER);
 	    libfolder.setPersistentProperty(key , TESTCASE_LIB);
-		
+	return    newtc	;
 		
 	} catch (CoreException e) {
 		error("exception when creating test case", e);
+		return null;
 	}
 
 		
@@ -337,6 +334,14 @@ public class TcXmlPluginController
 	private IFolder getTestcaseFolder(IProject project) {
 		// TODO Auto-generated method stub
 		return project.getFolder(TEST_CASES_PATH);
+	}
+	
+	private IFolder getLibraryFolder(IFolder testcase) {
+		
+		 IFolder libfolder = testcase.getFolder("Libraries");
+		 return libfolder;
+		
+		
 	}
 
 	public boolean isAlreadyExistingTestCase(String el, IFolder targetFolder) {
@@ -365,15 +370,36 @@ public class TcXmlPluginController
 	}
 	
 	
+	/***
+	 * 
+	 *  return the path of the .prm file and path of  all associated parameters of type 'file' included inside
+	 * 
+	 * @param rootdir
+	 * @return
+	 */
 	
-	
-	public IPath findParameterFile(String rootdir) {
-		IPath ret = null;
+	public List<String> findParameterFiles(String rootdir) {
+		List<String> ret =new ArrayList<String>() ;
 		IPath mainpath = new Path(rootdir);
 		String dirname = mainpath.lastSegment();
 		IPath parampath = mainpath.append("/").append(dirname  + ".prm");
-		if(parampath.toFile().exists()) {
-			ret= parampath;
+		File paramfile = parampath.toFile() ;
+		
+		if(paramfile.exists()) {
+			ret.add(parampath.toOSString()) ;
+		try {
+		List<String> li = TcxmlUtils.listFilesinParameterfiles(paramfile);
+		for (String foundedfile : li) {
+			ret.add(foundedfile);
+			
+		}
+			
+			
+			
+		} catch (TcXmlException e) {
+			error("failure when processing parameter file " + parampath, e);
+		
+		}
 			
 		}
 		
@@ -404,16 +430,70 @@ public class TcXmlPluginController
     	List<String> ret = new ArrayList<String>() ;
     IPath libdirpath = new Path(rootdir).append("/Libraries");	
     File libdir = new File(libdirpath.toOSString());
-    File[] libfiles = libdir.listFiles();
-    for (File file2 : libfiles) {
- 
- 
- ret.add(file2.getAbsolutePath());
-    	
-    	
+    if(libdir.exists()) {
+        File[] libfiles = libdir.listFiles();
+        for (File file2 : libfiles) {
+     
+     
+     ret.add(file2.getAbsolutePath());
+        	
+        	
+        }	
+    
     }
+
 return ret;
     }
+
+	public void importTestcase(String tcname, ImportModel model, IProject currentProject, IFolder testCaseFolder, IProgressMonitor monitor) throws FileNotFoundException, CoreException {
+		
+		// create the folder structure
+		IFolder newTC = addTestCase2project(currentProject, tcname);
+		importFile(currentProject, newTC , model.getMainScript(), monitor);
+		
+		
+		
+		importParameters( model.getParameters(),  currentProject,  newTC,monitor);
+		importLibrary( model.getLibraries(),  currentProject,  newTC,monitor);
+		
+	}
+
+
+
+	
+
+	private void importLibrary(List<String> libraries, IProject currentProject, IFolder testCaseFolder,
+			IProgressMonitor monitor) throws FileNotFoundException, CoreException {
+		
+		for (String lib : libraries) {
+			
+			IFolder libfolder = getLibraryFolder(testCaseFolder);
+			
+			String filename = new Path(lib).lastSegment();		
+			
+			IFile thefile = libfolder.getFile(filename);		
+			File inputFile = new File(lib);
+			InputStream in = new FileInputStream(inputFile);
+			thefile.create(in, true, monitor);
+			this.info("library " + filename + " imported");
+			
+			
+			
+		}
+		
+		
+
+		
+		
+	}
+
+	private void importParameters(List<String> parameters, IProject currentProject, IFolder testCaseFolder,IProgressMonitor monitor) throws FileNotFoundException, CoreException {
+		for (String fileparam : parameters) {
+			importFile(currentProject,testCaseFolder, fileparam, monitor);
+			
+		}
+		
+	}
 	
 
 	

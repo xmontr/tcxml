@@ -383,13 +383,15 @@ public void loadFromDisk(String pathdir) throws TcXmlException {
 	 }
 //search lib folder 	 
  if ( !listing.contains("Libraries")) {
+	 
+	 log.info(" no Libraries folder founded" + pathdir );
 		 
-	 throw new TcXmlException("invalid  script: no Libraries folder founded" ,  new IllegalArgumentException());	 
+		 
 	 }
  
  //search parameter file
  if ( !listing.contains(name + ".prm")) {
-	 
+	 log.info(" no parameter file .prm founded in " + pathdir);
 	 throw new TcXmlException("invalid  script: no parameter file .prm founded in " + pathdir ,  new IllegalArgumentException());	 
  }	 
 	
@@ -404,30 +406,47 @@ try {
 
 loadScript(in);
 // browse al libraries
-File[] libfiles = libdir.listFiles();
-for (File file2 : libfiles) {
-	try {
-		FileInputStream fin = new FileInputStream(file2);
-		TruLibrary li = loadLibrary(fin);
-		String libname = li.getStep().getAction();
+if(libdir.exists()) {
+	
+	File[] libfiles = libdir.listFiles();
+	for (File file2 : libfiles) {
+		try {
+			FileInputStream fin = new FileInputStream(file2);
+			TruLibrary li = loadLibrary(fin);
+			String libname = li.getStep().getAction();
+			
+			libraries.put(libname, li);
+			log.info("adding library " + libname  + " to script");
+			
+			
+			
+			
+		} catch (FileNotFoundException e) {
+			 throw new TcXmlException("exception when loading library" ,  new FileNotFoundException());
+		}
 		
-		libraries.put(libname, li);
-		log.info("adding library " + libname  + " to script");
+
 		
 		
-		
-		
-	} catch (FileNotFoundException e) {
-		 throw new TcXmlException("exception when loading library" ,  new FileNotFoundException());
 	}
 	
-
+	
+	
 	
 	
 }
 
+
+
+
 //load parameters
-loadParameters(parameterFile);
+if(parameterFile.exists()) {
+	loadParameters(parameterFile);	
+	
+}
+
+
+
 
 setPath(file);
 	

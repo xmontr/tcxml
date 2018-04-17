@@ -20,12 +20,28 @@ public class ImportTestCaseHandler  extends AbstractHandler{
 
 	@Override
 	public Object execute(ExecutionEvent event) throws ExecutionException {
+		ImportScriptTcxmlWizzard wiz = new ImportScriptTcxmlWizzard();
+	
+		ISelection theSelection = HandlerUtil.getCurrentSelection(event);
+		
+		if(theSelection instanceof IStructuredSelection){
+			
+			IFolder testCaseFolder =(IFolder)((IStructuredSelection) theSelection).getFirstElement();
+			  IProject currentProject = testCaseFolder.getProject();
+			  wiz.setCurrentProject(currentProject);
+			  wiz.setTestCaseFolder(testCaseFolder);
+			  
+			  
+			  
 	
 		
 		
 		Shell curentshell = HandlerUtil.getActiveWorkbenchWindow(event).getShell();
 		
-		WizardDialog dialog = new WizardDialog(curentshell, new ImportScriptTcxmlWizzard());
+		
+		
+		
+		WizardDialog dialog = new WizardDialog(curentshell,wiz );
 		
 		
 		
@@ -37,11 +53,12 @@ public class ImportTestCaseHandler  extends AbstractHandler{
         }
 		
 		
-		return null;
+	
 		
 
 }
 	
-
+		return null;
+	}
 	
 }

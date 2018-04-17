@@ -1,5 +1,7 @@
 package tcxmlplugin.wizzard;
 
+import org.eclipse.core.resources.IFolder;
+import org.eclipse.core.resources.IProject;
 import org.eclipse.jface.wizard.IWizardPage;
 import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.swt.SWT;
@@ -12,6 +14,8 @@ import tcxmlplugin.composite.PanelImportComposite;
 public class ValidateImportPage extends WizardPage implements  IWizardPage {
 
 	private PanelImportComposite compo;
+	
+
 
 	protected ValidateImportPage(String pageName) {
 		super(pageName);
@@ -25,7 +29,11 @@ public class ValidateImportPage extends WizardPage implements  IWizardPage {
 		
 	}
 
-	public void showValidationData(String selectedDirectory) {
+	public void showValidationData(String selectedDirectory, IProject currentProject, IFolder testCaseFolder) {
+		compo.setCurrentProject(currentProject);
+		compo.setTestCaseFolder(testCaseFolder);
+		
+		
 		setMessage("the follwing file will be imported, click proceed to start to the import");
 		compo.populate(selectedDirectory);
 		// list file to import

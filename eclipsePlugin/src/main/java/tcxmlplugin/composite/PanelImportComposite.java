@@ -6,6 +6,7 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Text;
 
+import tcxml.core.TcXmlException;
 import tcxmlplugin.TcXmlPluginController;
 
 import org.eclipse.swt.layout.GridData;
@@ -16,10 +17,19 @@ import java.util.ArrayList;
 
 import org.eclipse.core.databinding.DataBindingContext;
 import org.eclipse.core.databinding.observable.value.IObservableValue;
+import org.eclipse.core.resources.IFolder;
+import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.IPath;
+import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
+import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.jface.databinding.swt.WidgetProperties;
 import org.eclipse.core.databinding.beans.BeanProperties;
 import org.eclipse.core.databinding.observable.list.IObservableList;
+import org.eclipse.swt.events.MouseAdapter;
+import org.eclipse.swt.events.MouseEvent;
+import org.eclipse.swt.graphics.Path;
 
 
 
@@ -37,7 +47,13 @@ public class PanelImportComposite extends Composite {
 	private List parametersList;
 	
 	
+	private IProject currentProject;
 	
+	
+	private IFolder testCaseFolder ;
+	
+	
+	private String tcName;
 	
 	
 	
@@ -46,6 +62,24 @@ public class PanelImportComposite extends Composite {
 	
 	
 
+	public String getTcName() {
+		return tcName;
+	}
+	public void setTcName(String tcName) {
+		this.tcName = tcName;
+	}
+	public IProject getCurrentProject() {
+		return currentProject;
+	}
+	public void setCurrentProject(IProject currentProject) {
+		this.currentProject = currentProject;
+	}
+	public IFolder getTestCaseFolder() {
+		return testCaseFolder;
+	}
+	public void setTestCaseFolder(IFolder testCaseFolder) {
+		this.testCaseFolder = testCaseFolder;
+	}
 	public PanelImportComposite(Composite parent, int style) {
 		super(parent, style);
 		setLayout(new GridLayout(2, false));
@@ -74,6 +108,13 @@ public class PanelImportComposite extends Composite {
 		new Label(this, SWT.NONE);
 		
 		Button btnProceed = new Button(this, SWT.NONE);
+		btnProceed.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseDown(MouseEvent e) {
+				
+				proceedToImport();
+			}
+		});
 		btnProceed.setText("Proceed");
 		new Label(this, SWT.NONE);
 		
@@ -87,6 +128,44 @@ public class PanelImportComposite extends Composite {
 		messageText.setLayoutData(gd_text);
 		m_bindingContext = initDataBindings();
 		// TODO Auto-generated constructor stub
+	}
+	protected void proceedToImport() {
+		
+		
+		Job jobimport = new Job("import test case") {
+			
+			@Override
+			protected IStatus run(IProgressMonitor monitor) {
+				IStatus ret = Status.OK_STATUS;
+		try {	
+			
+		
+			TcXmlPluginController.getInstance().importTestcase(tcName, model, currentProject, testCaseFolder, monitor);
+		
+		ret = Status.OK_STATUS;
+			} catch (Exception e1) {
+				ret=Status.CANCEL_STATUS;
+				TcXmlPluginController.getInstance().error("fail import testcase", e1);
+				
+			
+			}
+		
+		return ret;		
+			
+		}	
+
+	};	
+		
+		
+	
+	jobimport.schedule();
+	
+		
+		
+		
+		
+		
+		
 	}
 	protected DataBindingContext initDataBindings() {
 		DataBindingContext bindingContext = new DataBindingContext();
@@ -106,21 +185,21 @@ public class PanelImportComposite extends Composite {
 		return bindingContext;
 	}
 	public void populate(String selectedDirectory) {
+		
+	 IPath p = new org.eclipse.core.runtime.Path(selectedDirectory);
+	 setTcName(p.lastSegment());
 	IPath mainfilpath = TcXmlPluginController.getInstance().findMainFile(selectedDirectory);
 	if(mainfilpath != null) {
 		model.setMainScript(mainfilpath.toOSString());		
 
 	}
-	java.util.List<String> parlist = new ArrayList<String>();
-	IPath parafilepath = TcXmlPluginController.getInstance().findParameterFile(selectedDirectory);
-	if(parafilepath != null) {
-		parlist.add(parafilepath.toOSString());
-
-	}
+	
+	java.util.List<String> paramfilelist = TcXmlPluginController.getInstance().findParameterFiles(selectedDirectory);
+	model.setParameters(paramfilelist);
 	
 	
 	java.util.List<String> listlib = TcXmlPluginController.getInstance().getLibraries(selectedDirectory);
 		model.setLibraries(listlib);
-		model.setParameters(parlist);
+	
 	}
 }

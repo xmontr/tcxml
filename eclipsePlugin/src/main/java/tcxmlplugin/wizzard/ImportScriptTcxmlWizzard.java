@@ -43,16 +43,35 @@ public class ImportScriptTcxmlWizzard  extends  Wizard implements IImportWizard 
 
 	@Override
 	public void init(IWorkbench workbench, IStructuredSelection selection) {
-		if(selection instanceof IStructuredSelection){
-			
-			IFolder testCaseFolder =(IFolder)((IStructuredSelection) selection).getFirstElement();
-			   this.currentProject = testCaseFolder.getProject();
-		
-	}
+
 	
 	}
 	
 	
+	public IProject getCurrentProject() {
+		return currentProject;
+	}
+
+
+
+	public void setCurrentProject(IProject currentProject) {
+		this.currentProject = currentProject;
+	}
+
+
+
+	public IFolder getTestCaseFolder() {
+		return testCaseFolder;
+	}
+
+
+
+	public void setTestCaseFolder(IFolder testCaseFolder) {
+		this.testCaseFolder = testCaseFolder;
+	}
+
+
+
 	@Override
 	public void addPages() {
 		
@@ -76,7 +95,7 @@ public class ImportScriptTcxmlWizzard  extends  Wizard implements IImportWizard 
 		
 		if(page == chooseScriptPage) {
 			
-			validateImportPage.showValidationData(chooseScriptPage.getSelectedDirectory());
+			validateImportPage.showValidationData(chooseScriptPage.getSelectedDirectory(),currentProject,testCaseFolder);
 			
 			
 			return validateImportPage;
@@ -95,7 +114,7 @@ public class ImportScriptTcxmlWizzard  extends  Wizard implements IImportWizard 
 	public boolean canFinish() {
 		
 		
-		return false;
+		return true;
 		
 	}
 	
