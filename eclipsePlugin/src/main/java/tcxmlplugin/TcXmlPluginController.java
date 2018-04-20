@@ -445,11 +445,13 @@ public class TcXmlPluginController
 return ret;
     }
 
-	public void importTestcase(String tcname, ImportModel model, IProject currentProject, IFolder testCaseFolder, IProgressMonitor monitor) throws FileNotFoundException, CoreException {
+	public void importTestcase(String tcname, ImportModel model, IProject currentProject, IFolder testCaseFolder, IProgressMonitor monitor) throws FileNotFoundException, CoreException, TcXmlException {
 		
 		// create the folder structure
 		IFolder newTC = addTestCase2project(currentProject, tcname);
-		importFile(currentProject, newTC , model.getMainScript(), monitor);
+		File source = new File(model.getMainScript());
+		 File withNS  = TcxmlUtils.addNameSpaceToXmlFile(source); 
+		importFile(currentProject, newTC , withNS.getAbsolutePath(), monitor);
 		
 		
 		
