@@ -250,6 +250,24 @@ public class TcXmlPluginController
 		thefile.create(in, true, monitor);
 		this.info("import " + filename +  " ok ");
 		
+		
+	}
+	
+	
+	
+	private void importFileAndRename(IProject newproject, IFolder testCaseFolder, String path2import, IProgressMonitor monitor, String newName) throws CoreException, FileNotFoundException  {
+		
+			
+		
+		IFile thefile = testCaseFolder.getFile(newName);		
+		File inputFile = new File(path2import);
+		InputStream in = new FileInputStream(inputFile);
+		thefile.create(in, true, monitor);
+		this.info("import " + newName +  " ok ");
+		
+		
+		
+		
 	}
 	
 
@@ -451,7 +469,7 @@ return ret;
 		IFolder newTC = addTestCase2project(currentProject, tcname);
 		File source = new File(model.getMainScript());
 		 File withNS  = TcxmlUtils.addNameSpaceToXmlFile(source); 
-		importFile(currentProject, newTC , withNS.getAbsolutePath(), monitor);
+		importFileAndRename(currentProject, newTC , withNS.getAbsolutePath(), monitor,source.getName());
 		
 		
 		
@@ -465,17 +483,23 @@ return ret;
 	
 
 	private void importLibrary(List<String> libraries, IProject currentProject, IFolder testCaseFolder,
-			IProgressMonitor monitor) throws FileNotFoundException, CoreException {
+			IProgressMonitor monitor) throws FileNotFoundException, CoreException, TcXmlException {
 		
 		for (String lib : libraries) {
 			
 			IFolder libfolder = getLibraryFolder(testCaseFolder);
 			
-			String filename = new Path(lib).lastSegment();		
+			String filename = new Path(lib).lastSegment();
+			
+			File source = new File(lib);
+			 File withNS  = TcxmlUtils.addNameSpaceToXmlFile(source); 
+	
+			
+			
 			
 			IFile thefile = libfolder.getFile(filename);		
-			File inputFile = new File(lib);
-			InputStream in = new FileInputStream(inputFile);
+			
+			InputStream in = new FileInputStream(withNS);
 			thefile.create(in, true, monitor);
 			this.info("library " + filename + " imported");
 			
