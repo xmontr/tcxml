@@ -22,6 +22,8 @@ public class ImportScriptTcxmlWizzard  extends  Wizard implements IImportWizard 
 
 	private ValidateImportPage validateImportPage;
 	
+	private boolean valideData = false ;
+	
 	
 	
 
@@ -95,7 +97,7 @@ public class ImportScriptTcxmlWizzard  extends  Wizard implements IImportWizard 
 		
 		if(page == chooseScriptPage) {
 			
-			validateImportPage.showValidationData(chooseScriptPage.getSelectedDirectory(),currentProject,testCaseFolder);
+			valideData = 	validateImportPage.showValidationData(chooseScriptPage.getSelectedDirectory(),currentProject,testCaseFolder);
 			
 			
 			return validateImportPage;
@@ -114,15 +116,26 @@ public class ImportScriptTcxmlWizzard  extends  Wizard implements IImportWizard 
 	public boolean canFinish() {
 		
 		
-		return true;
+		return valideData;
 		
 	}
 	
 
+
+
+
+
+	public void proceedToImport() {
+		validateImportPage.proceedToImport();
+		
+	}
+
+
+
 	@Override
 	public boolean performFinish() {
 		// TODO Auto-generated method stub
-		return false;
+		return true;
 	}
 	
 	

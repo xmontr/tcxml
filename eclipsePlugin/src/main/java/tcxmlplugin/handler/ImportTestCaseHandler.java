@@ -14,6 +14,7 @@ import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.handlers.HandlerUtil;
 
+import tcxmlplugin.TcXmlPluginController;
 import tcxmlplugin.wizzard.ImportScriptTcxmlWizzard;
 
 public class ImportTestCaseHandler  extends AbstractHandler{
@@ -47,9 +48,12 @@ public class ImportTestCaseHandler  extends AbstractHandler{
 		
 		
         if (dialog.open() == Window.OK) {
-            System.out.println("Ok pressed");
+        	
+        	wiz.proceedToImport();
+        	
+            
         } else {
-            System.out.println("Cancel pressed");
+            TcXmlPluginController.getInstance().info("import cancelled");
         }
 		
 		

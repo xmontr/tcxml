@@ -8,6 +8,7 @@ import org.eclipse.swt.widgets.Text;
 
 import tcxml.core.TcXmlException;
 import tcxmlplugin.TcXmlPluginController;
+import tcxmlplugin.TcXmlPluginException;
 
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.List;
@@ -42,7 +43,6 @@ public class PanelImportComposite extends Composite {
 	
 	private  ImportModel model= new ImportModel();
 	private Text scriptText;
-	private Text messageText;
 	private List librarieslist;
 	private List parametersList;
 	
@@ -104,32 +104,10 @@ public class PanelImportComposite extends Composite {
 		
 		parametersList = new List(this, SWT.BORDER);
 		parametersList.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
-		new Label(this, SWT.NONE);
-		new Label(this, SWT.NONE);
-		
-		Button btnProceed = new Button(this, SWT.NONE);
-		btnProceed.addMouseListener(new MouseAdapter() {
-			@Override
-			public void mouseDown(MouseEvent e) {
-				
-				proceedToImport();
-			}
-		});
-		btnProceed.setText("Proceed");
-		new Label(this, SWT.NONE);
-		
-		Label lblMessages = new Label(this, SWT.NONE);
-		lblMessages.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
-		lblMessages.setText("messages");
-		
-		messageText = new Text(this, SWT.BORDER);
-		GridData gd_text = new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1);
-		gd_text.heightHint = 63;
-		messageText.setLayoutData(gd_text);
 		m_bindingContext = initDataBindings();
 		// TODO Auto-generated constructor stub
 	}
-	protected void proceedToImport() {
+	public void proceedToImport() {
 		
 		
 		Job jobimport = new Job("import test case") {
@@ -184,15 +162,21 @@ public class PanelImportComposite extends Composite {
 		//
 		return bindingContext;
 	}
-	public void populate(String selectedDirectory) {
+	public void populate(String selectedDirectory) throws TcXmlPluginException {
 		
 	 IPath p = new org.eclipse.core.runtime.Path(selectedDirectory);
-	 setTcName(p.lastSegment());
+	 String tcnewname= p.lastSegment() ;
+	 
+	 if(  TcXmlPluginController.getInstance().isAlreadyExistingTestCase(tcnewname, testCaseFolder)) {
+		 
+		throw new TcXmlPluginException("Testcase with the same name " + tcnewname + " already exist", new IllegalArgumentException()) ;
+		 
+	 }
+	 
+	 setTcName(tcnewname);
 	IPath mainfilpath = TcXmlPluginController.getInstance().findMainFile(selectedDirectory);
-	if(mainfilpath != null) {
-		model.setMainScript(mainfilpath.toOSString());		
+	model.setMainScript(mainfilpath.toOSString());
 
-	}
 	
 	java.util.List<String> paramfilelist = TcXmlPluginController.getInstance().findParameterFiles(selectedDirectory);
 	model.setParameters(paramfilelist);

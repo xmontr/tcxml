@@ -59,7 +59,7 @@ public abstract  class StepParameter {
 	
 	
 	
-	public static StepParameter buildParameter(HierarchicalINIConfiguration conf, String secname) {
+	public static StepParameter buildParameter(HierarchicalINIConfiguration conf, String secname) throws TcXmlException {
 
 		StepParameter ret = null ;
 			
@@ -71,7 +71,8 @@ public abstract  class StepParameter {
 		case "Random": ret = getRandomParameter( conf, secname); break;
 		case "Table": ret = getTableParameter( conf, secname); break;
 		case "Userid": ret = getUserIdParameter( conf, secname) ; break;
-		default: ret = getDefaultParameter( conf, secname); break;
+		case "Unique":ret = getUniqueParameter(conf, secname);break;
+		default: ret = getDefaultParameter( conf, secname,type); break;
 		
 		}
 
@@ -84,9 +85,21 @@ public abstract  class StepParameter {
 		
 	}
 	
-	private static StepParameter getDefaultParameter(HierarchicalINIConfiguration conf, String secname) {
-		// TODO Auto-generated method stub
-		return null;
+	private static StepParameter getUniqueParameter(HierarchicalINIConfiguration conf, String secname) {
+		UniqueParameter p = new UniqueParameter(conf,secname);
+		
+		return p;
+	}
+
+
+
+
+
+
+
+	private static StepParameter getDefaultParameter(HierarchicalINIConfiguration conf, String secname, String type) throws TcXmlException {
+		throw new TcXmlException("unsupported parameter type" + type +  "for parameter " + secname, new IllegalAccessException());
+	
 	}
 
 	private static StepParameter getUserIdParameter(HierarchicalINIConfiguration conf, String secname) {

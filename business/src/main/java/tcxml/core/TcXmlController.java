@@ -456,9 +456,10 @@ setPath(file);
  *  parse the parameter file and populate the parameters map
  * 
  * @param parameterFile
+ * @throws TcXmlException 
  */
 
-private void loadParameters(File parameterFile) {	
+private void loadParameters(File parameterFile) throws TcXmlException {	
 	
 	HierarchicalINIConfiguration conf;
 	SubnodeConfiguration se;

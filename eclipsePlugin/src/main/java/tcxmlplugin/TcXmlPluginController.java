@@ -394,9 +394,10 @@ public class TcXmlPluginController
 	 * 
 	 * @param rootdir
 	 * @return
+	 * @throws TcXmlPluginException 
 	 */
 	
-	public List<String> findParameterFiles(String rootdir) {
+	public List<String> findParameterFiles(String rootdir) throws TcXmlPluginException {
 		List<String> ret =new ArrayList<String>() ;
 		IPath mainpath = new Path(rootdir);
 		String dirname = mainpath.lastSegment();
@@ -415,7 +416,8 @@ public class TcXmlPluginController
 			
 			
 		} catch (TcXmlException e) {
-			error("failure when processing parameter file " + parampath, e);
+			throw new TcXmlPluginException("failure when processing parameter file " + parampath, e);
+			
 		
 		}
 			
@@ -428,7 +430,7 @@ public class TcXmlPluginController
 
     
     
-    public IPath findMainFile( String rootdir ) {
+    public IPath findMainFile( String rootdir ) throws TcXmlPluginException {
     	IPath ret = null;
     
    
@@ -436,7 +438,8 @@ public class TcXmlPluginController
    if(mainpath.toFile().exists()) {
 	   ret = mainpath; 
 	   
-   }
+   }else throw new TcXmlPluginException("fail to find default.xml infolder " + rootdir, new FileNotFoundException()
+		   );
  
    return ret;
     	
