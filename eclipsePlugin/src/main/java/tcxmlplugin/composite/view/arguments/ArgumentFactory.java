@@ -8,7 +8,7 @@ public class ArgumentFactory {
 	
 	
 	
-	public static StepArgument getArgument(String newAction, StepView view) throws TcXmlException {
+	public static StepArgument getArgumentForTestObject(String newAction, StepView view) throws TcXmlException {
 		StepArgument ret = null;	
 		
 		switch(newAction) {
@@ -36,13 +36,13 @@ public class ArgumentFactory {
 
 	private static StepArgument getClickArgument(StepView view) throws TcXmlException {
 		StepArgument ret = new ClickArgs(view, view.getStyle());
-		ret.populate(view.getModel());
+		ret.populate(view.getModel().getArguments());
 		return ret;
 	}
 
 	private static StepArgument getTypeTextArgument(StepView view) throws TcXmlException {
 		StepArgument ret = new TypeTextArgs(view, view.getStyle());
-		ret.populate(view.getModel());
+		ret.populate(view.getModel().getArguments());
 		return ret;
 	}
 
@@ -53,7 +53,7 @@ public class ArgumentFactory {
 
 	private static StepArgument getNavigateArgument(StepView view) throws TcXmlException {
 		StepArgument ret = new NavigateArgs(view, view.getStyle());
-		ret.populate(view.getModel());
+		ret.populate(view.getModel().getArguments());
 		
 		return ret;
 	}

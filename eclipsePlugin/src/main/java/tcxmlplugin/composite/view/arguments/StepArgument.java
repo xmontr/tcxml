@@ -23,11 +23,11 @@ public abstract class StepArgument  extends Composite {
 		}
 	}
 
-	public void populate(Step model) throws TcXmlException {
+	public void populate(String jsonArg ) throws TcXmlException {
 
-String rawdata = model.getArguments();
+
 TcXmlController controller = view.getController();
-arg = controller.readJsonObject(model.getArguments());
+arg = controller.readJsonObject(jsonArg);
 
 		
 		

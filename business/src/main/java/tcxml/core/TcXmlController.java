@@ -51,6 +51,7 @@ import org.openqa.selenium.remote.DesiredCapabilities;
 
 import com.kscs.util.jaxb.BoundList;
 
+import model.Function;
 import tcxml.core.parameter.StepParameter;
 import tcxml.model.Ident;
 import tcxml.model.ObjectFactory;
@@ -179,14 +180,21 @@ public class TcXmlController {
     }
     
  
-    public BoundList<Step> getFunctionsForLib( String libname) throws TcXmlException {
+    public List<Function> getFunctionsForLib( String libname) throws TcXmlException {
+    	List<Function> ret = new ArrayList<Function>();
     TruLibrary lib = libraries.get(libname);	
     if(lib == null) {
     	
     	throw new TcXmlException("library with name" + libname +" does not exist ", new IllegalStateException());
     }
     	
-    BoundList<Step> ret = lib.getStep().getStep();	
+    BoundList<Step> li = lib.getStep().getStep();	
+    for (Step step : li) {
+		Function nf = new Function();
+		nf.setName(step.getAction());
+		nf.setArgumentSchema(step.getArgsSchema());
+		ret.add(nf);
+	}
     
     return ret;
     	
@@ -198,9 +206,9 @@ public class TcXmlController {
     public List<String> getFunctionsNameForLib(String libname) throws TcXmlException {
     	ArrayList<String> ret = new ArrayList<String>();
     	
-    	BoundList<Step> libs = getFunctionsForLib(libname);
-    	for (Step step : libs) {
-    		ret.add(step.getAction());
+    	 List<Function> libs = getFunctionsForLib(libname);
+    	for (Function f : libs) {
+    		ret.add(f.getName());
 			
 		}
     	return ret;

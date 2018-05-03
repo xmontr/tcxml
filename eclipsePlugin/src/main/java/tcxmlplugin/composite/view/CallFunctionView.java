@@ -10,6 +10,7 @@ import tcxmlplugin.TcXmlPluginController;
 import tcxmlplugin.composite.StepView;
 import org.eclipse.swt.widgets.Label;
 
+import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
 import java.util.ArrayList;
@@ -23,8 +24,9 @@ import org.eclipse.core.databinding.observable.list.IObservableList;
 import org.eclipse.jface.databinding.swt.WidgetProperties;
 import org.eclipse.core.databinding.beans.BeanProperties;
 import org.eclipse.core.databinding.observable.value.IObservableValue;
+import org.eclipse.swt.widgets.Group;
 
-public class CallFunctionView  extends StepView{
+public class CallFunctionView  extends StepView implements PropertyChangeListener{
 	private DataBindingContext m_bindingContext;
 	
 	
@@ -38,13 +40,38 @@ public class CallFunctionView  extends StepView{
 public static class CallFunctionViewModel {
 		
 		private List<String> allLibs;
-		private List<String> allFunctions;
+		private List<String> allFunctions;		
+		
+		private String selectedLib;
+		
+		
+		private String selectedFunction;
 		
 		
 		public CallFunctionViewModel() {
 			propertyChangeSupport = new PropertyChangeSupport(this);
 		}
 		
+
+		public String getSelectedLib() {
+			return selectedLib;
+		}
+
+		public void setSelectedLib(String selectedLib) {
+			propertyChangeSupport.firePropertyChange("selectedLib", this.selectedLib, this.selectedLib = selectedLib);
+			
+		}
+
+		public String getSelectedFunction() {
+			return selectedFunction;
+		}
+
+		public void setSelectedFunction(String selectedFunction) {
+			propertyChangeSupport.firePropertyChange("selectedFunction", this.selectedFunction,
+					this.selectedFunction = selectedFunction);
+			
+		}
+
 
 		private PropertyChangeSupport propertyChangeSupport;
 		
@@ -120,13 +147,18 @@ public static class CallFunctionViewModel {
 		
 		funcombo = new Combo(this, SWT.NONE);
 		funcombo.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
+		new Label(this, SWT.NONE);
+		
+		Group argumentEditorGroup = new Group(this, SWT.NONE);
+		argumentEditorGroup.setText("Arguments");
+		argumentEditorGroup.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 		
 		
 		
 		
 		m_bindingContext = initDataBindings();
 		
-
+		callfunctmodel.addPropertyChangeListener("", this);
 		
 		
 	}
@@ -151,6 +183,8 @@ public static class CallFunctionViewModel {
 		setTitle(formatTitle(model.getIndex(), " Call Function " + model.getLibName() + "." + model.getFuncName()) );
 		
 		callfunctmodel.setAllLibs(li);
+		callfunctmodel.setSelectedFunction(model.getFuncName());
+		callfunctmodel.setSelectedLib(model.getLibName());
 		
 
 		li.addAll(controller.getLibraries().keySet());
@@ -207,6 +241,21 @@ public static class CallFunctionViewModel {
 	@Override
 	public void playInteractive() throws TcXmlException {
 		throw new TcXmlException("not implemented", new IllegalAccessException());
+		
+	}
+
+
+
+
+
+
+
+
+
+
+	@Override
+	public void propertyChange(PropertyChangeEvent evt) {
+		// TODO Auto-generated method stub
 		
 	}
 }

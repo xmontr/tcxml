@@ -85,12 +85,17 @@ public class TypeTextArgs extends StepArgument {
 	
 	@Override
 	public void populate(Step model) throws TcXmlException {
+		boolean isj=false;
 		
 		super.populate(model);
 	JsonObject val = arg.getJsonObject("Value");
 		String txt = val.getJsonString("value").getString();
 		typemodel.setText(txt);
-	 boolean isj = val.getBoolean("evalJavaScript",false);
+		if(val.containsKey("evalJavaScript")) {
+			 isj = val.getBoolean("evalJavaScript",false);
+			
+		}
+	 
 	 typemodel.setJavascript(isj);
 	textInputView.setJavascript(isj);
 	textInputView.setInputData(txt);

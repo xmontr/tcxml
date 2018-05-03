@@ -192,14 +192,24 @@ public ClickArgModel() {
 	public void populate(Step model) throws TcXmlException {
 		
 		super.populate(model);
-		long xcoor;
-		long ycoor;
+		long xcoor=0;
+		long ycoor=0;
 		String button="left";
 		String ctrlkey="false";
 		String altkey="false";
 		String shiftkey="false";
+		
+		
+		
+		if(arg.containsKey("X Coordinate")) {
 		xcoor = arg.getJsonObject("X Coordinate").getJsonNumber("value").longValueExact();
+		}
+		
+		
+		
+		if(arg.containsKey("Y Coordinate")) {
 		ycoor = arg.getJsonObject("Y Coordinate").getJsonNumber("value").longValueExact();
+		}
 		
 		if(arg.containsKey("Button")) {
 			 button = arg.getJsonObject("Button").getJsonString("value").getString() ;
