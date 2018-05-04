@@ -2,6 +2,7 @@ package tcxmlplugin.composite.view.arguments;
 
 import tcxml.core.TcXmlException;
 import tcxmlplugin.composite.StepView;
+import tcxmlplugin.composite.view.CallFunctionView;
 
 
 public class ArgumentFactory {
@@ -56,6 +57,11 @@ public class ArgumentFactory {
 		ret.populate(view.getModel().getArguments());
 		
 		return ret;
+	}
+
+	public static StepArgument getArgumentForFUnction(String functName, CallFunctionView callFunctionView)  throws TcXmlException {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 }

@@ -7,7 +7,11 @@ import tcxml.core.TcXmlController;
 import tcxml.core.TcXmlException;
 import tcxml.model.Step;
 import tcxmlplugin.TcXmlPluginController;
+import tcxmlplugin.composite.ActionsModel;
 import tcxmlplugin.composite.StepView;
+import tcxmlplugin.composite.view.arguments.ArgumentFactory;
+import tcxmlplugin.composite.view.arguments.StepArgument;
+
 import org.eclipse.swt.widgets.Label;
 
 import java.beans.PropertyChangeEvent;
@@ -31,21 +35,25 @@ public class CallFunctionView  extends StepView implements PropertyChangeListene
 	
 	
 	
-	private CallFunctionViewModel callfunctmodel;
+	private CallFunctionViewModel  callfunctmodel;
 	private Combo libcombo;
 	private Combo funcombo;
+	private Group argumentEditorGroup;
 
 
 
 public static class CallFunctionViewModel {
+	
+	
+	private String selectedLib;
+	
+	
+	private String selectedFunction;
 		
 		private List<String> allLibs;
 		private List<String> allFunctions;		
 		
-		private String selectedLib;
-		
-		
-		private String selectedFunction;
+
 		
 		
 		public CallFunctionViewModel() {
@@ -149,7 +157,7 @@ public static class CallFunctionViewModel {
 		funcombo.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		new Label(this, SWT.NONE);
 		
-		Group argumentEditorGroup = new Group(this, SWT.NONE);
+		argumentEditorGroup = new Group(this, SWT.NONE);
 		argumentEditorGroup.setText("Arguments");
 		argumentEditorGroup.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 		
@@ -158,7 +166,8 @@ public static class CallFunctionViewModel {
 		
 		m_bindingContext = initDataBindings();
 		
-		callfunctmodel.addPropertyChangeListener("", this);
+		callfunctmodel.addPropertyChangeListener("selectedLib", this);
+		callfunctmodel.addPropertyChangeListener("selectedFunction", this);
 		
 		
 	}
@@ -182,24 +191,17 @@ public static class CallFunctionViewModel {
 		
 		setTitle(formatTitle(model.getIndex(), " Call Function " + model.getLibName() + "." + model.getFuncName()) );
 		
-		callfunctmodel.setAllLibs(li);
+		
 		callfunctmodel.setSelectedFunction(model.getFuncName());
 		callfunctmodel.setSelectedLib(model.getLibName());
 		
 
 		li.addAll(controller.getLibraries().keySet());
+		callfunctmodel.setAllLibs(li);
 		
+		updateFunctionList(model.getLibName());
 		
-		
-	try {
-		List<String> listname = controller.getFunctionsNameForLib(model.getLibName());
-		
-		callfunctmodel.setAllFunctions(listname);
-		
-	} catch (TcXmlException e) {
-		TcXmlPluginController.getInstance().error("fail to load functions for library" + model.getLibName() , e);
 	
-	}	
 		
 		
 		
@@ -207,26 +209,27 @@ public static class CallFunctionViewModel {
 		
 		
 	}
-	protected DataBindingContext initDataBindings() {
-		DataBindingContext bindingContext = new DataBindingContext();
-		//
-		IObservableList itemsLibcomboObserveWidget = WidgetProperties.items().observe(libcombo);
-		IObservableList allLibsCallfunctmodelObserveList = BeanProperties.list("allLibs").observe(callfunctmodel);
-		bindingContext.bindList(itemsLibcomboObserveWidget, allLibsCallfunctmodelObserveList, null, null);
-		//
-		IObservableValue observeSelectionLibcomboObserveWidget_1 = WidgetProperties.selection().observe(libcombo);
-		IObservableValue libNameGetModelObserveValue = BeanProperties.value("libName").observe(getModel());
-		bindingContext.bindValue(observeSelectionLibcomboObserveWidget_1, libNameGetModelObserveValue, null, null);
-		//
-		IObservableList itemsFuncomboObserveWidget = WidgetProperties.items().observe(funcombo);
-		IObservableList allFunctionsCallfunctmodelObserveList = BeanProperties.list("allFunctions").observe(callfunctmodel);
-		bindingContext.bindList(itemsFuncomboObserveWidget, allFunctionsCallfunctmodelObserveList, null, null);
-		//
-		IObservableValue observeSelectionFuncomboObserveWidget = WidgetProperties.selection().observe(funcombo);
-		IObservableValue funcNameGetModelObserveValue = BeanProperties.value("funcName").observe(getModel());
-		bindingContext.bindValue(observeSelectionFuncomboObserveWidget, funcNameGetModelObserveValue, null, null);
-		//
-		return bindingContext;
+
+
+
+
+
+
+
+
+
+
+	private void updateFunctionList(String libName) {
+		try {
+			List<String> listname = controller.getFunctionsNameForLib(model.getLibName());
+			
+			callfunctmodel.setAllFunctions(listname);
+			
+		} catch (TcXmlException e) {
+			TcXmlPluginController.getInstance().error("fail to load functions for library" + model.getLibName() , e);
+		
+		}
+		
 	}
 
 
@@ -255,7 +258,77 @@ public static class CallFunctionViewModel {
 
 	@Override
 	public void propertyChange(PropertyChangeEvent evt) {
-		// TODO Auto-generated method stub
+	switch (evt.getPropertyName() ) {
+	case "selectedLib" : updateFunctionList(evt.getNewValue().toString());break;
+	case "selectedFunction" :updateArgument (evt.getNewValue().toString(), callfunctmodel.getSelectedLib());break;
+	
+	
+	}
 		
+	}
+	private void updateArgument(String functName, String libname) {
+		
+		
+		StepArgument ar;
+		try {
+			ar = ArgumentFactory.getArgumentForFUnction(functName, this);
+			setArgumentView(ar);
+			TcXmlPluginController.getInstance().info("setting nw argument for step : " + functName);
+		} catch (TcXmlException e) {
+			TcXmlPluginController.getInstance().error("fail to create argument view for step", e);
+
+		}
+		
+		
+	
+		
+	}
+
+
+
+
+	private void setArgumentView(StepArgument ar) {
+		// remove oldone if necessary
+		if (theArgument != null) {
+			theArgument.dispose();
+
+		}
+		ar.setParent(argumentEditorGroup);
+		argumentEditorGroup.layout();
+		setTheArgument(ar);
+
+		
+
+
+
+	}
+	
+	
+
+
+
+
+
+
+	protected DataBindingContext initDataBindings() {
+		DataBindingContext bindingContext = new DataBindingContext();
+		//
+		IObservableList itemsLibcomboObserveWidget = WidgetProperties.items().observe(libcombo);
+		IObservableList allLibsCallfunctmodelObserveList = BeanProperties.list("allLibs").observe(callfunctmodel);
+		bindingContext.bindList(itemsLibcomboObserveWidget, allLibsCallfunctmodelObserveList, null, null);
+		//
+		IObservableList itemsFuncomboObserveWidget = WidgetProperties.items().observe(funcombo);
+		IObservableList allFunctionsCallfunctmodelObserveList = BeanProperties.list("allFunctions").observe(callfunctmodel);
+		bindingContext.bindList(itemsFuncomboObserveWidget, allFunctionsCallfunctmodelObserveList, null, null);
+		//
+		IObservableValue observeSelectionLibcomboObserveWidget = WidgetProperties.selection().observe(libcombo);
+		IObservableValue selectedLibCallfunctmodelObserveValue = BeanProperties.value("selectedLib").observe(callfunctmodel);
+		bindingContext.bindValue(observeSelectionLibcomboObserveWidget, selectedLibCallfunctmodelObserveValue, null, null);
+		//
+		IObservableValue observeSelectionFuncomboObserveWidget = WidgetProperties.selection().observe(funcombo);
+		IObservableValue selectedFunctionCallfunctmodelObserveValue = BeanProperties.value("selectedFunction").observe(callfunctmodel);
+		bindingContext.bindValue(observeSelectionFuncomboObserveWidget, selectedFunctionCallfunctmodelObserveValue, null, null);
+		//
+		return bindingContext;
 	}
 }

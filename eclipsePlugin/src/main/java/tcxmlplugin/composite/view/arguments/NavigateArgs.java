@@ -90,9 +90,9 @@ public class NavigateArgs extends StepArgument{
 	
 	
 	@Override
-	public void populate(Step model) throws TcXmlException {
+	public void populate(String jsonarg) throws TcXmlException {
 		
-		super.populate(model);
+		super.populate(jsonarg);
 	JsonObject locobj = arg.getJsonObject("Location");
 		String location = locobj.getJsonString("value").getString();
 		navmodel.setLocation(location);

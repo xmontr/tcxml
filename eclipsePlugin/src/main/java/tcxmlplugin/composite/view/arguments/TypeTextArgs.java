@@ -84,10 +84,10 @@ public class TypeTextArgs extends StepArgument {
 	}
 	
 	@Override
-	public void populate(Step model) throws TcXmlException {
+	public void populate(String jsonargl) throws TcXmlException {
 		boolean isj=false;
 		
-		super.populate(model);
+		super.populate(jsonargl);
 	JsonObject val = arg.getJsonObject("Value");
 		String txt = val.getJsonString("value").getString();
 		typemodel.setText(txt);

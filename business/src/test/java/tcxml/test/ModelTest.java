@@ -20,6 +20,7 @@ import org.junit.Test;
 
 import com.kscs.util.jaxb.BoundList;
 
+import model.Function;
 import tcxml.core.TcXmlController;
 import tcxml.core.TcXmlException;
 import tcxml.core.parameter.StepParameter;
@@ -80,7 +81,7 @@ assertThat(keys.toArray(new String[keys.size()]), arrayContainingInAnyOrder(acti
 
 		
 	try {
-		BoundList<Step> lif = controller.getFunctionsForLib("SMT");
+		List<Function> lif = controller.getFunctionsForLib("SMT");
 		
 		assertThat(lif.toArray(), arrayWithSize(9));
 		

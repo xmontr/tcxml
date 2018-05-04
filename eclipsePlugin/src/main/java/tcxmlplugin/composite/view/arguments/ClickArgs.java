@@ -189,9 +189,9 @@ public ClickArgModel() {
 	}
 	
 	@Override
-	public void populate(Step model) throws TcXmlException {
+	public void populate(String jsonarg) throws TcXmlException {
 		
-		super.populate(model);
+		super.populate(jsonarg);
 		long xcoor=0;
 		long ycoor=0;
 		String button="left";
