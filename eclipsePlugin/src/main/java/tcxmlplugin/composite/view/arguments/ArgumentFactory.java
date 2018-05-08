@@ -60,8 +60,9 @@ public class ArgumentFactory {
 	}
 
 	public static StepArgument getArgumentForFUnction(String functName, CallFunctionView callFunctionView)  throws TcXmlException {
-		// TODO Auto-generated method stub
-		return null;
+		StepArgument ret = new CallFunctionArg(callFunctionView, callFunctionView.getStyle());
+		ret.populate(callFunctionView.getModel().getArguments());
+		return ret;
 	}
 
 }

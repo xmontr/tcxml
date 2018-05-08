@@ -22,6 +22,7 @@ public class CallFunctionArg extends StepArgument {
 
 	public CallFunctionArg(Composite parent, int style) {
 		super(parent, style);
+		
 		setLayout(new GridLayout(2, false));
 		
 		Label headerLabelName = new Label(this, SWT.NONE);
@@ -45,7 +46,7 @@ public class CallFunctionArg extends StepArgument {
 	Set<String> keys = arg.keySet();
 	for (String key : keys) {
 		JsonObject att = arg.getJsonObject(key);
-		JsonString val = att.getJsonObject(key).getJsonString("value");
+		JsonString val = att.getJsonString("value");
 		CallFunctionAttribut callatt = new CallFunctionAttribut(key,val.getString(),false);
 		
 		populateSingleParameter(callatt);

@@ -28,6 +28,7 @@ import org.eclipse.core.databinding.beans.PojoProperties;
 import org.eclipse.core.databinding.UpdateListStrategy;
 import org.eclipse.core.databinding.observable.value.IObservableValue;
 import org.eclipse.swt.layout.FillLayout;
+import org.eclipse.swt.widgets.ProgressBar;
 
 public class ActionsViewer extends Composite  {
 	private DataBindingContext m_bindingContext;
@@ -70,8 +71,6 @@ public class ActionsViewer extends Composite  {
 		
 	
 		m_bindingContext = initDataBindings();
-		
-		
 
 		
 	}

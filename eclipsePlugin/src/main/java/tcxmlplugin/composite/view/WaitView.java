@@ -154,7 +154,12 @@ JsonObject arg = controller.readJsonObject(json);
 if(  arg.containsKey(rootKey)) { 
 	
 	JsonObject data = arg.getJsonObject(rootKey);
-	waitmodel.setThinkTime(data.getBoolean("evalJavaScript" , true));
+	if(data.containsKey("evalJavaScript")) {
+		waitmodel.setThinkTime(data.getBoolean("evalJavaScript" , true));
+	} else {
+		waitmodel.setThinkTime(true);	
+	}
+
 
 	waitmodel.setInterval(data.getString("value","3"));
 } else { // default value

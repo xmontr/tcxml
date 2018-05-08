@@ -11,6 +11,12 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
+import org.eclipse.core.runtime.jobs.IJobChangeEvent;
+import org.eclipse.core.runtime.jobs.IJobChangeListener;
+import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.layout.GridData;
@@ -23,16 +29,19 @@ import org.eclipse.swt.widgets.ToolItem;
 import org.eclipse.wb.swt.ResourceManager;
 
 import tcxml.core.TcXmlController;
+import tcxml.core.TcXmlException;
 import tcxml.model.Step;
 import tcxml.model.TruLibrary;
 import tcxmlplugin.TcXmlPluginController;
+import org.eclipse.swt.widgets.ProgressBar;
 
-public class TcViewer extends Composite implements PropertyChangeListener  {
+public class TcViewer extends Composite implements PropertyChangeListener, IJobChangeListener  {
 	private ActionsViewer actionsViewer;
 	private Map<String, Step> actionMap;
 	private Map<String, TruLibrary> libraryMap;
 	private LibraryViewer libraryViewer;
 	private TcXmlController controller;
+	private ProgressBar progressBar;
 
 	public TcViewer(Composite parent, int style, TcXmlController tccontroller) {
 		super(parent, style);
@@ -61,6 +70,9 @@ public class TcViewer extends Composite implements PropertyChangeListener  {
 		
 		ToolItem stopItem = new ToolItem(toolBar, SWT.NONE);
 		stopItem.setImage(ResourceManager.getPluginImage("tcxmlplugin", "icons/media-playback-stop-2.png"));
+		
+		progressBar = new ProgressBar(this, SWT.NONE);
+		progressBar.setVisible(false);
 		
 		CTabFolder tabFolder = new CTabFolder(this, SWT.BORDER);
 		tabFolder.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
@@ -157,7 +169,32 @@ public class TcViewer extends Composite implements PropertyChangeListener  {
 	}
 
 	private void showSelectedAction(Step step) {
+		
+		
+		
 		actionsViewer.showSelectedAction( step);
+		
+		
+
+		
+		
+	
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+	
 		
 	}
 
@@ -166,6 +203,65 @@ public class TcViewer extends Composite implements PropertyChangeListener  {
 
 this.populateAction( controller.getActionMap());
 this.populateLibrary(controller.getLibraries());
+		
+	}
+
+	@Override
+	public void aboutToRun(IJobChangeEvent event) {
+		getDisplay().asyncExec(new Runnable() {
+			
+			@Override
+			public void run() {
+			progressBar.setVisible(true);	
+			
+				
+			}
+
+
+		});
+			
+
+		
+	}
+
+	@Override
+	public void awake(IJobChangeEvent event) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void done(IJobChangeEvent event) {
+		
+		getDisplay().asyncExec(new Runnable() {
+			
+			@Override
+			public void run() {
+				progressBar.setVisible(false);
+				
+				
+			}
+		});
+		
+	
+		
+	}
+
+	@Override
+	public void running(IJobChangeEvent event) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void scheduled(IJobChangeEvent event) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void sleeping(IJobChangeEvent event) {
+		// TODO Auto-generated method stub
 		
 	}
 

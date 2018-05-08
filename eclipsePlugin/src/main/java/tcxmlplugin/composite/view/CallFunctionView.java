@@ -22,6 +22,7 @@ import java.util.List;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Combo;
+import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.core.databinding.DataBindingContext;
 import org.eclipse.core.databinding.observable.list.IObservableList;
@@ -136,7 +137,7 @@ public static class CallFunctionViewModel {
 	
 
 	public CallFunctionView(Composite parent, int style, TcXmlController controller) {
-		super(parent, style,controller);
+		super(parent,  style,controller);
 	
 		
 		callfunctmodel = new CallFunctionViewModel();
@@ -159,7 +160,8 @@ public static class CallFunctionViewModel {
 		
 		argumentEditorGroup = new Group(this, SWT.NONE);
 		argumentEditorGroup.setText("Arguments");
-		argumentEditorGroup.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
+		//argumentEditorGroup.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
+		argumentEditorGroup.setLayout(new FillLayout());
 		
 		
 		
@@ -273,7 +275,7 @@ public static class CallFunctionViewModel {
 		try {
 			ar = ArgumentFactory.getArgumentForFUnction(functName, this);
 			setArgumentView(ar);
-			TcXmlPluginController.getInstance().info("setting nw argument for step : " + functName);
+			TcXmlPluginController.getInstance().info("setting nw argument for function : " + functName);
 		} catch (TcXmlException e) {
 			TcXmlPluginController.getInstance().error("fail to create argument view for step", e);
 
