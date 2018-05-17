@@ -67,6 +67,8 @@ public class TcXmlEditor  extends EditorPart   {
 		
 		
 		
+		
+		
 		 try {
 			 
 			 
@@ -76,9 +78,10 @@ public class TcXmlEditor  extends EditorPart   {
 		tcpath=fi.getFile().getParent().getLocation();
 		tccontroller = new TcXmlController(testcasename);
 		tccontroller.loadFromDisk(tcpath.toOSString());
-		tccontroller.openBrowser("firefox", "pathtofirefox");
+	openBrowser();
 			
 		tcViewer = new TcViewer(parent, SWT.NONE,tccontroller);
+		TcXmlPluginController.getInstance().setTcviewer(tcViewer);
 		tcViewer.populate();
 		
 
@@ -89,6 +92,24 @@ public class TcXmlEditor  extends EditorPart   {
 
 
 	}
+
+	public  void openBrowser() {
+		try {
+			tccontroller.openBrowser("firefox", "pathtofirefox");
+		} catch (TcXmlException e) {
+			TcXmlPluginController.getInstance().error("Fail to open browser", e);
+		}
+		
+	}
+	
+	
+	
+	public void closeBrowser() {
+		
+		tccontroller.closeBrowser();	
+		
+	}
+	
 
 	@Override
 	public void setFocus() {

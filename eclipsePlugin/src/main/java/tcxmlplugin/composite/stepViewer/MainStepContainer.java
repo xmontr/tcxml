@@ -5,6 +5,10 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.ExpandBar;
 import org.eclipse.swt.widgets.ExpandItem;
+
+import java.util.ArrayList;
+import java.util.List;
+
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.ScrolledComposite;
 import org.eclipse.swt.graphics.Image;
@@ -25,6 +29,9 @@ public class MainStepContainer extends Composite implements StepContainer {
 
 	private ExpandBar bar;
 	private TcXmlController controller;
+	
+	
+	protected List<StepViewer> stepViwerChildren ;
 
 	public MainStepContainer(Composite parent, int style, TcXmlController controller) {
 		super(parent, style);
@@ -33,6 +40,7 @@ public class MainStepContainer extends Composite implements StepContainer {
 		GridLayout gridlayout = new GridLayout(1, false);
 	this.setLayout(gridlayout);	
 	this.controller= controller ;
+	stepViwerChildren = new ArrayList<StepViewer>();
 	
 	
 		
@@ -50,11 +58,7 @@ public class MainStepContainer extends Composite implements StepContainer {
 	public void addStep(Step step) throws TcXmlException {
 		
 		 StepViewer tv = StepViewerFactory.getViewer(step,this, controller);
-
-	
-			
-
-	
+		 stepViwerChildren.add(tv);
 		
 		ExpandItem xpndtmNewExpanditem = new ExpandItem(bar, SWT.NONE);		
 		
@@ -97,6 +101,7 @@ public class MainStepContainer extends Composite implements StepContainer {
 		
 	}
 	bar.redraw();
+	stepViwerChildren.clear();
 }
 
 

@@ -13,6 +13,7 @@ import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.ui.ExpectedCondition;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
+import tcxml.core.PlayingContext;
 import tcxml.core.StepRunner;
 import tcxml.core.StepStat;
 import tcxml.core.TcXmlController;
@@ -33,29 +34,29 @@ public class TestObjectRunner extends StepRunner{
 	}
 
 	@Override
-	public void runStep() throws TcXmlException  {
-	
+	public PlayingContext runStep(PlayingContext ctx) throws TcXmlException  {
+		PlayingContext nctx ;
 	
 		
 		
 		if(tcXmlController.isBrowserStep(step)) { // test object is the browser
 			
-		 runBrowserStep();
+		  nctx = runBrowserStep(ctx);
 		
 			
 		}else {
 			
 			
-			 runTestObjectStep();	
+			 nctx =	 runTestObjectStep(ctx);	
 			
 			
 		}
 		
-	
+	return nctx;
 		
 	}
 
-	private void runTestObjectStep() throws TcXmlException {
+	private PlayingContext runTestObjectStep( PlayingContext ctx) throws TcXmlException {
 		TestObject to;
 		if (library == null) {
 			to = tcXmlController.getTestObjectById(step.getTestObject());
@@ -76,7 +77,7 @@ public class TestObjectRunner extends StepRunner{
 		default: notImplemented();
 		}
 		
-		
+	return ctx;	
 		
 	}
 
@@ -134,17 +135,19 @@ public class TestObjectRunner extends StepRunner{
 		
 	}
 
-	private void runBrowserStep() throws TcXmlException {
+	private PlayingContext runBrowserStep(PlayingContext ctx) throws TcXmlException {
+		PlayingContext ret;
 		switch (step.getAction()) {
-		case "Navigate":navigate();break;
+		case "Navigate":ret = navigate(ctx);break;
 
 
 		default:throw new TcXmlException("not implemented", new IllegalStateException());
 		}
+		return ret;
 		
 	}
 
-	private void navigate() throws TcXmlException {
+	private PlayingContext navigate(PlayingContext ctx) throws TcXmlException {
 		
         ExpectedCondition<Boolean> pageLoadCondition = new
                 ExpectedCondition<Boolean>() {
@@ -180,7 +183,7 @@ public class TestObjectRunner extends StepRunner{
 	        WebDriverWait wait = new WebDriverWait(dr, 30);
 	        wait.until(pageLoadCondition);
 	        stat.setTimeComplete(System.currentTimeMillis());
-	        
+	        return ctx;
 	     
 		 
 		 

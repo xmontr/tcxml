@@ -3,16 +3,23 @@ package tcxmlplugin.composite.view;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 
+import tcxml.core.PlayingContext;
 import tcxml.core.TcXmlController;
 import tcxml.core.TcXmlException;
 import tcxml.model.Step;
 import tcxmlplugin.TcXmlPluginController;
 import tcxmlplugin.composite.ActionsModel;
 import tcxmlplugin.composite.StepView;
+import tcxmlplugin.composite.TcViewer;
+import tcxmlplugin.composite.stepViewer.StepViewer;
 import tcxmlplugin.composite.view.arguments.ArgumentFactory;
+import tcxmlplugin.composite.view.arguments.CallFunctionArg;
 import tcxmlplugin.composite.view.arguments.StepArgument;
+import tcxmlplugin.job.PlayingJob;
 
 import org.eclipse.swt.widgets.Label;
+
+import model.CallFunctionAttribut;
 
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
@@ -244,9 +251,41 @@ public static class CallFunctionViewModel {
 
 
 	@Override
-	public void playInteractive() throws TcXmlException {
-		throw new TcXmlException("not implemented", new IllegalAccessException());
+	public PlayingContext play(PlayingContext ctx) throws TcXmlException {
 		
+		PlayingContext ret = null;
+		
+		
+		//create new context for call
+		
+		List<CallFunctionAttribut> listArguments = ((CallFunctionArg)theArgument).getCallArguments();
+		PlayingContext currentctx = new PlayingContext(ctx);
+		currentctx.setArrgumentsList(listArguments);
+		
+		
+	TcViewer tcviewer = TcXmlPluginController.getInstance().getTcviewer();	
+	
+	
+	
+	tcviewer.switch2function();
+	
+	StepViewer funcViewer = tcviewer.getLibraryViewer().getFunction(model.getLibName(), model.getFuncName());
+	
+	PlayingJob j = funcViewer.getplayInteractiveJob(ctx);
+	
+	
+	
+	j.schedule();	
+	
+	try {
+		j.join();
+	} catch (InterruptedException e) {
+		// TODO Auto-generated catch block
+		e.printStackTrace();
+	}
+	
+	ret = j.getCtx();
+	return ret;
 	}
 
 
@@ -333,4 +372,26 @@ public static class CallFunctionViewModel {
 		//
 		return bindingContext;
 	}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 }

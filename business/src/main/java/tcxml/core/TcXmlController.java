@@ -3,9 +3,14 @@ package tcxml.core;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.Reader;
 import java.io.StringReader;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.StandardCopyOption;
+import java.nio.file.attribute.FileAttribute;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -165,6 +170,8 @@ public class TcXmlController {
     private Step runLogic;
 
 	private WebDriver driver;
+
+	private File highlighterExtension;
     
     public TcXmlController(String name){
     	
@@ -629,7 +636,7 @@ public void playSingleStep( Step theStep, TruLibrary lib) throws TcXmlException{
 	
 	log.fine("start running step " +theStep.getStepId() + " type is " + theStep.getType());
 	StepRunner ru = StepRunnerFactory.getRunner(theStep, this, lib);
-	ru.runStep();
+	ru.runStep(null);
 	
 }
 
@@ -891,8 +898,7 @@ public void openBrowser (String type, String driverPath) throws TcXmlException {
 	
 	//policy to destroy HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Google\Chrome
 	
-	 String extpath = getClass().getClassLoader().getResource("jqueryHighlighter.crx").getFile();
-	File extfile = new File(extpath);
+
 
 	// only chrome at this point
 	System.setProperty("webdriver.chrome.driver", "C:/bin/selenium/driver/2.37/chromedriver.exe");
@@ -902,14 +908,47 @@ public void openBrowser (String type, String driverPath) throws TcXmlException {
 	
 	options.addArguments("disable-infobars");
 	options.addArguments("start-maximized");
-	 File pathtohighlighter = new File("jqueryHighlighter.crx");
-	 options.addExtensions(extfile);
+	if(highlighterExtension == null) {
+		highlighterExtension = generatePathToLocalTemporaryResource("jqueryHighlighter.crx").toFile();
+	}
+	 
+	 options.addExtensions(highlighterExtension);
 
 	options.setExperimentalOption("useAutomationExtension", false);
+	
+	try {
 	driver = new ChromeDriver(options);
+	}
+	catch (Exception e) {
+		throw new TcXmlException("failure opening browser", e);
+	}
 	
 
 }	
+
+
+
+
+
+private Path generatePathToLocalTemporaryResource(String resourceName) throws TcXmlException {
+	
+	
+	 InputStream in = getClass().getClassLoader().getResourceAsStream(resourceName);
+
+try {
+	FileAttribute<?>[] fileatt= new FileAttribute<?>[0];
+	
+	Path tempLocal = Files.createTempFile(resourceName, null, fileatt);
+	Files.copy(in, tempLocal,  StandardCopyOption.REPLACE_EXISTING);
+	return tempLocal;
+	
+	
+	
+} catch (IOException e) {
+	throw new TcXmlException("failure when creating local temp resources for " + resourceName, e);
+}
+	
+}
 
 
 
@@ -1018,7 +1057,11 @@ public WebDriver getDriver() {
 
 public void closeBrowser() {
 	
-	driver.close();
+	if(driver != null) {
+		driver.close();
+	}
+	
+	
 }
 
 

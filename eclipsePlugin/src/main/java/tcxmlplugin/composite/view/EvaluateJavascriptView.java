@@ -3,6 +3,7 @@ package tcxmlplugin.composite.view;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 
+import tcxml.core.PlayingContext;
 import tcxml.core.TcXmlController;
 import tcxml.core.TcXmlException;
 import tcxml.model.Step;
@@ -138,8 +139,13 @@ private String getShortCode() {
 
 
 	@Override
-	public void playInteractive() throws TcXmlException {
+	public PlayingContext  play( PlayingContext ctx) throws TcXmlException {
 		throw new TcXmlException("not implemented", new IllegalAccessException());
 		
 	}
+
+
+
+
+
 }

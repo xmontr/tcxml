@@ -42,6 +42,7 @@ public class TcViewer extends Composite implements PropertyChangeListener, IJobC
 	private LibraryViewer libraryViewer;
 	private TcXmlController controller;
 	private ProgressBar progressBar;
+	private CTabFolder tabFolder;
 
 	public TcViewer(Composite parent, int style, TcXmlController tccontroller) {
 		super(parent, style);
@@ -74,7 +75,7 @@ public class TcViewer extends Composite implements PropertyChangeListener, IJobC
 		progressBar = new ProgressBar(this, SWT.NONE);
 		progressBar.setVisible(false);
 		
-		CTabFolder tabFolder = new CTabFolder(this, SWT.BORDER);
+		tabFolder = new CTabFolder(this, SWT.BORDER);
 		tabFolder.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 		tabFolder.setTabPosition(SWT.BOTTOM);
 		tabFolder.setSelectionBackground(Display.getCurrent().getSystemColor(SWT.COLOR_TITLE_INACTIVE_BACKGROUND_GRADIENT));
@@ -100,6 +101,10 @@ public class TcViewer extends Composite implements PropertyChangeListener, IJobC
 		
 		
 		
+	}
+
+	public LibraryViewer getLibraryViewer() {
+		return libraryViewer;
 	}
 
 	private void populateAction(Map<String, Step> actionmap) {
@@ -266,7 +271,11 @@ this.populateLibrary(controller.getLibraries());
 	}
 
 
-	
+	public void switch2function() {
+		
+		tabFolder.setSelection(1);
+		
+	}
 	
 	
 	

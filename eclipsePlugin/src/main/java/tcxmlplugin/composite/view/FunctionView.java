@@ -10,6 +10,8 @@ import org.eclipse.swt.widgets.ExpandItem;
 
 import com.kscs.util.jaxb.BoundList;
 
+import model.Function;
+import tcxml.core.PlayingContext;
 import tcxml.core.TcXmlController;
 import tcxml.core.TcXmlException;
 import tcxml.model.Step;
@@ -25,6 +27,9 @@ public class FunctionView extends StepView implements StepContainer {
 	private ExpandBar bar;
 
 	private TruLibrary Library;
+	
+	
+	private Function function ;
 
 	public TruLibrary getLibrary() {
 		return Library;
@@ -96,6 +101,12 @@ public class FunctionView extends StepView implements StepContainer {
 	}
 
 	public void populate(Step mo) throws TcXmlException {
+		function = new Function();
+		function.setName(mo.getAction());
+		function.setId(mo.getStepId());
+		function.setArgumentSchema(mo.getArgsSchema());
+		function.setIndex(mo.getIndex());
+		function.setLevel(mo.getLevel());
 
 		setTitle("Function " + mo.getAction());
 		// first step child is internal - skipit
@@ -106,6 +117,10 @@ public class FunctionView extends StepView implements StepContainer {
 			addStep(step);
 		}
 
+	}
+
+	public Function getFunction() {
+		return function;
 	}
 
 	private void sanityCheck(Step mo) throws TcXmlException {
@@ -120,9 +135,19 @@ public class FunctionView extends StepView implements StepContainer {
 	}
 
 	@Override
-	public void playInteractive() throws TcXmlException {
-		throw new TcXmlException("not implemented", new IllegalAccessException());
+	public PlayingContext play(PlayingContext ctx) throws TcXmlException {
+		
+		
+		try {
+			Thread.currentThread().sleep(10000);
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	return null;
 		
 	}
+
+
 
 }

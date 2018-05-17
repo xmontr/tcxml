@@ -1,5 +1,6 @@
 package tcxml.core.runner;
 
+import tcxml.core.PlayingContext;
 import tcxml.core.StepRunner;
 import tcxml.core.TcXmlController;
 import tcxml.core.TcXmlException;
@@ -14,8 +15,8 @@ public class BlockRunner extends StepRunner {
 	}
 
 	@Override
-	public void runStep() throws TcXmlException {
-		// TODO Auto-generated method stub
+	public PlayingContext runStep(PlayingContext ctx) throws TcXmlException {
+		throw new TcXmlException(" no runner for this step", new IllegalStateException());
 		
 	}
 

@@ -9,6 +9,7 @@ import org.eclipse.swt.widgets.ExpandItem;
 
 import com.kscs.util.jaxb.BoundList;
 
+import tcxml.core.PlayingContext;
 import tcxml.core.TcXmlController;
 import tcxml.core.TcXmlException;
 import tcxml.model.Step;
@@ -107,10 +108,16 @@ public class BlockView  extends StepView implements StepContainer {
 	}
 
 
+
+
+
 	@Override
-	public void playInteractive() throws TcXmlException {
+	public PlayingContext play(PlayingContext ctx) throws TcXmlException {
 		throw new TcXmlException("not implemented", new IllegalAccessException());
 		
 	}
+
+
+
 
 }

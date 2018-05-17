@@ -43,6 +43,6 @@ protected StepStat stat;
 
 
 
-	public abstract void runStep () throws TcXmlException ;
+	public abstract PlayingContext runStep (PlayingContext ctx) throws TcXmlException ;
 
 }

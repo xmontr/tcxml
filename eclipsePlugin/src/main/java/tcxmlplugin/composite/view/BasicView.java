@@ -11,6 +11,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
 
+import tcxml.core.PlayingContext;
 import tcxml.core.TcXmlController;
 import tcxml.core.TcXmlException;
 import tcxml.model.Step;
@@ -198,11 +199,16 @@ super.populate(mo);
 	}
 
 
+
+
+
 	@Override
-	public void playInteractive() throws TcXmlException {
+	public PlayingContext play(PlayingContext ctx) throws TcXmlException {
 		throw new TcXmlException("not implemented", new IllegalAccessException());
-		
 	}
+
+
+
 	
 	
 	

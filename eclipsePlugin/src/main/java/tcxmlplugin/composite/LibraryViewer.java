@@ -15,6 +15,8 @@ import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
 
+import model.CallFunctionAttribut;
+import tcxml.core.PlayingContext;
 import tcxml.core.TcXmlController;
 import tcxml.core.TcXmlException;
 import tcxml.model.Step;
@@ -22,6 +24,7 @@ import tcxml.model.TruLibrary;
 import tcxmlplugin.TcXmlPluginController;
 import tcxmlplugin.composite.stepViewer.FunctionContainer;
 import tcxmlplugin.composite.stepViewer.MainStepContainer;
+import tcxmlplugin.composite.stepViewer.StepViewer;
 
 public class LibraryViewer extends Composite {
 	
@@ -118,6 +121,29 @@ TcXmlPluginController.getInstance().error("fail to show selected action", e);
 			
 		}
 		
+		
+	}
+
+/**
+ * 
+ * execution interactive of the function with the list of attributs 
+ * 
+ * 
+ * @param libName
+ * @param funcName
+ * @param ctx
+ */
+
+	public StepViewer getFunction(String libName, String funcName) {
+		
+	
+		
+	return functionContainer.getFunction( libName,  funcName) ;	
+	}
+	
+	public void showLibrary(String libName) {
+		
+		model.setLibrarySelected(libName);
 		
 	}
 

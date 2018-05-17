@@ -1,5 +1,7 @@
 package tcxmlplugin.composite.view.arguments;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Set;
 
 import javax.json.JsonObject;
@@ -19,9 +21,14 @@ import org.eclipse.wb.swt.SWTResourceManager;
 import model.CallFunctionAttribut;
 
 public class CallFunctionArg extends StepArgument {
+	
+	
+	private List<CallFunctionAttribut>   callArguments;
 
 	public CallFunctionArg(Composite parent, int style) {
 		super(parent, style);
+		
+		callArguments = new ArrayList<CallFunctionAttribut>();
 		
 		setLayout(new GridLayout(2, false));
 		
@@ -49,9 +56,16 @@ public class CallFunctionArg extends StepArgument {
 		JsonString val = att.getJsonString("value");
 		CallFunctionAttribut callatt = new CallFunctionAttribut(key,val.getString(),false);
 		
+		callArguments.add(callatt);
+		
 		populateSingleParameter(callatt);
 	}
 		
+	}
+
+
+	public List<CallFunctionAttribut> getCallArguments() {
+		return callArguments;
 	}
 
 

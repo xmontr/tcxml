@@ -17,6 +17,7 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.wb.swt.ResourceManager;
 
+import tcxml.core.PlayingContext;
 import tcxml.core.TcXmlController;
 import tcxml.core.TcXmlException;
 import tcxml.model.Step;
@@ -24,6 +25,7 @@ import tcxml.model.TruLibrary;
 import tcxmlplugin.TcXmlPluginController;
 import tcxmlplugin.composite.stepViewer.StepViewer;
 import tcxmlplugin.composite.view.TestObjectView;
+import tcxmlplugin.job.PlayingJob;
 
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.ProgressBar;
@@ -32,7 +34,7 @@ import org.eclipse.swt.events.MouseEvent;
 
 public class StepToolBar extends Composite implements IJobChangeListener   {
 	
-	
+	private PlayingJob currrentJob;
 	
 
 	private Label indexLabel;
@@ -41,6 +43,9 @@ public class StepToolBar extends Composite implements IJobChangeListener   {
 	private Button nookbutton;
 	private ProgressBar progressBar;
 
+
+	private Button playButton;
+
 	public StepToolBar(Composite parent, int style, StepViewer step) {
 		super(parent, style);
 		setLayout(new GridLayout(5, false));
@@ -48,7 +53,7 @@ public class StepToolBar extends Composite implements IJobChangeListener   {
 		
 		 indexLabel = new Label(this, SWT.NONE);
 		
-		Button playButton = new Button(this, SWT.NONE);
+		playButton = new Button(this, SWT.NONE);
 		playButton.setToolTipText("play");
 		playButton.addMouseListener(new MouseAdapter() {
 			@Override
@@ -89,7 +94,8 @@ play();
 	protected void play() {
 		
 		
-stepviewer.playInteractive();
+		currrentJob = stepviewer.getplayInteractiveJob( new PlayingContext(null));
+		currrentJob.schedule();
 	
 	}
 	
@@ -203,5 +209,12 @@ stepviewer.playInteractive();
 		// TODO Auto-generated method stub
 		
 	}
+	
+	public void setPlayable( boolean isPlayable) {
+		
+		playButton.setVisible(isPlayable);
+		
+	}
+	
 	
 }

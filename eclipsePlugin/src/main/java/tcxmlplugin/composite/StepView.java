@@ -5,6 +5,7 @@ import java.beans.PropertyChangeSupport;
 
 import org.eclipse.swt.widgets.Composite;
 
+import tcxml.core.PlayingContext;
 import tcxml.core.TcXmlController;
 import tcxml.core.TcXmlException;
 import tcxml.model.Step;
@@ -121,6 +122,9 @@ public abstract class StepView extends Composite  {
 		
 	}
 
-	public abstract  void playInteractive() throws TcXmlException  ;
+	public abstract  PlayingContext play(PlayingContext ctx) throws TcXmlException  ;
+	
+	
+	
 
 }

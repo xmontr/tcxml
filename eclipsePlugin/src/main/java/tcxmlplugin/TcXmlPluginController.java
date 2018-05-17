@@ -25,6 +25,7 @@ import org.eclipse.core.runtime.QualifiedName;
 
 import tcxml.core.TcXmlException;
 import tcxmlplugin.composite.ImportModel;
+import tcxmlplugin.composite.TcViewer;
 import tcxmlplugin.nature.NatureTcXml;
 import util.TcxmlUtils;
 
@@ -44,10 +45,21 @@ public class TcXmlPluginController
 	private static final String TESTCASE_LIB = "testcaselib";
 
 	private static TcXmlPluginController instance = null;
+	
+	
+	private TcViewer tcviewer;
 
 	
 
 
+
+	public TcViewer getTcviewer() {
+		return tcviewer;
+	}
+
+	public void setTcviewer(TcViewer tcviewer) {
+		this.tcviewer = tcviewer;
+	}
 
 	private TcXmlPluginController() {
 		
