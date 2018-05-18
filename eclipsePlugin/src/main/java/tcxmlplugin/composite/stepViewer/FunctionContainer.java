@@ -6,6 +6,7 @@ import org.eclipse.swt.widgets.Composite;
 
 import model.Function;
 import tcxml.core.TcXmlController;
+import tcxml.core.TcXmlException;
 import tcxml.model.TruLibrary;
 import tcxmlplugin.composite.view.FunctionView;
 
@@ -27,7 +28,7 @@ public class FunctionContainer  extends MainStepContainer {
 		// TODO Auto-generated constructor stub
 	}
 
-	public StepViewer getFunction(String libName, String funcName) {
+	public StepViewer getFunction(String libName, String funcName) throws TcXmlException {
 		StepViewer ret = null;
 		Iterator<StepViewer> it = stepViwerChildren.iterator();
 		while (it.hasNext()) {
@@ -44,6 +45,10 @@ public class FunctionContainer  extends MainStepContainer {
 				
 				
 			}
+			
+		}
+		if(ret == null) {
+			throw new TcXmlException("fail to find function-"+  funcName +  " in current library" , new IllegalArgumentException());
 			
 		}
 		return ret;

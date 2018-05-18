@@ -269,11 +269,16 @@ this.populateLibrary(controller.getLibraries());
 		// TODO Auto-generated method stub
 		
 	}
+/***
+ *  show the lib in the viewer
+ * 
+ * @param libname
+ */
 
-
-	public void switch2function() {
+	public void switch2function(String libname) {
 		
-		tabFolder.setSelection(1);
+		tabFolder.setSelection(0);
+		libraryViewer.showLibrary(libname);
 		
 	}
 	

@@ -158,7 +158,7 @@ play();
 		});
 		
 	
-	
+		TcXmlPluginController.getInstance().info("playing job" + event.getJob().getName() + "  ended with status" + event.getResult());
 		
 		
 	}
@@ -166,7 +166,7 @@ play();
 
 
 	private void showStatus(IStatus result) {
-		TcXmlPluginController.getInstance().info("playing job ended with status" + result);
+		
 		if(result == Status.OK_STATUS) {
 		okbutton.setVisible(true);	
 		nookbutton.setVisible(false);

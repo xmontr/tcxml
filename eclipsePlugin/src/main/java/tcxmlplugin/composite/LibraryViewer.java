@@ -132,9 +132,10 @@ TcXmlPluginController.getInstance().error("fail to show selected action", e);
  * @param libName
  * @param funcName
  * @param ctx
+ * @throws TcXmlException 
  */
 
-	public StepViewer getFunction(String libName, String funcName) {
+	public StepViewer getFunction(String libName, String funcName) throws TcXmlException {
 		
 	
 		

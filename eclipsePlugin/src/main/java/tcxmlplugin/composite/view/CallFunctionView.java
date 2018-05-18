@@ -266,8 +266,15 @@ public static class CallFunctionViewModel {
 	TcViewer tcviewer = TcXmlPluginController.getInstance().getTcviewer();	
 	
 	
+	getDisplay().syncExec(new Runnable() {
+		
+		@Override
+		public void run() {
+			tcviewer.switch2function(model.getLibName());
+			
+		}
+	});
 	
-	tcviewer.switch2function();
 	
 	StepViewer funcViewer = tcviewer.getLibraryViewer().getFunction(model.getLibName(), model.getFuncName());
 	
