@@ -111,12 +111,14 @@ public class TcViewer extends Composite implements PropertyChangeListener, IJobC
 		
 		this.actionMap = actionmap;
 		
-		 List<String> allActions =    new ArrayList<String>(actionmap.keySet())    ;
-		 
-		 TcXmlPluginController.getInstance().info(("fouded actions :" + allActions.size()  ))   ;
 	
 		 
-		actionsViewer.getModel().setAllActions(allActions);
+		 
+		 
+		 actionsViewer.buildAllActions(actionmap);
+	
+		 
+		
 		
 		actionsViewer.getModel().addPropertyChangeListener(ActionsModel.ACTION_SELECTED, this);
 		
@@ -125,12 +127,12 @@ public class TcViewer extends Composite implements PropertyChangeListener, IJobC
 	
 	
 	private void populateLibrary(Map<String, TruLibrary> libmap) {
+		
+		
 	this.libraryMap = libmap;
-	List<String> allLib =    new ArrayList<String>(libmap.keySet())    ;
 	
-	 TcXmlPluginController.getInstance().info(("fouded libraries :" + allLib.size()  ))   ;
-	 
-	 libraryViewer.getModel().setAllLibraries(allLib);
+	libraryViewer.buildAllLibraries(libmap);
+
 	 
 	 libraryViewer.getModel().addPropertyChangeListener(LibraryModel.LIBRARY_SELECTED, this);
 	
@@ -150,7 +152,7 @@ public class TcViewer extends Composite implements PropertyChangeListener, IJobC
 			
 			String  selection = (String) evt.getNewValue();
 			TcXmlPluginController.getInstance().info("selected action:" + selection);
-			this.showSelectedAction(actionMap.get(selection));
+			this.showSelectedAction(selection);
 			
 			
 		}
@@ -160,7 +162,7 @@ public class TcViewer extends Composite implements PropertyChangeListener, IJobC
 			
 			String  selection = (String) evt.getNewValue();
 			TcXmlPluginController.getInstance().info("selected library:" + selection);
-			this.showSelectedLibrary(libraryMap.get(selection));
+			this.showSelectedLibrary(selection);
 			
 			
 		}
@@ -168,16 +170,16 @@ public class TcViewer extends Composite implements PropertyChangeListener, IJobC
 		
 	}
 
-	private void showSelectedLibrary(TruLibrary lib) {
-		libraryViewer.showSelectedLibrary(lib);
+	private void showSelectedLibrary(String  libname) {
+		libraryViewer.showSelectedLibrary(libname);
 		
 	}
 
-	private void showSelectedAction(Step step) {
+	private void showSelectedAction(String actName) {
 		
 		
 		
-		actionsViewer.showSelectedAction( step);
+		actionsViewer.showSelectedAction( actName);
 		
 		
 

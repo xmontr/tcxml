@@ -1,6 +1,9 @@
 package tcxmlplugin.composite;
 
+import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 import org.eclipse.core.databinding.DataBindingContext;
 import org.eclipse.core.databinding.beans.BeanProperties;
@@ -13,6 +16,7 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
 
 import model.CallFunctionAttribut;
@@ -33,6 +37,9 @@ public class LibraryViewer extends Composite {
 	private Combo combo;
 	
 	private DataBindingContext m_bindingContext;
+	
+	
+	private Map<String, LibraryView> librariesView;
 	
 	private FunctionContainer functionContainer;
 	private TcXmlController controller;
@@ -87,40 +94,17 @@ public class LibraryViewer extends Composite {
 		return bindingContext;
 	}
 
-	public void showSelectedAction(Step step) {
-		//clean old one
-		functionContainer.clean();
-		List<Step> list = step.getStep();
-		for (Step step2 : list) { // add the step
-			try {
-				functionContainer.addStep(step2);
-			} catch (TcXmlException e) {
-TcXmlPluginController.getInstance().error("fail to show selected action", e);
-			}
-				
-			
-		}
-	
-	}
 
 
 
-	public void showSelectedLibrary(TruLibrary lib) {
-		//clean old one
-		functionContainer.clean();
-		functionContainer.setLibrary(lib);
-		List<Step> list = lib.getStep().getStep();
-		for (Step step2 : list) { // add the step
-			try {
-				functionContainer.addStep(step2);
-			} catch (TcXmlException e) {
-				// TODO Auto-generated catch block
-				TcXmlPluginController.getInstance().error("fail to show selected library", e);
-			}
-				
-			
-		}
+
+	public void showSelectedLibrary(String libname) {
 		
+		Control	ctrl = librariesView.get(libname);
+		functionContainer.showAction(ctrl);
+		//setLibrary(truLibrary);
+		
+
 		
 	}
 
@@ -139,12 +123,33 @@ TcXmlPluginController.getInstance().error("fail to show selected action", e);
 		
 	
 		
-	return functionContainer.getFunction( libName,  funcName) ;	
+	return librariesView.get(libName).getFunction( libName,  funcName) ;	
 	}
 	
 	public void showLibrary(String libName) {
 		
 		model.setLibrarySelected(libName);
+		
+	}
+
+
+
+	public void buildAllLibraries(Map<String, TruLibrary> libmap) {
+		List<String> allLib =    new ArrayList<String>(libmap.keySet())    ;
+		
+		 TcXmlPluginController.getInstance().info(("fouded libraries :" + allLib.size()  ))   ;
+		 
+		 
+		 model.setAllLibraries(allLib);
+		 
+			for (Iterator iterator = allLib.iterator(); iterator.hasNext();) {
+				String name = (String) iterator.next();
+				
+				LibraryView libv = new LibraryView(name,functionContainer, this.getStyle(), controller);
+				libv.buildLibrary(libmap.get(name));
+				librariesView.put(name, libv);
+				
+			}
 		
 	}
 

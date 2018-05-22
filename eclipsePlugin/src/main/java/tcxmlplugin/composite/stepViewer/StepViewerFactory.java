@@ -10,6 +10,7 @@ import tcxml.core.TcXmlController;
 import tcxml.core.TcXmlException;
 import tcxml.model.Step;
 import tcxml.model.TruLibrary;
+import tcxmlplugin.composite.LibraryView;
 import tcxmlplugin.composite.view.BasicView;
 import tcxmlplugin.composite.view.BlockView;
 import tcxmlplugin.composite.view.CallFunctionView;
@@ -41,11 +42,11 @@ public class StepViewerFactory {
 			
 		
 		case "function":
-			if(!(stepContainer instanceof FunctionContainer)) {
+			if(!(stepContainer instanceof LibraryView)) {
 				
-			throw new TcXmlException("cannot view a function outside of a functioncontainer", new IllegalStateException())	;
+			throw new TcXmlException("cannot view a function outside of a LibraryView", new IllegalStateException())	;
 			}
-		tv=getFunctionViewer(step,(FunctionContainer)stepContainer,controller);
+		tv=getFunctionViewer(step,(LibraryView)stepContainer,controller);
 		break;	
 		case "testObject":				
 				tv=getTestObjectViewer(step,stepContainer,controller);
@@ -112,7 +113,7 @@ public class StepViewerFactory {
 		return stepviewer;
 	}
 
-	private static StepViewer getFunctionViewer(Step step, FunctionContainer stepContainer,
+	private static StepViewer getFunctionViewer(Step step, LibraryView stepContainer,
 			TcXmlController controller)  throws TcXmlException {
 		
 		FunctionView view = new FunctionView(stepContainer.getBar(), SWT.NONE,controller);

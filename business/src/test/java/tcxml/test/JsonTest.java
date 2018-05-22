@@ -48,7 +48,16 @@ public class JsonTest {
 			
 		String json = null;
 		
-		Path pa = Paths.get(p.getPath().substring(1));
+		
+		Path pa = null;
+		if (System.getProperty("os.name").startsWith("Windows")) {
+			
+			pa=Paths.get(p.getPath().substring(1));
+		}else {
+			
+			pa=Paths.get(p.getPath());	
+		}
+		
 		
 
 		byte[] b = Files.readAllBytes( pa);

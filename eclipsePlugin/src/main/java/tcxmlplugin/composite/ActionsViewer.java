@@ -1,6 +1,7 @@
 package tcxmlplugin.composite;
 
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Label;
 
@@ -18,7 +19,10 @@ import org.eclipse.swt.widgets.Combo;
 import org.eclipse.jface.viewers.ComboViewer;
 import org.eclipse.swt.layout.GridData;
 
+import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 import org.eclipse.core.databinding.DataBindingContext;
 import org.eclipse.core.databinding.observable.list.IObservableList;
@@ -39,6 +43,7 @@ public class ActionsViewer extends Composite  {
 	private Combo combo;
 
 
+	private Map<String, ActionView> actionsView;
 
 	private MainStepContainer stepContainer;
 
@@ -92,20 +97,33 @@ public class ActionsViewer extends Composite  {
 		return bindingContext;
 	}
 
-	public void showSelectedAction(Step step) {
-		//clean old one
-		stepContainer.clean();
-		List<Step> list = step.getStep();
-		for (Step step2 : list) { // add the step
-			try {
-				stepContainer.addStep(step2);
-			} catch (TcXmlException e) {
-				TcXmlPluginController.getInstance().error("fail to show selected action", e);
-			}
-				
-			
-		}
-	
+	public void showSelectedAction(String  actname) {
+
+	Control	ctrl = actionsView.get(actname);
+		stepContainer.showAction(ctrl);
+		
+	}
+
+	public void buildAllActions(Map<String, Step> actionmap) {
+		
+		
+		 List<String> allActions =    new ArrayList<String>(actionmap.keySet())    ;
+		model.setAllActions(allActions);
+		TcXmlPluginController.getInstance().info(("built actions :" + allActions.size()  ))   ;
+		
+		
+		
+	for (Iterator iterator = allActions.iterator(); iterator.hasNext();) {
+		String name = (String) iterator.next();
+		
+		ActionView acv = new ActionView(name,stepContainer, this.getStyle(), controller);
+		acv.buildAction(actionmap.get(name));
+		actionsView.put(name, acv);
+		
+	}
+		
+		
+		
 	}
 
 
