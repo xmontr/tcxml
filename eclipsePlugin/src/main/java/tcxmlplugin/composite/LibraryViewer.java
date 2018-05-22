@@ -1,6 +1,7 @@
 package tcxmlplugin.composite;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -49,6 +50,7 @@ public class LibraryViewer extends Composite {
 		super(parent, style);
 		setLayout(new GridLayout(2, false));
 		this.controller = controller;
+		librariesView= new HashMap<String,LibraryView>();
 		
 		Label lblNewLabel = new Label(this, SWT.NONE);
 		lblNewLabel.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));

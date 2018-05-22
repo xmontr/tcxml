@@ -20,6 +20,7 @@ import tcxml.core.TcXmlController;
 import tcxml.core.TcXmlException;
 import tcxml.model.Step;
 import tcxml.model.TruLibrary;
+import tcxmlplugin.Activator;
 import tcxmlplugin.TcXmlPluginController;
 import tcxmlplugin.composite.TcViewer;
 
@@ -94,8 +95,10 @@ public class TcXmlEditor  extends EditorPart   {
 	}
 
 	public  void openBrowser() {
+		
+		String path2chrome = Activator.getDefault().getPreferenceStore().getString(tcxmlplugin.composite.preference.TcXmlPreference.PATH2CHROME);
 		try {
-			tccontroller.openBrowser("firefox", "pathtofirefox");
+			tccontroller.openBrowser("firefox", path2chrome);
 		} catch (TcXmlException e) {
 			TcXmlPluginController.getInstance().error("Fail to open browser", e);
 		}

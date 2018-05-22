@@ -407,7 +407,7 @@ public void loadFromDisk(String pathdir) throws TcXmlException {
  //search parameter file
  if ( !listing.contains(name + ".prm")) {
 	 log.info(" no parameter file .prm founded in " + pathdir);
-	 throw new TcXmlException("invalid  script: no parameter file .prm founded in " + pathdir ,  new IllegalArgumentException());	 
+	// throw new TcXmlException("invalid  script: no parameter file .prm founded in " + pathdir ,  new IllegalArgumentException());	 
  }	 
 	
 File mainscriptfile = new File(pathdir + "default.xml");
@@ -901,7 +901,7 @@ public void openBrowser (String type, String driverPath) throws TcXmlException {
 
 
 	// only chrome at this point
-	System.setProperty("webdriver.chrome.driver", "C:/bin/selenium/driver/2.37/chromedriver.exe");
+	System.setProperty("webdriver.chrome.driver",driverPath );
 	ChromeOptions options = new ChromeOptions();
 	DesiredCapabilities caps = DesiredCapabilities.chrome();
 	caps.setCapability(ChromeOptions.CAPABILITY, options);

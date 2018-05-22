@@ -20,6 +20,7 @@ import org.eclipse.jface.viewers.ComboViewer;
 import org.eclipse.swt.layout.GridData;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -54,6 +55,8 @@ public class ActionsViewer extends Composite  {
 	public ActionsViewer(Composite parent, int style, TcXmlController controller) {
 		super(parent, style);
 		this.controller =  controller ;
+		
+		actionsView = new HashMap<String,ActionView>();
 		setLayout(new GridLayout(2, false));
 		
 		Label lblNewLabel = new Label(this, SWT.NONE);
