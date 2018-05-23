@@ -52,6 +52,7 @@ public class MainStepContainer extends Composite {
 public void showAction(Control ctrl) {
 	
 	layout.topControl=ctrl;
+	layout();
 	
 }
 

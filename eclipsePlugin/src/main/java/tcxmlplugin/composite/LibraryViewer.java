@@ -139,7 +139,7 @@ public class LibraryViewer extends Composite {
 	public void buildAllLibraries(Map<String, TruLibrary> libmap) {
 		List<String> allLib =    new ArrayList<String>(libmap.keySet())    ;
 		
-		 TcXmlPluginController.getInstance().info(("fouded libraries :" + allLib.size()  ))   ;
+		 TcXmlPluginController.getInstance().info(("found libraries :" + allLib.size()  ))   ;
 		 
 		 
 		 model.setAllLibraries(allLib);

@@ -35,9 +35,6 @@ import org.eclipse.swt.events.MouseEvent;
 public class StepToolBar extends Composite implements IJobChangeListener   {
 	
 	private PlayingJob currrentJob;
-	
-
-	private Label indexLabel;
 	private StepViewer stepviewer;
 	private Button okbutton;
 	private Button nookbutton;
@@ -45,13 +42,15 @@ public class StepToolBar extends Composite implements IJobChangeListener   {
 
 
 	private Button playButton;
+	private Label label;
+	
+	
 
-	public StepToolBar(Composite parent, int style, StepViewer step) {
+
+	public StepToolBar(Composite parent, int style) {
 		super(parent, style);
-		setLayout(new GridLayout(5, false));
-		this.stepviewer = step;
+		setLayout(new GridLayout(4, false));
 		
-		 indexLabel = new Label(this, SWT.NONE);
 		
 		playButton = new Button(this, SWT.NONE);
 		playButton.setToolTipText("play");
@@ -78,6 +77,13 @@ play();
 		progressBar = new ProgressBar(this , SWT.INDETERMINATE);
 		progressBar.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		progressBar.setVisible(false);
+		
+		label = new Label(this, SWT.SEPARATOR | SWT.HORIZONTAL);
+		label.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 4, 1));
+		new Label(this, SWT.NONE);
+		new Label(this, SWT.NONE);
+		new Label(this, SWT.NONE);
+		new Label(this, SWT.NONE);
 
 		
 
@@ -91,6 +97,20 @@ play();
 
 	
 	
+	public void setStepviewer(StepViewer stepviewer) {
+		this.stepviewer = stepviewer;
+		
+		
+	}
+
+
+
+
+
+
+
+
+
 	protected void play() {
 		
 		
@@ -100,11 +120,7 @@ play();
 	}
 	
 	
-	public void setIndex(String  index) {
-		
-		this.indexLabel.setText(index);
-		
-	}
+
 
 
 
