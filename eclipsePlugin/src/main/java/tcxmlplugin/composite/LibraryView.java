@@ -83,7 +83,7 @@ public class LibraryView extends Composite implements StepContainer{
 			
 		}
 		
-	
+	bar.layout();
 		
 	}
 	

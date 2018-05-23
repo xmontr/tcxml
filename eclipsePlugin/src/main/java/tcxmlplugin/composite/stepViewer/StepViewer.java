@@ -72,6 +72,7 @@ public  class StepViewer extends Composite{
 		stepToolBar.setStepviewer(this);
 		
 		contentView = new Composite(this, SWT.NONE);
+		contentView.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 	contentView.setLayout(new GridLayout(1, false));
 	new Label(this, SWT.NONE);
 	
@@ -148,7 +149,7 @@ public  class StepViewer extends Composite{
 		
 		
 		view.populate( mo  );
-		//stepToolBar.setIndex(mo.getIndex());
+		
 		
 	}
 	

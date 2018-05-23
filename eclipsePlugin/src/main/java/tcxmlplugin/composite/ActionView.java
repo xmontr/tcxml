@@ -72,6 +72,7 @@ public class ActionView extends Composite implements StepContainer{
 				
 			
 		}
+		bar.layout();
 	
 	}
 

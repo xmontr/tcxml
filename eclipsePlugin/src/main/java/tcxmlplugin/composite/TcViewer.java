@@ -4,6 +4,8 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.ToolBar;
 
+import static org.hamcrest.Matchers.instanceOf;
+
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.util.ArrayList;
@@ -33,6 +35,9 @@ import tcxml.core.TcXmlException;
 import tcxml.model.Step;
 import tcxml.model.TruLibrary;
 import tcxmlplugin.TcXmlPluginController;
+import tcxmlplugin.composite.stepViewer.StepViewer;
+import tcxmlplugin.composite.view.FunctionView;
+
 import org.eclipse.swt.widgets.ProgressBar;
 
 public class TcViewer extends Composite implements PropertyChangeListener, IJobChangeListener  {
@@ -283,6 +288,26 @@ this.populateLibrary(controller.getLibraries());
 		libraryViewer.showLibrary(libname);
 		
 	}
+
+	
+	
+	/***
+	 * 
+	 *  make sure that the step viewer is visible in the UI
+	 * 
+	 * @param stepviewer
+	 */
+	
+public void ensureVisibility(StepViewer stepviewer) {
+	
+	StepView view = stepviewer.getViewer();
+	if(view instanceof FunctionView ) {// switch 2 functions tab, seeek to function and expand it
+		
+		
+		
+	}
+	
+}
 	
 	
 	

@@ -127,6 +127,10 @@ play();
 	@Override
 	public void aboutToRun(IJobChangeEvent event) {
 		
+		
+		TcXmlPluginController.getInstance().getTcviewer().ensureVisibility(stepviewer);
+		
+		
 	getDisplay().asyncExec(new Runnable() {
 		
 		@Override

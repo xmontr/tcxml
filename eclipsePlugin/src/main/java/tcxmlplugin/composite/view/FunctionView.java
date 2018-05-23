@@ -69,8 +69,7 @@ public class FunctionView extends StepView implements StepContainer {
 		xpndtmNewExpanditem.setHeight(tv.computeSize(SWT.DEFAULT, SWT.DEFAULT).y );
 		xpndtmNewExpanditem.setControl(tv);
 		
-		
-		setSize(bar.computeSize(SWT.DEFAULT, SWT.DEFAULT, true));
+
 
 	}
 
