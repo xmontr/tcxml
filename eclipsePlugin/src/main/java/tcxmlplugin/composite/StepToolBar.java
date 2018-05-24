@@ -128,13 +128,15 @@ play();
 	public void aboutToRun(IJobChangeEvent event) {
 		
 		
-		TcXmlPluginController.getInstance().getTcviewer().ensureVisibility(stepviewer);
+		
 		
 		
 	getDisplay().asyncExec(new Runnable() {
 		
 		@Override
 		public void run() {
+		
+			
 		progressBar.setVisible(true);	
 		hideStatus();
 			

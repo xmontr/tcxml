@@ -30,31 +30,19 @@ import tcxmlplugin.composite.stepViewer.TitleListener;
  */
 
 
-public class ActionView extends Composite implements StepContainer{
+public class ActionView extends AStepContainer{
 	
 	
 	
 	
 	private String actionName;
-	private TcXmlController controller;
-	
-	
-	protected List<StepViewer> stepViwerChildren ;
-	
-	private ExpandBar bar;
+
 
 	public ActionView(String name,Composite parent, int style, TcXmlController controller) {
-		super(parent, style);
-		GridLayout gridlayout = new GridLayout(1, false);
-	this.setLayout(gridlayout);	
-	this.controller= controller ;
+		super(parent, style,controller);
+
 	actionName=name;
-	stepViwerChildren = new ArrayList<StepViewer>();
-	bar = new ExpandBar(this, SWT.V_SCROLL);
-	bar.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
-	bar.setBackground( getDisplay().getSystemColor( SWT.COLOR_WHITE) );
-	bar.setSpacing(10);
-	
+
 	
 	
 	}
@@ -76,58 +64,18 @@ public class ActionView extends Composite implements StepContainer{
 	
 	}
 
-	public void addStep(Step step) throws TcXmlException {
-		
-		 StepViewer tv = StepViewerFactory.getViewer(step,this, controller);
-		 stepViwerChildren.add(tv);
-		
-		ExpandItem xpndtmNewExpanditem = new ExpandItem(bar, SWT.NONE);		
-		
 
-		xpndtmNewExpanditem.setExpanded(false);
-		
-		xpndtmNewExpanditem.setText(tv.getTitle());
-		
-		xpndtmNewExpanditem.setHeight(tv.computeSize(SWT.DEFAULT, SWT.DEFAULT).y );
-		xpndtmNewExpanditem.setControl(tv);
-		tv.addPropertyChangeListener("title", new TitleListener(xpndtmNewExpanditem , tv));
 
-		
-		
-		
-		
-		
+
+	public String getActionName() {
+		return actionName;
 	}
 
 
-	@Override
-	public ExpandBar getBar() {
-		// TODO Auto-generated method stub
-		return bar;
-	}
 
 
-	public void clean() {
-	ExpandItem[] li = bar.getItems();
-	for (ExpandItem expandItem : li) {
-	Control innercontrol = expandItem.getControl();
-	if( innercontrol instanceof StepContainer) {
-		
-		((StepContainer) innercontrol).clean();
-		expandItem.dispose();
-	}
-	
-		
-		
-	else {
-		innercontrol.dispose();
-		expandItem.dispose();
-	}
-		
-	}
-	bar.redraw();
-	stepViwerChildren.clear();
-}
+
+
 	
 	
 	

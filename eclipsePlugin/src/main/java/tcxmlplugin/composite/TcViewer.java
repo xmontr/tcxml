@@ -28,6 +28,7 @@ import org.eclipse.swt.custom.CTabFolder;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.custom.CTabItem;
 import org.eclipse.swt.widgets.ToolItem;
+import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.wb.swt.ResourceManager;
 
 import tcxml.core.TcXmlController;
@@ -305,9 +306,28 @@ public void ensureVisibility(StepViewer stepviewer) {
 		
 		
 		
+		String libname = ((FunctionView ) view).getLibName() ;
+		switch2function(libname );
+		
+	}else { //stepviewer is not a function also is in action
+		
+		
+		String actionName  =((ActionView) stepviewer.getContainer()).getActionName();
+		switch2Action(actionName );
+		
 	}
 	
+	stepviewer.expand();
+	
+	FormToolkit.ensureVisible(stepviewer);
+	
 }
+
+	private void switch2Action(String actionName) {
+		tabFolder.setSelection(1);
+		actionsViewer.showAction(actionName);
+		
+	}
 	
 	
 	

@@ -1,5 +1,9 @@
 package tcxmlplugin.composite.view;
 
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.layout.GridLayout;
@@ -21,6 +25,8 @@ import tcxmlplugin.composite.StepView;
 import tcxmlplugin.composite.stepViewer.StepViewer;
 import tcxmlplugin.composite.stepViewer.StepContainer;
 import tcxmlplugin.composite.stepViewer.StepViewerFactory;
+import tcxmlplugin.job.PlayingJob;
+
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.wb.swt.SWTResourceManager;
@@ -32,6 +38,20 @@ public class FunctionView extends StepView implements StepContainer {
 	
 	
 	private Function function ;
+	
+	
+	private List<StepViewer> stepViwerChildren ;
+	
+	
+	private String libName;
+
+	public String getLibName() {
+		return libName;
+	}
+
+	public void setLibName(String libName) {
+		this.libName = libName;
+	}
 
 	public TruLibrary getLibrary() {
 		return Library;
@@ -46,7 +66,7 @@ public class FunctionView extends StepView implements StepContainer {
 		super(parent, style, controller);
 		GridLayout gridlayout = new GridLayout(1, false);
 		setLayout(gridlayout);
-
+		stepViwerChildren = new ArrayList<StepViewer>();
 		bar = new ExpandBar(this, SWT.V_SCROLL);
 		bar.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 		bar.setBackground(getDisplay().getSystemColor(SWT.COLOR_WHITE));
@@ -68,7 +88,9 @@ public class FunctionView extends StepView implements StepContainer {
 
 		xpndtmNewExpanditem.setHeight(tv.computeSize(SWT.DEFAULT, SWT.DEFAULT).y );
 		xpndtmNewExpanditem.setControl(tv);
+		tv.setParentExpandItem(xpndtmNewExpanditem);
 		
+		 stepViwerChildren.add(tv);
 
 
 	}
@@ -99,6 +121,7 @@ public class FunctionView extends StepView implements StepContainer {
 
 		}
 		bar.redraw();
+		stepViwerChildren.clear();
 	}
 
 	public void populate(Step mo) throws TcXmlException {
@@ -138,6 +161,33 @@ public class FunctionView extends StepView implements StepContainer {
 	@Override
 	public PlayingContext play(PlayingContext ctx) throws TcXmlException {
 		
+		PlayingContext nctx=null;
+		
+		for (Iterator iterator = stepViwerChildren.iterator(); iterator.hasNext();) {
+			StepViewer stepViewer = (StepViewer) iterator.next();
+			
+			
+			PlayingJob j = stepViewer.getplayInteractiveJob(ctx);
+			j.schedule();	
+			
+			try {
+				j.join();
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			
+			 nctx = j.getCtx();
+			 ctx = nctx;
+			
+			
+			
+		}
+		
+		
+		
+		
+		
 		
 		try {
 			Thread.currentThread().sleep(10000);
@@ -147,6 +197,12 @@ public class FunctionView extends StepView implements StepContainer {
 		}
 	return null;
 		
+	}
+
+	@Override
+	public List<StepViewer> getChildViewer() {
+		// TODO Auto-generated method stub
+		return stepViwerChildren;
 	}
 
 

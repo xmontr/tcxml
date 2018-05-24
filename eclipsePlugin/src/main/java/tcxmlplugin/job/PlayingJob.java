@@ -36,6 +36,19 @@ public class PlayingJob extends Job{
 		IStatus ret = Status.OK_STATUS;
 try {	
 	
+	
+	//ensure visible and expanded
+	
+	stepviewer.getDisplay().syncExec(new Runnable() {
+		
+		@Override
+		public void run() {
+			TcXmlPluginController.getInstance().getTcviewer().ensureVisibility(stepviewer);
+			
+		}
+	});
+	
+	
 ctx = stepviewer.play(ctx);
 
 

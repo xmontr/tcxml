@@ -1,5 +1,8 @@
 package tcxmlplugin.composite.view;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.widgets.Composite;
@@ -21,14 +24,14 @@ import tcxmlplugin.composite.stepViewer.StepViewerFactory;
 public class BlockView  extends StepView implements StepContainer {
 	private ExpandBar bar;
 	
-	
+	private List<StepViewer> stepViwerChildren ;
 
 	public BlockView(Composite parent, int style, TcXmlController controller) {
 		
 		
 		super(parent, style,controller);
 		setLayout(new FillLayout());
-		
+		stepViwerChildren = new ArrayList<StepViewer>();
 		bar = new ExpandBar(this, SWT.BORDER);
 		bar.setBackground( getDisplay().getSystemColor( SWT.COLOR_GRAY) );
 		bar.setSpacing(10);
@@ -56,7 +59,7 @@ public class BlockView  extends StepView implements StepContainer {
 		xpndtmNewExpanditem.setHeight(tv.computeSize(SWT.DEFAULT, SWT.DEFAULT).y );
 		xpndtmNewExpanditem.setControl(tv);
 		
-		
+		 stepViwerChildren.add(tv);
 		
 	}
 	
@@ -115,6 +118,13 @@ public class BlockView  extends StepView implements StepContainer {
 	public PlayingContext play(PlayingContext ctx) throws TcXmlException {
 		throw new TcXmlException("not implemented", new IllegalAccessException());
 		
+	}
+
+
+	@Override
+	public List<StepViewer> getChildViewer() {
+		// TODO Auto-generated method stub
+		return stepViwerChildren;
 	}
 
 

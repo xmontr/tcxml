@@ -1,6 +1,7 @@
 package tcxmlplugin.composite.stepViewer;
 
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.ExpandItem;
 
 import tcxml.core.PlayingContext;
 import tcxml.core.StepRunner;
@@ -9,6 +10,7 @@ import tcxml.model.Step;
 import org.eclipse.swt.layout.GridLayout;
 
 import tcxmlplugin.TcXmlPluginController;
+import tcxmlplugin.composite.AStepContainer;
 import tcxmlplugin.composite.StepToolBar;
 import tcxmlplugin.composite.StepView;
 import tcxmlplugin.job.PlayingJob;
@@ -55,8 +57,37 @@ public  class StepViewer extends Composite{
 	private StepToolBar stepToolBar;
 	private Composite contentView;
 	private Label lblNewLabel_1;
+	private ExpandItem parentExpandItem;
+	private StepContainer container;
 	
 	
+	public StepContainer getContainer() {
+		return container;
+	}
+
+
+
+
+
+
+	public void setContainer(StepContainer container) {
+		this.container = container;
+	}
+
+
+
+
+
+
+	public void setParentExpandItem(ExpandItem parentExpandItem) {
+		this.parentExpandItem = parentExpandItem;
+	}
+
+
+
+
+
+
 	public StepViewer(Composite parent, int style) {
 		
 		super(parent, style);
@@ -206,4 +237,24 @@ public  class StepViewer extends Composite{
 			
 			
 		}
+		
+		
+		
+		
+		public void expand() {
+			
+			parentExpandItem.setExpanded(true);
+			
+			
+			
+		}
+		
+		
+		public void collapse() {
+			
+			
+			parentExpandItem.setExpanded(false);
+			
+		}
+		
 }

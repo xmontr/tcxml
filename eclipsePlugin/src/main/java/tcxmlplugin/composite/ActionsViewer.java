@@ -106,6 +106,16 @@ public class ActionsViewer extends Composite  {
 		stepContainer.showAction(ctrl);
 		
 	}
+	
+	
+	
+	
+	
+	public void showAction( String actName) {
+		
+		model.setActionSelected(actName);
+		
+	}
 
 	public void buildAllActions(Map<String, Step> actionmap) {
 		

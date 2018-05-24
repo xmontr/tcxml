@@ -10,6 +10,7 @@ import tcxml.core.TcXmlController;
 import tcxml.core.TcXmlException;
 import tcxml.model.Step;
 import tcxml.model.TruLibrary;
+import tcxmlplugin.composite.AStepContainer;
 import tcxmlplugin.composite.LibraryView;
 import tcxmlplugin.composite.view.BasicView;
 import tcxmlplugin.composite.view.BlockView;
@@ -79,6 +80,7 @@ public class StepViewerFactory {
 	TestObjectView view = new TestObjectView(stepContainer.getBar(), SWT.NONE,controller);
 	view.setLibrary(lib);
 		StepViewer stepviewer = new StepViewer(stepContainer.getBar(), SWT.NONE);
+		stepviewer.setContainer(stepContainer);
 		stepviewer.setView(view);
 		stepviewer.populate(step);
 		return stepviewer;
@@ -102,6 +104,7 @@ public class StepViewerFactory {
 	private static StepViewer getWaitViewer(Step step, StepContainer stepContainer, TcXmlController controller) throws TcXmlException {
 		WaitView view = new WaitView(stepContainer.getBar(), SWT.NONE,controller);
 		StepViewer stepviewer = new StepViewer(stepContainer.getBar(), SWT.NONE);
+		stepviewer.setContainer(stepContainer);
 		stepviewer.setView(view);
 		stepviewer.populate(step);
 		return stepviewer;
@@ -111,6 +114,7 @@ public class StepViewerFactory {
 			TcXmlController controller) throws TcXmlException {
 		EvaluateJavascriptView view = new EvaluateJavascriptView(stepContainer.getBar(), SWT.NONE,controller);
 		StepViewer stepviewer = new StepViewer(stepContainer.getBar(), SWT.NONE);
+		stepviewer.setContainer(stepContainer);
 		stepviewer.setView(view);
 		stepviewer.populate(step);
 		return stepviewer;
@@ -121,7 +125,9 @@ public class StepViewerFactory {
 		
 		FunctionView view = new FunctionView(stepContainer.getBar(), SWT.NONE,controller);
 		view.setLibrary(stepContainer.getLibrary());
+		view.setLibName(stepContainer.getLibraryName());
 		StepViewer stepviewer = new StepViewer(stepContainer.getBar(), SWT.NONE);
+		stepviewer.setContainer(stepContainer);
 		stepviewer.setView(view);
 		stepviewer.populate(step);
 		stepviewer.setPlayable(false);
@@ -131,7 +137,8 @@ public class StepViewerFactory {
 	private static StepViewer getBlockViewer(Step step, StepContainer stepContainer, TcXmlController controller) throws TcXmlException  {
 		BlockView view = new BlockView(stepContainer.getBar(), SWT.NONE,controller);
 		
-		StepViewer stepviewer = new StepViewer(stepContainer.getBar(), SWT.NONE); 	
+		StepViewer stepviewer = new StepViewer(stepContainer.getBar(), SWT.NONE); 
+		stepviewer.setContainer(stepContainer);
 		stepviewer.setView(view);
 		stepviewer.populate(step);
 		return stepviewer;
@@ -141,6 +148,7 @@ public class StepViewerFactory {
 		
 		BasicView view = new BasicView(stepContainer.getBar(), SWT.NONE,controller);
 		StepViewer stepviewer = new StepViewer(stepContainer.getBar(), SWT.NONE); 
+		stepviewer.setContainer(stepContainer);
 		stepviewer.setView(view);
 	stepviewer.populate(step);
 		return stepviewer;
@@ -152,6 +160,7 @@ public class StepViewerFactory {
 		
 		CallFunctionView view = new CallFunctionView(stepContainer.getBar(), SWT.NONE,controller);
 		StepViewer stepviewer = new StepViewer(stepContainer.getBar(), SWT.NONE);
+		stepviewer.setContainer(stepContainer);
 		stepviewer.setView(view);
 		
 		

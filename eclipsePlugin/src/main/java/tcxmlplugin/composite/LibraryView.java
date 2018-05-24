@@ -24,9 +24,17 @@ import tcxmlplugin.composite.stepViewer.StepViewerFactory;
 import tcxmlplugin.composite.stepViewer.TitleListener;
 import tcxmlplugin.composite.view.FunctionView;
 
-public class LibraryView extends Composite implements StepContainer{
+public class LibraryView extends AStepContainer{
 	
 	
+	public String getLibraryName() {
+		return libraryName;
+	}
+
+
+
+
+
 	private TruLibrary Library;
 
 	public TruLibrary getLibrary() {
@@ -42,25 +50,12 @@ public class LibraryView extends Composite implements StepContainer{
 
 
 	private String libraryName;
-	private TcXmlController controller;
-	
-	
-	protected List<StepViewer> stepViwerChildren ;
-	
-	private ExpandBar bar;
+
 	
 	
 	public LibraryView(String name,Composite parent, int style, TcXmlController controller) {
-		super(parent, style);
-		GridLayout gridlayout = new GridLayout(1, false);
-	this.setLayout(gridlayout);	
-	this.controller= controller ;
-	libraryName=name;
-	stepViwerChildren = new ArrayList<StepViewer>();
-	bar = new ExpandBar(this, SWT.V_SCROLL);
-	bar.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
-	bar.setBackground( getDisplay().getSystemColor( SWT.COLOR_WHITE) );
-	bar.setSpacing(10);
+		super(parent, style,controller);
+
 	
 	
 	
@@ -87,59 +82,6 @@ public class LibraryView extends Composite implements StepContainer{
 		
 	}
 	
-	
-	public void addStep(Step step) throws TcXmlException {
-		
-		 StepViewer tv = StepViewerFactory.getViewer(step,this, controller);
-		 stepViwerChildren.add(tv);
-		
-		ExpandItem xpndtmNewExpanditem = new ExpandItem(bar, SWT.NONE);		
-		
-
-		xpndtmNewExpanditem.setExpanded(false);
-		
-		xpndtmNewExpanditem.setText(tv.getTitle());
-		
-		xpndtmNewExpanditem.setHeight(tv.computeSize(SWT.DEFAULT, SWT.DEFAULT).y );
-		xpndtmNewExpanditem.setControl(tv);
-		tv.addPropertyChangeListener("title", new TitleListener(xpndtmNewExpanditem , tv));
-
-		
-		
-		
-		
-		
-	}
-
-
-	@Override
-	public ExpandBar getBar() {
-		// TODO Auto-generated method stub
-		return bar;
-	}
-
-
-	public void clean() {
-	ExpandItem[] li = bar.getItems();
-	for (ExpandItem expandItem : li) {
-	Control innercontrol = expandItem.getControl();
-	if( innercontrol instanceof StepContainer) {
-		
-		((StepContainer) innercontrol).clean();
-		expandItem.dispose();
-	}
-	
-		
-		
-	else {
-		innercontrol.dispose();
-		expandItem.dispose();
-	}
-		
-	}
-	bar.redraw();
-	stepViwerChildren.clear();
-}
 	
 	
 	
