@@ -19,7 +19,12 @@ public class PlayingJob extends Job{
 
 	private StepViewer stepviewer;
 	private PlayingContext ctx;
+	private String errorMessage;
 	
+
+	public String getErrorMessage() {
+		return errorMessage;
+	}
 
 	public PlayingJob(StepViewer viewer,PlayingContext ctx) {
 		super("playing " + viewer.getViewer().getTitle());	
@@ -56,8 +61,7 @@ ret = Status.OK_STATUS;
 	} catch (TcXmlException e1) {
 		ret=Status.CANCEL_STATUS;
 		TcXmlPluginController.getInstance().error("fail to play step", e1);
-		
-	
+		errorMessage= e1.getMessage();
 	}
 
 return ret;		

@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.layout.GridLayout;
@@ -161,7 +163,7 @@ public class FunctionView extends StepView implements StepContainer {
 	@Override
 	public PlayingContext play(PlayingContext ctx) throws TcXmlException {
 		
-		PlayingContext nctx=null;
+	
 		
 		for (Iterator iterator = stepViwerChildren.iterator(); iterator.hasNext();) {
 			StepViewer stepViewer = (StepViewer) iterator.next();
@@ -172,13 +174,28 @@ public class FunctionView extends StepView implements StepContainer {
 			
 			try {
 				j.join();
+				
+				
+				IStatus lastExecStatus = j.getResult() ;
+				
+				if(lastExecStatus != Status.OK_STATUS) {
+					
+					throw new TcXmlException("error in child step", new IllegalStateException());	
+				}
+				
+				
 			} catch (InterruptedException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 			
-			 nctx = j.getCtx();
-			 ctx = nctx;
+			finally {
+				
+				ctx.popContext();	
+				
+			}
+			
+			
 			
 			
 			

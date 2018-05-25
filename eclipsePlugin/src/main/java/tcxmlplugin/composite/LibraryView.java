@@ -55,7 +55,7 @@ public class LibraryView extends AStepContainer{
 	
 	public LibraryView(String name,Composite parent, int style, TcXmlController controller) {
 		super(parent, style,controller);
-
+		this.libraryName =name ;
 	
 	
 	

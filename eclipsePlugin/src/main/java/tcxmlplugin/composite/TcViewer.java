@@ -36,6 +36,7 @@ import tcxml.core.TcXmlException;
 import tcxml.model.Step;
 import tcxml.model.TruLibrary;
 import tcxmlplugin.TcXmlPluginController;
+import tcxmlplugin.composite.stepViewer.StepContainer;
 import tcxmlplugin.composite.stepViewer.StepViewer;
 import tcxmlplugin.composite.view.FunctionView;
 
@@ -309,20 +310,35 @@ public void ensureVisibility(StepViewer stepviewer) {
 		String libname = ((FunctionView ) view).getLibName() ;
 		switch2function(libname );
 		
-	}else { //stepviewer is not a function also is in action
+	}else { 
 		
 		
+		
+		
+		
+		//stepviewer is not a function also is in action but action can be already selected
+		
+		StepContainer cont = stepviewer.getContainer();
+		if( cont instanceof ActionView )
+		{
 		String actionName  =((ActionView) stepviewer.getContainer()).getActionName();
 		switch2Action(actionName );
 		
-	}
+	
+	
+
+	
+		}
+	
+}
+	
 	
 	stepviewer.expand();
 	
 	FormToolkit.ensureVisible(stepviewer);
 	
+	
 }
-
 	private void switch2Action(String actionName) {
 		tabFolder.setSelection(1);
 		actionsViewer.showAction(actionName);

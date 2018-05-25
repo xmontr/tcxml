@@ -114,7 +114,7 @@ play();
 	protected void play() {
 		
 		
-		currrentJob = stepviewer.getplayInteractiveJob( new PlayingContext(null));
+		currrentJob = stepviewer.getplayInteractiveJob( new PlayingContext());
 		currrentJob.schedule();
 	
 	}
@@ -144,6 +144,7 @@ play();
 
 		private void hideStatus() {
 			nookbutton.setVisible(false);
+			nookbutton.setToolTipText("");
 			okbutton.setVisible(false);
 			
 		}
@@ -174,7 +175,7 @@ play();
 			@Override
 			public void run() {
 				progressBar.setVisible(false);
-				showStatus(event.getResult());
+				showStatus((PlayingJob)event.getJob());
 				
 			}
 		});
@@ -187,9 +188,9 @@ play();
 
 
 
-	private void showStatus(IStatus result) {
+	private void showStatus(PlayingJob job) {
 		
-		if(result == Status.OK_STATUS) {
+		if(job == Status.OK_STATUS) {
 		okbutton.setVisible(true);	
 		nookbutton.setVisible(false);
 			
@@ -197,6 +198,7 @@ play();
 			
 			okbutton.setVisible(false);	
 			nookbutton.setVisible(true);
+			nookbutton.setToolTipText(job.getErrorMessage());
 			
 		}
 		

@@ -1,35 +1,49 @@
 package tcxml.core;
 
 import java.util.List;
+import java.util.Stack;
 
 import model.CallFunctionAttribut;
 
 public class PlayingContext {
 	
 	
-	private List<CallFunctionAttribut> arrgumentsList;
-	
-	
-	private PlayingContext parentContext;
 	
 	
 	
-	public PlayingContext(PlayingContext parent) {
-		this.parentContext = parent;
+	private Stack<ExecutionContext>  stack;
+	
+	
+	
+	public PlayingContext() {
+		stack = new Stack<ExecutionContext>();
 		
 	}
 	
 	
-	public List<CallFunctionAttribut> getArrgumentsList() {
-		return arrgumentsList;
-	}
 
-	public void setArrgumentsList(List<CallFunctionAttribut> arrgumentsList) {
-		this.arrgumentsList = arrgumentsList;
-	}
+public void  pushContext(ExecutionContext ec) {
+	
+	stack.push(ec);
+}
+	
+	
+public void  popContext() {
+	
+	stack.pop();
+}
 
+
+
+
+public ExecutionContext getCurrentExecutionContext() {
 	
+	return stack.lastElement();
 	
-	
+}
+
+
+
+
 
 }
