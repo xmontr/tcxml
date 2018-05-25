@@ -3,6 +3,7 @@ package tcxmlplugin.composite.view;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 
+import tcxml.core.ExecutionContext;
 import tcxml.core.PlayingContext;
 import tcxml.core.TcXmlController;
 import tcxml.core.TcXmlException;
@@ -36,6 +37,8 @@ import org.eclipse.core.databinding.observable.list.IObservableList;
 import org.eclipse.jface.databinding.swt.WidgetProperties;
 import org.eclipse.core.databinding.beans.BeanProperties;
 import org.eclipse.core.databinding.observable.value.IObservableValue;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.swt.widgets.Group;
 
 public class CallFunctionView  extends StepView implements PropertyChangeListener{
@@ -253,14 +256,18 @@ public static class CallFunctionViewModel {
 	@Override
 	public PlayingContext play(PlayingContext ctx) throws TcXmlException {
 		
-		PlayingContext ret = null;
+		PlayingContext ret = ctx;
 		
 		
-		//create new context for call
+		//create new execution context for call
 		
 		List<CallFunctionAttribut> listArguments = ((CallFunctionArg)theArgument).getCallArguments();
-		PlayingContext currentctx = new PlayingContext(ctx);
-		currentctx.setArrgumentsList(listArguments);
+		
+		ExecutionContext ec = new ExecutionContext();
+		
+		
+		ec.setArrgumentsList(listArguments);
+		ret.pushContext(ec);
 		
 		
 	TcViewer tcviewer = TcXmlPluginController.getInstance().getTcviewer();	
@@ -279,9 +286,16 @@ public static class CallFunctionViewModel {
 	
 	try {
 		j.join();
+		
+		IStatus lastExecStatus = j.getResult() ;
+		
+		if(lastExecStatus != Status.OK_STATUS) {
+			
+			throw new TcXmlException("error in child step", new IllegalStateException());	
+		}
 	} catch (InterruptedException e) {
-		// TODO Auto-generated catch block
-		e.printStackTrace();
+		throw new TcXmlException("Interupted", e);
+		
 	}
 	
 	ret = j.getCtx();

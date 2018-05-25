@@ -70,9 +70,9 @@ public class TestObjectRunner extends StepRunner{
 	
 		switch (step.getAction()) {
 			
-		case "Type": typeText( thexpath);
+		case "Type": typeText( thexpath,ctx);
 		break;
-		case "Click":click(thexpath);
+		case "Click":click(thexpath,ctx);
 		break;
 		default: notImplemented();
 		}
@@ -81,7 +81,7 @@ public class TestObjectRunner extends StepRunner{
 		
 	}
 
-	private void click(String thexpath) throws TcXmlException {
+	private void click(String thexpath, PlayingContext ctx) throws TcXmlException {
 		
 		String button ="left";
 		
@@ -119,7 +119,7 @@ public class TestObjectRunner extends StepRunner{
 		
 	}
 
-	private void typeText(String thexpath) throws TcXmlException {
+	private void typeText(String thexpath, PlayingContext ctx) throws TcXmlException {
 		JsonObject val = arg.getJsonObject("Value");
 		String txt = val.getJsonString("value").getString();
 			 boolean isj = val.getBoolean("evalJavaScript",false);
@@ -128,7 +128,7 @@ public class TestObjectRunner extends StepRunner{
 	/// if argument is in js it should be evaluated before
 			 if(isj) {
 				 
-			txt =(String) tcXmlController.evaluateJS(txt);	 
+			txt =(String) tcXmlController.evaluateJS(txt,ctx);	 
 			 }
 			 
 			 tcXmlController.typeTextXpath(thexpath, txt, 20);
@@ -168,7 +168,7 @@ public class TestObjectRunner extends StepRunner{
 	log.fine("found location for navigate:" + location);
 		 
 		 if(isj == true) { // need to evaluate js argument
-	location =		(tcXmlController.evaluateJS(location)).toString(); 
+	location =		(tcXmlController.evaluateJS(location,ctx)).toString(); 
 		log.fine("after eval JS location is:" + location);	 
 		 }
 		

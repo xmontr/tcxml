@@ -56,6 +56,7 @@ import org.openqa.selenium.remote.DesiredCapabilities;
 
 import com.kscs.util.jaxb.BoundList;
 
+import model.CallFunctionAttribut;
 import model.Function;
 import tcxml.core.parameter.StepParameter;
 import tcxml.model.Ident;
@@ -843,20 +844,16 @@ return ret;
  * 
  * 
  * @param code
+ * @param ctx 
  * @return
  * @throws TcXmlException
  */
 
-public Object evaluateJS(String code) throws TcXmlException {
+public Object evaluateJS(String code, PlayingContext ctx) throws TcXmlException {
 	
 	   ScriptEngineManager m = new ScriptEngineManager();
 	   ScriptEngine engine = m.getEngineByName("nashorn");
-	   ScriptContext context = new SimpleScriptContext();
-	   
-	   Object api = new LrAPI(this);
-	   
-	   context.setBindings(engine.createBindings(), ScriptContext.ENGINE_SCOPE);
-	   context.setAttribute("LR", api, ScriptContext.ENGINE_SCOPE);
+	   ScriptContext context = buildJavascriptContext(engine, ctx);
 	try {
 		Object ret = engine.eval(code, context);
 		return ret;
@@ -868,6 +865,40 @@ public Object evaluateJS(String code) throws TcXmlException {
 	
 	
 	
+}
+
+
+
+private ScriptContext  buildJavascriptContext(ScriptEngine engine,PlayingContext ctx) {
+	ScriptContext context = new SimpleScriptContext();
+	// import LR object
+	   Object api = new LrAPI(this);
+	   
+	   context.setBindings(engine.createBindings(), ScriptContext.ENGINE_SCOPE);
+	   context.setAttribute("LR", api, ScriptContext.ENGINE_SCOPE);
+	   
+	   // import Utils obj
+	   Object utils = new UtilsAPI(this);
+	   context.setAttribute("Utils", utils, ScriptContext.ENGINE_SCOPE);
+	   // create FuncArgs object
+	   ExecutionContext ec = ctx.getCurrentExecutionContext();
+	   if(ec != null) {
+		 List<CallFunctionAttribut> li = ec.getArrgumentsList() ;
+		 for (Iterator iterator = li.iterator(); iterator.hasNext();) {
+			CallFunctionAttribut callFunctionAttribut = (CallFunctionAttribut) iterator.next();
+			
+			//callFunctionAttribut.
+			
+			
+			
+			
+		}
+		   
+	   }
+	   
+	   
+	
+return context;	
 }
 
 

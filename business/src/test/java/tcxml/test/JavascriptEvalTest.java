@@ -14,6 +14,7 @@ import javax.json.JsonString;
 
 import org.junit.Test;
 
+import tcxml.core.PlayingContext;
 import tcxml.core.TcXmlController;
 import tcxml.core.TcXmlException;
 
@@ -53,7 +54,8 @@ public class JavascriptEvalTest extends JsonTest{
 				
 				boolean isjs = loc.getBoolean("evalJavaScript");
 				
-			Object location = controller.evaluateJS(val.getString());
+			PlayingContext ctx= new PlayingContext();
+			Object location = controller.evaluateJS(val.getString(),ctx);
 			System.out.println("location :" + location);
 				
 			assertThat(location, equalTo("https://intragate.stress.ec.europa.eu/smtweb"));	
