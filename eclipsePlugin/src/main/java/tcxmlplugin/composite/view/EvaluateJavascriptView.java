@@ -140,7 +140,11 @@ private String getShortCode() {
 
 	@Override
 	public PlayingContext  play( PlayingContext ctx) throws TcXmlException {
-		throw new TcXmlException("not implemented", new IllegalAccessException());
+		
+String code = evaljsmodel.getCode();
+controller.evaluateJS(code , ctx);
+return ctx;
+		
 		
 	}
 

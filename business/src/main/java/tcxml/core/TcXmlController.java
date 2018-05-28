@@ -17,6 +17,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Objects;
 import java.util.Set;
 import java.util.UUID;
@@ -28,6 +29,7 @@ import javax.json.JsonObject;
 import javax.json.JsonReader;
 import javax.json.JsonValue;
 import javax.json.JsonValue.ValueType;
+import javax.script.Bindings;
 import javax.script.ScriptContext;
 import javax.script.ScriptEngine;
 import javax.script.ScriptEngineManager;
@@ -53,6 +55,7 @@ import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.remote.Augmenter;
 import org.openqa.selenium.remote.DesiredCapabilities;
+import  jdk.nashorn.api.scripting.ScriptObjectMirror;
 
 import com.kscs.util.jaxb.BoundList;
 
@@ -854,8 +857,32 @@ public Object evaluateJS(String code, PlayingContext ctx) throws TcXmlException 
 	   ScriptEngineManager m = new ScriptEngineManager();
 	   ScriptEngine engine = m.getEngineByName("nashorn");
 	   ScriptContext context = buildJavascriptContext(engine, ctx);
+	   
+	   log.info(" evaluationg javascript:\n " + code);
 	try {
 		Object ret = engine.eval(code, context);
+		Bindings obj = context.getBindings(ScriptContext.ENGINE_SCOPE);
+		Object nashornGlobal = obj.get("nashorn.global"); 
+		ScriptObjectMirror globalMirror = (ScriptObjectMirror) nashornGlobal;
+		
+		Set<Entry<String, Object>> globalval = engine.getContext().getBindings(ScriptContext.ENGINE_SCOPE).entrySet();
+		for (Entry<String, Object> entry : globalval) {
+			log.info("  browsing global context found var " + entry.getKey());
+		}
+		
+		
+		
+		Set<Entry<String, Object>> localval = context.getBindings(ScriptContext.ENGINE_SCOPE).entrySet();
+		for (Entry<String, Object> entry : localval) {
+			
+			
+			log.info("  browsing local context found var " + entry.getKey());
+			
+			
+			
+		}
+		
+		
 		return ret;
 	} catch (ScriptException e) {
 		throw new TcXmlException("fail to evaluate js code ", e);
@@ -869,8 +896,10 @@ public Object evaluateJS(String code, PlayingContext ctx) throws TcXmlException 
 
 
 
-private ScriptContext  buildJavascriptContext(ScriptEngine engine,PlayingContext ctx) {
+private ScriptContext  buildJavascriptContext(ScriptEngine engine,PlayingContext ctx) throws TcXmlException {
 	ScriptContext context = new SimpleScriptContext();
+	ScriptContext defCtx = engine.getContext();
+	context.setBindings(defCtx.getBindings(ScriptContext.ENGINE_SCOPE) , ScriptContext.GLOBAL_SCOPE) ;
 	// import LR object
 	   Object api = new LrAPI(this);
 	   
@@ -881,13 +910,26 @@ private ScriptContext  buildJavascriptContext(ScriptEngine engine,PlayingContext
 	   Object utils = new UtilsAPI(this);
 	   context.setAttribute("Utils", utils, ScriptContext.ENGINE_SCOPE);
 	   // create FuncArgs object
+	   
+	   Object funcargs = new Object();
+	   context.setAttribute("FuncArgs", funcargs, ScriptContext.ENGINE_SCOPE);
+	   
 	   ExecutionContext ec = ctx.getCurrentExecutionContext();
 	   if(ec != null) {
 		 List<CallFunctionAttribut> li = ec.getArrgumentsList() ;
 		 for (Iterator iterator = li.iterator(); iterator.hasNext();) {
 			CallFunctionAttribut callFunctionAttribut = (CallFunctionAttribut) iterator.next();
+			StringBuffer sb = new StringBuffer();
+			sb.append("FuncArgs['").append(callFunctionAttribut.getName()).append("']=").append("\"").append(callFunctionAttribut.getValue()).append("\";");
+			try {
+				Object ret = engine.eval(sb.toString(), context);
+				
+			} catch (ScriptException e) {
+				throw new TcXmlException("fail to build FuncArgs object in js context ", e);
 			
-			//callFunctionAttribut.
+			}
+			
+			
 			
 			
 			

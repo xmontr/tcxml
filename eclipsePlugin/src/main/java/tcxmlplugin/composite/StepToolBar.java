@@ -190,7 +190,7 @@ play();
 
 	private void showStatus(PlayingJob job) {
 		
-		if(job == Status.OK_STATUS) {
+		if(job.getResult() == Status.OK_STATUS) {
 		okbutton.setVisible(true);	
 		nookbutton.setVisible(false);
 			

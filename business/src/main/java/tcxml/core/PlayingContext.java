@@ -37,8 +37,15 @@ public void  popContext() {
 
 
 public ExecutionContext getCurrentExecutionContext() {
+	if(stack.isEmpty()) {
+		
+		return null;
+	}else {
+		
+		return stack.lastElement();
+	}
 	
-	return stack.lastElement();
+	
 	
 }
 
