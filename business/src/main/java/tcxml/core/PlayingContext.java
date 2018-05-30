@@ -81,14 +81,14 @@ public void dumpJsContext() {
 	
 	Set<Entry<String, Object>> globalval = nashorn_global.entrySet();
 	for (Entry<String, Object> entry : globalval) {
-		log.info("   found global var " + entry.getKey());
+		log.info("   found global var " + entry.getKey() + " value= " + entry.getValue());
 	}
 	log.info(" browsing local variable for JS context");
 	Set<Entry<String, Object>> localval = jsContext.getBindings(ScriptContext.ENGINE_SCOPE).entrySet();
 	for (Entry<String, Object> entry : localval) {
 		
 		
-		log.info(" found local var " + entry.getKey());
+		log.info(" found local var " + entry.getKey()+ " value= " + entry.getValue());
 		
 		
 		
@@ -100,6 +100,19 @@ public void dumpJsContext() {
 	
 	
 }
+
+
+public Object getGlobalJsVariable(String name) {
+	Bindings nashorn_global = (Bindings) jsContext.getAttribute("nashorn.global");
+	if(nashorn_global == null) {
+		
+		return null ;
+	}
+	
+	return nashorn_global.get(name);
+	
+}
+
 
 
 }

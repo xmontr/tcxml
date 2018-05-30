@@ -46,7 +46,7 @@ public class UniqueParameter extends StepParameter  {
 
 	@Override
 	public String evalParameter() throws TcXmlException {
-String ret =	String.format(Format, currentValue.toString());
+String ret =	String.format(Format, currentValue);
 		currentValue++;
 		return ret;
 	}

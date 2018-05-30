@@ -21,5 +21,13 @@ public class LrAPI {
 		String ret = stepParam.evalParameter() ;
 		return ret;
 	}
+	
+	
+	
+	public void log( String message, String level) {
+		controller.getLog().info("JS message:level="+level +"\r\n"+ message);	
+		
+		
+	}
 
 }

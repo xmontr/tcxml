@@ -4,6 +4,7 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.io.InputStreamReader;
 import java.security.GeneralSecurityException;
 import java.util.HashMap;
@@ -43,7 +44,9 @@ public class TableParameter extends StepParameter {
 	private String tableLocation ;
 	
 	
-	private FileInputStream inputstream;
+	
+	
+	private String[] header;
 	
 	private HashMap<String, String>[]  values;
 
@@ -156,12 +159,16 @@ public class TableParameter extends StepParameter {
 	}
 	
 	
-	private FileInputStream getFileStream() throws FileNotFoundException {
+	private FileInputStream getFileStream() throws TcXmlException  {
 		FileInputStream ret = null;
 		if(isLocalFile()) {
 			String path2file = conf.getBasePath()	 +File.separator +  table;
 			File file = new File(path2file);
-			ret = new FileInputStream(file);
+			try {
+				ret = new FileInputStream(file);
+			} catch (FileNotFoundException e) {
+throw  new TcXmlException("fail when getting stream for parameter", e);
+			}
 		} else {//remote file
 			
 			
@@ -184,16 +191,13 @@ public class TableParameter extends StepParameter {
 	public String evalParameter() throws TcXmlException {
 String ret ="not implemented";		
 		
-if(inputstream == null) {
-	
-	try {
-		inputstream = getFileStream();
-	} catch (FileNotFoundException e) {
-	throw new TcXmlException("file not found when loading parameter", e);
-	}	
-}
 
-//file is there
+
+
+if( header == null) {
+	
+	header = readHeader();
+}
 
 
 if(values == null) {
@@ -202,9 +206,17 @@ if(values == null) {
 }
 
 
-// values are there
 
+
+
+// values are there
+try {
 ret = values[getCurrentLine()].get(getColumn());
+}
+catch( ArrayIndexOutOfBoundsException e) {
+	int toto = 0;
+	
+}
 
 
 
@@ -218,6 +230,23 @@ return ret;
 	
 	
 
+	private String[] readHeader() throws TcXmlException {
+		String[] ret;
+		try {
+		BufferedReader br = new BufferedReader(new InputStreamReader(getFileStream()));
+		
+		
+		
+		String li = br.readLine();
+		
+	
+			ret = li.split(delimiter);
+		} catch (IOException e) {
+throw new TcXmlException("failure when reading header ", e);
+		}
+		return ret;
+	}
+
 	private Object getColumn() {
 		// TODO Auto-generated method stub
 		return columnName;
@@ -228,13 +257,13 @@ return ret;
 		return 0;
 	}
 
-	private HashMap<String, String>[] readAllLines() {
-		BufferedReader br = new BufferedReader(new InputStreamReader(inputstream));
+	private HashMap<String, String>[] readAllLines() throws TcXmlException  {
+		BufferedReader br = new BufferedReader(new InputStreamReader(getFileStream()));
 		Function<String,HashMap<String,String>> mapToParamValue= (String line ) ->{
 			HashMap<String, String> re = new HashMap<String, String>();
 			String[] data = line.split(delimiter);
 			for (int i = 0; i < data.length; i++) {
-				re.put("Col "+(i +1), data[i]);
+				re.put(getHeader(i), data[i]);
 			}
 			
 			return re;
@@ -245,6 +274,14 @@ return ret;
 		return ar;
 	}
 
-
-
+	private String getHeader(int i) {
+		if(getColumnName().startsWith("Col")) {
+		String ret = "Col "+(i +1) ;
+		return ret;
+	}else {
+		return header[i];
+		
+	}
+}
+	
 }

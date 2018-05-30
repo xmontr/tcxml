@@ -3,6 +3,7 @@ package tcxml.test;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.Matchers.instanceOf;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.fail;
 
@@ -12,6 +13,7 @@ import java.net.URL;
 import javax.json.JsonObject;
 import javax.json.JsonString;
 
+import org.hamcrest.core.IsInstanceOf;
 import org.junit.Test;
 
 import tcxml.core.PlayingContext;
@@ -21,7 +23,45 @@ import tcxml.core.TcXmlException;
 public class JavascriptEvalTest extends JsonTest{
 	
 	
-	
+	@Test
+	public void testEvaluateJavascript() {
+		
+	URL p = this.getClass().getResource("/ScriptSample/TC01_OLAF_OCM");
+		TcXmlController controller = new TcXmlController("TC01_OLAF_OCM");
+		
+		
+		try {
+			controller.loadFromDisk(p.getPath());
+		} catch (TcXmlException e) {
+			e.printStackTrace();
+			fail("unable to load default.xml in /ScriptSample/TC01_OLF_OCM");
+		
+		}	
+		String json;
+		try {
+			json = fileResourceToString("/sampleEvaluateJSForOlaf.json");
+			JsonObject data = controller.readJsonObject(json);
+			JsonObject code = data.getJsonObject("Code");
+			JsonString js = code.getJsonString("value");
+		
+			PlayingContext ctx = new PlayingContext(controller);
+			controller.evaluateJS(js.getString(), ctx );
+			
+			assertThat(ctx.getGlobalJsVariable("theselectorname"), instanceOf(String.class) );
+			//assertThat(ctx.getGlobalJsVariable("theselectorname"), equalTo("CSIRIBAN") );
+			
+		;	
+			
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			fail("unable to read sampleEvaluateJSForOlaf.json");
+		} catch (TcXmlException e) {
+						e.printStackTrace();
+						fail("unable to read json in sampleEvaluateJSForOlaf.json");
+		}
+		
+	}
 	
 	
 	@Test
@@ -35,7 +75,7 @@ public class JavascriptEvalTest extends JsonTest{
 			controller.loadFromDisk(p.getPath());
 		} catch (TcXmlException e) {
 			e.printStackTrace();
-			fail("unable to load default.xml ");
+			fail("unable to load default.xml in /ScriptSample/SMT");
 		
 		}
 		
