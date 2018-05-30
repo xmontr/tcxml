@@ -5,6 +5,7 @@ import org.eclipse.swt.widgets.ExpandItem;
 
 import tcxml.core.PlayingContext;
 import tcxml.core.StepRunner;
+import tcxml.core.TcXmlController;
 import tcxml.core.TcXmlException;
 import tcxml.model.Step;
 import org.eclipse.swt.layout.GridLayout;
@@ -70,7 +71,7 @@ public  class StepViewer extends Composite{
 
 
 
-	public void setContainer(StepContainer container) {
+	private void setContainer(StepContainer container) {
 		this.container = container;
 	}
 
@@ -83,13 +84,7 @@ public  class StepViewer extends Composite{
 		this.parentExpandItem = parentExpandItem;
 	}
 
-
-
-
-
-
-	public StepViewer(Composite parent, int style) {
-		
+	public   StepViewer(Composite parent, int style, StepView view, StepContainer container) {
 		super(parent, style);
 		setLayout(new GridLayout(2, false));
 		
@@ -112,32 +107,20 @@ public  class StepViewer extends Composite{
 	lblNewLabel_1.setText("   aaa");
 	lblNewLabel_1.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 	lblNewLabel_1.setForeground(SWTResourceManager.getColor(SWT.COLOR_DARK_GREEN));
+	setView(view);
+	setContainer(container);
 		
 	}
 
-/*	public StepViewer(Composite parent, int style , StepView view) {
-		super(parent, style);
-		
-		setLayout(layout);
 
-		
-		stepToolBar = new StepToolBar(this, SWT.NONE, this);
-		stepToolBar.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
-		this.view=view;
-		view.setParent(this);
-	GridData gd = new GridData();
-	gd.grabExcessHorizontalSpace=true;
-	gd.grabExcessVerticalSpace=true;
-	gd.horizontalAlignment=gd.FILL;
-	gd.verticalAlignment=gd.FILL;
-		this.view.setLayoutData(gd);
-		
-		
-		
-	}*/
+
+
+
+
+
 	
 	
-	public void setView(StepView view) {
+	private  void setView(StepView view) {
 		this.view = view;
 		view.setParent(contentView);
 		GridData gd = new GridData();
@@ -254,6 +237,13 @@ public  class StepViewer extends Composite{
 			
 			
 			parentExpandItem.setExpanded(false);
+			
+		}
+		
+		
+		public TcXmlController getController() {
+			
+			return view.getController();
 			
 		}
 		

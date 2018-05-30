@@ -263,10 +263,10 @@ public static class CallFunctionViewModel {
 		
 		List<CallFunctionAttribut> listArguments = ((CallFunctionArg)theArgument).getCallArguments();
 		
-		ExecutionContext ec = new ExecutionContext();
+		ExecutionContext ec = new ExecutionContext(listArguments);
 		
 		
-		ec.setArrgumentsList(listArguments);
+		
 		ret.pushContext(ec);
 		
 		

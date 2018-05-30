@@ -1,5 +1,7 @@
 package tcxmlplugin.job;
 
+
+
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
@@ -20,6 +22,10 @@ public class PlayingJob extends Job{
 	private StepViewer stepviewer;
 	private PlayingContext ctx;
 	private String errorMessage;
+	
+	
+	
+
 	
 
 	public String getErrorMessage() {

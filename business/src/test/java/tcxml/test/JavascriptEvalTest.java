@@ -54,9 +54,9 @@ public class JavascriptEvalTest extends JsonTest{
 				
 				boolean isjs = loc.getBoolean("evalJavaScript");
 				
-			PlayingContext ctx= new PlayingContext();
+			PlayingContext ctx= new PlayingContext(controller);
 			Object location = controller.evaluateJS(val.getString(),ctx);
-			System.out.println("location :" + location);
+			
 				
 			assertThat(location, equalTo("https://intragate.stress.ec.europa.eu/smtweb"));	
 			} catch (IOException e) {

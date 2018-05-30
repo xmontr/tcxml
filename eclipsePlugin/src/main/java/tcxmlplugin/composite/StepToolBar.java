@@ -56,9 +56,14 @@ public class StepToolBar extends Composite implements IJobChangeListener   {
 		playButton.setToolTipText("play");
 		playButton.addMouseListener(new MouseAdapter() {
 			@Override
-			public void mouseDown(MouseEvent e) {				
+			public void mouseDown(MouseEvent e) {
+				
 		
-play();
+try {
+	play();
+} catch (TcXmlException e1) {
+TcXmlPluginController.getInstance().error("fail to play step ", e1);
+}
 				
 			}
 		});
@@ -111,10 +116,10 @@ play();
 
 
 
-	protected void play() {
+	protected void play() throws TcXmlException {
 		
-		
-		currrentJob = stepviewer.getplayInteractiveJob( new PlayingContext());
+				
+		currrentJob = stepviewer.getplayInteractiveJob( new PlayingContext(stepviewer.getController() ));
 		currrentJob.schedule();
 	
 	}

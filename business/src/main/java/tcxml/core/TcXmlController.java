@@ -176,8 +176,16 @@ public class TcXmlController {
 	private WebDriver driver;
 
 	private File highlighterExtension;
+	
+	
+	private static  ScriptEngineManager  scriptFactory = new ScriptEngineManager();
+	
+	
+	
     
     public TcXmlController(String name){
+    	
+    	
     	
     	log = Logger.getLogger(TcXmlController.class.getName());
     	log.setLevel(Level.ALL);
@@ -188,6 +196,10 @@ public class TcXmlController {
     libraries = new HashMap<String,TruLibrary>();
     	
     this.name = name;	
+    
+  
+    		
+    		 
     }
     
  
@@ -854,34 +866,14 @@ return ret;
 
 public Object evaluateJS(String code, PlayingContext ctx) throws TcXmlException {
 	
-	   ScriptEngineManager m = new ScriptEngineManager();
-	   ScriptEngine engine = m.getEngineByName("nashorn");
-	   ScriptContext context = buildJavascriptContext(engine, ctx);
+	 
+	ScriptEngine engine = scriptFactory.getEngineByName("nashorn");
+	   ScriptContext context = ctx.getJsContext();
 	   
 	   log.info(" evaluationg javascript:\n " + code);
 	try {
 		Object ret = engine.eval(code, context);
-		Bindings obj = context.getBindings(ScriptContext.ENGINE_SCOPE);
-		Object nashornGlobal = obj.get("nashorn.global"); 
-		ScriptObjectMirror globalMirror = (ScriptObjectMirror) nashornGlobal;
-		
-		Set<Entry<String, Object>> globalval = engine.getContext().getBindings(ScriptContext.ENGINE_SCOPE).entrySet();
-		for (Entry<String, Object> entry : globalval) {
-			log.info("  browsing global context found var " + entry.getKey());
-		}
-		
-		
-		
-		Set<Entry<String, Object>> localval = context.getBindings(ScriptContext.ENGINE_SCOPE).entrySet();
-		for (Entry<String, Object> entry : localval) {
-			
-			
-			log.info("  browsing local context found var " + entry.getKey());
-			
-			
-			
-		}
-		
+		ctx.dumpJsContext();  // debug
 		
 		return ret;
 	} catch (ScriptException e) {
@@ -896,26 +888,19 @@ public Object evaluateJS(String code, PlayingContext ctx) throws TcXmlException 
 
 
 
-private ScriptContext  buildJavascriptContext(ScriptEngine engine,PlayingContext ctx) throws TcXmlException {
-	ScriptContext context = new SimpleScriptContext();
-	ScriptContext defCtx = engine.getContext();
-	context.setBindings(defCtx.getBindings(ScriptContext.ENGINE_SCOPE) , ScriptContext.GLOBAL_SCOPE) ;
-	// import LR object
-	   Object api = new LrAPI(this);
+public Logger getLog() {
+	return log;
+}
+
+public void addFuncArg2context(PlayingContext ctx,ExecutionContext ec) throws TcXmlException {
+	
+	
+	
 	   
-	   context.setBindings(engine.createBindings(), ScriptContext.ENGINE_SCOPE);
-	   context.setAttribute("LR", api, ScriptContext.ENGINE_SCOPE);
-	   
-	   // import Utils obj
-	   Object utils = new UtilsAPI(this);
-	   context.setAttribute("Utils", utils, ScriptContext.ENGINE_SCOPE);
-	   // create FuncArgs object
-	   
-	   Object funcargs = new Object();
-	   context.setAttribute("FuncArgs", funcargs, ScriptContext.ENGINE_SCOPE);
-	   
-	   ExecutionContext ec = ctx.getCurrentExecutionContext();
-	   if(ec != null) {
+	   ScriptContext context = ctx.getJsContext();
+	   ScriptEngine engine = scriptFactory.getEngineByName("nashorn");
+	
+	  
 		 List<CallFunctionAttribut> li = ec.getArrgumentsList() ;
 		 for (Iterator iterator = li.iterator(); iterator.hasNext();) {
 			CallFunctionAttribut callFunctionAttribut = (CallFunctionAttribut) iterator.next();
@@ -934,9 +919,40 @@ private ScriptContext  buildJavascriptContext(ScriptEngine engine,PlayingContext
 			
 			
 			
-		}
+		
 		   
 	   }
+	
+	
+	
+	
+	
+}
+
+
+
+
+public  ScriptContext   buildInitialJavascriptContext(PlayingContext ctx) throws TcXmlException {
+	
+	ScriptEngine engine = scriptFactory.getEngineByName("nashorn");
+	ScriptContext context = new SimpleScriptContext();
+
+	context.setBindings(engine.createBindings(), ScriptContext.ENGINE_SCOPE);
+	
+	// import LR object
+	   Object api = new LrAPI(this);
+	   
+	   context.setBindings(engine.createBindings(), ScriptContext.ENGINE_SCOPE);
+	   context.setAttribute("LR", api, ScriptContext.ENGINE_SCOPE);
+	   
+	   // import Utils obj
+	   Object utils = new UtilsAPI(this);
+	   context.setAttribute("Utils", utils, ScriptContext.ENGINE_SCOPE);
+	   // create FuncArgs object
+	   
+	   Object funcargs = new Object();
+	context.setAttribute("FuncArgs", funcargs , ScriptContext.ENGINE_SCOPE); 
+
 	   
 	   
 	
@@ -1162,6 +1178,35 @@ protected void screenshot(final String filename) {
 private String getSnapshotDir() {
 	// TODO Auto-generated method stub
 	return "C:\\tmp\\";
+}
+
+public void removeArgsFromJsContext(PlayingContext playingContext, ExecutionContext toremove) throws TcXmlException {
+	   ScriptContext context = playingContext.getJsContext();
+	   ScriptEngine engine = scriptFactory.getEngineByName("nashorn");
+	
+	  
+		 List<CallFunctionAttribut> li = toremove.getArrgumentsList() ;
+		 for (Iterator iterator = li.iterator(); iterator.hasNext();) {
+			CallFunctionAttribut callFunctionAttribut = (CallFunctionAttribut) iterator.next();
+			StringBuffer sb = new StringBuffer();
+			sb.append(" delete FuncArgs['").append(callFunctionAttribut.getName()).append("'];").append("\"");
+			try {
+				Object ret = engine.eval(sb.toString(), context);
+				
+			} catch (ScriptException e) {
+				throw new TcXmlException("fail to delete FuncArgs object in js context ", e);
+			
+			}
+			
+			
+			
+			
+			
+			
+		
+		   
+	   }
+	
 }
 
 
