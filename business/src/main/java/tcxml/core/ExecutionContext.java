@@ -14,6 +14,8 @@ public class ExecutionContext {
 	
 	private PlayingContext parent;
 	
+	private String name ;
+	
 
 	
 
@@ -37,9 +39,14 @@ public class ExecutionContext {
 		
 	}
 
-	public ExecutionContext(List<CallFunctionAttribut> arrgumentsList) {
+	public ExecutionContext(String name , List<CallFunctionAttribut> arrgumentsList) {
 		super();
+		this.name = name;
 		this.arrgumentsList = arrgumentsList;
+	}
+
+	public String getName() {
+		return name;
 	}
 
 

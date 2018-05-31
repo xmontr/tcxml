@@ -54,7 +54,10 @@ public class CallFunctionArg extends StepArgument {
 	for (String key : keys) {
 		JsonObject att = arg.getJsonObject(key);
 		JsonString val = att.getJsonString("value");
-		CallFunctionAttribut callatt = new CallFunctionAttribut(key,val.getString(),false);
+		
+		
+		Boolean evalJavaScript = att.getBoolean("evalJavaScript", false);
+		CallFunctionAttribut callatt = new CallFunctionAttribut(key,val.getString(),evalJavaScript);
 		
 		callArguments.add(callatt);
 		

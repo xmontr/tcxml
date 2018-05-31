@@ -263,7 +263,8 @@ public static class CallFunctionViewModel {
 		
 		List<CallFunctionAttribut> listArguments = ((CallFunctionArg)theArgument).getCallArguments();
 		
-		ExecutionContext ec = new ExecutionContext(listArguments);
+		String name = "Call function " +model.getLibName() + "." +  model.getFuncName();
+		ExecutionContext ec = new ExecutionContext(name  ,listArguments);
 		
 		
 		
@@ -289,17 +290,26 @@ public static class CallFunctionViewModel {
 		
 		IStatus lastExecStatus = j.getResult() ;
 		
+		
+		
 		if(lastExecStatus != Status.OK_STATUS) {
 			
 			throw new TcXmlException("error in child step", new IllegalStateException());	
 		}
+		
+		ret = j.getCtx();
+		return ret;
+		
 	} catch (InterruptedException e) {
 		throw new TcXmlException("Interupted", e);
 		
 	}
 	
-	ret = j.getCtx();
-	return ret;
+	finally {
+		ctx.popContext();
+	}
+	
+
 	}
 
 

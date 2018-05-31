@@ -37,14 +37,11 @@ public class FunctionView extends StepView implements StepContainer {
 	private ExpandBar bar;
 
 	private TruLibrary Library;
-	
-	
-	private Function function ;
-	
-	
-	private List<StepViewer> stepViwerChildren ;
-	
-	
+
+	private Function function;
+
+	private List<StepViewer> stepViwerChildren;
+
 	private String libName;
 
 	public String getLibName() {
@@ -73,10 +70,7 @@ public class FunctionView extends StepView implements StepContainer {
 		bar.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 		bar.setBackground(getDisplay().getSystemColor(SWT.COLOR_WHITE));
 		bar.setSpacing(10);
-		
-		
 
-	
 	}
 
 	public void addStep(Step step) throws TcXmlException {
@@ -88,12 +82,11 @@ public class FunctionView extends StepView implements StepContainer {
 		xpndtmNewExpanditem.setExpanded(false);
 		xpndtmNewExpanditem.setText(tv.getTitle());
 
-		xpndtmNewExpanditem.setHeight(tv.computeSize(SWT.DEFAULT, SWT.DEFAULT).y );
+		xpndtmNewExpanditem.setHeight(tv.computeSize(SWT.DEFAULT, SWT.DEFAULT).y);
 		xpndtmNewExpanditem.setControl(tv);
 		tv.setParentExpandItem(xpndtmNewExpanditem);
-		
-		 stepViwerChildren.add(tv);
 
+		stepViwerChildren.add(tv);
 
 	}
 
@@ -162,58 +155,42 @@ public class FunctionView extends StepView implements StepContainer {
 
 	@Override
 	public PlayingContext play(PlayingContext ctx) throws TcXmlException {
-		
-	
-		
+
+		PlayingContext temp = ctx;
+
 		for (Iterator iterator = stepViwerChildren.iterator(); iterator.hasNext();) {
 			StepViewer stepViewer = (StepViewer) iterator.next();
-			
-			
-			PlayingJob j = stepViewer.getplayInteractiveJob(ctx);
-			j.schedule();	
-			
+
+			PlayingJob j = stepViewer.getplayInteractiveJob(temp);
+			j.schedule();
+
 			try {
 				j.join();
-				
-				
-				IStatus lastExecStatus = j.getResult() ;
-				
-				if(lastExecStatus != Status.OK_STATUS) {
-					
-					throw new TcXmlException("error in child step", new IllegalStateException());	
+				temp = j.getCtx();
+
+				IStatus lastExecStatus = j.getResult();
+
+				if (lastExecStatus != Status.OK_STATUS) {
+
+					throw new TcXmlException("error in child step", new IllegalStateException());
 				}
-				
-				
+
 			} catch (InterruptedException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-			
-			finally {
-				
-				ctx.popContext();	
-				
+
+			try {
+				Thread.currentThread().sleep(10000);
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
 			}
-			
-			
-			
-			
-			
+
 		}
-		
-		
-		
-		
-		
-		
-		try {
-			Thread.currentThread().sleep(10000);
-		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-	return null;
-		
+
+		return temp;
+
 	}
 
 	@Override
@@ -221,7 +198,5 @@ public class FunctionView extends StepView implements StepContainer {
 		// TODO Auto-generated method stub
 		return stepViwerChildren;
 	}
-
-
 
 }

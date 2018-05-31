@@ -12,6 +12,8 @@ import org.eclipse.swt.widgets.Composite;
 import tcxml.core.PlayingContext;
 import tcxml.core.TcXmlController;
 import tcxml.core.TcXmlException;
+import tcxml.core.runner.TestObjectRunner;
+import tcxml.core.runner.WaitRunner;
 import tcxml.model.Step;
 import tcxmlplugin.composite.StepView;
 import org.eclipse.swt.widgets.Label;
@@ -195,8 +197,11 @@ waitmodel.setUnit("seconds");
 
 	@Override
 	public PlayingContext play(PlayingContext ctx) throws TcXmlException {
-		throw new TcXmlException("not implemented", new IllegalAccessException());
 		
+		WaitRunner runner = new WaitRunner(model, controller);
+		
+	PlayingContext ret = runner.runStep(ctx);
+	return ret;
 	}
 
 

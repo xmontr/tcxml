@@ -11,6 +11,7 @@ import org.openqa.selenium.By.ByXPath;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.ui.ExpectedCondition;
+import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
 import tcxml.core.PlayingContext;
@@ -74,12 +75,26 @@ public class TestObjectRunner extends StepRunner{
 		break;
 		case "Click":click(thexpath,ctx);
 		break;
+		case "Wait":waitOn(thexpath, ctx);
+	break;
+		
 		default: notImplemented();
 		}
 		
 	return ctx;	
 		
 	}
+
+	
+	/**
+	 * 
+	 * wait for the html element to be present 
+	 * @param thexpath
+	 * @param ctx
+	 * @throws TcXmlException 
+	 */
+	
+
 
 	private void click(String thexpath, PlayingContext ctx) throws TcXmlException {
 		
@@ -204,6 +219,20 @@ public class TestObjectRunner extends StepRunner{
 			actions.moveToElement(driver.findElements(xp2).get(0)).click().perform();
 		 
 
+		
+	}
+	
+	private void waitOn(String thexpath, PlayingContext ctx) throws TcXmlException {
+		WebDriver dr = tcXmlController.getDriver();
+		tcXmlController.ensureDriver();
+		ByXPath xp = new ByXPath(thexpath);
+
+		long TIMEOUTWAIT = 20000;
+		WebDriverWait w = new WebDriverWait(dr, TIMEOUTWAIT );
+		w.until(ExpectedConditions.presenceOfElementLocated(xp));	
+		tcXmlController.highLightXpath(thexpath);
+		
+		
 		
 	}
 

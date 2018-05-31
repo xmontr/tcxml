@@ -1189,7 +1189,7 @@ public void removeArgsFromJsContext(PlayingContext playingContext, ExecutionCont
 		 for (Iterator iterator = li.iterator(); iterator.hasNext();) {
 			CallFunctionAttribut callFunctionAttribut = (CallFunctionAttribut) iterator.next();
 			StringBuffer sb = new StringBuffer();
-			sb.append(" delete FuncArgs['").append(callFunctionAttribut.getName()).append("'];").append("\"");
+			sb.append(" delete FuncArgs['").append(callFunctionAttribut.getName()).append("'];");
 			try {
 				Object ret = engine.eval(sb.toString(), context);
 				

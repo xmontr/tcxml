@@ -47,12 +47,14 @@ public void  pushContext(ExecutionContext ec) throws TcXmlException {
 	ec.setParent(this);
 	controller.addFuncArg2context(this,ec);
 	stack.push(ec);
+	controller.getLog().info(" adding executioncontext " + ec.getName());
 }
 	
 	
 public void  popContext() throws TcXmlException {
 	
 	ExecutionContext toremove = stack.pop();
+	controller.getLog().info(" removing executioncontext " + toremove.getName());
 	controller.removeArgsFromJsContext(this,toremove);
 }
 

@@ -76,7 +76,7 @@ public class StepRunnerFactory {
 		StepRunner ret = null;
 		switch(action){
 		case"Evaluate JavaScript":ret = new EvalJavascriptRunner(step,lib, tcXmlController); break;
-		case "Wait":ret = new WaitRunner(step,lib, tcXmlController);  break;
+		case "Wait":ret = new WaitRunner(step, tcXmlController);  break;
 		default:ret=new DefaulltRunner(step,lib, tcXmlController);
 			
 		}

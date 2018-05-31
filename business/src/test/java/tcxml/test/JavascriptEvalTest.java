@@ -48,7 +48,7 @@ public class JavascriptEvalTest extends JsonTest{
 			controller.evaluateJS(js.getString(), ctx );
 			
 			assertThat(ctx.getGlobalJsVariable("theselectorname"), instanceOf(String.class) );
-			//assertThat(ctx.getGlobalJsVariable("theselectorname"), equalTo("CSIRIBAN") );
+			assertThat(ctx.getGlobalJsVariable("theselectorname"), equalTo("CSIRIBAN") );
 			
 		;	
 			
