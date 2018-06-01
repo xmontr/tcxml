@@ -27,6 +27,7 @@ import java.util.logging.Logger;
 import javax.json.Json;
 import javax.json.JsonObject;
 import javax.json.JsonReader;
+import javax.json.JsonString;
 import javax.json.JsonValue;
 import javax.json.JsonValue.ValueType;
 import javax.script.Bindings;
@@ -661,9 +662,10 @@ public String JSCodefromJSON( String json) throws TcXmlException {
 	String ret = null;
 	
 	
-	JsonValue codeobj = readJsonObject(json, "Code");
+	 JsonObject codeobj = readJsonObject(json, "Code");
+	JsonString js = codeobj.getJsonString("value");
 
-ret = ((JsonObject)codeobj).get("value").toString();
+ret =js.getString();
 	
 
 
@@ -873,8 +875,8 @@ public Object evaluateJS(String code, PlayingContext ctx) throws TcXmlException 
 	   log.info(" evaluationg javascript:\n " + code);
 	try {
 		Object ret = engine.eval(code, context);
-		ctx.dumpJsContext();  // debug
 		
+		log.info("return for evaluateJS is " + ret);
 		return ret;
 	} catch (ScriptException e) {
 		throw new TcXmlException("fail to evaluate js code ", e);
@@ -905,7 +907,10 @@ public void addFuncArg2context(PlayingContext ctx,ExecutionContext ec) throws Tc
 		 for (Iterator iterator = li.iterator(); iterator.hasNext();) {
 			CallFunctionAttribut callFunctionAttribut = (CallFunctionAttribut) iterator.next();
 			StringBuffer sb = new StringBuffer();
-			sb.append("FuncArgs['").append(callFunctionAttribut.getName()).append("']=").append("\"").append(callFunctionAttribut.getValue()).append("\";");
+			
+			
+			
+			sb.append("FuncArgs['").append(callFunctionAttribut.getName()).append("']=").append("\"").append(evaluate(callFunctionAttribut,ctx)).append("\";");
 			try {
 				Object ret = engine.eval(sb.toString(), context);
 				
@@ -931,6 +936,23 @@ public void addFuncArg2context(PlayingContext ctx,ExecutionContext ec) throws Tc
 
 
 
+
+private Object evaluate(CallFunctionAttribut callFunctionAttribut, PlayingContext ctx) throws TcXmlException {
+	Object ret ;
+	if( callFunctionAttribut.isJs()) { // value is js that need to be evaluated
+		String code = callFunctionAttribut.getValue();
+		ret= evaluateJS(code, ctx);
+		
+	}else {
+		
+	ret = callFunctionAttribut.getValue();	
+		
+	}
+	
+	
+	
+	return ret;
+}
 
 public  ScriptContext   buildInitialJavascriptContext(PlayingContext ctx) throws TcXmlException {
 	

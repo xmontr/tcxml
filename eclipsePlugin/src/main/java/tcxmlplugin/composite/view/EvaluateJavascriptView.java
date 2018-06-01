@@ -143,6 +143,8 @@ private String getShortCode() {
 		
 String code = evaljsmodel.getCode();
 controller.evaluateJS(code , ctx);
+controller.getLog().info("after evaljavascript step context is :");
+ctx.dumpJsContext();
 return ctx;
 		
 		

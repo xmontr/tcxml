@@ -61,6 +61,33 @@ public class JavascriptEvalTest extends JsonTest{
 						fail("unable to read json in sampleEvaluateJSForOlaf.json");
 		}
 		
+		
+		try {
+			json = fileResourceToString("/otherEvaluateJS.json");
+			JsonObject data = controller.readJsonObject(json);
+			JsonObject code = data.getJsonObject("Code");
+			JsonString js = code.getJsonString("value");
+		
+			PlayingContext ctx = new PlayingContext(controller);
+			controller.evaluateJS(js.getString(), ctx );
+			
+			assertThat(ctx.getGlobalJsVariable("user"), instanceOf(String.class) );
+			assertThat(ctx.getGlobalJsVariable("user"), equalTo("montrxa") );
+			ctx.dumpJsContext();
+			
+		;	
+			
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			fail("unable to read sampleEvaluateJSForOlaf.json");
+		} catch (TcXmlException e) {
+						e.printStackTrace();
+						fail("unable to read json in sampleEvaluateJSForOlaf.json");
+		}
+		
+		
+		
 	}
 	
 	
