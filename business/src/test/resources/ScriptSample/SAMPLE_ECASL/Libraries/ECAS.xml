@@ -1,0 +1,556 @@
+<truLibrary engineVersion="12.55.1333.0" timestamp="Thu May 31 2018 11:02:58 GMT+0200 (Romance Standard Time)">
+<step type="library" stepId="step:{3c2d6416-5dec-4e86-938b-04380789034a}" action="ECAS" level="43" arguments="{}" snapshotId="nppdmztui"><step type="function" stepId="step:{67801193-5515-4d77-975a-7ef136921034}" action="LogIn" level="1" arguments="{}" snapshotId="jcsykfuq" index="1" argsSchema="{&quot;userName&quot;:{&quot;type&quot;:&quot;string&quot;}}"><step type="block" stepId="step:{e881b515-4c0f-4f62-aa7c-da03bafc0b7d}" action="internal" level="43" arguments="{}" snapshotId="vvmrplymj"><step type="testObject" testObject="testObj:{00000000-0000-0000-0000-000000000001}" stepId="step:{0e5ae152-a67d-4026-a373-177b12b75459}" action="Navigate" level="1" arguments="{&quot;Location&quot;:{&quot;value&quot;:&quot;LR.getParam(\&quot;baseURL\&quot;);&quot;,&quot;evalJavaScript&quot;:true}}" snapshotId="vwntmwh" index="1" recDuration="3" autoEndEventFF="Document Loaded"/><step type="util" stepId="step:{8fb31dbe-68c9-4cea-a56d-c608bf6cfb5e}" action="Wait" level="1" arguments="{}" snapshotId="xetlzjhj" index="2"/><step type="testObject" stepId="step:{5b9a5c3a-6341-4586-8b8f-a7c4583f2c56}" action="Wait" level="1" arguments="{}" snapshotId="izwdaykok" index="3" testObject="testObj:{90b50871-418b-444e-bbf2-10afbade82ca}"/><step type="testObject" testObject="testObj:{3e5b1ba2-1375-420e-9288-2fe6cc4e0abb}" stepId="step:{2c0bb157-449e-4f2d-9f19-799ace0f5f9d}" action="Click" level="1" arguments="{&quot;X Coordinate&quot;:{&quot;value&quot;:156},&quot;Y Coordinate&quot;:{&quot;value&quot;:23}}" snapshotId="oiytbypgn" index="4" autoEndEventFF="Action completed"/><step type="testObject" testObject="testObj:{3e5b1ba2-1375-420e-9288-2fe6cc4e0abb}" stepId="step:{7dfc9281-e96e-4f38-a718-9a0099e07385}" action="Type" level="1" arguments="{&quot;Value&quot;:{&quot;value&quot;:&quot;FuncArgs.userName;&quot;,&quot;evalJavaScript&quot;:true}}" snapshotId="btfqksdlh" index="5" recDuration="3" autoEndEventFF="Action completed"/><step type="testObject" testObject="testObj:{85bcdc5c-cbf6-47fd-999e-517921817365}" stepId="step:{e1f70604-e1f1-4f36-a7c4-32e108a1832a}" action="Click" level="1" arguments="{&quot;X Coordinate&quot;:{&quot;value&quot;:130},&quot;Y Coordinate&quot;:{&quot;value&quot;:18}}" snapshotId="ujefrmd" index="6" recDuration="3" autoEndEventFF="Document Loaded"/><step type="block" stepId="step:{af1f0201-2d55-45a3-8755-c0a2e838fee9}" action="Sign in" level="1" arguments="{}" snapshotId="hjcjrpuic" index="7"><step type="testObject" testObject="testObj:{b380e129-0bee-4dbb-b2bf-79b54401cb28}" stepId="step:{fa5119e6-950e-4339-b8e9-b1c606ccc106}" action="Click" level="1" arguments="{&quot;X Coordinate&quot;:{&quot;value&quot;:83},&quot;Y Coordinate&quot;:{&quot;value&quot;:22}}" snapshotId="yasaqqn" index="1" autoEndEventFF="Action completed"/><step type="testObject" testObject="testObj:{b380e129-0bee-4dbb-b2bf-79b54401cb28}" stepId="step:{d741fcc0-f011-4f1f-b411-c7771216de2f}" action="Type" level="1" arguments="{&quot;Value&quot;:{&quot;value&quot;:&quot;Str3ssm3&quot;}}" snapshotId="rkclc" index="2" recDuration="5" autoEndEventFF="Action completed"/><step type="testObject" testObject="testObj:{518c4f7e-892f-4014-b59d-b75415bdcc10}" stepId="step:{11e97d58-4209-4dbe-85ff-8e5dfe51fb8c}" action="Click" level="1" arguments="{&quot;X Coordinate&quot;:{&quot;value&quot;:131},&quot;Y Coordinate&quot;:{&quot;value&quot;:26}}" snapshotId="oujitvdh" index="3" recDuration="9" autoEndEventFF="Step network completed"/><step type="testObject" stepId="step:{e6e5991f-103b-4cdb-aafc-12f7a147c32e}" action="Wait" level="1" arguments="{}" snapshotId="obfyczc" index="4" testObject="testObj:{c403ffc4-68d1-43de-aa20-9bb4d716d2b5}"/><step type="util" stepId="step:{04d363c6-5fef-4f30-a17d-b8cef85dcec6}" action="Wait" level="1" arguments="{}" snapshotId="gwwjppx" index="5"/></step></step></step></step>
+<testObjects><testObject testObjId="testObj:{90b50871-418b-444e-bbf2-10afbade82ca}" platform="web" autoName="Sign in to continue"><roles><role>element</role><role>heading</role></roles><idents active="XPath"><ident type="XPath"><![CDATA[{
+"primaryScore":1,
+"implData":{
+	"value":"//h1[text()=\" to continue\"]",
+	"suggestions":["//h1[text()=\" to continue\"]","/html/body/div[2]/div/div/div/h1"]
+}
+}]]></ident><ident type="Electors"><![CDATA[{
+"primaryScore":0.41194000000000003,
+"implData":{
+	"ctxScore":0,
+	"electors":[
+		{"id":"tagName","value":"H1","score":0.01},
+		{"id":"text","value":{"text":"Sign in to continue","tagName":"H1"},"score":0.4},
+		{"id":"leaf","value":false,"score":0.01}
+	],
+	"secondaryData":{
+		"default": {
+				"totalObjs": 1,
+				"maxObjsPerElector": 200,
+				"total": {
+						"tagName": 1,
+						"text": 1,
+						"leaf": null
+				},
+				"secondaryScore": 0,
+				"totalCandidates": 1
+		}
+}
+}
+}]]></ident><ident type="Descriptors"><![CDATA[{
+"primaryScore":1,
+"implData":{
+	"ctxScore":0,
+	"userModified":false,
+	"expression":
+		{"op":"and",
+		"active":true,
+		"args":[
+			{"op":"equalsIgnoreCase",
+			"active":true,
+			"descriptor":"tagName",
+			"args":[
+				{"op":"property", "args":"tagName"},
+				{"op": "value", "args":"H1"}
+			]
+			},
+			{"op":"equals",
+			"active":true,
+			"descriptor":"text",
+			"args":[
+				{"op":"property", "args":"text"},
+				{"op": "value", "args":"Sign in to continue"}
+			]
+			}
+		]
+		},
+	"secondaryData":{
+		"default": {
+				"maxObjsPerDescriptor": 200,
+				"total": {
+						"tagName": 1,
+						"text": 1
+				},
+				"totalCandidates": 1
+		}
+}
+}
+}]]></ident></idents><methods><![CDATA[{
+}]]></methods></testObject><testObject testObjId="testObj:{3e5b1ba2-1375-420e-9288-2fe6cc4e0abb}" platform="web" autoName="Use your e mail address"><roles><role>element</role><role>focusable</role><role>textbox</role></roles><idents active="XPath"><ident type="XPath"><![CDATA[{
+"primaryScore":1,
+"implData":{
+	"value":"//input[@type=\"text\" and @name=\"username\"]",
+	"suggestions":["//input[@type=\"text\" and @name=\"username\"]","//input[@id=\"username\"]"]
+}
+}]]></ident><ident type="Electors"><![CDATA[{
+"primaryScore":0.867039634,
+"implData":{
+	"ctxScore":0.4,
+	"electors":[
+		{"id":"tagName","value":"INPUT","score":0.1},
+		{"id":"id","value":{"id":"username","isValidWord":true},"score":0.5},
+		{"id":"name","value":{"name":"username","isValidWord":true},"score":0.3},
+		{"id":"class","value":"form-control","score":0.15},
+		{"id":"label","value":"Use your e-mail address","score":0.4},
+		{"id":"input/type","value":"text","score":0.05},
+		{"id":"leaf","value":true,"score":0.01},
+		{"id":"border","value":{"top":2,"right":2,"bottom":2,"left":2},"score":0.12}
+	],
+	"secondaryData":{
+		"default": {
+				"totalObjs": 6,
+				"maxObjsPerElector": 200,
+				"total": {
+						"tagName": 5,
+						"id": 1,
+						"name": 1,
+						"class": 2,
+						"label": 1,
+						"input/type": 1,
+						"leaf": null,
+						"border": null
+				},
+				"secondaryScore": 0,
+				"totalCandidates": 1
+		}
+}
+}
+}]]></ident><ident type="Descriptors"><![CDATA[{
+"primaryScore":1,
+"implData":{
+	"ctxScore":0,
+	"userModified":false,
+	"expression":
+		{"op":"and",
+		"active":true,
+		"args":[
+			{"op":"equalsIgnoreCase",
+			"active":true,
+			"descriptor":"tagName",
+			"args":[
+				{"op":"property", "args":"tagName"},
+				{"op": "value", "args":"INPUT"}
+			]
+			},
+			{"op":"equalsIgnoreDigits",
+			"active":true,
+			"descriptor":"name",
+			"args":[
+				{"op":"property", "args":"name"},
+				{"op": "value", "args":"username"}
+			]
+			},
+			{"op":"equals",
+			"active":true,
+			"descriptor":"label",
+			"args":[
+				{"op":"property", "args":"label"},
+				{"op": "value", "args":"Use your e-mail address"}
+			]
+			},
+			{"op":"equals",
+			"active":true,
+			"descriptor":"input/type",
+			"args":[
+				{"op":"property", "args":"input/type"},
+				{"op": "value", "args":"text"}
+			]
+			}
+		]
+		},
+	"secondaryData":{
+		"default": {
+				"maxObjsPerDescriptor": 200,
+				"total": {
+						"tagName": 5,
+						"name": 1,
+						"label": 1,
+						"input/type": 1
+				},
+				"totalCandidates": 1
+		}
+}
+}
+}]]></ident></idents><methods><![CDATA[{getValue:function ()		{ return this.object.value; },
+setValue:function (value)	{ this.object.value = value; }
+}]]></methods></testObject><testObject testObjId="testObj:{85bcdc5c-cbf6-47fd-999e-517921817365}" platform="web" autoName="Next"><roles><role>element</role><role>focusable</role><role>button</role></roles><idents active="XPath"><ident type="XPath"><![CDATA[{
+"primaryScore":1,
+"implData":{
+	"value":"//input[@type=\"submit\" and @value=\"Next\"]",
+	"suggestions":["//input[@type=\"submit\" and @value=\"Next\"]","/html/body/div[2]/div/div/div/div/div[2]/form/input[2]"]
+}
+}]]></ident><ident type="Electors"><![CDATA[{
+"primaryScore":0.7518073168,
+"implData":{
+	"ctxScore":0.4,
+	"electors":[
+		{"id":"tagName","value":"INPUT","score":0.1},
+		{"id":"name","value":{"name":"whoamiSubmit","isValidWord":false},"score":0.2},
+		{"id":"class","value":"btn btn-primary btn-block","score":0.15},
+		{"id":"title","value":"Next","score":0.3},
+		{"id":"input/type","value":"submit","score":0.05},
+		{"id":"input/button/value","value":"Next","score":0.3},
+		{"id":"leaf","value":true,"score":0.01},
+		{"id":"border","value":{"top":2,"right":2,"bottom":2,"left":2},"score":0.12}
+	],
+	"secondaryData":{
+		"default": {
+				"totalObjs": 5,
+				"maxObjsPerElector": 200,
+				"total": {
+						"tagName": 5,
+						"name": 1,
+						"class": 1,
+						"title": 1,
+						"input/type": 1,
+						"input/button/value": 1,
+						"leaf": null,
+						"border": null
+				},
+				"secondaryScore": 0,
+				"totalCandidates": 1
+		}
+}
+}
+}]]></ident><ident type="Descriptors"><![CDATA[{
+"primaryScore":1,
+"implData":{
+	"ctxScore":0,
+	"userModified":false,
+	"expression":
+		{"op":"and",
+		"active":true,
+		"args":[
+			{"op":"equalsIgnoreCase",
+			"active":true,
+			"descriptor":"tagName",
+			"args":[
+				{"op":"property", "args":"tagName"},
+				{"op": "value", "args":"INPUT"}
+			]
+			},
+			{"op":"equalsIgnoreDigits",
+			"active":true,
+			"descriptor":"name",
+			"args":[
+				{"op":"property", "args":"name"},
+				{"op": "value", "args":"whoamiSubmit"}
+			]
+			},
+			{"op":"equals",
+			"active":true,
+			"descriptor":"title",
+			"args":[
+				{"op":"property", "args":"title"},
+				{"op": "value", "args":"Next"}
+			]
+			},
+			{"op":"equals",
+			"active":true,
+			"descriptor":"input/type",
+			"args":[
+				{"op":"property", "args":"input/type"},
+				{"op": "value", "args":"submit"}
+			]
+			},
+			{"op":"equals",
+			"active":true,
+			"descriptor":"input/button/value",
+			"args":[
+				{"op":"property", "args":"input/button/value"},
+				{"op": "value", "args":"Next"}
+			]
+			}
+		]
+		},
+	"secondaryData":{
+		"default": {
+				"maxObjsPerDescriptor": 200,
+				"total": {
+						"tagName": 5,
+						"name": 1,
+						"title": 1,
+						"input/type": 1,
+						"input/button/value": 1
+				},
+				"totalCandidates": 1
+		}
+}
+}
+}]]></ident></idents><methods><![CDATA[{
+}]]></methods></testObject><testObject testObjId="testObj:{b380e129-0bee-4dbb-b2bf-79b54401cb28}" platform="web" autoName="Password"><roles><role>element</role><role>focusable</role><role>textbox</role><role>passwordbox</role></roles><idents active="XPath"><ident type="XPath"><![CDATA[{
+"primaryScore":1,
+"implData":{
+	"value":"//input[@type=\"password\" and @name=\"password\"]",
+	"suggestions":["//input[@type=\"password\" and @name=\"password\"]","//input[@id=\"password\"]"]
+}
+}]]></ident><ident type="Electors"><![CDATA[{
+"primaryScore":0.9069277438000001,
+"implData":{
+	"ctxScore":0.4,
+	"electors":[
+		{"id":"tagName","value":"INPUT","score":0.1},
+		{"id":"id","value":{"id":"password","isValidWord":true},"score":0.5},
+		{"id":"name","value":{"name":"password","isValidWord":true},"score":0.3},
+		{"id":"class","value":"form-control","score":0.15},
+		{"id":"label","value":"Password","score":0.4},
+		{"id":"title","value":"Password","score":0.3},
+		{"id":"input/type","value":"password","score":0.05},
+		{"id":"leaf","value":true,"score":0.01},
+		{"id":"border","value":{"top":2,"right":2,"bottom":2,"left":2},"score":0.12}
+	],
+	"secondaryData":{
+		"default": {
+				"totalObjs": 23,
+				"maxObjsPerElector": 200,
+				"total": {
+						"tagName": 17,
+						"id": 1,
+						"name": 1,
+						"class": 6,
+						"label": 1,
+						"title": 1,
+						"input/type": 2,
+						"leaf": null,
+						"border": null
+				},
+				"secondaryScore": 0,
+				"totalCandidates": 1
+		}
+}
+}
+}]]></ident><ident type="Descriptors"><![CDATA[{
+"primaryScore":1,
+"implData":{
+	"ctxScore":0,
+	"userModified":false,
+	"expression":
+		{"op":"and",
+		"active":true,
+		"args":[
+			{"op":"equalsIgnoreCase",
+			"active":true,
+			"descriptor":"tagName",
+			"args":[
+				{"op":"property", "args":"tagName"},
+				{"op": "value", "args":"INPUT"}
+			]
+			},
+			{"op":"equalsIgnoreDigits",
+			"active":true,
+			"descriptor":"name",
+			"args":[
+				{"op":"property", "args":"name"},
+				{"op": "value", "args":"password"}
+			]
+			},
+			{"op":"equals",
+			"active":true,
+			"descriptor":"label",
+			"args":[
+				{"op":"property", "args":"label"},
+				{"op": "value", "args":"Password"}
+			]
+			},
+			{"op":"equals",
+			"active":true,
+			"descriptor":"title",
+			"args":[
+				{"op":"property", "args":"title"},
+				{"op": "value", "args":"Password"}
+			]
+			},
+			{"op":"equals",
+			"active":true,
+			"descriptor":"input/type",
+			"args":[
+				{"op":"property", "args":"input/type"},
+				{"op": "value", "args":"password"}
+			]
+			}
+		]
+		},
+	"secondaryData":{
+		"default": {
+				"maxObjsPerDescriptor": 200,
+				"total": {
+						"tagName": 17,
+						"name": 1,
+						"label": 1,
+						"title": 1,
+						"input/type": 1
+				},
+				"totalCandidates": 1
+		}
+}
+}
+}]]></ident></idents><methods><![CDATA[{getValue:function ()		{ return this.object.value; },
+setValue:function (value)	{ this.object.value = value; }
+}]]></methods></testObject><testObject testObjId="testObj:{518c4f7e-892f-4014-b59d-b75415bdcc10}" platform="web" autoName="Sign in"><roles><role>element</role><role>focusable</role><role>button</role></roles><idents active="XPath"><ident type="XPath"><![CDATA[{
+"primaryScore":1,
+"implData":{
+	"value":"//input[@type=\"submit\" and @name=\"_submit\" and @value=\"Sign in\"]",
+	"suggestions":["//input[@type=\"submit\" and @name=\"_submit\" and @value=\"Sign in\"]","//form[@id=\"loginForm\"]/div/input"]
+}
+}]]></ident><ident type="Electors"><![CDATA[{
+"primaryScore":0.7828314022,
+"implData":{
+	"ctxScore":0.4,
+	"electors":[
+		{"id":"tagName","value":"INPUT","score":0.1},
+		{"id":"name","value":{"name":"_submit","isValidWord":true},"score":0.3},
+		{"id":"class","value":"btn btn-primary btn-block","score":0.15},
+		{"id":"title","value":"Sign in","score":0.3},
+		{"id":"input/type","value":"submit","score":0.05},
+		{"id":"input/button/value","value":"Sign in","score":0.3},
+		{"id":"leaf","value":true,"score":0.01},
+		{"id":"border","value":{"top":2,"right":2,"bottom":2,"left":2},"score":0.12}
+	],
+	"secondaryData":{
+		"default": {
+				"totalObjs": 17,
+				"maxObjsPerElector": 200,
+				"total": {
+						"tagName": 17,
+						"name": 1,
+						"class": 1,
+						"title": 1,
+						"input/type": 1,
+						"input/button/value": 1,
+						"leaf": null,
+						"border": null
+				},
+				"secondaryScore": 0,
+				"totalCandidates": 1
+		}
+}
+}
+}]]></ident><ident type="Descriptors"><![CDATA[{
+"primaryScore":1,
+"implData":{
+	"ctxScore":0,
+	"userModified":false,
+	"expression":
+		{"op":"and",
+		"active":true,
+		"args":[
+			{"op":"equalsIgnoreCase",
+			"active":true,
+			"descriptor":"tagName",
+			"args":[
+				{"op":"property", "args":"tagName"},
+				{"op": "value", "args":"INPUT"}
+			]
+			},
+			{"op":"equalsIgnoreDigits",
+			"active":true,
+			"descriptor":"name",
+			"args":[
+				{"op":"property", "args":"name"},
+				{"op": "value", "args":"_submit"}
+			]
+			},
+			{"op":"equals",
+			"active":true,
+			"descriptor":"title",
+			"args":[
+				{"op":"property", "args":"title"},
+				{"op": "value", "args":"Sign in"}
+			]
+			},
+			{"op":"equals",
+			"active":true,
+			"descriptor":"input/type",
+			"args":[
+				{"op":"property", "args":"input/type"},
+				{"op": "value", "args":"submit"}
+			]
+			},
+			{"op":"equals",
+			"active":true,
+			"descriptor":"input/button/value",
+			"args":[
+				{"op":"property", "args":"input/button/value"},
+				{"op": "value", "args":"Sign in"}
+			]
+			}
+		]
+		},
+	"secondaryData":{
+		"default": {
+				"maxObjsPerDescriptor": 200,
+				"total": {
+						"tagName": 17,
+						"name": 1,
+						"title": 1,
+						"input/type": 1,
+						"input/button/value": 1
+				},
+				"totalCandidates": 1
+		}
+}
+}
+}]]></ident></idents><methods><![CDATA[{
+}]]></methods></testObject><testObject testObjId="testObj:{c403ffc4-68d1-43de-aa20-9bb4d716d2b5}" platform="web" autoName="Successful login"><roles><role>element</role><role>heading</role></roles><idents active="XPath"><ident type="XPath"><![CDATA[{
+"primaryScore":1,
+"implData":{
+	"value":"//h1[text()=\"Successful login\"]",
+	"suggestions":["//h1[text()=\"Successful login\"]","/html/body/div[2]/div[2]/div/div/h1"]
+}
+}]]></ident><ident type="Electors"><![CDATA[{
+"primaryScore":0.41194000000000003,
+"implData":{
+	"ctxScore":0,
+	"electors":[
+		{"id":"tagName","value":"H1","score":0.01},
+		{"id":"text","value":{"text":"Successful login","tagName":"H1"},"score":0.4},
+		{"id":"leaf","value":true,"score":0.01}
+	],
+	"secondaryData":{
+		"default": {
+				"totalObjs": 1,
+				"maxObjsPerElector": 200,
+				"total": {
+						"tagName": 1,
+						"text": 1,
+						"leaf": null
+				},
+				"secondaryScore": 0,
+				"totalCandidates": 1
+		}
+}
+}
+}]]></ident><ident type="Descriptors"><![CDATA[{
+"primaryScore":1,
+"implData":{
+	"ctxScore":0,
+	"userModified":false,
+	"expression":
+		{"op":"and",
+		"active":true,
+		"args":[
+			{"op":"equalsIgnoreCase",
+			"active":true,
+			"descriptor":"tagName",
+			"args":[
+				{"op":"property", "args":"tagName"},
+				{"op": "value", "args":"H1"}
+			]
+			},
+			{"op":"equals",
+			"active":true,
+			"descriptor":"text",
+			"args":[
+				{"op":"property", "args":"text"},
+				{"op": "value", "args":"Successful login"}
+			]
+			}
+		]
+		},
+	"secondaryData":{
+		"default": {
+				"maxObjsPerDescriptor": 200,
+				"total": {
+						"tagName": 1,
+						"text": 1
+				},
+				"totalCandidates": 1
+		}
+}
+}
+}]]></ident></idents><methods><![CDATA[{
+}]]></methods></testObject></testObjects>
+<transactions/>
+</truLibrary>

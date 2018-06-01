@@ -51,6 +51,9 @@ public class StepViewerFactory {
 		break;	
 		case "testObject":				
 				tv=getTestObjectViewer(step,stepContainer,controller);
+				break;
+				
+		case "control":tv=getCallActionViwer(step,stepContainer,controller);
 			
 		
 		break;
@@ -65,6 +68,13 @@ public class StepViewerFactory {
 		
 
 		return tv;
+	}
+
+
+
+	private static StepViewer getCallActionViwer(Step step, StepContainer stepContainer, TcXmlController controller) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 

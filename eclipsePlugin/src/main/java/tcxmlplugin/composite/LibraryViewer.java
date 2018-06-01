@@ -45,6 +45,11 @@ public class LibraryViewer extends Composite {
 	private FunctionContainer functionContainer;
 	private TcXmlController controller;
 	
+	public LibraryViewer(Composite parent, int style) {
+		
+		super(parent, style);
+	}
+	
 
 	public LibraryViewer(Composite parent, int style, TcXmlController controller) {
 		super(parent, style);

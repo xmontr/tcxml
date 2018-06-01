@@ -51,6 +51,13 @@ public class ActionsViewer extends Composite  {
 
 
 	private TcXmlController controller;
+	
+	
+	public ActionsViewer(Composite parent, int style) {
+	super(parent, style);	
+		
+		
+	}
 
 	public ActionsViewer(Composite parent, int style, TcXmlController controller) {
 		super(parent, style);

@@ -44,20 +44,77 @@ import org.eclipse.swt.widgets.ProgressBar;
 
 public class TcViewer extends Composite implements PropertyChangeListener, IJobChangeListener  {
 	private ActionsViewer actionsViewer;
-	private Map<String, Step> actionMap;
-	private Map<String, TruLibrary> libraryMap;
+	
+	
+	private RunLogicViewer runLogicViewer ;
+
 	private LibraryViewer libraryViewer;
 	private TcXmlController controller;
 	private ProgressBar progressBar;
 	private CTabFolder tabFolder;
 
+
+	private Map<String, Step> actionMap;
+
+
+	private Map<String, TruLibrary> libraryMap;
+
 	public TcViewer(Composite parent, int style, TcXmlController tccontroller) {
 		super(parent, style);
 
 		setLayout(new GridLayout(1, false));
+		tabFolder = new CTabFolder(this, SWT.BORDER);
 		
 		this.controller=tccontroller;
-		ToolBar toolBar = new ToolBar(this, SWT.FLAT | SWT.RIGHT);
+		
+		actionsViewer = new ActionsViewer(tabFolder, SWT.BORDER,controller);
+		this.libraryViewer = new LibraryViewer(tabFolder, SWT.BORDER,controller);
+		
+		this.runLogicViewer = new RunLogicViewer(tabFolder, SWT.BORDER,controller);
+		
+		
+		
+		buildToolbar();
+		
+		buildTabFolder();
+	
+		
+
+		
+		
+		
+	}
+
+	private void buildTabFolder() {
+		
+		tabFolder.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
+		tabFolder.setTabPosition(SWT.BOTTOM);
+		tabFolder.setSelectionBackground(Display.getCurrent().getSystemColor(SWT.COLOR_TITLE_INACTIVE_BACKGROUND_GRADIENT));
+		
+		CTabItem functionTab = new CTabItem(tabFolder, SWT.NONE);
+		functionTab.setImage(ResourceManager.getPluginImage("tcxmlplugin", "icons/function-icon_16.png"));
+		functionTab.setText("Functions");
+		functionTab.setControl(libraryViewer);
+		
+		CTabItem actionTab = new CTabItem(tabFolder, SWT.NONE);
+		actionTab.setImage(ResourceManager.getPluginImage("tcxmlplugin", "icons/script-icon_16.png"));
+		actionTab.setText("Actions");
+		actionTab.setControl(actionsViewer);
+		
+
+		
+		
+		
+		
+		CTabItem logicTab = new CTabItem(tabFolder, SWT.NONE);		
+		logicTab.setText("Run Logic");
+		logicTab.setImage(ResourceManager.getPluginImage("tcxmlplugin", "icons/Gear-icon_16.png"));
+		logicTab.setControl(runLogicViewer);
+		
+	}
+
+	private void buildToolbar() {
+	ToolBar toolBar = new ToolBar(this, SWT.FLAT | SWT.RIGHT);
 		
 		ToolItem recorditem = new ToolItem(toolBar, SWT.PUSH);
 		recorditem.setToolTipText("Record");
@@ -81,32 +138,6 @@ public class TcViewer extends Composite implements PropertyChangeListener, IJobC
 		
 		progressBar = new ProgressBar(this, SWT.NONE);
 		progressBar.setVisible(false);
-		
-		tabFolder = new CTabFolder(this, SWT.BORDER);
-		tabFolder.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
-		tabFolder.setTabPosition(SWT.BOTTOM);
-		tabFolder.setSelectionBackground(Display.getCurrent().getSystemColor(SWT.COLOR_TITLE_INACTIVE_BACKGROUND_GRADIENT));
-		
-		CTabItem tbtmNewItem = new CTabItem(tabFolder, SWT.NONE);
-		tbtmNewItem.setImage(ResourceManager.getPluginImage("tcxmlplugin", "icons/function-icon_16.png"));
-		tbtmNewItem.setText("Functions");
-		
-		CTabItem tbtmNewItem_1 = new CTabItem(tabFolder, SWT.NONE);
-		tbtmNewItem_1.setImage(ResourceManager.getPluginImage("tcxmlplugin", "icons/script-icon_16.png"));
-		tbtmNewItem_1.setText("Actions");
-		
-		actionsViewer = new ActionsViewer(tabFolder, SWT.BORDER,controller);
-		tbtmNewItem_1.setControl(actionsViewer);
-		
-		this.libraryViewer = new LibraryViewer(tabFolder, SWT.BORDER,controller);
-		tbtmNewItem.setControl(libraryViewer);
-		
-		CTabItem tbtmNewItem_2 = new CTabItem(tabFolder, SWT.NONE);
-		
-		
-		tbtmNewItem_2.setText("Run Logic");
-		
-		
 		
 	}
 
@@ -217,6 +248,18 @@ public class TcViewer extends Composite implements PropertyChangeListener, IJobC
 
 this.populateAction( controller.getActionMap());
 this.populateLibrary(controller.getLibraries());
+this.populateRunLogic(controller.getRunLogic());
+		
+	}
+
+	private void populateRunLogic(Step runLogic) {
+		
+		try {
+			runLogicViewer.populate(runLogic);
+		} catch (TcXmlException e) {
+			TcXmlPluginController.getInstance().error(" fail to load runlogic", e);
+			e.printStackTrace();
+		}
 		
 	}
 
