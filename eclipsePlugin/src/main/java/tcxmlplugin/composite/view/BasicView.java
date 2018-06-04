@@ -193,7 +193,7 @@ private Text categorynametext;
 	public void populate(Step mo  ) throws TcXmlException {	
 	
 super.populate(mo);		
-		setTitle(formatTitle(model.getIndex(), "step #" +  model.getStepId()));
+	
 		
 		
 	}
@@ -205,6 +205,13 @@ super.populate(mo);
 	@Override
 	public PlayingContext play(PlayingContext ctx) throws TcXmlException {
 		throw new TcXmlException("not implemented", new IllegalAccessException());
+	}
+
+
+	@Override
+	public String buildTitle(Step mo) {
+		String ret = formatTitle(model.getIndex(), "step #" +  model.getStepId());
+		return ret;
 	}
 
 

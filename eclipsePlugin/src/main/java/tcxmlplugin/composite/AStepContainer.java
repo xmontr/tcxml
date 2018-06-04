@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.ExpandEvent;
+import org.eclipse.swt.events.ExpandListener;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
@@ -14,12 +16,13 @@ import org.eclipse.swt.widgets.ExpandItem;
 import tcxml.core.TcXmlController;
 import tcxml.core.TcXmlException;
 import tcxml.model.Step;
+import tcxmlplugin.TcXmlPluginController;
 import tcxmlplugin.composite.stepViewer.StepContainer;
 import tcxmlplugin.composite.stepViewer.StepViewer;
 import tcxmlplugin.composite.stepViewer.StepViewerFactory;
 import tcxmlplugin.composite.stepViewer.TitleListener;
 
-public abstract class AStepContainer extends Composite   implements StepContainer {
+public abstract class AStepContainer extends Composite   implements StepContainer, ExpandListener {
 	
 	protected TcXmlController controller;
 	
@@ -49,6 +52,16 @@ public abstract class AStepContainer extends Composite   implements StepContaine
 	public void addStep(Step step) throws TcXmlException {
 		
 		 StepViewer tv = StepViewerFactory.getViewer(step,this, controller);
+		 
+		 if(tv.getViewer() instanceof StepContainer) {
+			 
+			 StepContainer childcont = (StepContainer)tv.getViewer();
+			 childcont.getBar().addExpandListener(this);
+			 
+		 }
+		 
+		 
+		 
 		 stepViwerChildren.add(tv);
 		
 		ExpandItem xpndtmNewExpanditem = new ExpandItem(bar, SWT.NONE);		
@@ -58,7 +71,7 @@ public abstract class AStepContainer extends Composite   implements StepContaine
 		
 		xpndtmNewExpanditem.setText(tv.getTitle());
 		
-		xpndtmNewExpanditem.setHeight(tv.computeSize(SWT.DEFAULT, SWT.DEFAULT).y );
+		xpndtmNewExpanditem.setHeight(tv.computeSize(SWT.DEFAULT, SWT.DEFAULT).y +500);
 		xpndtmNewExpanditem.setControl(tv);
 		tv.setParentExpandItem(xpndtmNewExpanditem);
 		tv.addPropertyChangeListener("title", new TitleListener(xpndtmNewExpanditem , tv));
@@ -67,6 +80,25 @@ public abstract class AStepContainer extends Composite   implements StepContaine
 		
 		
 		
+		
+	}
+	
+	
+	@Override
+	public void itemCollapsed(ExpandEvent e) {
+		bar.layout();
+		
+		TcXmlPluginController.getInstance().info("**************************colapsed");
+	
+		
+	}
+	
+	
+	
+	@Override
+	public void itemExpanded(ExpandEvent e) {
+		TcXmlPluginController.getInstance().info("**************************expanded");
+		bar.layout();
 		
 	}
 	

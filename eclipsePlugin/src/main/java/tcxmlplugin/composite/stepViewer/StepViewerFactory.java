@@ -14,6 +14,7 @@ import tcxmlplugin.composite.AStepContainer;
 import tcxmlplugin.composite.LibraryView;
 import tcxmlplugin.composite.view.BasicView;
 import tcxmlplugin.composite.view.BlockView;
+import tcxmlplugin.composite.view.CallActionView;
 import tcxmlplugin.composite.view.CallFunctionView;
 import tcxmlplugin.composite.view.EvaluateJavascriptView;
 import tcxmlplugin.composite.view.FunctionView;
@@ -72,9 +73,11 @@ public class StepViewerFactory {
 
 
 
-	private static StepViewer getCallActionViwer(Step step, StepContainer stepContainer, TcXmlController controller) {
-		// TODO Auto-generated method stub
-		return null;
+	private static StepViewer getCallActionViwer(Step step, StepContainer stepContainer, TcXmlController controller) throws TcXmlException {
+		CallActionView view = new CallActionView(stepContainer.getBar(), SWT.NONE,controller);
+		StepViewer sv =  new StepViewer(stepContainer.getBar(), SWT.NONE, view, stepContainer);
+		sv.populate(step);
+		return sv;
 	}
 
 
@@ -163,13 +166,9 @@ public class StepViewerFactory {
 		
 		CallFunctionView view = new CallFunctionView(stepContainer.getBar(), SWT.NONE,controller);
 		StepViewer stepviewer = new StepViewer(stepContainer.getBar(), SWT.NONE,view,stepContainer);
-
-		
-		
-		
-
-	stepviewer.populate(step);
+		stepviewer.populate(step);
 		return stepviewer;
+
 	}
 
 }

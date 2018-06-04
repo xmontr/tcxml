@@ -92,9 +92,10 @@ public class EvaluateJavascriptView extends StepView{
 
 public void populate(Step mo  ) throws TcXmlException {	
 	
+
+evaljsmodel.setCode(controller.JSCodefromJSON(mo.getArguments()));
 super.populate(mo);	
-evaljsmodel.setCode(controller.JSCodefromJSON(model.getArguments()));
-	setTitle( formatTitle(model.getIndex(), "Evaluate Javascript code " +  getShortCode()));
+	
 	
 	
 	
@@ -148,6 +149,15 @@ ctx.dumpJsContext();
 return ctx;
 		
 		
+	}
+
+
+
+
+	@Override
+	public String buildTitle(Step mo) {
+		String ret = formatTitle(model.getIndex(), "Evaluate Javascript code " +  getShortCode());
+		return ret;
 	}
 
 

@@ -52,7 +52,7 @@ public abstract class StepView extends Composite  {
 	}
 	
 	
-	
+	public abstract String buildTitle(Step mo) throws TcXmlException;
 	
 	
 	
@@ -90,7 +90,7 @@ public abstract class StepView extends Composite  {
 		model.setStepId(mo.getStepId());
 		model.setTestObject(mo.getTestObject());
 		model.getStep().addAll(mo.getStep());
-		
+		setTitle(buildTitle(mo));
 		
 		
 	

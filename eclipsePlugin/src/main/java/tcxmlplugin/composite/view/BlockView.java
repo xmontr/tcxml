@@ -4,7 +4,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.ExpandEvent;
+import org.eclipse.swt.events.ExpandListener;
 import org.eclipse.swt.layout.FillLayout;
+import org.eclipse.swt.layout.GridData;
+import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.ExpandBar;
@@ -16,12 +20,13 @@ import tcxml.core.PlayingContext;
 import tcxml.core.TcXmlController;
 import tcxml.core.TcXmlException;
 import tcxml.model.Step;
+import tcxmlplugin.TcXmlPluginController;
 import tcxmlplugin.composite.StepView;
 import tcxmlplugin.composite.stepViewer.StepViewer;
 import tcxmlplugin.composite.stepViewer.StepContainer;
 import tcxmlplugin.composite.stepViewer.StepViewerFactory;
 
-public class BlockView  extends StepView implements StepContainer {
+public class BlockView  extends StepView implements StepContainer, ExpandListener {
 	private ExpandBar bar;
 	
 	private List<StepViewer> stepViwerChildren ;
@@ -30,9 +35,14 @@ public class BlockView  extends StepView implements StepContainer {
 		
 		
 		super(parent, style,controller);
-		setLayout(new FillLayout());
+		
+		GridLayout gridlayout = new GridLayout(1, false);
+		setLayout(gridlayout);
 		stepViwerChildren = new ArrayList<StepViewer>();
-		bar = new ExpandBar(this, SWT.BORDER);
+		
+		bar = new ExpandBar(this, SWT.V_SCROLL);
+		bar.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
+		
 		bar.setBackground( getDisplay().getSystemColor( SWT.COLOR_GRAY) );
 		bar.setSpacing(10);
 		
@@ -45,6 +55,13 @@ public class BlockView  extends StepView implements StepContainer {
 	public void addStep(Step step) throws TcXmlException {
 		
 		 StepViewer tv = StepViewerFactory.getViewer(step,this, controller);
+		 
+		 if(tv.getViewer() instanceof StepContainer) {
+			 
+			 StepContainer childcont = (StepContainer)tv.getViewer();
+			 childcont.getBar().addExpandListener(this);
+			 
+		 }
 
 	
 			
@@ -59,7 +76,10 @@ public class BlockView  extends StepView implements StepContainer {
 		xpndtmNewExpanditem.setHeight(tv.computeSize(SWT.DEFAULT, SWT.DEFAULT).y );
 		xpndtmNewExpanditem.setControl(tv);
 		
+		
 		 stepViwerChildren.add(tv);
+		 
+		 bar.layout();
 		
 	}
 	
@@ -105,8 +125,8 @@ public class BlockView  extends StepView implements StepContainer {
 			addStep(step);
 		}
 				
-	
-		setTitle(formatTitle(model.getIndex(), "Group " +  model.getAction()));
+		bar.layout();
+		
 		
 	}
 
@@ -125,6 +145,32 @@ public class BlockView  extends StepView implements StepContainer {
 	public List<StepViewer> getChildViewer() {
 		// TODO Auto-generated method stub
 		return stepViwerChildren;
+	}
+
+
+	@Override
+	public String buildTitle(Step mo) {
+		String ret = formatTitle(model.getIndex(), "Group " +  model.getAction());
+		return ret;
+	}
+
+
+	@Override
+	public void itemCollapsed(ExpandEvent e) {
+		bar.layout();
+		
+		TcXmlPluginController.getInstance().info("**************************colapsed");
+	
+		
+	}
+	
+	
+	
+	@Override
+	public void itemExpanded(ExpandEvent e) {
+		TcXmlPluginController.getInstance().info("**************************expanded");
+		bar.layout();
+		
 	}
 
 

@@ -27,15 +27,16 @@ public class RunLogicViewer extends Composite implements StepContainer{
 
 	public RunLogicViewer(Composite parent, int style) {
 		super(parent, style);
-		setLayout(new FillLayout(SWT.VERTICAL));
-		
-		bar = new ExpandBar(this, SWT.NONE);
+
 		
 	}
 	
 	
 	public RunLogicViewer(Composite parent, int style, TcXmlController controller) {
 		super(parent, style);
+		setLayout(new FillLayout(SWT.VERTICAL));
+		
+		bar = new ExpandBar(this, SWT.NONE);
 		this.controller=controller;
 		
 		

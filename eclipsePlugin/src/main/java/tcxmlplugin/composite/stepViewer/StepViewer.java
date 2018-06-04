@@ -129,6 +129,8 @@ public  class StepViewer extends Composite{
 		gd.horizontalAlignment=gd.FILL;
 		gd.verticalAlignment=gd.FILL;
 			this.view.setLayoutData(gd);
+	
+		
 		layout();
 		contentView.layout();
 	}

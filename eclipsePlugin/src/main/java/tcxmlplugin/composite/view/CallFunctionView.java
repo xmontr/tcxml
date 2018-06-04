@@ -201,7 +201,7 @@ public static class CallFunctionViewModel {
 		
 		
 		
-		setTitle(formatTitle(model.getIndex(), " Call Function " + model.getLibName() + "." + model.getFuncName()) );
+		
 		
 		
 		callfunctmodel.setSelectedFunction(model.getFuncName());
@@ -395,6 +395,21 @@ public static class CallFunctionViewModel {
 		bindingContext.bindValue(observeSelectionFuncomboObserveWidget, selectedFunctionCallfunctmodelObserveValue, null, null);
 		//
 		return bindingContext;
+	}
+
+
+
+
+
+
+
+
+
+
+	@Override
+	public String buildTitle(Step mo) {
+		String ret = formatTitle(model.getIndex(), " Call Function " + model.getLibName() + "." + model.getFuncName()) ;
+		return ret;
 	}
 
 

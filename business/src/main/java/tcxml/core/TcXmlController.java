@@ -673,6 +673,28 @@ ret =js.getString();
 	
 }
 
+
+
+public String readStingArgumentByName(String json,String name) throws TcXmlException {
+	String ret = null;
+	
+	
+	 JsonObject obj = readJsonObject(json, name);
+	JsonString js = obj.getJsonString("value");
+
+ret =js.getString();
+	
+
+
+	return ret;
+	
+	
+	
+	
+}
+
+
+
 public JsonObject readJsonObject(String json , String rootKey) throws TcXmlException {
 	
 

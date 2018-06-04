@@ -173,7 +173,7 @@ waitmodel.setUnit("seconds");
 	
 }
 
-		setTitle( formatTitle(model.getIndex(), "Wait "+ waitmodel.getInterval() + " seconds" ) );
+		
 		
 
 		
@@ -202,6 +202,14 @@ waitmodel.setUnit("seconds");
 		
 	PlayingContext ret = runner.runStep(ctx);
 	return ret;
+	}
+
+
+
+	@Override
+	public String buildTitle(Step mo) throws TcXmlException {
+		String ret = formatTitle(model.getIndex(), "Wait "+ waitmodel.getInterval() + " seconds" ) ;
+		return ret;
 	}
 
 

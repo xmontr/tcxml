@@ -7,6 +7,8 @@ import java.util.List;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.ExpandEvent;
+import org.eclipse.swt.events.ExpandListener;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
@@ -33,7 +35,7 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.wb.swt.SWTResourceManager;
 
-public class FunctionView extends StepView implements StepContainer {
+public class FunctionView extends StepView implements StepContainer, ExpandListener {
 	private ExpandBar bar;
 
 	private TruLibrary Library;
@@ -76,6 +78,15 @@ public class FunctionView extends StepView implements StepContainer {
 	public void addStep(Step step) throws TcXmlException {
 
 		StepViewer tv = StepViewerFactory.getViewer(step, this, controller);
+		
+		
+		 
+		 if(tv.getViewer() instanceof StepContainer) {
+			 
+			 StepContainer childcont = (StepContainer)tv.getViewer();
+			 childcont.getBar().addExpandListener(this);
+			 
+		 }
 
 		ExpandItem xpndtmNewExpanditem = new ExpandItem(bar, SWT.NONE);
 
@@ -120,6 +131,8 @@ public class FunctionView extends StepView implements StepContainer {
 	}
 
 	public void populate(Step mo) throws TcXmlException {
+		super.populate(mo);
+		sanityCheck(mo);
 		function = new Function();
 		function.setName(mo.getAction());
 		function.setId(mo.getStepId());
@@ -127,10 +140,10 @@ public class FunctionView extends StepView implements StepContainer {
 		function.setIndex(mo.getIndex());
 		function.setLevel(mo.getLevel());
 
-		setTitle("Function " + mo.getAction());
+		
 		// first step child is internal - skipit
-		sanityCheck(mo);
-		super.populate(mo);
+		
+	
 		BoundList<Step> li = mo.getStep().get(0).getStep();
 		for (Step step : li) {
 			addStep(step);
@@ -197,6 +210,30 @@ public class FunctionView extends StepView implements StepContainer {
 	public List<StepViewer> getChildViewer() {
 		// TODO Auto-generated method stub
 		return stepViwerChildren;
+	}
+
+	@Override
+	public String buildTitle(Step mo) {
+		String ret = "Function " + mo.getAction();
+		return ret;
+	}
+	
+	@Override
+	public void itemCollapsed(ExpandEvent e) {
+		bar.layout();
+		
+		TcXmlPluginController.getInstance().info("**************************colapsed");
+	
+		
+	}
+	
+	
+	
+	@Override
+	public void itemExpanded(ExpandEvent e) {
+		TcXmlPluginController.getInstance().info("**************************expanded");
+		bar.layout();
+		
 	}
 
 }

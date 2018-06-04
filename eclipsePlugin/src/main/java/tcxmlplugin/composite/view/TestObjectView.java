@@ -233,12 +233,12 @@ public class TestObjectView extends StepView implements PropertyChangeListener {
 			}
 
 			testobjectmodel.setXpath(controller.getXpathForTestObject(to));
-			setTitle(formatTitle(mo.getIndex(), mo.getAction() + " on " + to.getAutoName()));
+			
 		} else { // testobject is browser
 
 			hideXpath();
 
-			setTitle(formatTitle(mo.getIndex(), mo.getAction() + " on Browser "));
+		
 
 		}
 
@@ -278,6 +278,35 @@ public class TestObjectView extends StepView implements PropertyChangeListener {
 	PlayingContext ret = runner.runStep(ctx);
 	return ret;
 		
+	}
+
+	@Override
+	public String buildTitle(Step mo) throws TcXmlException {
+		
+		String ret;
+		TestObject to = null;
+		if (!controller.isBrowserStep(mo)) { // testobject is not browser
+			if (library == null) {
+				to = controller.getTestObjectById(mo.getTestObject());
+
+			} else {
+				to = controller.getTestObjectById(mo.getTestObject(), library);
+
+			}
+			
+			
+			 ret = formatTitle(mo.getIndex(), mo.getAction() + " on " + to.getAutoName());
+			
+			
+		}else {// testobject is browser
+			
+			ret = formatTitle(mo.getIndex(), mo.getAction() + " on Browser ");	
+			
+		}
+		
+		
+
+		return ret;
 	}
 
 
