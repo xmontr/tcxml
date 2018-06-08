@@ -9,6 +9,7 @@ import tcxml.core.PlayingContext;
 import tcxml.core.TcXmlController;
 import tcxml.core.TcXmlException;
 import tcxml.model.Step;
+import tcxmlplugin.composite.stepViewer.StepViewer;
 import tcxmlplugin.composite.view.arguments.StepArgument;
 
 public abstract class StepView extends Composite  {
@@ -37,7 +38,17 @@ public abstract class StepView extends Composite  {
 
 	protected TcXmlController controller;
 	
+	protected StepViewer viewer;
 	
+	
+	public StepViewer getViewer() {
+		return viewer;
+	}
+
+	public void setViewer(StepViewer viewer) {
+		this.viewer = viewer;
+	}
+
 	public StepView(Composite parent, int style, TcXmlController controller) {
 		super(parent, style);
 		this.controller=controller;

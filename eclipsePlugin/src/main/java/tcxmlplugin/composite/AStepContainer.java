@@ -46,6 +46,7 @@ public abstract class AStepContainer extends Composite   implements StepContaine
 	bar.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 	bar.setBackground( getDisplay().getSystemColor( SWT.COLOR_WHITE) );
 	bar.setSpacing(10);
+	bar.addExpandListener(this);
 	
 	}
 	
@@ -53,12 +54,7 @@ public abstract class AStepContainer extends Composite   implements StepContaine
 		
 		 StepViewer tv = StepViewerFactory.getViewer(step,this, controller);
 		 
-		 if(tv.getViewer() instanceof StepContainer) {
-			 
-			 StepContainer childcont = (StepContainer)tv.getViewer();
-			 childcont.getBar().addExpandListener(this);
-			 
-		 }
+
 		 
 		 
 		 
@@ -71,7 +67,7 @@ public abstract class AStepContainer extends Composite   implements StepContaine
 		
 		xpndtmNewExpanditem.setText(tv.getTitle());
 		
-		xpndtmNewExpanditem.setHeight(tv.computeSize(SWT.DEFAULT, SWT.DEFAULT).y +500);
+		xpndtmNewExpanditem.setHeight(tv.computeSize(SWT.DEFAULT, SWT.DEFAULT).y  );
 		xpndtmNewExpanditem.setControl(tv);
 		tv.setParentExpandItem(xpndtmNewExpanditem);
 		tv.addPropertyChangeListener("title", new TitleListener(xpndtmNewExpanditem , tv));
@@ -86,9 +82,9 @@ public abstract class AStepContainer extends Composite   implements StepContaine
 	
 	@Override
 	public void itemCollapsed(ExpandEvent e) {
-		bar.layout();
+
 		
-		TcXmlPluginController.getInstance().info("**************************colapsed");
+		TcXmlPluginController.getInstance().info("**********     ASTEPCONTAINER " + this.getClass()  +"***************colapsed");
 	
 		
 	}
@@ -97,8 +93,9 @@ public abstract class AStepContainer extends Composite   implements StepContaine
 	
 	@Override
 	public void itemExpanded(ExpandEvent e) {
-		TcXmlPluginController.getInstance().info("**************************expanded");
-		bar.layout();
+	
+		TcXmlPluginController.getInstance().info("**********    ASTEPCONTAINER " + this.getClass()  +"***************expanded");
+		//bar.layout();
 		
 	}
 	

@@ -59,13 +59,20 @@ public class TcViewer extends Composite implements PropertyChangeListener, IJobC
 
 	private Map<String, TruLibrary> libraryMap;
 
+
+	private ToolBar toolBar;
+
 	public TcViewer(Composite parent, int style, TcXmlController tccontroller) {
 		super(parent, style);
 
 		setLayout(new GridLayout(1, false));
+		toolBar = new ToolBar(this, SWT.FLAT | SWT.RIGHT);
+		
 		tabFolder = new CTabFolder(this, SWT.BORDER);
 		
 		this.controller=tccontroller;
+		
+		buildToolbar();
 		
 		actionsViewer = new ActionsViewer(tabFolder, SWT.BORDER,controller);
 		this.libraryViewer = new LibraryViewer(tabFolder, SWT.BORDER,controller);
@@ -74,7 +81,7 @@ public class TcViewer extends Composite implements PropertyChangeListener, IJobC
 		
 		
 		
-		buildToolbar();
+		
 		
 		buildTabFolder();
 	
@@ -111,10 +118,14 @@ public class TcViewer extends Composite implements PropertyChangeListener, IJobC
 		logicTab.setImage(ResourceManager.getPluginImage("tcxmlplugin", "icons/Gear-icon_16.png"));
 		logicTab.setControl(runLogicViewer);
 		
+
+		
 	}
 
 	private void buildToolbar() {
-	ToolBar toolBar = new ToolBar(this, SWT.FLAT | SWT.RIGHT);
+		
+		
+		
 		
 		ToolItem recorditem = new ToolItem(toolBar, SWT.PUSH);
 		recorditem.setToolTipText("Record");
@@ -135,6 +146,8 @@ public class TcViewer extends Composite implements PropertyChangeListener, IJobC
 		
 		ToolItem stopItem = new ToolItem(toolBar, SWT.NONE);
 		stopItem.setImage(ResourceManager.getPluginImage("tcxmlplugin", "icons/media-playback-stop-2.png"));
+		
+		
 		
 		progressBar = new ProgressBar(this, SWT.NONE);
 		progressBar.setVisible(false);

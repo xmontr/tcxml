@@ -19,67 +19,25 @@ import org.eclipse.swt.widgets.ExpandItem;
 
 import com.kscs.util.jaxb.BoundList;
 
-public class RunLogicViewer extends Composite implements StepContainer{
+public class RunLogicViewer extends AStepContainer{
 	
 	
 	private TcXmlController controller;
-	private ExpandBar bar;
 
-	public RunLogicViewer(Composite parent, int style) {
-		super(parent, style);
 
-		
-	}
+	
 	
 	
 	public RunLogicViewer(Composite parent, int style, TcXmlController controller) {
-		super(parent, style);
-		setLayout(new FillLayout(SWT.VERTICAL));
-		
-		bar = new ExpandBar(this, SWT.NONE);
-		this.controller=controller;
+		super(parent, style,controller);
+
+	
 		
 		
 	}
 
 
-	@Override
-	public ExpandBar getBar() {
-		// TODO Auto-generated method stub
-		return bar;
-	}
 
-
-	@Override
-	public void clean() {
-		// TODO Auto-generated method stub
-		
-	}
-
-
-	@Override
-	public void addStep(Step step) throws TcXmlException {
-		StepViewer tv = StepViewerFactory.getViewer(step, this, controller);
-
-		ExpandItem xpndtmNewExpanditem = new ExpandItem(bar, SWT.NONE);
-
-		xpndtmNewExpanditem.setExpanded(false);
-		xpndtmNewExpanditem.setText(tv.getTitle());
-
-		xpndtmNewExpanditem.setHeight(tv.computeSize(SWT.DEFAULT, SWT.DEFAULT).y);
-		xpndtmNewExpanditem.setControl(tv);
-		tv.setParentExpandItem(xpndtmNewExpanditem);
-
-		
-		
-	}
-
-
-	@Override
-	public List<StepViewer> getChildViewer() {
-		// TODO Auto-generated method stub
-		return null;
-	}
 	
 	
 	
@@ -92,7 +50,7 @@ public class RunLogicViewer extends Composite implements StepContainer{
 			addStep(step);
 		}
 		
-		
+	bar.layout();	
 		
 		
 	}

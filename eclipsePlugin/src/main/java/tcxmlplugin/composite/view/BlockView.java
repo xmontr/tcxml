@@ -40,11 +40,13 @@ public class BlockView  extends StepView implements StepContainer, ExpandListene
 		setLayout(gridlayout);
 		stepViwerChildren = new ArrayList<StepViewer>();
 		
-		bar = new ExpandBar(this, SWT.V_SCROLL);
+		bar = new ExpandBar(this, SWT.NONE);
 		bar.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 		
-		bar.setBackground( getDisplay().getSystemColor( SWT.COLOR_GRAY) );
+		bar.setBackground( getDisplay().getSystemColor( SWT.COLOR_WHITE) );
 		bar.setSpacing(10);
+		
+		bar.addExpandListener(this);
 		
 		
 		
@@ -61,21 +63,15 @@ public class BlockView  extends StepView implements StepContainer, ExpandListene
 			 StepContainer childcont = (StepContainer)tv.getViewer();
 			 childcont.getBar().addExpandListener(this);
 			 
-		 }
-
-	
-			
-
-	
-		
+		 }		
 		ExpandItem xpndtmNewExpanditem = new ExpandItem(bar, SWT.NONE);
 
-		xpndtmNewExpanditem.setExpanded(false);
+		xpndtmNewExpanditem.setExpanded(true);
 		xpndtmNewExpanditem.setText(tv.getTitle());
 		
 		xpndtmNewExpanditem.setHeight(tv.computeSize(SWT.DEFAULT, SWT.DEFAULT).y );
 		xpndtmNewExpanditem.setControl(tv);
-		
+		tv.setParentExpandItem(xpndtmNewExpanditem);
 		
 		 stepViwerChildren.add(tv);
 		 
@@ -157,9 +153,14 @@ public class BlockView  extends StepView implements StepContainer, ExpandListene
 
 	@Override
 	public void itemCollapsed(ExpandEvent e) {
-		bar.layout();
-		
-		TcXmlPluginController.getInstance().info("**************************colapsed");
+		ExpandItem ex = (ExpandItem)e.item;
+		StepViewer sv = (StepViewer)ex.getControl();
+		StepContainer parent = sv.getContainer();
+		StepView parentview = (StepView)parent;
+		parentview.getViewer().refreshSizeExpanditem();
+		bar.redraw();
+		bar.layout(true,true);
+		TcXmlPluginController.getInstance().info("***************      block ********colapsed");
 	
 		
 	}
@@ -168,7 +169,15 @@ public class BlockView  extends StepView implements StepContainer, ExpandListene
 	
 	@Override
 	public void itemExpanded(ExpandEvent e) {
-		TcXmlPluginController.getInstance().info("**************************expanded");
+		ExpandItem ex = (ExpandItem)e.item;
+		StepViewer sv = (StepViewer)ex.getControl();
+		StepContainer parent = sv.getContainer();
+		StepView parentview = (StepView)parent;
+		parentview.getViewer().refreshSizeExpanditem();
+		bar.redraw();
+		bar.layout(true,true);
+		TcXmlPluginController.getInstance().info("***************     block **********expanded");
+		
 		bar.layout();
 		
 	}

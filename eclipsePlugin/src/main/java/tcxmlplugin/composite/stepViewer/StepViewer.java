@@ -1,6 +1,7 @@
 package tcxmlplugin.composite.stepViewer;
 
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.ExpandItem;
 
 import tcxml.core.PlayingContext;
@@ -16,6 +17,8 @@ import tcxmlplugin.composite.StepToolBar;
 import tcxmlplugin.composite.StepView;
 import tcxmlplugin.job.PlayingJob;
 
+import static org.hamcrest.Matchers.instanceOf;
+
 import java.beans.PropertyChangeListener;
 
 import javax.sql.rowset.Joinable;
@@ -26,15 +29,31 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.IJobChangeListener;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.ControlEvent;
+import org.eclipse.swt.events.ControlListener;
+import org.eclipse.swt.events.ExpandEvent;
+import org.eclipse.swt.events.ExpandListener;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Layout;
+import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.wb.swt.SWTResourceManager;
 import org.eclipse.swt.widgets.Table;
 
-public  class StepViewer extends Composite{
+public  class StepViewer extends Composite implements ExpandListener {
 	
+	public ExpandItem getParentExpandItem() {
+		return parentExpandItem;
+	}
+
+
+
+
+
 	protected StepView view;
+	
+	
+	
 	
 	
 	public StepView getViewer() {
@@ -82,10 +101,46 @@ public  class StepViewer extends Composite{
 
 	public void setParentExpandItem(ExpandItem parentExpandItem) {
 		this.parentExpandItem = parentExpandItem;
-	}
 
-	public   StepViewer(Composite parent, int style, StepView view, StepContainer container) {
+	}
+	
+	/**
+	 * 
+	 *  expanditem is created with a fix height, may be expansed or not, and can be inside parent expanbar.
+	 *  
+	 *  reset the size of the expanditem
+	 * 
+	 */
+	
+	
+	public void refreshSizeExpanditem() {
+		
+		getDisplay().asyncExec(new Runnable() {
+			
+			@Override
+			public void run() {
+				parentExpandItem.setHeight(computeSize(SWT.DEFAULT, SWT.DEFAULT).y );
+				
+			}
+		});
+		
+		
+		
+		
+		
+		
+	}
+	
+	public   StepViewer( Composite parent , int style) {
+		
 		super(parent, style);
+		
+	}
+	
+	
+
+	public   StepViewer( int style, StepView view, StepContainer container) {
+		super(container.getBar(), style);
 		setLayout(new GridLayout(2, false));
 		
 		Label lblNewLabel = new Label(this, SWT.NONE);
@@ -122,17 +177,17 @@ public  class StepViewer extends Composite{
 	
 	private  void setView(StepView view) {
 		this.view = view;
+		
+		
+		view.setViewer(this);
+		view.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 		view.setParent(contentView);
-		GridData gd = new GridData();
-		gd.grabExcessHorizontalSpace=true;
-		gd.grabExcessVerticalSpace=true;
-		gd.horizontalAlignment=gd.FILL;
-		gd.verticalAlignment=gd.FILL;
-			this.view.setLayoutData(gd);
+		view.layout();	
+		contentView.layout();		
+		layout();
+		
 	
 		
-		layout();
-		contentView.layout();
 	}
 
 
@@ -248,5 +303,37 @@ public  class StepViewer extends Composite{
 			return view.getController();
 			
 		}
+
+
+
+
+
+
+		@Override
+		public void itemCollapsed(ExpandEvent e) {
+			TcXmlPluginController.getInstance().info("**********    STEPVIEWER " + this.getClass()  +"***************collapsed");
+	/*	view.layout();
+		contentView.layout();
+		layout();*/	
+			
+		}
+
+
+
+
+
+
+		@Override
+		public void itemExpanded(ExpandEvent e) {
+			TcXmlPluginController.getInstance().info("**********    STEPVIEWER  " + this.getClass()  +"***************expanded");
+	/*	view.layout();
+			contentView.layout();
+		layout();*/
+			
+		}
+
+
+
+	
 		
 }
