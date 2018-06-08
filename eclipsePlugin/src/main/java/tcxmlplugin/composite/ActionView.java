@@ -11,6 +11,7 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.ExpandBar;
 import org.eclipse.swt.widgets.ExpandItem;
 
+import tcxml.core.PlayingContext;
 import tcxml.core.TcXmlController;
 import tcxml.core.TcXmlException;
 import tcxml.model.Step;
@@ -19,6 +20,7 @@ import tcxmlplugin.composite.stepViewer.StepContainer;
 import tcxmlplugin.composite.stepViewer.StepViewer;
 import tcxmlplugin.composite.stepViewer.StepViewerFactory;
 import tcxmlplugin.composite.stepViewer.TitleListener;
+import tcxmlplugin.job.MultipleStepRunner;
 
 
 /**
@@ -72,7 +74,17 @@ public class ActionView extends AStepContainer{
 	}
 
 
-
+	public PlayingContext play(PlayingContext ctx) throws TcXmlException {
+		
+		
+		MultipleStepRunner mc = new MultipleStepRunner(stepViwerChildren);
+		
+		PlayingContext ret = mc.runSteps(ctx);
+		
+		return ret;
+		
+		
+	}
 
 
 

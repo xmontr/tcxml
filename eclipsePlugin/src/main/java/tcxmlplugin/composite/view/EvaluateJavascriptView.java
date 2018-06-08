@@ -155,7 +155,7 @@ return ctx;
 
 
 	@Override
-	public String buildTitle(Step mo) {
+	public String buildTitle() {
 		String ret = formatTitle(model.getIndex(), "Evaluate Javascript code " +  getShortCode());
 		return ret;
 	}

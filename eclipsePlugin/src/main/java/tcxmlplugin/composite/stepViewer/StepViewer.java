@@ -76,9 +76,10 @@ public  class StepViewer extends Composite implements ExpandListener {
 	protected StepRunner runner ;
 	private StepToolBar stepToolBar;
 	private Composite contentView;
-	private Label lblNewLabel_1;
+	private Label horizontalLabel;
 	private ExpandItem parentExpandItem;
 	private StepContainer container;
+	private Label verticalabel;
 	
 	
 	public StepContainer getContainer() {
@@ -134,6 +135,7 @@ public  class StepViewer extends Composite implements ExpandListener {
 	public   StepViewer( Composite parent , int style) {
 		
 		super(parent, style);
+		buildGUI();
 		
 	}
 	
@@ -141,34 +143,37 @@ public  class StepViewer extends Composite implements ExpandListener {
 
 	public   StepViewer( int style, StepView view, StepContainer container) {
 		super(container.getBar(), style);
-		setLayout(new GridLayout(2, false));
-		
-		Label lblNewLabel = new Label(this, SWT.NONE);
-		lblNewLabel.setLayoutData(new GridData(SWT.LEFT, SWT.FILL, false, true, 1, 2));
-		lblNewLabel.setBackground(SWTResourceManager.getColor(SWT.COLOR_DARK_GREEN));
-		lblNewLabel.setText(" ");
-		
-		stepToolBar = new StepToolBar(this, SWT.NONE);
-		stepToolBar.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
-		stepToolBar.setStepviewer(this);
-		
-		contentView = new Composite(this, SWT.NONE);
-		contentView.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
-	contentView.setLayout(new GridLayout(1, false));
-	new Label(this, SWT.NONE);
-	
-	lblNewLabel_1 = new Label(this, SWT.NONE);
-	lblNewLabel_1.setBackground(SWTResourceManager.getColor(SWT.COLOR_DARK_GREEN));
-	lblNewLabel_1.setText("   aaa");
-	lblNewLabel_1.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
-	lblNewLabel_1.setForeground(SWTResourceManager.getColor(SWT.COLOR_DARK_GREEN));
+buildGUI();
 	setView(view);
 	setContainer(container);
 		
 	}
 
 
+public void buildGUI() {
+	setLayout(new GridLayout(2, false));
+	
+	verticalabel = new Label(this, SWT.NONE);
+	verticalabel.setLayoutData(new GridData(SWT.LEFT, SWT.FILL, false, true, 1, 2));
+	verticalabel.setBackground(SWTResourceManager.getColor(SWT.COLOR_DARK_GREEN));
+	verticalabel.setText(" ");
+	
+	stepToolBar = new StepToolBar(this, SWT.NONE);
+	stepToolBar.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
+	stepToolBar.setStepviewer(this);
+	
+	contentView = new Composite(this, SWT.NONE);
+	contentView.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
+contentView.setLayout(new GridLayout(1, false));
+new Label(this, SWT.NONE);
 
+horizontalLabel = new Label(this, SWT.NONE);
+horizontalLabel.setBackground(SWTResourceManager.getColor(SWT.COLOR_DARK_GREEN));
+horizontalLabel.setText("   aaa");
+horizontalLabel.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
+horizontalLabel.setForeground(SWTResourceManager.getColor(SWT.COLOR_DARK_GREEN));
+	
+}
 
 
 
@@ -177,7 +182,11 @@ public  class StepViewer extends Composite implements ExpandListener {
 	
 	private  void setView(StepView view) {
 		this.view = view;
-		
+		// color for the viewer
+		horizontalLabel.setBackground(SWTResourceManager.getColor(view.getColor()));
+		horizontalLabel.setForeground(SWTResourceManager.getColor(view.getColor()));
+		verticalabel.setBackground(SWTResourceManager.getColor(view.getColor()));
+		verticalabel.setForeground(SWTResourceManager.getColor(view.getColor()));
 		
 		view.setViewer(this);
 		view.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));

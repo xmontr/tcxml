@@ -17,7 +17,7 @@ public class UtilsAPI {
 	
 	public void clearCookies( ) {
 		
-		
+		controller.getLog().info(" clear cookies is not implemented now !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
 		
 		
 	}
@@ -25,6 +25,8 @@ public class UtilsAPI {
 	
 	
 	public void clearCache() {
+		
+		controller.getLog().info(" clear cache is not implemented now !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
 		
 		
 		

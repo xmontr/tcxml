@@ -209,7 +209,7 @@ super.populate(mo);
 
 
 	@Override
-	public String buildTitle(Step mo) {
+	public String buildTitle() {
 		String ret = formatTitle(model.getIndex(), "step #" +  model.getStepId());
 		return ret;
 	}

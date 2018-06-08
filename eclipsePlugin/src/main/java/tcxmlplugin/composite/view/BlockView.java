@@ -31,10 +31,11 @@ public class BlockView  extends StepView implements StepContainer, ExpandListene
 	
 	private List<StepViewer> stepViwerChildren ;
 
-	public BlockView(Composite parent, int style, TcXmlController controller) {
-		
-		
+	public BlockView(Composite parent, int style, TcXmlController controller) {		
 		super(parent, style,controller);
+		
+		// color for the viewer
+		color=SWT.COLOR_DARK_YELLOW ;
 		
 		GridLayout gridlayout = new GridLayout(1, false);
 		setLayout(gridlayout);
@@ -66,7 +67,7 @@ public class BlockView  extends StepView implements StepContainer, ExpandListene
 		 }		
 		ExpandItem xpndtmNewExpanditem = new ExpandItem(bar, SWT.NONE);
 
-		xpndtmNewExpanditem.setExpanded(true);
+		xpndtmNewExpanditem.setExpanded(false);
 		xpndtmNewExpanditem.setText(tv.getTitle());
 		
 		xpndtmNewExpanditem.setHeight(tv.computeSize(SWT.DEFAULT, SWT.DEFAULT).y );
@@ -145,7 +146,7 @@ public class BlockView  extends StepView implements StepContainer, ExpandListene
 
 
 	@Override
-	public String buildTitle(Step mo) {
+	public String buildTitle() {
 		String ret = formatTitle(model.getIndex(), "Group " +  model.getAction());
 		return ret;
 	}

@@ -60,7 +60,7 @@ try {
 	});
 	
 	
-ctx = stepviewer.play(ctx);
+this.ctx = stepviewer.play(ctx);
 
 
 ret = Status.OK_STATUS;

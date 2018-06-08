@@ -3,6 +3,7 @@ package tcxmlplugin.composite;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
 
+import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
 
 import tcxml.core.PlayingContext;
@@ -40,7 +41,13 @@ public abstract class StepView extends Composite  {
 	
 	protected StepViewer viewer;
 	
+	protected int color = SWT.COLOR_DARK_GREEN;
 	
+	
+	public int getColor() {
+		return color;
+	}
+
 	public StepViewer getViewer() {
 		return viewer;
 	}
@@ -63,7 +70,15 @@ public abstract class StepView extends Composite  {
 	}
 	
 	
-	public abstract String buildTitle(Step mo) throws TcXmlException;
+	
+	/***
+	 * 
+	 *  cretae the title for the view. is called after populate
+	 * 
+	 * @return
+	 * @throws TcXmlException
+	 */
+	public abstract String buildTitle() throws TcXmlException;
 	
 	
 	
@@ -71,6 +86,15 @@ public abstract class StepView extends Composite  {
 		// TODO Auto-generated method stub
 		return model;
 	}
+	
+	
+	/**
+	 *   fill data in the model
+	 * 
+	 * 
+	 * @param mo
+	 * @throws TcXmlException
+	 */
 
 	public  void populate(Step mo) throws TcXmlException   {
 		
@@ -101,7 +125,7 @@ public abstract class StepView extends Composite  {
 		model.setStepId(mo.getStepId());
 		model.setTestObject(mo.getTestObject());
 		model.getStep().addAll(mo.getStep());
-		setTitle(buildTitle(mo));
+		setTitle(buildTitle());
 		
 		
 	

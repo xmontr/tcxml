@@ -122,6 +122,9 @@ public class WaitView extends StepView  {
 
 	public WaitView(Composite parent, int style, TcXmlController controller) {
 		super(parent, style, controller);
+		
+		// color for the viewer
+		color=SWT.COLOR_BLUE ;
 		this.setLayout(new GridLayout(2, false));
 		
 		Label intervalLabel = new Label(this, SWT.NONE);
@@ -148,7 +151,7 @@ public class WaitView extends StepView  {
 	
 	public void populate(Step mo  ) throws TcXmlException {	
 		
-super.populate(mo);
+
 
 String json = mo.getArguments();
 String rootKey="Interval";
@@ -173,7 +176,7 @@ waitmodel.setUnit("seconds");
 	
 }
 
-		
+super.populate(mo);		
 		
 
 		
@@ -207,7 +210,7 @@ waitmodel.setUnit("seconds");
 
 
 	@Override
-	public String buildTitle(Step mo) throws TcXmlException {
+	public String buildTitle() throws TcXmlException {
 		String ret = formatTitle(model.getIndex(), "Wait "+ waitmodel.getInterval() + " seconds" ) ;
 		return ret;
 	}

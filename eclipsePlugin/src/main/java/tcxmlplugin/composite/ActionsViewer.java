@@ -146,6 +146,11 @@ public class ActionsViewer extends Composite  {
 		
 	}
 
+	public ActionView getActionView(String actionName) {
+		// TODO Auto-generated method stub
+		return actionsView.get(actionName);
+	}
+
 
 
 

@@ -29,6 +29,7 @@ import tcxmlplugin.composite.StepView;
 import tcxmlplugin.composite.stepViewer.StepViewer;
 import tcxmlplugin.composite.stepViewer.StepContainer;
 import tcxmlplugin.composite.stepViewer.StepViewerFactory;
+import tcxmlplugin.job.MultipleStepRunner;
 import tcxmlplugin.job.PlayingJob;
 
 import org.eclipse.swt.layout.GridData;
@@ -63,8 +64,11 @@ public class FunctionView extends StepView implements StepContainer, ExpandListe
 	}
 
 	public FunctionView(Composite parent, int style, TcXmlController controller) {
-
 		super(parent, style, controller);
+		
+		// color for the viewer
+		color=SWT.COLOR_DARK_BLUE ;
+		
 		GridLayout gridlayout = new GridLayout(1, false);
 		setLayout(gridlayout);
 		stepViwerChildren = new ArrayList<StepViewer>();
@@ -166,42 +170,14 @@ public class FunctionView extends StepView implements StepContainer, ExpandListe
 
 	@Override
 	public PlayingContext play(PlayingContext ctx) throws TcXmlException {
-
-		PlayingContext temp = ctx;
-
-		for (Iterator iterator = stepViwerChildren.iterator(); iterator.hasNext();) {
-			StepViewer stepViewer = (StepViewer) iterator.next();
-
-			PlayingJob j = stepViewer.getplayInteractiveJob(temp);
-			j.schedule();
-
-			try {
-				j.join();
-				temp = j.getCtx();
-
-				IStatus lastExecStatus = j.getResult();
-
-				if (lastExecStatus != Status.OK_STATUS) {
-
-					throw new TcXmlException("error in child step", new IllegalStateException());
-				}
-
-			} catch (InterruptedException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-
-			try {
-				Thread.currentThread().sleep(10000);
-			} catch (InterruptedException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-
-		}
-
-		return temp;
-
+		
+		
+		MultipleStepRunner mc = new MultipleStepRunner(stepViwerChildren);
+		
+		PlayingContext ret = mc.runSteps(ctx);
+		
+		return ret;
+		
 	}
 
 	@Override
@@ -211,8 +187,8 @@ public class FunctionView extends StepView implements StepContainer, ExpandListe
 	}
 
 	@Override
-	public String buildTitle(Step mo) {
-		String ret = "Function " + mo.getAction();
+	public String buildTitle() {
+		String ret = "Function " + model.getAction();
 		return ret;
 	}
 	

@@ -281,26 +281,26 @@ public class TestObjectView extends StepView implements PropertyChangeListener {
 	}
 
 	@Override
-	public String buildTitle(Step mo) throws TcXmlException {
+	public String buildTitle() throws TcXmlException {
 		
 		String ret;
 		TestObject to = null;
-		if (!controller.isBrowserStep(mo)) { // testobject is not browser
+		if (!controller.isBrowserStep(model)) { // testobject is not browser
 			if (library == null) {
-				to = controller.getTestObjectById(mo.getTestObject());
+				to = controller.getTestObjectById(model.getTestObject());
 
 			} else {
-				to = controller.getTestObjectById(mo.getTestObject(), library);
+				to = controller.getTestObjectById(model.getTestObject(), library);
 
 			}
 			
 			
-			 ret = formatTitle(mo.getIndex(), mo.getAction() + " on " + to.getAutoName());
+			 ret = formatTitle(model.getIndex(), model.getAction() + " on " + to.getAutoName());
 			
 			
 		}else {// testobject is browser
 			
-			ret = formatTitle(mo.getIndex(), mo.getAction() + " on Browser ");	
+			ret = formatTitle(model.getIndex(), model.getAction() + " on Browser ");	
 			
 		}
 		

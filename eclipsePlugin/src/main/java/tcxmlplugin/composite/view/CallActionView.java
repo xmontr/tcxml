@@ -11,8 +11,11 @@ import tcxml.core.PlayingContext;
 import tcxml.core.TcXmlController;
 import tcxml.core.TcXmlException;
 import tcxml.model.Step;
+import tcxmlplugin.TcXmlPluginController;
+import tcxmlplugin.composite.ActionView;
 import tcxmlplugin.composite.ActionsModel;
 import tcxmlplugin.composite.StepView;
+import tcxmlplugin.composite.TcViewer;
 import tcxmlplugin.composite.stepViewer.StepContainer;
 import tcxmlplugin.composite.stepViewer.StepViewer;
 import org.eclipse.swt.layout.GridLayout;
@@ -40,6 +43,9 @@ public class CallActionView extends StepView {
 
 	public CallActionView(Composite parent, int style, TcXmlController controller) {
 		super(parent, style, controller);
+		// color for the viewer
+		color=SWT.COLOR_DARK_CYAN ;
+		
 		this.controller = controller;
 		setLayout(new GridLayout(2, false));
 		
@@ -68,21 +74,31 @@ public class CallActionView extends StepView {
 @Override
 public void populate(Step mo) throws TcXmlException {
 	
-	super.populate(mo);
+	
 	
 	// populate argument
 	
 	String selectedAction = controller.readStingArgumentByName(mo.getArguments(), "Action Name");
 	
 	actionmodel.setActionSelected(selectedAction);
+	
+	super.populate(mo);
 }
 
 
 
 	@Override
 	public PlayingContext play(PlayingContext ctx) throws TcXmlException {
-		// TODO Auto-generated method stub
-		return null;
+		
+		TcViewer tcviewer = TcXmlPluginController.getInstance().getTcviewer();
+		
+		String actionName = actionmodel.getActionSelected();
+		
+	ActionView action	= tcviewer.getActionsViewer().getActionView(actionName);
+	
+	PlayingContext ret = action.play(ctx);
+		
+		return ret;
 	}
 
 
@@ -92,7 +108,7 @@ public void populate(Step mo) throws TcXmlException {
 
 
 	@Override
-	public String buildTitle(Step mo) throws TcXmlException {
+	public String buildTitle() throws TcXmlException {
 		String ret = formatTitle(model.getIndex(), " Call Action" );
 		return ret;
 	}

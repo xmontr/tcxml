@@ -150,6 +150,9 @@ public static class CallFunctionViewModel {
 		super(parent,  style,controller);
 	
 		
+		// color for the viewer
+		color=SWT.COLOR_DARK_MAGENTA ;
+		
 		callfunctmodel = new CallFunctionViewModel();
 		this.setLayout(new GridLayout(2, false));
 		
@@ -169,6 +172,7 @@ public static class CallFunctionViewModel {
 		new Label(this, SWT.NONE);
 		
 		argumentEditorGroup = new Group(this, SWT.NONE);
+		argumentEditorGroup.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 		argumentEditorGroup.setText("Arguments");
 		//argumentEditorGroup.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 		argumentEditorGroup.setLayout(new FillLayout());
@@ -204,18 +208,18 @@ public static class CallFunctionViewModel {
 		
 		
 		
-		callfunctmodel.setSelectedFunction(model.getFuncName());
-		callfunctmodel.setSelectedLib(model.getLibName());
+		callfunctmodel.setSelectedFunction(mo.getFuncName());
+		callfunctmodel.setSelectedLib(mo.getLibName());
 		
 
 		li.addAll(controller.getLibraries().keySet());
 		callfunctmodel.setAllLibs(li);
 		
-		updateFunctionList(model.getLibName());
+		updateFunctionList(mo.getLibName());
 		
 	
 		
-		
+			
 		
 		
 		
@@ -407,7 +411,7 @@ public static class CallFunctionViewModel {
 
 
 	@Override
-	public String buildTitle(Step mo) {
+	public String buildTitle() {
 		String ret = formatTitle(model.getIndex(), " Call Function " + model.getLibName() + "." + model.getFuncName()) ;
 		return ret;
 	}

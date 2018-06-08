@@ -395,6 +395,10 @@ public void ensureVisibility(StepViewer stepviewer) {
 	
 	
 }
+	public ActionsViewer getActionsViewer() {
+		return actionsViewer;
+	}
+
 	private void switch2Action(String actionName) {
 		tabFolder.setSelection(1);
 		actionsViewer.showAction(actionName);
