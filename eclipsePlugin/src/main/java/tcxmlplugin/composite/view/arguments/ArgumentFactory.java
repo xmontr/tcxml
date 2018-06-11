@@ -36,13 +36,13 @@ public class ArgumentFactory {
 	}
 
 	private static StepArgument getClickArgument(StepView view) throws TcXmlException {
-		StepArgument ret = new ClickArgs(view, view.getStyle());
+		ClickArgs ret = new ClickArgs(view, view.getStyle());
 		ret.populate(view.getModel().getArguments());
 		return ret;
 	}
 
 	private static StepArgument getTypeTextArgument(StepView view) throws TcXmlException {
-		StepArgument ret = new TypeTextArgs(view, view.getStyle());
+		TypeTextArgs ret = new TypeTextArgs(view, view.getStyle());
 		ret.populate(view.getModel().getArguments());
 		return ret;
 	}
@@ -53,14 +53,14 @@ public class ArgumentFactory {
 	}
 
 	private static StepArgument getNavigateArgument(StepView view) throws TcXmlException {
-		StepArgument ret = new NavigateArgs(view, view.getStyle());
+		NavigateArgs ret = new NavigateArgs(view, view.getStyle());
 		ret.populate(view.getModel().getArguments());
 		
 		return ret;
 	}
 
 	public static StepArgument getArgumentForFUnction(String functName, CallFunctionView callFunctionView)  throws TcXmlException {
-		StepArgument ret = new CallFunctionArg(callFunctionView, callFunctionView.getStyle());
+		CallFunctionArg ret = new CallFunctionArg(callFunctionView, callFunctionView.getStyle());
 		ret.populate(callFunctionView.getModel().getArguments());
 		return ret;
 	}

@@ -283,7 +283,7 @@ public static class CallFunctionViewModel {
 	
 	StepViewer funcViewer = tcviewer.getLibraryViewer().getFunction(model.getLibName(), model.getFuncName());
 	
-	PlayingJob j = funcViewer.getplayInteractiveJob(ctx);
+	PlayingJob j = funcViewer.getplayInteractiveJob(ret);
 	
 	
 	

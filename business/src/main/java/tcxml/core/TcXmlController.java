@@ -899,6 +899,10 @@ public Object evaluateJS(String code, PlayingContext ctx) throws TcXmlException 
 		Object ret = engine.eval(code, context);
 		
 		log.info("return for evaluateJS is " + ret);
+		// save global variable in the global context 
+		Bindings nashorn_global = (Bindings) context.getAttribute("nashorn.global");
+		context.getBindings( ScriptContext.ENGINE_SCOPE ).putAll(nashorn_global);
+		
 		return ret;
 	} catch (ScriptException e) {
 		throw new TcXmlException("fail to evaluate js code ", e);
@@ -935,6 +939,8 @@ public void addFuncArg2context(PlayingContext ctx,ExecutionContext ec) throws Tc
 			sb.append("FuncArgs['").append(callFunctionAttribut.getName()).append("']=").append("\"").append(evaluate(callFunctionAttribut,ctx)).append("\";");
 			try {
 				Object ret = engine.eval(sb.toString(), context);
+				
+				log.info("adding entry to FuncArgs: "+sb.toString());
 				
 			} catch (ScriptException e) {
 				throw new TcXmlException("fail to build FuncArgs object in js context ", e);
@@ -981,21 +987,21 @@ public  ScriptContext   buildInitialJavascriptContext(PlayingContext ctx) throws
 	ScriptEngine engine = scriptFactory.getEngineByName("nashorn");
 	ScriptContext context = new SimpleScriptContext();
 
-	context.setBindings(engine.createBindings(), ScriptContext.ENGINE_SCOPE);
+	context.setBindings(engine.createBindings(), ScriptContext.GLOBAL_SCOPE);
 	
 	// import LR object
 	   Object api = new LrAPI(this);
 	   
-	   context.setBindings(engine.createBindings(), ScriptContext.ENGINE_SCOPE);
-	   context.setAttribute("LR", api, ScriptContext.ENGINE_SCOPE);
+	  
+	   context.setAttribute("LR", api, ScriptContext.GLOBAL_SCOPE);
 	   
 	   // import Utils obj
 	   Object utils = new UtilsAPI(this);
-	   context.setAttribute("Utils", utils, ScriptContext.ENGINE_SCOPE);
+	   context.setAttribute("Utils", utils, ScriptContext.GLOBAL_SCOPE);
 	   // create FuncArgs object
 	   
 	   Object funcargs = new Object();
-	context.setAttribute("FuncArgs", funcargs , ScriptContext.ENGINE_SCOPE); 
+	context.setAttribute("FuncArgs", funcargs , ScriptContext.GLOBAL_SCOPE); 
 
 	   
 	   

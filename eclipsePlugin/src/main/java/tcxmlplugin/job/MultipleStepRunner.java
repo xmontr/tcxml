@@ -55,7 +55,7 @@ public class MultipleStepRunner {
 			}
 
 			try {
-				Thread.currentThread().sleep(10000);
+				Thread.currentThread().sleep(500);
 			} catch (InterruptedException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
