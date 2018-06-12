@@ -56,7 +56,7 @@ import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.remote.Augmenter;
 import org.openqa.selenium.remote.DesiredCapabilities;
-import  jdk.nashorn.api.scripting.ScriptObjectMirror;
+import jdk.nashorn.api.scripting.JSObject;
 
 import com.kscs.util.jaxb.BoundList;
 
@@ -921,28 +921,33 @@ public Logger getLog() {
 }
 
 public void addFuncArg2context(PlayingContext ctx,ExecutionContext ec) throws TcXmlException {
-	
+	try {
 	
 	
 	   
 	   ScriptContext context = ctx.getJsContext();
 	   ScriptEngine engine = scriptFactory.getEngineByName("nashorn");
+	  
 	
 	  
 		 List<CallFunctionAttribut> li = ec.getArrgumentsList() ;
 		 for (Iterator iterator = li.iterator(); iterator.hasNext();) {
 			CallFunctionAttribut callFunctionAttribut = (CallFunctionAttribut) iterator.next();
-			StringBuffer sb = new StringBuffer();
+			String name = callFunctionAttribut.getName();
+			Object value=evaluate(callFunctionAttribut,ctx);
 			
-			
-			
-			sb.append("FuncArgs['").append(callFunctionAttribut.getName()).append("']=").append("\"").append(evaluate(callFunctionAttribut,ctx)).append("\";");
-			try {
-				Object ret = engine.eval(sb.toString(), context);
+			JSObject objConstructor = (JSObject)engine.eval("Object");
+			   JSObject jsObj = (JSObject) objConstructor.newObject();
+	
+		      jsObj.setMember(name, value);
+		      
+		      context.setAttribute("FuncArgs", jsObj, ScriptContext.GLOBAL_SCOPE);
+		      
 				
-				log.info("adding entry to FuncArgs: "+sb.toString());
+				log.info("adding entry to FuncArgs: "+name);
+		 	}
 				
-			} catch (ScriptException e) {
+		} catch (ScriptException e) {
 				throw new TcXmlException("fail to build FuncArgs object in js context ", e);
 			
 			}
@@ -954,7 +959,7 @@ public void addFuncArg2context(PlayingContext ctx,ExecutionContext ec) throws Tc
 			
 		
 		   
-	   }
+	   
 	
 	
 	
@@ -998,10 +1003,9 @@ public  ScriptContext   buildInitialJavascriptContext(PlayingContext ctx) throws
 	   // import Utils obj
 	   Object utils = new UtilsAPI(this);
 	   context.setAttribute("Utils", utils, ScriptContext.GLOBAL_SCOPE);
-	   // create FuncArgs object
+	
 	   
-	   Object funcargs = new Object();
-	context.setAttribute("FuncArgs", funcargs , ScriptContext.GLOBAL_SCOPE); 
+
 
 	   
 	   
