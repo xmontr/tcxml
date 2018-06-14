@@ -8,6 +8,7 @@ import tcxml.model.Step;
 import tcxmlplugin.composite.stepViewer.StepContainer;
 import tcxmlplugin.composite.stepViewer.StepViewer;
 import tcxmlplugin.composite.stepViewer.StepViewerFactory;
+import tcxmlplugin.composite.stepViewer.TopStepContainer;
 
 import org.eclipse.swt.layout.FillLayout;
 
@@ -19,7 +20,7 @@ import org.eclipse.swt.widgets.ExpandItem;
 
 import com.kscs.util.jaxb.BoundList;
 
-public class RunLogicViewer extends AStepContainer{
+public class RunLogicViewer extends AStepContainer implements TopStepContainer{
 	
 	
 	private TcXmlController controller;
@@ -62,6 +63,18 @@ public class RunLogicViewer extends AStepContainer{
 			
 			throw new TcXmlException("invalide runlogic step", new IllegalArgumentException());
 		}
+		
+	}
+
+
+
+
+
+
+
+	@Override
+	public void showOnTop(StepViewer st) {
+		// TODO Auto-generated method stub
 		
 	}
 	

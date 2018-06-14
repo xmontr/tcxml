@@ -7,6 +7,7 @@ import java.util.List;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.custom.ScrolledComposite;
 import org.eclipse.swt.events.ExpandEvent;
 import org.eclipse.swt.events.ExpandListener;
 import org.eclipse.swt.layout.FillLayout;
@@ -202,6 +203,8 @@ public class FunctionView extends StepView implements StepContainer, ExpandListe
 			parentview.getViewer().refreshSizeExpanditem();
 			bar.redraw();
 			bar.layout(true,true);
+			
+			
 	
 		TcXmlPluginController.getInstance().info("***************     function  **********collpased ");
 

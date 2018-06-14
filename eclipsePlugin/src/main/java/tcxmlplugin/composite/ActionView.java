@@ -20,6 +20,7 @@ import tcxmlplugin.composite.stepViewer.StepContainer;
 import tcxmlplugin.composite.stepViewer.StepViewer;
 import tcxmlplugin.composite.stepViewer.StepViewerFactory;
 import tcxmlplugin.composite.stepViewer.TitleListener;
+import tcxmlplugin.composite.stepViewer.TopStepContainer;
 import tcxmlplugin.job.MultipleStepRunner;
 
 
@@ -32,7 +33,7 @@ import tcxmlplugin.job.MultipleStepRunner;
  */
 
 
-public class ActionView extends AStepContainer{
+public class ActionView extends AStepContainer implements TopStepContainer{
 	
 	
 	
@@ -83,6 +84,13 @@ public class ActionView extends AStepContainer{
 		
 		return ret;
 		
+		
+	}
+
+
+	@Override
+	public void showOnTop(StepViewer st) {
+		// TODO Auto-generated method stub
 		
 	}
 

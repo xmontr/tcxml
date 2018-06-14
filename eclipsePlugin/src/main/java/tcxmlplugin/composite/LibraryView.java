@@ -5,12 +5,15 @@ import java.util.Iterator;
 import java.util.List;
 
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.ExpandBar;
 import org.eclipse.swt.widgets.ExpandItem;
+import org.eclipse.swt.widgets.ScrollBar;
+import org.eclipse.swt.widgets.Scrollable;
 
 import model.Function;
 import tcxml.core.TcXmlController;
@@ -22,9 +25,10 @@ import tcxmlplugin.composite.stepViewer.StepContainer;
 import tcxmlplugin.composite.stepViewer.StepViewer;
 import tcxmlplugin.composite.stepViewer.StepViewerFactory;
 import tcxmlplugin.composite.stepViewer.TitleListener;
+import tcxmlplugin.composite.stepViewer.TopStepContainer;
 import tcxmlplugin.composite.view.FunctionView;
 
-public class LibraryView extends AStepContainer{
+public class LibraryView extends AStepContainer implements TopStepContainer{
 	
 	
 	public String getLibraryName() {
@@ -115,6 +119,16 @@ public StepViewer getFunction(String libName, String funcName) throws TcXmlExcep
 		
 	}
 	return ret;
+}
+
+@Override
+public void showOnTop(StepViewer st) {
+	Point p = st.getLocation();
+	Scrollable sc = (Scrollable)bar;
+	ScrollBar vb = sc.getVerticalBar();
+	
+	vb.setSelection(p.y);
+	
 }
 
 

@@ -38,6 +38,8 @@ import tcxml.model.TruLibrary;
 import tcxmlplugin.TcXmlPluginController;
 import tcxmlplugin.composite.stepViewer.StepContainer;
 import tcxmlplugin.composite.stepViewer.StepViewer;
+import tcxmlplugin.composite.stepViewer.TopStepContainer;
+import tcxmlplugin.composite.view.CallActionView;
 import tcxmlplugin.composite.view.FunctionView;
 
 import org.eclipse.swt.widgets.ProgressBar;
@@ -61,6 +63,9 @@ public class TcViewer extends Composite implements PropertyChangeListener, IJobC
 
 
 	private ToolBar toolBar;
+	
+	
+	private TopStepContainer  currentTopStep=null;
 
 	public TcViewer(Composite parent, int style, TcXmlController tccontroller) {
 		super(parent, style);
@@ -358,43 +363,76 @@ this.populateRunLogic(controller.getRunLogic());
 	
 public void ensureVisibility(StepViewer stepviewer) {
 	
-	StepView view = stepviewer.getViewer();
-	if(view instanceof FunctionView ) {// switch 2 functions tab, seeek to function and expand it
+	
+	updateTopContainer(stepviewer);
+	stepviewer.expand();
+	currentTopStep.showOnTop(stepviewer);	
+	stepviewer.expand();
+	
+	FormToolkit.ensureVisible(stepviewer.getViewer());
+	
+	
+}
+
+
+
+
+
+
+/**
+ *  switch between Functions / Actions and runlogic when 
+ *  
+ *  a call function is executed
+ * a call action
+ * 
+ * 
+ * @param stepviewer
+ * @return
+ */
+
+
+	private void updateTopContainer(StepViewer stepviewer) {
+		
+		StepView view = stepviewer .getViewer();
 		
 		
+		if(view instanceof FunctionView) {// start execute newfunction also switch tab
+			
+			String libname = ((FunctionView ) view).getLibName() ;
+			switch2function(libname );
+			currentTopStep =  (LibraryView) view.getViewer().getContainer();
+			
+			return;
+		}
 		
-		String libname = ((FunctionView ) view).getLibName() ;
-		switch2function(libname );
-		
-	}else { 
-		
-		
-		
+		if(view instanceof CallActionView) {
+		switch2runlogic();	
+		currentTopStep =  runLogicViewer;
+			
+		}
 		
 		
-		//stepviewer is not a function also is in action but action can be already selected
-		
-		StepContainer cont = stepviewer.getContainer();
-		if( cont instanceof ActionView )
+		StepContainer pa = stepviewer.getContainer();
+		if( pa instanceof ActionView )
 		{
 		String actionName  =((ActionView) stepviewer.getContainer()).getActionName();
 		switch2Action(actionName );
 		
-	
-	
-
-	
+		currentTopStep = (ActionView)pa;
+		return;
+		
 		}
+		
+		
+		
+
+	}
+
+	private void switch2runlogic() {
+		tabFolder.setSelection(2);
 	
 }
-	
-	
-	stepviewer.expand();
-	
-	FormToolkit.ensureVisible(stepviewer);
-	
-	
-}
+
 	public ActionsViewer getActionsViewer() {
 		return actionsViewer;
 	}

@@ -44,6 +44,8 @@ public class StepToolBar extends Composite implements IJobChangeListener   {
 	private Button playButton;
 	private Label label;
 	
+	private boolean playable;
+	
 	
 
 
@@ -142,7 +144,11 @@ TcXmlPluginController.getInstance().error("fail to play step ", e1);
 		public void run() {
 		
 			
-		progressBar.setVisible(true);	
+		if(playable)	{
+			progressBar.setVisible(true);
+			
+		}
+			
 		hideStatus();
 			
 		}
@@ -179,7 +185,10 @@ TcXmlPluginController.getInstance().error("fail to play step ", e1);
 			
 			@Override
 			public void run() {
-				progressBar.setVisible(false);
+				if(playable) {
+					progressBar.setVisible(false);						
+				}
+				
 				showStatus((PlayingJob)event.getJob());
 				
 			}
@@ -240,7 +249,7 @@ TcXmlPluginController.getInstance().error("fail to play step ", e1);
 	}
 	
 	public void setPlayable( boolean isPlayable) {
-		
+		this.playable = isPlayable ;
 		playButton.setVisible(isPlayable);
 		
 	}

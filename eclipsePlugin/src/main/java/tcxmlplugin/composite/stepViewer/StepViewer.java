@@ -2,6 +2,7 @@ package tcxmlplugin.composite.stepViewer;
 
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Event;
+import org.eclipse.swt.widgets.ExpandBar;
 import org.eclipse.swt.widgets.ExpandItem;
 
 import tcxml.core.PlayingContext;
@@ -291,8 +292,13 @@ horizontalLabel.setForeground(SWTResourceManager.getColor(SWT.COLOR_DARK_GREEN))
 		
 		
 		public void expand() {
-			
 			parentExpandItem.setExpanded(true);
+			StepContainer parent = this.getContainer();
+			StepView parentview = (StepView)parent;
+			parentview.getViewer().refreshSizeExpanditem();			
+			ExpandBar bar = parent.getBar();
+			bar.redraw();
+			bar.layout(true,true);
 			
 			
 			
@@ -339,6 +345,13 @@ horizontalLabel.setForeground(SWTResourceManager.getColor(SWT.COLOR_DARK_GREEN))
 			contentView.layout();
 		layout();*/
 			
+		}
+		
+		
+		@Override
+		public String toString() {
+			// TODO Auto-generated method stub
+			return view.getTitle();
 		}
 
 
