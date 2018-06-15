@@ -367,9 +367,8 @@ public void ensureVisibility(StepViewer stepviewer) {
 	updateTopContainer(stepviewer);
 	stepviewer.expand();
 	currentTopStep.showOnTop(stepviewer);	
-	stepviewer.expand();
 	
-	FormToolkit.ensureVisible(stepviewer.getViewer());
+
 	
 	
 }

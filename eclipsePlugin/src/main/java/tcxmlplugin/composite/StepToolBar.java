@@ -144,10 +144,10 @@ TcXmlPluginController.getInstance().error("fail to play step ", e1);
 		public void run() {
 		
 			
-		if(playable)	{
+		
 			progressBar.setVisible(true);
 			
-		}
+		
 			
 		hideStatus();
 			
@@ -185,9 +185,9 @@ TcXmlPluginController.getInstance().error("fail to play step ", e1);
 			
 			@Override
 			public void run() {
-				if(playable) {
+				
 					progressBar.setVisible(false);						
-				}
+				
 				
 				showStatus((PlayingJob)event.getJob());
 				

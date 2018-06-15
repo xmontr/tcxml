@@ -116,17 +116,24 @@ public  class StepViewer extends Composite implements ExpandListener {
 	
 	
 	public void refreshSizeExpanditem() {
-		
+		//reset size of current
 		getDisplay().asyncExec(new Runnable() {
 			
 			@Override
 			public void run() {
 				parentExpandItem.setHeight(computeSize(SWT.DEFAULT, SWT.DEFAULT).y );
 				
+				
 			}
 		});
-		
-		
+		// refresh size of parent
+		StepContainer pa = getContainer();
+		pa.getBar().redraw();
+		if( ! (pa instanceof TopStepContainer)) {
+			StepView theview = (StepView) pa;
+			theview.getViewer().refreshSizeExpanditem();
+			
+		}
 		
 		
 		
@@ -293,12 +300,7 @@ horizontalLabel.setForeground(SWTResourceManager.getColor(SWT.COLOR_DARK_GREEN))
 		
 		public void expand() {
 			parentExpandItem.setExpanded(true);
-			StepContainer parent = this.getContainer();
-			StepView parentview = (StepView)parent;
-			parentview.getViewer().refreshSizeExpanditem();			
-			ExpandBar bar = parent.getBar();
-			bar.redraw();
-			bar.layout(true,true);
+			refreshSizeExpanditem();
 			
 			
 			

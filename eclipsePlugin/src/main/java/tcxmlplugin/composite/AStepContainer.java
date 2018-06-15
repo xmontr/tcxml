@@ -4,8 +4,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.custom.ScrolledComposite;
 import org.eclipse.swt.events.ExpandEvent;
 import org.eclipse.swt.events.ExpandListener;
+import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
@@ -135,6 +137,24 @@ public abstract class AStepContainer extends Composite   implements StepContaine
 		return stepViwerChildren;
 	}
 	
+	
+	
+	protected Point getControlLocation(
+			Control control) {
+		int x = 0;
+		int y = 0;
+		Control content = this;
+		Control currentControl = control;
+		for (;;) {
+			if (currentControl == content)
+				break;
+			Point location = currentControl.getLocation();
+			x += location.x;
+			y += location.y;
+			currentControl = currentControl.getParent();
+		}
+		return new Point(x, y);
+	}
 	
 	
 	

@@ -223,9 +223,9 @@ public class FunctionView extends StepView implements StepContainer, ExpandListe
 
 		ExpandItem ex = (ExpandItem)e.item;
 		StepViewer sv = (StepViewer)ex.getControl();
-		StepContainer parent = sv.getContainer();
-		StepView parentview = (StepView)parent;
-		parentview.getViewer().refreshSizeExpanditem();
+		sv.refreshSizeExpanditem();
+		
+
 		TcXmlPluginController.getInstance().info("***************     function **********expanded");
 		bar.layout(true,true);
 		

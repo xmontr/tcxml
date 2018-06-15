@@ -171,12 +171,12 @@ public class BlockView  extends StepView implements StepContainer, ExpandListene
 	@Override
 	public void itemExpanded(ExpandEvent e) {
 		ExpandItem ex = (ExpandItem)e.item;
+		
+		
+		
+		
 		StepViewer sv = (StepViewer)ex.getControl();
-		StepContainer parent = sv.getContainer();
-		StepView parentview = (StepView)parent;
-		parentview.getViewer().refreshSizeExpanditem();
-		bar.redraw();
-		bar.layout(true,true);
+		sv.refreshSizeExpanditem();
 		TcXmlPluginController.getInstance().info("***************     block **********expanded");
 		
 		bar.layout();
