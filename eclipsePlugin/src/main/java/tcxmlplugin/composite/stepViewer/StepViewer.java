@@ -41,7 +41,7 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.wb.swt.SWTResourceManager;
 import org.eclipse.swt.widgets.Table;
 
-public  class StepViewer extends Composite implements ExpandListener {
+public  class StepViewer extends Composite  {
 	
 	public ExpandItem getParentExpandItem() {
 		return parentExpandItem;
@@ -122,18 +122,27 @@ public  class StepViewer extends Composite implements ExpandListener {
 			@Override
 			public void run() {
 				parentExpandItem.setHeight(computeSize(SWT.DEFAULT, SWT.DEFAULT).y );
-				
+				parentExpandItem.getParent().redraw();
 				
 			}
 		});
 		// refresh size of parent
 		StepContainer pa = getContainer();
-		pa.getBar().redraw();
+		
 		if( ! (pa instanceof TopStepContainer)) {
 			StepView theview = (StepView) pa;
 			theview.getViewer().refreshSizeExpanditem();
 			
+		} else { // resiize the top container
+			
+			TopStepContainer topc = (TopStepContainer) pa;
+			topc.refreshSize();
 		}
+		
+
+		
+
+	
 		
 		
 		
@@ -301,6 +310,9 @@ horizontalLabel.setForeground(SWTResourceManager.getColor(SWT.COLOR_DARK_GREEN))
 		public void expand() {
 			parentExpandItem.setExpanded(true);
 			refreshSizeExpanditem();
+	
+			
+
 			
 			
 			
@@ -326,28 +338,14 @@ horizontalLabel.setForeground(SWTResourceManager.getColor(SWT.COLOR_DARK_GREEN))
 
 
 
-		@Override
-		public void itemCollapsed(ExpandEvent e) {
-			TcXmlPluginController.getInstance().info("**********    STEPVIEWER " + this.getClass()  +"***************collapsed");
-	/*	view.layout();
-		contentView.layout();
-		layout();*/	
-			
-		}
 
 
 
 
 
 
-		@Override
-		public void itemExpanded(ExpandEvent e) {
-			TcXmlPluginController.getInstance().info("**********    STEPVIEWER  " + this.getClass()  +"***************expanded");
-	/*	view.layout();
-			contentView.layout();
-		layout();*/
-			
-		}
+
+
 		
 		
 		@Override

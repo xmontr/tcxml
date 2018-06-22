@@ -129,7 +129,7 @@ public class ActionsViewer extends Composite  {
 		
 		 List<String> allActions =    new ArrayList<String>(actionmap.keySet())    ;
 		model.setAllActions(allActions);
-		TcXmlPluginController.getInstance().info(("built actions :" + allActions.size()  ))   ;
+		controller.getLog().info(("built actions :" + allActions.size()  ))   ;
 		
 		
 		

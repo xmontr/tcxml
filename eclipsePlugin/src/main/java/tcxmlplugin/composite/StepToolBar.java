@@ -195,7 +195,7 @@ TcXmlPluginController.getInstance().error("fail to play step ", e1);
 		});
 		
 	
-		TcXmlPluginController.getInstance().info("playing job" + event.getJob().getName() + "  ended with status" + event.getResult());
+		TcXmlPluginController.getInstance().info("playing " + event.getJob().getName() + "  ended with status" + event.getResult());
 		
 		
 	}

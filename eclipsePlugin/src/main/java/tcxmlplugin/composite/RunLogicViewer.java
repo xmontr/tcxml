@@ -79,6 +79,12 @@ public class RunLogicViewer extends AStepContainer implements TopStepContainer{
 	}
 	
 	
+	@Override
+	public void refreshSize() {
+		resizeContent();
+		
+	
+	}	
 	
 	
 	

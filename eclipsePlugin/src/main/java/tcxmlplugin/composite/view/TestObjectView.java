@@ -189,7 +189,7 @@ public class TestObjectView extends StepView implements PropertyChangeListener {
 		try {
 			ar = ArgumentFactory.getArgumentForTestObject(newAction, this);
 			setArgumentView(ar);
-			TcXmlPluginController.getInstance().info("setting nw action for step : " + newAction);
+			controller.getLog().info("setting nw action for step : " + newAction);
 		} catch (TcXmlException e) {
 			TcXmlPluginController.getInstance().error("fail to create argument view for step", e);
 

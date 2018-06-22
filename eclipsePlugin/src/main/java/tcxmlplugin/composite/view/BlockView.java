@@ -25,6 +25,7 @@ import tcxmlplugin.composite.StepView;
 import tcxmlplugin.composite.stepViewer.StepViewer;
 import tcxmlplugin.composite.stepViewer.StepContainer;
 import tcxmlplugin.composite.stepViewer.StepViewerFactory;
+import tcxmlplugin.job.MultipleStepRunner;
 
 public class BlockView  extends StepView implements StepContainer, ExpandListener {
 	private ExpandBar bar;
@@ -133,7 +134,11 @@ public class BlockView  extends StepView implements StepContainer, ExpandListene
 
 	@Override
 	public PlayingContext play(PlayingContext ctx) throws TcXmlException {
-		throw new TcXmlException("not implemented", new IllegalAccessException());
+		MultipleStepRunner mc = new MultipleStepRunner(stepViwerChildren);
+		
+		PlayingContext ret = mc.runSteps(ctx);
+		
+		return ret;
 		
 	}
 
@@ -156,12 +161,10 @@ public class BlockView  extends StepView implements StepContainer, ExpandListene
 	public void itemCollapsed(ExpandEvent e) {
 		ExpandItem ex = (ExpandItem)e.item;
 		StepViewer sv = (StepViewer)ex.getControl();
-		StepContainer parent = sv.getContainer();
-		StepView parentview = (StepView)parent;
-		parentview.getViewer().refreshSizeExpanditem();
+		sv.refreshSizeExpanditem();
 		bar.redraw();
 		bar.layout(true,true);
-		TcXmlPluginController.getInstance().info("***************      block ********colapsed");
+		controller.getLog().info("***************      block ********colapsed");
 	
 		
 	}
@@ -170,14 +173,10 @@ public class BlockView  extends StepView implements StepContainer, ExpandListene
 	
 	@Override
 	public void itemExpanded(ExpandEvent e) {
-		ExpandItem ex = (ExpandItem)e.item;
-		
-		
-		
-		
+		ExpandItem ex = (ExpandItem)e.item;		
 		StepViewer sv = (StepViewer)ex.getControl();
 		sv.refreshSizeExpanditem();
-		TcXmlPluginController.getInstance().info("***************     block **********expanded");
+		controller.getLog().info("***************     block **********expanded");
 		
 		bar.layout();
 		

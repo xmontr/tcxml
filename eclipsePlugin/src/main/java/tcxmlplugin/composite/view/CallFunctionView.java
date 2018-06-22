@@ -342,7 +342,7 @@ public static class CallFunctionViewModel {
 		try {
 			ar = ArgumentFactory.getArgumentForFUnction(functName, this);
 			setArgumentView(ar);
-			TcXmlPluginController.getInstance().info("setting nw argument for function : " + functName);
+			controller.getLog().info("setting nw argument for function : " + functName);
 		} catch (TcXmlException e) {
 			TcXmlPluginController.getInstance().error("fail to create argument view for step", e);
 

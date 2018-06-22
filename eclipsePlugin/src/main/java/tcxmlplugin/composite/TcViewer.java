@@ -366,7 +366,9 @@ public void ensureVisibility(StepViewer stepviewer) {
 	
 	updateTopContainer(stepviewer);
 	stepviewer.expand();
-	currentTopStep.showOnTop(stepviewer);	
+	currentTopStep.showOnTop(stepviewer);
+
+	
 	
 
 	

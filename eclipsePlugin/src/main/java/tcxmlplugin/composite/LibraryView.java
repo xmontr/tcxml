@@ -123,26 +123,30 @@ public StepViewer getFunction(String libName, String funcName) throws TcXmlExcep
 
 @Override
 public void showOnTop(StepViewer st) {
-	bar.redraw();
-	bar.layout(true,true);
-	Point p = getControlLocation(st);
-	Scrollable sc = (Scrollable)bar;
 	
 	
-	ScrollBar vb = sc.getVerticalBar();
-	int y =  vb.getSelection();
-	controller.getLog().info("scrolling vertical libraryviewer from " + y + " to " + p.y + "  isvisible=" + vb.isVisible());
 	
+
+	Point p = getControlLocation(st);	
 	
 	getDisplay().asyncExec(new Runnable() {
 		
 		@Override
 		public void run() {
-			vb.setSelection(p.y);
+			scroller.setOrigin(p);
+		
+
+			
 			
 		}
 	});
 
+	
+}
+
+@Override
+public void refreshSize() {
+	resizeContent();
 	
 }
 

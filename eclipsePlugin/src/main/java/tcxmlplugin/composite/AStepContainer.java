@@ -8,12 +8,14 @@ import org.eclipse.swt.custom.ScrolledComposite;
 import org.eclipse.swt.events.ExpandEvent;
 import org.eclipse.swt.events.ExpandListener;
 import org.eclipse.swt.graphics.Point;
+import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.ExpandBar;
 import org.eclipse.swt.widgets.ExpandItem;
+import org.eclipse.ui.internal.ide.dialogs.CreateLinkedResourceGroup;
 
 import tcxml.core.TcXmlController;
 import tcxml.core.TcXmlException;
@@ -32,34 +34,119 @@ public abstract class AStepContainer extends Composite   implements StepContaine
 	protected List<StepViewer> stepViwerChildren ;
 	
 	protected ExpandBar bar;
+
+
+	private Composite content;
+
+
+	protected ScrolledComposite scroller;
 	
 	
 	
+	public void buildGUI(Composite parent,int style) {
+		GridLayout gridlayout = new GridLayout(1, false);
+	this.setLayout(gridlayout);
+	scroller = new ScrolledComposite(this, SWT.V_SCROLL | SWT.H_SCROLL);
+	scroller.setExpandVertical(true);
+	scroller.setExpandHorizontal(true);
+	scroller.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
+	scroller.setAlwaysShowScrollBars(true);
+	content = new Composite(scroller, SWT.NONE);	
+	//content.setBackground( getDisplay().getSystemColor( SWT.COLOR_RED) );	
+	content.setLayout(new GridLayout(1, false));
+	bar = new ExpandBar(content, SWT.NONE);
+	bar.setBackground( getDisplay().getSystemColor( SWT.COLOR_WHITE) );
+	bar.setSpacing(10);
+	bar.addExpandListener(this);
+	bar.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
+	scroller.setContent(content);
+	content.setSize(content.computeSize(SWT.DEFAULT, SWT.DEFAULT));
+	content.layout();
+	
+	
+	
+		
+	scroller.addListener( SWT.Resize, event -> {
+		  int width = scroller.getClientArea().width;
+		  int height = scroller.getClientArea().height;
+		  scroller.setMinWidth(width);
+		  scroller.setMinHeight(height);		 
+		 		 scroller.layout();
+		} );
+	
+	scroller.setBackground( getDisplay().getSystemColor( SWT.COLOR_DARK_BLUE) );
+	layout(true,true);
+
+	
+		
+	}
+	
+	
+	
+
+	
+	
+	protected void resizeContent() {
+		 int width = scroller.getClientArea().width;
+		 getDisplay().asyncExec(new Runnable() {
+			
+			@Override
+			public void run() {
+				
+				Point newsize = content.computeSize(SWT.DEFAULT,SWT.DEFAULT);
+			scroller.setMinSize(newsize);	
+content.setSize(newsize);
+	content.layout(true,true);	
+	scroller.layout(true, true);
+	
+			}
+		});
+		 
+
+
+		
+		
+	}
+	
+	
+	public int getBarHeight() {
+		ExpandItem[] li = bar.getItems();	
+		int w = 0;
+		for (ExpandItem expandItem : li) {
+			w+= expandItem.getHeight() ;	
+			
+		}
+		
+		
+		controller.getLog().info(" hauteur bar: " +w );
+		
+		return w;
+		
+		
+		
+	}
+	
+	
+	public AStepContainer(Composite parent, int style) {
+		super(parent, style);
+	buildGUI(parent,style);
+		
+	}
 	
 
 	public AStepContainer(Composite parent, int style, TcXmlController controller) {
 		super(parent, style);
-		GridLayout gridlayout = new GridLayout(1, false);
-	this.setLayout(gridlayout);	
-	this.controller= controller ;
+		this.controller= controller ;
+	buildGUI(parent,style);
+	
+	
 	
 	stepViwerChildren = new ArrayList<StepViewer>();
-	bar = new ExpandBar(this, SWT.V_SCROLL);
-	bar.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
-	bar.setBackground( getDisplay().getSystemColor( SWT.COLOR_WHITE) );
-	bar.setSpacing(10);
-	bar.addExpandListener(this);
-	
 	}
 	
 	public void addStep(Step step) throws TcXmlException {
 		
-		 StepViewer tv = StepViewerFactory.getViewer(step,this, controller);
-		 
-
-		 
-		 
-		 
+		 StepViewer tv = StepViewerFactory.getViewer(step,this, controller);		 
 		 stepViwerChildren.add(tv);
 		
 		ExpandItem xpndtmNewExpanditem = new ExpandItem(bar, SWT.NONE);		
@@ -84,9 +171,11 @@ public abstract class AStepContainer extends Composite   implements StepContaine
 	
 	@Override
 	public void itemCollapsed(ExpandEvent e) {
-
+		ExpandItem ex = (ExpandItem)e.item;
+		StepViewer sv = (StepViewer)ex.getControl();
+sv.refreshSizeExpanditem();
 		
-		TcXmlPluginController.getInstance().info("**********     ASTEPCONTAINER " + this.getClass()  +"***************colapsed");
+controller.getLog().info("**********     ASTEPCONTAINER " + this.getClass()  +"***************colapsed");
 	
 		
 	}
@@ -95,9 +184,12 @@ public abstract class AStepContainer extends Composite   implements StepContaine
 	
 	@Override
 	public void itemExpanded(ExpandEvent e) {
+		ExpandItem ex = (ExpandItem)e.item;
+		StepViewer sv = (StepViewer)ex.getControl();
+sv.refreshSizeExpanditem();
 	
-		TcXmlPluginController.getInstance().info("**********    ASTEPCONTAINER " + this.getClass()  +"***************expanded");
-		//bar.layout();
+controller.getLog().info("**********    ASTEPCONTAINER " + this.getClass()  +"***************expanded");
+
 		
 	}
 	

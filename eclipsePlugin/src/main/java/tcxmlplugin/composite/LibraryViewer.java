@@ -70,7 +70,7 @@ public class LibraryViewer extends Composite {
 		
 	
 	
-		functionContainer = new FunctionContainer(this, SWT.NONE,controller);
+		functionContainer = new FunctionContainer(this,SWT.NONE,controller);
 		functionContainer.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 2, 1));
 
 	
@@ -144,7 +144,7 @@ public class LibraryViewer extends Composite {
 	public void buildAllLibraries(Map<String, TruLibrary> libmap) {
 		List<String> allLib =    new ArrayList<String>(libmap.keySet())    ;
 		
-		 TcXmlPluginController.getInstance().info(("found libraries :" + allLib.size()  ))   ;
+		controller.getLog().info(("found libraries :" + allLib.size()  ))   ;
 		 
 		 
 		 model.setAllLibraries(allLib);

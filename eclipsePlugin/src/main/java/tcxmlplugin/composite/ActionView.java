@@ -93,6 +93,11 @@ public class ActionView extends AStepContainer implements TopStepContainer{
 		// TODO Auto-generated method stub
 		
 	}
+	
+	@Override
+	public void refreshSize() {
+		resizeContent();
+	}
 
 
 

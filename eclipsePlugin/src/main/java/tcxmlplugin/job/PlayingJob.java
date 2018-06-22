@@ -33,7 +33,7 @@ public class PlayingJob extends Job{
 	}
 
 	public PlayingJob(StepViewer viewer,PlayingContext ctx) {
-		super("playing " + viewer.getViewer().getTitle());	
+		super( viewer.getViewer().getTitle());	
 	this.stepviewer = viewer;
 	this.ctx = ctx ;
 	
