@@ -6,8 +6,10 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Properties;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
@@ -49,7 +51,7 @@ public class TcXmlPluginController
 	
 	private TcViewer tcviewer;
 
-	
+	private Properties properties;
 
 
 
@@ -61,9 +63,18 @@ public class TcXmlPluginController
 		this.tcviewer = tcviewer;
 	}
 
-	private TcXmlPluginController() {
+	private TcXmlPluginController()  {
 		
-		
+		  URL url = getClass().getResource("/config.properties");
+		 properties = new Properties();
+		 try {
+			
+			 InputStream in = url.openStream();
+			 properties.load(in);
+		} catch (IOException e) {
+			e.printStackTrace();
+			
+		}
 		
 	}
 
@@ -534,6 +545,13 @@ return ret;
 			
 		}
 		
+		
+	
+		
+	}
+
+	public Properties getProperties() {
+		return properties;
 	}
 	
 

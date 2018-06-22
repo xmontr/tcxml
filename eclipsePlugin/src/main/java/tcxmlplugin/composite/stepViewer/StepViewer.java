@@ -37,6 +37,8 @@ import org.eclipse.swt.events.ExpandListener;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Layout;
 import org.eclipse.swt.widgets.Listener;
+import org.eclipse.swt.widgets.Menu;
+import org.eclipse.swt.widgets.MenuItem;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.wb.swt.SWTResourceManager;
 import org.eclipse.swt.widgets.Table;
@@ -189,6 +191,8 @@ horizontalLabel.setBackground(SWTResourceManager.getColor(SWT.COLOR_DARK_GREEN))
 horizontalLabel.setText("   aaa");
 horizontalLabel.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 horizontalLabel.setForeground(SWTResourceManager.getColor(SWT.COLOR_DARK_GREEN));
+
+setMenu(buildMenu());
 	
 }
 
@@ -197,6 +201,21 @@ horizontalLabel.setForeground(SWTResourceManager.getColor(SWT.COLOR_DARK_GREEN))
 
 	
 	
+	private Menu buildMenu() {
+		   Menu popupMenu = new Menu(this);
+		    MenuItem newItem = new MenuItem(popupMenu, SWT.CASCADE);
+		    newItem.setText("set break point");
+
+		    MenuItem deleteItem = new MenuItem(popupMenu, SWT.NONE);
+		    deleteItem.setText("Delete");
+	return popupMenu;
+}
+
+
+
+
+
+
 	private  void setView(StepView view) {
 		this.view = view;
 		// color for the viewer

@@ -9,6 +9,7 @@ import org.eclipse.core.runtime.Status;
 import tcxml.core.PlayingContext;
 import tcxml.core.TcXmlException;
 import tcxml.model.Step;
+import tcxmlplugin.TcXmlPluginController;
 import tcxmlplugin.composite.stepViewer.StepViewer;
 
 public class MultipleStepRunner {
@@ -31,6 +32,7 @@ public class MultipleStepRunner {
 	public PlayingContext runSteps( PlayingContext ctx) throws TcXmlException {
 		
 		PlayingContext temp = ctx;
+		long interva = Long.parseLong(TcXmlPluginController.getInstance().getProperties().getProperty("RS.interstepInterval"));
 
 		for (Iterator iterator = steps.iterator(); iterator.hasNext();) {
 			StepViewer stepViewer = (StepViewer) iterator.next();
@@ -55,7 +57,7 @@ public class MultipleStepRunner {
 			}
 
 			try {
-				Thread.currentThread().sleep(500);
+				Thread.currentThread().sleep(interva);
 			} catch (InterruptedException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
