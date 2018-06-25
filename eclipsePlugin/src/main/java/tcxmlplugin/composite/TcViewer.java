@@ -21,11 +21,13 @@ import org.eclipse.core.runtime.jobs.IJobChangeListener;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Label;
+import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.TabFolder;
 import org.eclipse.swt.widgets.TabItem;
 import org.eclipse.swt.custom.CTabFolder;
 import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.custom.CTabItem;
 import org.eclipse.swt.widgets.ToolItem;
 import org.eclipse.ui.forms.widgets.FormToolkit;
@@ -140,6 +142,30 @@ public class TcViewer extends Composite implements PropertyChangeListener, IJobC
 		
 		ToolItem startitem = new ToolItem(toolBar, SWT.NONE);
 		startitem.setToolTipText("Play");
+		
+		startitem.addListener(SWT.Selection, new Listener() {
+			
+			@Override
+			public void handleEvent(Event event) {
+				
+				
+				
+				if(TcXmlPluginController.getInstance().isOnBreakpoint()) {
+					TcXmlPluginController.getInstance().releaseBreakpoint();
+					
+					
+					
+					
+					
+				}
+				
+			}
+		});
+		
+		
+		
+		
+		
 		startitem.setImage(ResourceManager.getPluginImage("tcxmlplugin", "icons/media-playback-start-2.png"));
 		
 		ToolItem pauseitem = new ToolItem(toolBar, SWT.NONE);

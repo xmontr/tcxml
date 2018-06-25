@@ -52,8 +52,46 @@ public class TcXmlPluginController
 	private TcViewer tcviewer;
 
 	private Properties properties;
+	
+	
+	private Object currentBreakPoint;
 
 
+
+	public Object getCurrentBreakPoint() {
+		return currentBreakPoint;
+	}
+
+	public void setCurrentBreakPoint(Object currentBreakPoint) {
+		this.currentBreakPoint = currentBreakPoint;
+	}
+	
+	
+	
+	
+	public boolean isOnBreakpoint() {
+		boolean ret = false;
+		if(currentBreakPoint != null) {
+			ret = true;
+			
+			
+		}
+		
+		return ret;
+		
+	}
+	
+	
+	
+	public void releaseBreakpoint() {
+		
+		synchronized (currentBreakPoint) {
+			currentBreakPoint.notify();
+			info("releasing breakpoint");
+		}
+		
+	}
+	
 
 	public TcViewer getTcviewer() {
 		return tcviewer;

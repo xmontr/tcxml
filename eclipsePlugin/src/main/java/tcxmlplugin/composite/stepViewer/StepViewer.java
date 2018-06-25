@@ -54,28 +54,6 @@ public  class StepViewer extends Composite  {
 
 
 	protected StepView view;
-	
-	
-	
-	
-	
-	public StepView getViewer() {
-		return view;
-	}
-
-
-
-
-
-
-	public StepRunner getRunner() {
-		return runner;
-	}
-
-
-
-
-
 	protected StepRunner runner ;
 	private StepToolBar stepToolBar;
 	private Composite contentView;
@@ -83,6 +61,9 @@ public  class StepViewer extends Composite  {
 	private ExpandItem parentExpandItem;
 	private StepContainer container;
 	private Label verticalabel;
+	private Object breakPoint;
+	
+	
 	
 	
 	public StepContainer getContainer() {
@@ -199,15 +180,47 @@ setMenu(buildMenu());
 
 
 
+
 	
 	
 	private Menu buildMenu() {
 		   Menu popupMenu = new Menu(this);
-		    MenuItem newItem = new MenuItem(popupMenu, SWT.CASCADE);
-		    newItem.setText("set break point");
+		    MenuItem addbreakpointitem = new MenuItem(popupMenu, SWT.CASCADE);
+		    addbreakpointitem.setText("set break point");
+		    addbreakpointitem.addListener(SWT.Selection, new Listener() {
+				
+				@Override
+				public void handleEvent(Event event) {
+					setBreakPoint();
+					
+				}
+			});
+		    
+		    
+		    
+		    MenuItem removebreakpointItem = new MenuItem(popupMenu, SWT.CASCADE);
+		    removebreakpointItem.setText("remove break point");
+		    removebreakpointItem.addListener(SWT.Selection, new Listener() {
+				
+				@Override
+				public void handleEvent(Event event) {
+					removeBreakpoint();
+					
+				}
+			});
+		    
+		    
+		    
+		    
+		    
+		    
 
 		    MenuItem deleteItem = new MenuItem(popupMenu, SWT.NONE);
 		    deleteItem.setText("Delete");
+		    
+		    
+		    
+		    
 	return popupMenu;
 }
 
@@ -301,6 +314,26 @@ setMenu(buildMenu());
 		  
 		  public PlayingContext play(PlayingContext ctx) throws TcXmlException {
 			  
+			  
+			  if(breakPoint != null) {
+				  
+				  
+				  synchronized (breakPoint) {
+					 TcXmlPluginController.getInstance().info("waiting on break point step " + getTitle());
+					  
+					  try {
+						  
+						  TcXmlPluginController.getInstance().setCurrentBreakPoint(breakPoint);
+						breakPoint.wait();
+					} catch (InterruptedException e) {
+						// TODO Auto-generated catch block
+						throw new TcXmlException(" failure waiting on breakpoint", e);
+					}
+					
+				}
+				  
+			  }
+			
 			PlayingContext ret = view.play(ctx);
 			
 			return ret;
@@ -372,9 +405,37 @@ setMenu(buildMenu());
 			// TODO Auto-generated method stub
 			return view.getTitle();
 		}
+		
+		
+		
+		public StepView getViewer() {
+			return view;
+		}
 
 
 
+
+
+
+		public StepRunner getRunner() {
+			return runner;
+		}
+		
+		
+		public void setBreakPoint() {
+			
+			this.breakPoint=new Object();
+			this.setBackground(SWTResourceManager.getColor(SWT.COLOR_DARK_RED));
+			
+		}
+
+
+public void removeBreakpoint() {
+	
+	this.breakPoint = null;
+	this.setBackground(SWTResourceManager.getColor(SWT.COLOR_LIST_BACKGROUND));
+	
+}
 	
 		
 }
