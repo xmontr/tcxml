@@ -20,7 +20,7 @@ public class RandomParameter extends StepParameter {
 	
 
 	protected RandomParameter(HierarchicalINIConfiguration conf ,String  secname) {
-		super(conf,secname);
+		super(conf,secname,StepParameterType.RANDOM);
 	format = config.getString("Format");
 	generateNewVal = config.getString("GenerateNewVal");
 	maxValue = config.getString("MaxValue");

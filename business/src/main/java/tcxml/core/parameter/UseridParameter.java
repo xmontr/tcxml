@@ -15,7 +15,7 @@ public class UseridParameter extends StepParameter {
 	
 
 	protected UseridParameter(HierarchicalINIConfiguration conf ,String  secname) {
-		super(conf,secname);
+		super(conf,secname,StepParameterType.USERID);
 	format = config.getString("Format");
 	originalValue = config.getString("OriginalValue");
 	}

@@ -35,9 +35,11 @@ import org.eclipse.wb.swt.ResourceManager;
 
 import tcxml.core.TcXmlController;
 import tcxml.core.TcXmlException;
+import tcxml.core.parameter.StepParameter;
 import tcxml.model.Step;
 import tcxml.model.TruLibrary;
 import tcxmlplugin.TcXmlPluginController;
+import tcxmlplugin.composite.parameter.ParameterViewer;
 import tcxmlplugin.composite.stepViewer.StepContainer;
 import tcxmlplugin.composite.stepViewer.StepViewer;
 import tcxmlplugin.composite.stepViewer.TopStepContainer;
@@ -51,6 +53,9 @@ public class TcViewer extends Composite implements PropertyChangeListener, IJobC
 	
 	
 	private RunLogicViewer runLogicViewer ;
+	
+	
+	private ParameterViewer parameterviewer;
 
 	private LibraryViewer libraryViewer;
 	private TcXmlController controller;
@@ -85,6 +90,9 @@ public class TcViewer extends Composite implements PropertyChangeListener, IJobC
 		this.libraryViewer = new LibraryViewer(tabFolder, SWT.BORDER,controller);
 		
 		this.runLogicViewer = new RunLogicViewer(tabFolder, SWT.BORDER,controller);
+		
+		
+		this.parameterviewer = new ParameterViewer(tabFolder, SWT.BORDER,controller);
 		
 		
 		
@@ -126,6 +134,9 @@ public class TcViewer extends Composite implements PropertyChangeListener, IJobC
 		logicTab.setControl(runLogicViewer);
 		
 
+		CTabItem CTabItemparameterTab = new CTabItem(tabFolder, SWT.NONE);
+		CTabItemparameterTab.setText("Parameters");
+		CTabItemparameterTab.setControl(parameterviewer);
 		
 	}
 
@@ -293,6 +304,16 @@ public class TcViewer extends Composite implements PropertyChangeListener, IJobC
 this.populateAction( controller.getActionMap());
 this.populateLibrary(controller.getLibraries());
 this.populateRunLogic(controller.getRunLogic());
+this.populateParameter(controller.getParameters());
+		
+	}
+
+	private void populateParameter(Map<String, StepParameter> parameters) {
+		try {
+			parameterviewer.populate(parameters);
+		} catch (TcXmlException e) {
+			TcXmlPluginController.getInstance().error(" fail to load parameters", e);
+		}	
 		
 	}
 

@@ -25,7 +25,7 @@ public class UniqueParameter extends StepParameter  {
 	
 
 	protected UniqueParameter(HierarchicalINIConfiguration conf, String secname) {
-		super(conf, secname);
+		super(conf, secname, StepParameterType.UNIQUE);
 		this.Format = config.getString("Format");
 		this.GenerateNewVal = config.getString("GenerateNewVal");
 		this.BlockSize = config.getString("BlockSize");

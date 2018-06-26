@@ -51,7 +51,7 @@ public class TableParameter extends StepParameter {
 	private HashMap<String, String>[]  values;
 
 	public TableParameter(HierarchicalINIConfiguration conf ,String  secname) {
-		super(conf,secname);
+		super(conf,secname,StepParameterType.TABLE);
 		this.columnName = config.getString("ColumnName");
 		this.delimiter = config.getString("Delimiter");
 		this.generateNewVal = config.getString("GenerateNewVal");

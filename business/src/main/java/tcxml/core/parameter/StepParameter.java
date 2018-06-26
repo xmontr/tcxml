@@ -10,7 +10,29 @@ import tcxml.core.TcXmlException;
 public abstract  class StepParameter {
 	
 	
+	public static  enum StepParameterType {
+		CURRENTITERATION,
+		TABLE,
+		UNIQUE,
+		USERID,
+		RANDOM
+		
+		
+		
+	}
 	
+	
+	protected StepParameterType parameterType;
+	
+	
+	public String getType() {
+		return type;
+	}
+
+	public StepParameterType getParameterType() {
+		return parameterType;
+	}
+
 	protected SubnodeConfiguration config;
 	
 	protected String type ; 
@@ -21,8 +43,8 @@ public abstract  class StepParameter {
 	
 	protected String secname ;
 	
-	protected StepParameter (HierarchicalINIConfiguration conf ,String  secname ) {
-		
+	protected StepParameter (HierarchicalINIConfiguration conf ,String  secname , StepParameterType typeparam ) {
+		parameterType = typeparam ;
 		 config = conf.getSection(secname);
 		 this.secname = secname;
 		 this.conf = conf;

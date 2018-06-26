@@ -14,7 +14,7 @@ public class CurrentIterationParameter extends StepParameter{
 	
 
 	protected CurrentIterationParameter(HierarchicalINIConfiguration conf ,String  secname) {
-		super(conf,secname);
+		super(conf,secname, StepParameterType.CURRENTITERATION);
 		format = config.getString("Format");
 		originalValue = config.getString("OriginalValue");
 		paramName = config.getString("ParamName");
