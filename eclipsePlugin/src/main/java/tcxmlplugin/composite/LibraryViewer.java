@@ -13,6 +13,7 @@ import org.eclipse.core.databinding.observable.value.IObservableValue;
 import org.eclipse.jface.databinding.swt.WidgetProperties;
 import org.eclipse.jface.viewers.ComboViewer;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.custom.StackLayout;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Combo;
@@ -42,20 +43,38 @@ public class LibraryViewer extends Composite {
 	
 	private Map<String, LibraryView> librariesView;
 	
-	private FunctionContainer functionContainer;
+	private Composite functionContainer;
 	private TcXmlController controller;
+	private StackLayout funclayout;
 	
 	public LibraryViewer(Composite parent, int style) {
 		
 		super(parent, style);
+		buildGUI();
 	}
 	
 
 	public LibraryViewer(Composite parent, int style, TcXmlController controller) {
 		super(parent, style);
-		setLayout(new GridLayout(2, false));
+
 		this.controller = controller;
-		librariesView= new HashMap<String,LibraryView>();
+	
+		buildGUI();
+		librariesView= new HashMap<String,LibraryView>();	
+		
+		
+		
+	
+		m_bindingContext = initDataBindings();
+		
+		
+		
+	}
+	
+	
+	private void buildGUI() {
+		setLayout(new GridLayout(2, false));	
+	
 		
 		Label lblNewLabel = new Label(this, SWT.NONE);
 		lblNewLabel.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
@@ -65,19 +84,10 @@ public class LibraryViewer extends Composite {
 		combo = comboViewer.getCombo();
 		combo.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		
-
-		
-		
-	
-	
-		functionContainer = new FunctionContainer(this,SWT.NONE,controller);
+		functionContainer = new Composite(this, this.getStyle());
 		functionContainer.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 2, 1));
-
-	
-		
-	
-		m_bindingContext = initDataBindings();
-		
+		 funclayout = new StackLayout();
+		 functionContainer.setLayout(funclayout);
 		
 		
 	}
@@ -108,8 +118,10 @@ public class LibraryViewer extends Composite {
 	public void showSelectedLibrary(String libname) {
 		
 		Control	ctrl = librariesView.get(libname);
-		functionContainer.showAction(ctrl);
-		//setLibrary(truLibrary);
+		funclayout.topControl=ctrl;
+		layout(true,true);
+		
+		
 		
 
 		

@@ -13,6 +13,7 @@ import tcxmlplugin.composite.stepViewer.MainStepContainer;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.ScrolledComposite;
+import org.eclipse.swt.custom.StackLayout;
 import org.eclipse.swt.events.ExpandEvent;
 import org.eclipse.swt.events.ExpandListener;
 import org.eclipse.swt.widgets.Combo;
@@ -46,11 +47,15 @@ public class ActionsViewer extends Composite  {
 
 	private Map<String, ActionView> actionsView;
 
-	private MainStepContainer stepContainer;
+	private Composite stepContainer;
 
 
 
 	private TcXmlController controller;
+
+
+
+	private StackLayout actionlayout;
 	
 	
 	public ActionsViewer(Composite parent, int style) {
@@ -61,9 +66,18 @@ public class ActionsViewer extends Composite  {
 
 	public ActionsViewer(Composite parent, int style, TcXmlController controller) {
 		super(parent, style);
-		this.controller =  controller ;
+		this.controller =  controller ;		
 		
-		actionsView = new HashMap<String,ActionView>();
+		actionsView = new HashMap<String,ActionView>();	
+		buildGUI();
+		m_bindingContext = initDataBindings();
+		
+	}
+	
+	
+	
+	public void buildGUI() {
+		
 		setLayout(new GridLayout(2, false));
 		
 		Label lblNewLabel = new Label(this, SWT.NONE);
@@ -79,16 +93,16 @@ public class ActionsViewer extends Composite  {
 		
 	
 	
-		stepContainer = new MainStepContainer(this, SWT.NONE,controller );
+		//stepContainer = new MainStepContainer(this, SWT.NONE,controller );
+		stepContainer = new Composite(this,this.getStyle());
 		stepContainer.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 2, 1));
-
-	
 		
-	
-		m_bindingContext = initDataBindings();
-
+		actionlayout = new StackLayout();
+		stepContainer.setLayout(actionlayout);
+		
 		
 	}
+	
 
 	public ActionsModel getModel() {
 		return model;
@@ -110,7 +124,10 @@ public class ActionsViewer extends Composite  {
 	public void showSelectedAction(String  actname) {
 
 	Control	ctrl = actionsView.get(actname);
-		stepContainer.showAction(ctrl);
+	actionlayout.topControl = ctrl;
+	layout(true,true);
+	
+		//stepContainer.showAction(ctrl);
 		
 	}
 	
