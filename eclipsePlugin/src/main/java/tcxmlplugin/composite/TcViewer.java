@@ -29,6 +29,8 @@ import org.eclipse.swt.custom.CTabFolder;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.custom.CTabItem;
+import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.widgets.ToolItem;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.wb.swt.ResourceManager;
@@ -149,7 +151,7 @@ public class TcViewer extends Composite implements PropertyChangeListener, IJobC
 		recorditem.setToolTipText("Record");
 		recorditem.setImage(ResourceManager.getPluginImage("tcxmlplugin", "icons/media-record-2.png"));
 		
-		ToolItem toolItem = new ToolItem(toolBar, SWT.SEPARATOR);
+		
 		
 		ToolItem startitem = new ToolItem(toolBar, SWT.NONE);
 		startitem.setToolTipText("Play");
@@ -188,6 +190,31 @@ public class TcViewer extends Composite implements PropertyChangeListener, IJobC
 		
 		ToolItem stopItem = new ToolItem(toolBar, SWT.NONE);
 		stopItem.setImage(ResourceManager.getPluginImage("tcxmlplugin", "icons/media-playback-stop-2.png"));
+		
+		
+		ToolItem toolItem = new ToolItem(toolBar, SWT.SEPARATOR);
+		
+		
+		ToolItem snapshotToolItem = new ToolItem(toolBar, SWT.CHECK);
+		
+		snapshotToolItem.setText("view snapshot");
+		snapshotToolItem.setSelection(true);
+		
+		
+		snapshotToolItem.addSelectionListener(new SelectionListener() {
+			
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				boolean selection = ((ToolItem)e.getSource()).getSelection();
+				actionsViewer.setSnapshotLayout(selection);
+			}
+			
+			@Override
+			public void widgetDefaultSelected(SelectionEvent e) {
+				// TODO Auto-generated method stub
+				
+			}
+		});
 		
 		
 		

@@ -12,10 +12,12 @@ import tcxmlplugin.TcXmlPluginController;
 import tcxmlplugin.composite.stepViewer.MainStepContainer;
 
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.custom.SashForm;
 import org.eclipse.swt.custom.ScrolledComposite;
 import org.eclipse.swt.custom.StackLayout;
 import org.eclipse.swt.events.ExpandEvent;
 import org.eclipse.swt.events.ExpandListener;
+import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Combo;
 import org.eclipse.jface.viewers.ComboViewer;
 import org.eclipse.swt.layout.GridData;
@@ -56,11 +58,31 @@ public class ActionsViewer extends Composite  {
 
 
 	private StackLayout actionlayout;
+
+
+
+	private Composite maincontainer;
+
+
+
+	private StackLayout maincontainerlayout;
+
+
+
+	private Composite viewwithSnapshot;
+
+
+
+	private Composite viewWitoutSnapshot;
+
+
+
+	private Composite stepcontainerwithoutsnapshot;
 	
 	
 	public ActionsViewer(Composite parent, int style) {
 	super(parent, style);	
-		
+	buildGUI();	
 		
 	}
 
@@ -88,18 +110,17 @@ public class ActionsViewer extends Composite  {
 		combo = comboViewer.getCombo();
 		combo.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		
-
-		
-		
-	
-	
-		//stepContainer = new MainStepContainer(this, SWT.NONE,controller );
-		stepContainer = new Composite(this,this.getStyle());
-		stepContainer.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 2, 1));
-		
+		maincontainer = new Composite(this,this.getStyle());
+		maincontainer.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 2, 1));
+		maincontainerlayout = new StackLayout();
+		maincontainer.setLayout(maincontainerlayout);		
 		actionlayout = new StackLayout();
-		stepContainer.setLayout(actionlayout);
 		
+		viewwithSnapshot = createaViewWithsnapshotViewer();
+		viewWitoutSnapshot = createViewWithoutsnapshotViewer();
+
+	// default layout with snapshot viewer
+		maincontainerlayout.topControl = viewwithSnapshot;
 		
 	}
 	
@@ -167,9 +188,62 @@ public class ActionsViewer extends Composite  {
 		// TODO Auto-generated method stub
 		return actionsView.get(actionName);
 	}
+	
+	
+	
+	private Composite createViewWithoutsnapshotViewer() {
+		Composite parent = new Composite(maincontainer, getStyle());
+		parent.setLayout(new FillLayout());
+		stepcontainerwithoutsnapshot = new Composite(parent, getStyle());
+		stepcontainerwithoutsnapshot.setLayout(actionlayout);
+		
+		
+		
+		
+	return parent;	
+	}
+	
+	
+private Composite createaViewWithsnapshotViewer() {
+	
+	Composite parent = new Composite(maincontainer, getStyle());
+	parent.setLayout(new FillLayout());		
+	SashForm sf = new SashForm(parent,SWT.HORIZONTAL);		
+	stepContainer = new Composite(sf,sf.getStyle());
+	stepContainer.setLayout(actionlayout);
+	Composite shviewer = new Composite(sf, getStyle());
+		
+	return parent;	
+		
+	}
+	
+	
+	
+	
+	
+	
+	public void setSnapshotLayout( boolean  issnapshotlayout) {
+		
+		ActionView currentaction = (ActionView) actionlayout.topControl;
+		if(currentaction == null) return;
+		
+		if(issnapshotlayout == false) { // view without snapshot viewer		
+			
+			currentaction.setParent(stepcontainerwithoutsnapshot);
+			
+		maincontainerlayout.topControl = viewWitoutSnapshot;	
+		
+			
+		}else { // view with snapshot viewer 
+			
+			currentaction.setParent(stepContainer);
+			maincontainerlayout.topControl = viewwithSnapshot;
+		
+		
+	}
 
-
-
+layout(true,true);
+	}
 
 	
 }
