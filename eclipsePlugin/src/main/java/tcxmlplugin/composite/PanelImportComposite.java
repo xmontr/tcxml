@@ -54,6 +54,7 @@ public class PanelImportComposite extends Composite {
 	
 	
 	private String tcName;
+	private List snapshotlist;
 	
 	
 	
@@ -104,6 +105,14 @@ public class PanelImportComposite extends Composite {
 		
 		parametersList = new List(this, SWT.BORDER);
 		parametersList.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
+		new Label(this, SWT.NONE);
+		new Label(this, SWT.NONE);
+		
+		Label lblSnapshots = new Label(this, SWT.NONE);
+		lblSnapshots.setText("snapshots:");
+		
+		snapshotlist = new List(this, SWT.BORDER);
+		snapshotlist.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		m_bindingContext = initDataBindings();
 		// TODO Auto-generated constructor stub
 	}
@@ -145,23 +154,6 @@ public class PanelImportComposite extends Composite {
 		
 		
 	}
-	protected DataBindingContext initDataBindings() {
-		DataBindingContext bindingContext = new DataBindingContext();
-		//
-		IObservableValue observeTextScriptTextObserveWidget = WidgetProperties.text(SWT.Modify).observe(scriptText);
-		IObservableValue mainScriptMoObserveValue = BeanProperties.value("mainScript").observe(model);
-		bindingContext.bindValue(observeTextScriptTextObserveWidget, mainScriptMoObserveValue, null, null);
-		//
-		IObservableList itemsLibrarieslistObserveWidget = WidgetProperties.items().observe(librarieslist);
-		IObservableList librariesMoObserveList = BeanProperties.list("libraries").observe(model);
-		bindingContext.bindList(itemsLibrarieslistObserveWidget, librariesMoObserveList, null, null);
-		//
-		IObservableList itemsParametersListObserveWidget = WidgetProperties.items().observe(parametersList);
-		IObservableList parametersMoObserveList = BeanProperties.list("parameters").observe(model);
-		bindingContext.bindList(itemsParametersListObserveWidget, parametersMoObserveList, null, null);
-		//
-		return bindingContext;
-	}
 	public void populate(String selectedDirectory) throws TcXmlPluginException {
 		
 	 IPath p = new org.eclipse.core.runtime.Path(selectedDirectory);
@@ -184,6 +176,31 @@ public class PanelImportComposite extends Composite {
 	
 	java.util.List<String> listlib = TcXmlPluginController.getInstance().getLibraries(selectedDirectory);
 		model.setLibraries(listlib);
+		
+		
+		java.util.List<String> listsnap = TcXmlPluginController.getInstance().getSnapshots(selectedDirectory);
+		model.setSnapshots(listsnap);
 	
+	}
+	protected DataBindingContext initDataBindings() {
+		DataBindingContext bindingContext = new DataBindingContext();
+		//
+		IObservableValue observeTextScriptTextObserveWidget = WidgetProperties.text(SWT.Modify).observe(scriptText);
+		IObservableValue mainScriptMoObserveValue = BeanProperties.value("mainScript").observe(model);
+		bindingContext.bindValue(observeTextScriptTextObserveWidget, mainScriptMoObserveValue, null, null);
+		//
+		IObservableList itemsLibrarieslistObserveWidget = WidgetProperties.items().observe(librarieslist);
+		IObservableList librariesMoObserveList = BeanProperties.list("libraries").observe(model);
+		bindingContext.bindList(itemsLibrarieslistObserveWidget, librariesMoObserveList, null, null);
+		//
+		IObservableList itemsParametersListObserveWidget = WidgetProperties.items().observe(parametersList);
+		IObservableList parametersMoObserveList = BeanProperties.list("parameters").observe(model);
+		bindingContext.bindList(itemsParametersListObserveWidget, parametersMoObserveList, null, null);
+		//
+		IObservableList itemsSnapshotlistObserveWidget = WidgetProperties.items().observe(snapshotlist);
+		IObservableList snapshotsModelObserveList = BeanProperties.list("snapshots").observe(model);
+		bindingContext.bindList(itemsSnapshotlistObserveWidget, snapshotsModelObserveList, null, null);
+		//
+		return bindingContext;
 	}
 }

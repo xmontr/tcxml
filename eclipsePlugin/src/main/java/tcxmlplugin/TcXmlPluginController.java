@@ -545,12 +545,53 @@ return ret;
 		
 		importParameters( model.getParameters(),  currentProject,  newTC,monitor);
 		importLibrary( model.getLibraries(),  currentProject,  newTC,monitor);
+		importSnapshot(model.getSnapshots(),currentProject,  newTC,monitor);
 		
 	}
 
 
 
 	
+
+	private void importSnapshot(List<String> snapshots, IProject currentProject, IFolder testCaseFolder,
+			IProgressMonitor monitor) throws FileNotFoundException, CoreException {
+		
+	for (String snap : snapshots) {
+			
+			IFolder libsnapshot = getSnapshotFolder(testCaseFolder);
+			
+			String filename = new Path(snap).lastSegment();
+			
+			File source = new File(snap);
+		 
+	
+			
+			
+			
+			IFile thefile = libsnapshot.getFile(filename);		
+			
+			InputStream in = new FileInputStream(source);
+			thefile.create(in, true, monitor);
+			this.info("snapshot " + filename + " imported");
+			
+			
+			
+		}
+		
+		
+		
+		
+		
+		
+		
+		
+		
+	}
+
+	private IFolder getSnapshotFolder(IFolder testCaseFolder) {
+		 IFolder libfolder = testCaseFolder.getFolder("snapshots");
+		 return libfolder;
+	}
 
 	private void importLibrary(List<String> libraries, IProject currentProject, IFolder testCaseFolder,
 			IProgressMonitor monitor) throws FileNotFoundException, CoreException, TcXmlException {
@@ -596,6 +637,25 @@ return ret;
 
 	public Properties getProperties() {
 		return properties;
+	}
+
+	public List<String> getSnapshots(String selectedDirectory) {
+    	List<String> ret = new ArrayList<String>() ;
+    IPath libdirpath = new Path(selectedDirectory).append("/snapshots");	
+    File libdir = new File(libdirpath.toOSString());
+    if(libdir.exists()) {
+        File[] libfiles = libdir.listFiles();
+        for (File file2 : libfiles) {
+     
+     
+     ret.add(file2.getAbsolutePath());
+        	
+        	
+        }	
+    
+    }
+
+return ret;
 	}
 	
 

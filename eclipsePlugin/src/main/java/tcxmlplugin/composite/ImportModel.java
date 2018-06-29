@@ -25,8 +25,35 @@ public class ImportModel {
 	private List<String> libraries ;
 	
 	
+	private List<String> snapshots;
+	
+	
 	public String getMainScript() {
 		return mainScript;
+	}
+
+
+
+
+
+
+
+
+	public List<String> getSnapshots() {
+		return snapshots;
+	}
+
+
+
+
+
+
+
+
+	public void setSnapshots(List<String> snapshots) {
+		;
+		propertyChangeSupport.firePropertyChange("snapshots", this.snapshots,
+				this.snapshots = snapshots);
 	}
 
 
