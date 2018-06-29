@@ -45,6 +45,9 @@ public class TcXmlPluginController
 	private static final String TEST_CASES_PATH = "/Test Cases";
 
 	private static final String TESTCASE_LIB = "testcaselib";
+	
+	
+	private static final String TESTCASE_SNAPSHOT = "testcasesnapshot";
 
 	private static TcXmlPluginController instance = null;
 	
@@ -394,12 +397,15 @@ public class TcXmlPluginController
 	IFolder	testcasefolder = getTestcaseFolder(project);
     IFolder newtc = testcasefolder.getFolder(name);
     IFolder libfolder = newtc.getFolder("Libraries");
+    IFolder snapshotfolder= newtc.getFolder("snapshots");
 	try {
 		newtc .create(true, true, null);
 		libfolder.create(true, true, null);
+		snapshotfolder.create(true, true, null);
 	    QualifiedName key = new QualifiedName("tcxmlplug", "folderType");
 	    newtc.setPersistentProperty(key , TESTCASE_FOLDER);
 	    libfolder.setPersistentProperty(key , TESTCASE_LIB);
+	    snapshotfolder.setPersistentProperty(key, TESTCASE_SNAPSHOT);
 	return    newtc	;
 		
 	} catch (CoreException e) {
