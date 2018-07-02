@@ -1,4 +1,4 @@
-package tcxmlplugin.composite;
+package tcxmlplugin.model;
 
 
 import java.beans.PropertyChangeListener;

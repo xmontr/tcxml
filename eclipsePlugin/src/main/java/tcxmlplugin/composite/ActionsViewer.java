@@ -10,6 +10,7 @@ import tcxml.core.TcXmlException;
 import tcxml.model.Step;
 import tcxmlplugin.TcXmlPluginController;
 import tcxmlplugin.composite.stepViewer.MainStepContainer;
+import tcxmlplugin.model.ActionsModel;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.SashForm;
@@ -211,7 +212,8 @@ private Composite createaViewWithsnapshotViewer() {
 	SashForm sf = new SashForm(parent,SWT.HORIZONTAL);		
 	stepContainer = new Composite(sf,sf.getStyle());
 	stepContainer.setLayout(actionlayout);
-	Composite shviewer = new Composite(sf, getStyle());
+	Composite shviewer = new SnapshotViewer(sf, getStyle());
+			
 		
 	return parent;	
 		

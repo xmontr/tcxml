@@ -47,6 +47,8 @@ import tcxmlplugin.composite.stepViewer.StepViewer;
 import tcxmlplugin.composite.stepViewer.TopStepContainer;
 import tcxmlplugin.composite.view.CallActionView;
 import tcxmlplugin.composite.view.FunctionView;
+import tcxmlplugin.model.ActionsModel;
+import tcxmlplugin.model.LibraryModel;
 
 import org.eclipse.swt.widgets.ProgressBar;
 

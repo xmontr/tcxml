@@ -26,8 +26,8 @@ import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.QualifiedName;
 
 import tcxml.core.TcXmlException;
-import tcxmlplugin.composite.ImportModel;
 import tcxmlplugin.composite.TcViewer;
+import tcxmlplugin.model.ImportModel;
 import tcxmlplugin.nature.NatureTcXml;
 import util.TcxmlUtils;
 

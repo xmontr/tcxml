@@ -31,6 +31,7 @@ import tcxmlplugin.TcXmlPluginController;
 import tcxmlplugin.composite.stepViewer.FunctionContainer;
 import tcxmlplugin.composite.stepViewer.MainStepContainer;
 import tcxmlplugin.composite.stepViewer.StepViewer;
+import tcxmlplugin.model.LibraryModel;
 
 public class LibraryViewer extends Composite {
 	

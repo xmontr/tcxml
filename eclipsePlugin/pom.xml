@@ -42,6 +42,18 @@
         	<artifactId>target-platform-configuration</artifactId>
         	<version>1.0.0</version>
         	<configuration>
+        	 <environments>
+            <environment>
+              <os>win64</os>
+              <ws>win64</ws>
+              <arch>x86</arch>
+            </environment>
+            <environment>
+              <os>linux</os>
+              <ws>gtk</ws>
+              <arch>x86_64</arch>
+            </environment>
+            </environments>
         	                    <resolver>p2</resolver>
                      <!-- <pomDependencies>consider</pomDependencies>  -->
         	</configuration>
@@ -81,8 +93,8 @@
   </dependencies>
    <repositories>
     <repository>
-      <id>eclipse-oxygen</id>
-      <url>http://download.eclipse.org/releases/oxygen</url>
+      <id>eclipse-photon</id>
+      <url>http://download.eclipse.org/releases/photon</url>
       <layout>p2</layout>
     </repository>
   </repositories>
@@ -90,5 +102,6 @@
    	<tycho.env.osgi.arch>x86_64</tycho.env.osgi.arch>
    	<tycho.env.osgi.os>win32</tycho.env.osgi.os>
    	<tycho.env.osgi.ws>win32</tycho.env.osgi.ws>
+   	<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
    </properties>
 </project>

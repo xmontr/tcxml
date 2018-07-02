@@ -13,11 +13,12 @@ import tcxml.core.TcXmlException;
 import tcxml.model.Step;
 import tcxmlplugin.TcXmlPluginController;
 import tcxmlplugin.composite.ActionView;
-import tcxmlplugin.composite.ActionsModel;
 import tcxmlplugin.composite.StepView;
 import tcxmlplugin.composite.TcViewer;
 import tcxmlplugin.composite.stepViewer.StepContainer;
 import tcxmlplugin.composite.stepViewer.StepViewer;
+import tcxmlplugin.model.ActionsModel;
+
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.SWT;

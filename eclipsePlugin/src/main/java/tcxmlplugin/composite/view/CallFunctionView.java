@@ -9,7 +9,6 @@ import tcxml.core.TcXmlController;
 import tcxml.core.TcXmlException;
 import tcxml.model.Step;
 import tcxmlplugin.TcXmlPluginController;
-import tcxmlplugin.composite.ActionsModel;
 import tcxmlplugin.composite.StepView;
 import tcxmlplugin.composite.TcViewer;
 import tcxmlplugin.composite.stepViewer.StepViewer;
@@ -17,6 +16,7 @@ import tcxmlplugin.composite.view.arguments.ArgumentFactory;
 import tcxmlplugin.composite.view.arguments.CallFunctionArg;
 import tcxmlplugin.composite.view.arguments.StepArgument;
 import tcxmlplugin.job.PlayingJob;
+import tcxmlplugin.model.ActionsModel;
 
 import org.eclipse.swt.widgets.Label;
 
