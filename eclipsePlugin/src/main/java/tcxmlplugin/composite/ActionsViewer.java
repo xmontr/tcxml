@@ -213,6 +213,7 @@ private Composite createaViewWithsnapshotViewer() {
 	stepContainer = new Composite(sf,sf.getStyle());
 	stepContainer.setLayout(actionlayout);
 	Composite shviewer = new SnapshotViewer(sf, getStyle());
+	
 			
 		
 	return parent;	
@@ -227,23 +228,27 @@ private Composite createaViewWithsnapshotViewer() {
 	public void setSnapshotLayout( boolean  issnapshotlayout) {
 		
 		ActionView currentaction = (ActionView) actionlayout.topControl;
-		if(currentaction == null) return;
+		
 		
 		if(issnapshotlayout == false) { // view without snapshot viewer		
+			if(currentaction != null) {
+				currentaction.setParent(stepcontainerwithoutsnapshot);
+				
+			}
 			
-			currentaction.setParent(stepcontainerwithoutsnapshot);
 			
 		maincontainerlayout.topControl = viewWitoutSnapshot;	
 		
 			
 		}else { // view with snapshot viewer 
-			
+			if(currentaction != null) {
 			currentaction.setParent(stepContainer);
+			}
 			maincontainerlayout.topControl = viewwithSnapshot;
 		
 		
 	}
-
+		maincontainer.layout(true,true);
 layout(true,true);
 	}
 

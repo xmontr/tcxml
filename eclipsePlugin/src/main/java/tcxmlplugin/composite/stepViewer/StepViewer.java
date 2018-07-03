@@ -185,6 +185,15 @@ setMenu(buildMenu());
 	
 	private Menu buildMenu() {
 		   Menu popupMenu = new Menu(this);
+		   
+		   
+		   
+		
+		   
+		   
+		   
+		   
+		   
 		    MenuItem addbreakpointitem = new MenuItem(popupMenu, SWT.CASCADE);
 		    addbreakpointitem.setText("set break point");
 		    addbreakpointitem.addListener(SWT.Selection, new Listener() {
@@ -436,6 +445,9 @@ public void removeBreakpoint() {
 	this.setBackground(SWTResourceManager.getColor(SWT.COLOR_LIST_BACKGROUND));
 	
 }
+
+
+
 	
 		
 }
