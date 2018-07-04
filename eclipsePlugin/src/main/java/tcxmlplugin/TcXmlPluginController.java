@@ -24,6 +24,8 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.QualifiedName;
+import org.eclipse.swt.graphics.Image;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Listener;
 
 import tcxml.core.TcXmlException;
@@ -661,7 +663,36 @@ return ret;
 	}
 
 
-
+	
+	/** ceeate SWT image from an absolute path 
+	 * 
+	 * 
+	 * 
+	 * @param absolutepath
+	 * @param display
+	 * @return
+	 * @throws TcXmlException
+	 */
+	
+	
+	
+public Image createImage(String absolutepath, Display display) throws TcXmlException {
+	
+	File f = new File(absolutepath);
+	
+	FileInputStream in;
+	try {
+		in = new FileInputStream(f);
+	} catch (FileNotFoundException e) {
+		throw new TcXmlException("failure finding  snapshot" , e);
+	}
+	Image img = new Image(display, in);
+	return img;
+	
+	
+	
+	
+}
 	
 	
 

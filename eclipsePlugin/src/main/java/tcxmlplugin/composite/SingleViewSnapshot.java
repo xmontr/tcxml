@@ -68,7 +68,7 @@ public class SingleViewSnapshot extends Composite {
 		scroller.setContent(canvas);
 		
 		
-		showsampleimage();
+		//showsampleimage();
 		
 	}
 
@@ -108,7 +108,7 @@ public class SingleViewSnapshot extends Composite {
 	
 	
 	
-	private void  showImage( Image img) {
+	public void  showImage( Image img) {
 		if(this.currentImage != null) {
 			this.currentImage.dispose();
 			

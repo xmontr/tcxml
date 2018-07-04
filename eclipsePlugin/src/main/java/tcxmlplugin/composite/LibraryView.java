@@ -121,34 +121,16 @@ public StepViewer getFunction(String libName, String funcName) throws TcXmlExcep
 	return ret;
 }
 
-@Override
-public void showOnTop(StepViewer st) {
-	
-	
-	
 
-	Point p = getControlLocation(st);	
-	
-	getDisplay().asyncExec(new Runnable() {
-		
-		@Override
-		public void run() {
-			scroller.setOrigin(p);
-		
 
-			
-			
-		}
-	});
-
-	
-}
 
 @Override
 public void refreshSize() {
 	resizeContent();
 	
 }
+
+
 
 
 

@@ -198,7 +198,7 @@ public class FunctionView extends StepView implements StepContainer, ExpandListe
 
 		ExpandItem ex = (ExpandItem)e.item;
 			StepViewer sv = (StepViewer)ex.getControl();
-sv.refreshSizeExpanditem();
+sv.refreshSizeExpanditem(sv);
 
 			
 			
@@ -220,7 +220,7 @@ controller.getLog().info("***************     function  **********collpased ");
 
 		ExpandItem ex = (ExpandItem)e.item;
 		StepViewer sv = (StepViewer)ex.getControl();
-		sv.refreshSizeExpanditem();
+		sv.refreshSizeExpanditem(sv);
 
 		controller.getLog().info("***************     function **********expanded");
 		

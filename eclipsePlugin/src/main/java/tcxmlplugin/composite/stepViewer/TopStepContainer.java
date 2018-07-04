@@ -9,6 +9,6 @@ public interface TopStepContainer {
 	public void refreshSize();
 	
 	
-	
+	public void setCurrentStepExpanded(StepViewer st );
 
 }

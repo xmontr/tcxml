@@ -23,7 +23,6 @@ import java.util.Set;
 import java.util.UUID;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-
 import javax.json.Json;
 import javax.json.JsonObject;
 import javax.json.JsonReader;
@@ -137,7 +136,7 @@ public class TcXmlController {
     
     /**
      * 
-     *  map for the librries of the script path/libraries/*
+     *  map for the libraries of the script path/libraries/*
      */
     private Map<String, TruLibrary> libraries ;
     
@@ -1233,6 +1232,31 @@ private String getSnapshotDir() {
 	// TODO Auto-generated method stub
 	return "C:\\tmp\\";
 }
+
+
+
+
+private String getRecordSnapshotsAbsolutePath() {
+	String ret= path + "/snapshots/";
+	return ret;
+	
+	
+	
+}
+
+
+
+
+public String getRecordSnaphotImage4step( Step st) {
+	
+
+	StringBuffer sb = new StringBuffer();
+	sb.append(getRecordSnapshotsAbsolutePath());
+	sb.append("/").append(st.getSnapshotId()).append(".png");	
+	
+	return sb.toString();
+}
+
 
 public void removeArgsFromJsContext(PlayingContext playingContext, ExecutionContext toremove) throws TcXmlException {
 	   ScriptContext context = playingContext.getJsContext();

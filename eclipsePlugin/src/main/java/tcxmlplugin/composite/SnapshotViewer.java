@@ -1,11 +1,15 @@
 package tcxmlplugin.composite;
 
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
+
 import org.eclipse.jface.preference.RadioGroupFieldEditor;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.StackLayout;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.graphics.Color;
+import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
@@ -15,7 +19,13 @@ import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.ToolBar;
 import org.eclipse.swt.widgets.ToolItem;
 
-public class SnapshotViewer extends Composite implements SelectionListener {
+import tcxml.core.TcXmlController;
+import tcxml.core.TcXmlException;
+import tcxml.model.Step;
+import tcxmlplugin.TcXmlPluginController;
+import tcxmlplugin.composite.stepViewer.StepViewer;
+
+public class SnapshotViewer extends Composite implements SelectionListener, PropertyChangeListener {
 	
 	
 	public snapshotViewerMode getMode() {
@@ -66,15 +76,30 @@ public class SnapshotViewer extends Composite implements SelectionListener {
 	private ToolItem replayitem;
 	private ToolItem bothitem;
 	private StackLayout maincontainerlayout;
-	private Composite viewRecord;
-	private Composite viewReplay;
-	private Composite dualView;
+	private SingleViewSnapshot viewRecord;
+	private SingleViewSnapshot viewReplay;
+	private DualViewSnapshot dualView;
+	private TcXmlController controller;
 	
 
 	public SnapshotViewer(Composite parent, int style) {
 		super(parent, style);
 		buildGUI();
 	}
+	
+	
+	public SnapshotViewer(Composite parent, int style , TcXmlController controller) {
+		super(parent, style);
+		this.controller=controller;
+		buildGUI();
+	}	
+	
+	
+	
+	
+	
+	
+	
 
 	private void buildGUI() {
 		
@@ -177,6 +202,26 @@ layout(true,true);
 	@Override
 	public void widgetDefaultSelected(SelectionEvent e) {
 
+	}
+
+	@Override
+	public void propertyChange(PropertyChangeEvent evt) {
+		StepViewer src = (StepViewer)evt.getNewValue();
+		controller.getLog().info(" snapshot viewer current selection"+ src);
+	Step step = src.getViewer().model ;
+	String absolutepath2snap = controller.getRecordSnaphotImage4step(step);
+try {
+	Image recimage = TcXmlPluginController.getInstance().createImage(absolutepath2snap, getDisplay());
+	
+	viewRecord.showImage(recimage);
+	
+} catch (TcXmlException e) {
+	TcXmlPluginController.getInstance().error("failure with record snapshot", e);
+}
+	
+	
+	
+		
 	}
 	
 }

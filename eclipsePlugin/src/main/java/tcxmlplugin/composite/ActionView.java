@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
@@ -88,16 +89,15 @@ public class ActionView extends AStepContainer implements TopStepContainer{
 	}
 
 
-	@Override
-	public void showOnTop(StepViewer st) {
-		// TODO Auto-generated method stub
-		
-	}
+
 	
 	@Override
 	public void refreshSize() {
 		resizeContent();
 	}
+
+
+
 
 
 

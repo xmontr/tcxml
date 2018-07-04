@@ -1,5 +1,7 @@
 package tcxmlplugin.composite;
 
+import java.beans.PropertyChangeListener;
+import java.beans.PropertyChangeSupport;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -37,6 +39,29 @@ public abstract class AStepContainer extends Composite   implements StepContaine
 
 
 	private Composite content;
+	
+	
+	private PropertyChangeSupport propertyChangeSupport;
+	
+	
+	
+	private  StepViewer currentStepExpanded ;
+
+
+	public StepViewer getCurrentStepExpanded() {
+		return currentStepExpanded;
+	}
+
+
+
+
+
+
+	public void setCurrentStepExpanded(StepViewer currentStepExpanded) {
+		propertyChangeSupport.firePropertyChange("currentStepExpanded", this.currentStepExpanded,
+				this.currentStepExpanded = currentStepExpanded);
+		
+	}
 
 
 	protected ScrolledComposite scroller;
@@ -129,6 +154,7 @@ content.setSize(newsize);
 	
 	public AStepContainer(Composite parent, int style) {
 		super(parent, style);
+		propertyChangeSupport = new PropertyChangeSupport(this);
 	buildGUI(parent,style);
 		
 	}
@@ -136,6 +162,7 @@ content.setSize(newsize);
 
 	public AStepContainer(Composite parent, int style, TcXmlController controller) {
 		super(parent, style);
+		propertyChangeSupport = new PropertyChangeSupport(this);
 		this.controller= controller ;
 	buildGUI(parent,style);
 	
@@ -173,7 +200,7 @@ content.setSize(newsize);
 	public void itemCollapsed(ExpandEvent e) {
 		ExpandItem ex = (ExpandItem)e.item;
 		StepViewer sv = (StepViewer)ex.getControl();
-sv.refreshSizeExpanditem();
+sv.refreshSizeExpanditem(sv);
 		
 controller.getLog().info("**********     ASTEPCONTAINER " + this.getClass()  +"***************colapsed");
 	
@@ -186,7 +213,7 @@ controller.getLog().info("**********     ASTEPCONTAINER " + this.getClass()  +"*
 	public void itemExpanded(ExpandEvent e) {
 		ExpandItem ex = (ExpandItem)e.item;
 		StepViewer sv = (StepViewer)ex.getControl();
-sv.refreshSizeExpanditem();
+sv.refreshSizeExpanditem(sv);
 	
 controller.getLog().info("**********    ASTEPCONTAINER " + this.getClass()  +"***************expanded");
 
@@ -247,6 +274,41 @@ controller.getLog().info("**********    ASTEPCONTAINER " + this.getClass()  +"**
 		}
 		return new Point(x, y);
 	}
+	
+	
+	protected void addPropertyChangeListener(String propertyName,
+		      PropertyChangeListener listener) {
+		    propertyChangeSupport.addPropertyChangeListener(propertyName, listener);
+		  }
+
+		  protected void removePropertyChangeListener(PropertyChangeListener listener) {
+		    propertyChangeSupport.removePropertyChangeListener(listener);
+		  }
+		  
+		  
+		  public void showOnTop(StepViewer st) {
+				
+				
+				
+
+				Point p = getControlLocation(st);	
+				
+				getDisplay().asyncExec(new Runnable() {
+					
+					@Override
+					public void run() {
+						scroller.setOrigin(p);
+					
+
+						
+						
+					}
+				});
+
+				
+			}
+	
+	
 	
 	
 	

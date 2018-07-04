@@ -237,11 +237,7 @@ public class TcViewer extends Composite implements PropertyChangeListener, IJobC
 		 
 		 
 		 
-		 actionsViewer.buildAllActions(actionmap);
-	
-		 
-		
-		
+		 actionsViewer.buildAllActions(actionmap);		
 		actionsViewer.getModel().addPropertyChangeListener(ActionsModel.ACTION_SELECTED, this);
 		
 			

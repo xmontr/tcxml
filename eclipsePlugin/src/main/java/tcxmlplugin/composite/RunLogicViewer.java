@@ -72,11 +72,7 @@ public class RunLogicViewer extends AStepContainer implements TopStepContainer{
 
 
 
-	@Override
-	public void showOnTop(StepViewer st) {
-		// TODO Auto-generated method stub
-		
-	}
+
 	
 	
 	@Override
@@ -84,6 +80,18 @@ public class RunLogicViewer extends AStepContainer implements TopStepContainer{
 		resizeContent();
 		
 	
+	}
+
+
+
+
+
+
+
+	@Override
+	public void setCurrentStepExpanded(StepViewer st) {
+		// TODO Auto-generated method stub
+		
 	}	
 	
 	

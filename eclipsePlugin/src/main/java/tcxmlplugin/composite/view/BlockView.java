@@ -161,7 +161,7 @@ public class BlockView  extends StepView implements StepContainer, ExpandListene
 	public void itemCollapsed(ExpandEvent e) {
 		ExpandItem ex = (ExpandItem)e.item;
 		StepViewer sv = (StepViewer)ex.getControl();
-		sv.refreshSizeExpanditem();
+		sv.refreshSizeExpanditem(sv);
 		bar.redraw();
 		bar.layout(true,true);
 		controller.getLog().info("***************      block ********colapsed");
@@ -175,7 +175,7 @@ public class BlockView  extends StepView implements StepContainer, ExpandListene
 	public void itemExpanded(ExpandEvent e) {
 		ExpandItem ex = (ExpandItem)e.item;		
 		StepViewer sv = (StepViewer)ex.getControl();
-		sv.refreshSizeExpanditem();
+		sv.refreshSizeExpanditem(sv);
 		controller.getLog().info("***************     block **********expanded");
 		
 		bar.layout();

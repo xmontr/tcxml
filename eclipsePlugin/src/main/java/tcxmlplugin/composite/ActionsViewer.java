@@ -79,6 +79,14 @@ public class ActionsViewer extends Composite  {
 
 
 	private Composite stepcontainerwithoutsnapshot;
+
+
+
+	private SnapshotViewer snapshotviewer;
+
+
+
+	private boolean isSnapshotlayout;
 	
 	
 	public ActionsViewer(Composite parent, int style) {
@@ -122,6 +130,7 @@ public class ActionsViewer extends Composite  {
 
 	// default layout with snapshot viewer
 		maincontainerlayout.topControl = viewwithSnapshot;
+		isSnapshotlayout=true;
 		
 	}
 	
@@ -145,7 +154,19 @@ public class ActionsViewer extends Composite  {
 
 	public void showSelectedAction(String  actname) {
 
-	Control	ctrl = actionsView.get(actname);
+	ActionView	ctrl = actionsView.get(actname);
+	
+	ActionView old = (ActionView)actionlayout.topControl ;
+	if(old != null) {
+		old.removePropertyChangeListener(snapshotviewer);	
+		
+	}
+
+	if(isSnapshotlayout) {
+		ctrl.addPropertyChangeListener("currentStepExpanded", snapshotviewer);	
+	}
+
+	
 	actionlayout.topControl = ctrl;
 	layout(true,true);
 	
@@ -212,7 +233,7 @@ private Composite createaViewWithsnapshotViewer() {
 	SashForm sf = new SashForm(parent,SWT.HORIZONTAL);		
 	stepContainer = new Composite(sf,sf.getStyle());
 	stepContainer.setLayout(actionlayout);
-	Composite shviewer = new SnapshotViewer(sf, getStyle());
+	snapshotviewer = new SnapshotViewer(sf, getStyle(),controller);
 	
 			
 		
@@ -226,13 +247,14 @@ private Composite createaViewWithsnapshotViewer() {
 	
 	
 	public void setSnapshotLayout( boolean  issnapshotlayout) {
-		
+		this.isSnapshotlayout=issnapshotlayout;
 		ActionView currentaction = (ActionView) actionlayout.topControl;
 		
 		
 		if(issnapshotlayout == false) { // view without snapshot viewer		
 			if(currentaction != null) {
 				currentaction.setParent(stepcontainerwithoutsnapshot);
+				currentaction.removePropertyChangeListener(snapshotviewer);
 				
 			}
 			
@@ -243,6 +265,7 @@ private Composite createaViewWithsnapshotViewer() {
 		}else { // view with snapshot viewer 
 			if(currentaction != null) {
 			currentaction.setParent(stepContainer);
+			currentaction.addPropertyChangeListener("currentStepExpanded", snapshotviewer);
 			}
 			maincontainerlayout.topControl = viewwithSnapshot;
 		

@@ -94,11 +94,13 @@ public  class StepViewer extends Composite  {
 	 *  expanditem is created with a fix height, may be expansed or not, and can be inside parent expanbar.
 	 *  
 	 *  reset the size of the expanditem
+	 *  
+	 *  make recurrent call to evantual parent - first callee is pointed by origin
 	 * 
 	 */
 	
 	
-	public void refreshSizeExpanditem() {
+	public void refreshSizeExpanditem(StepViewer origin) {
 		//reset size of current
 		getDisplay().asyncExec(new Runnable() {
 			
@@ -114,12 +116,13 @@ public  class StepViewer extends Composite  {
 		
 		if( ! (pa instanceof TopStepContainer)) {
 			StepView theview = (StepView) pa;
-			theview.getViewer().refreshSizeExpanditem();
+			theview.getViewer().refreshSizeExpanditem(origin);
 			
 		} else { // resiize the top container
 			
 			TopStepContainer topc = (TopStepContainer) pa;
 			topc.refreshSize();
+			topc.setCurrentStepExpanded(origin);
 		}
 		
 
@@ -370,7 +373,7 @@ setMenu(buildMenu());
 		
 		public void expand() {
 			parentExpandItem.setExpanded(true);
-			refreshSizeExpanditem();
+			refreshSizeExpanditem(this);
 	
 			
 

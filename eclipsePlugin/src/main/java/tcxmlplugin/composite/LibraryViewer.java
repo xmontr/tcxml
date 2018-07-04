@@ -13,7 +13,9 @@ import org.eclipse.core.databinding.observable.value.IObservableValue;
 import org.eclipse.jface.databinding.swt.WidgetProperties;
 import org.eclipse.jface.viewers.ComboViewer;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.custom.SashForm;
 import org.eclipse.swt.custom.StackLayout;
+import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Combo;
@@ -28,7 +30,7 @@ import tcxml.core.TcXmlException;
 import tcxml.model.Step;
 import tcxml.model.TruLibrary;
 import tcxmlplugin.TcXmlPluginController;
-import tcxmlplugin.composite.stepViewer.FunctionContainer;
+
 import tcxmlplugin.composite.stepViewer.MainStepContainer;
 import tcxmlplugin.composite.stepViewer.StepViewer;
 import tcxmlplugin.model.LibraryModel;
@@ -44,9 +46,17 @@ public class LibraryViewer extends Composite {
 	
 	private Map<String, LibraryView> librariesView;
 	
-	private Composite functionContainer;
+	
 	private TcXmlController controller;
-	private StackLayout funclayout;
+	private Composite maincontainer;
+	private StackLayout maincontainerlayout;
+	private StackLayout functionlayout;
+	private Composite stepContainer;
+	private SnapshotViewer snapshotviewer;
+	private Composite stepcontainerwithoutsnapshot;
+	private Composite viewwithSnapshot;
+	private Composite viewWitoutSnapshot;
+	private boolean isSnapshotlayout;
 	
 	public LibraryViewer(Composite parent, int style) {
 		
@@ -85,10 +95,18 @@ public class LibraryViewer extends Composite {
 		combo = comboViewer.getCombo();
 		combo.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		
-		functionContainer = new Composite(this, this.getStyle());
-		functionContainer.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 2, 1));
-		 funclayout = new StackLayout();
-		 functionContainer.setLayout(funclayout);
+		maincontainer = new Composite(this,this.getStyle());
+		maincontainer.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 2, 1));
+		maincontainerlayout = new StackLayout();
+		maincontainer.setLayout(maincontainerlayout);		
+		functionlayout = new StackLayout();
+		
+		viewwithSnapshot = createaViewWithsnapshotViewer();
+		viewWitoutSnapshot = createViewWithoutsnapshotViewer();
+
+	// default layout with snapshot viewer
+		maincontainerlayout.topControl = viewwithSnapshot;
+		isSnapshotlayout=true;
 		
 		
 	}
@@ -114,12 +132,83 @@ public class LibraryViewer extends Composite {
 
 
 
+	private Composite createaViewWithsnapshotViewer() {
+		
+		Composite parent = new Composite(maincontainer, getStyle());
+		parent.setLayout(new FillLayout());		
+		SashForm sf = new SashForm(parent,SWT.HORIZONTAL);		
+		stepContainer = new Composite(sf,sf.getStyle());
+		stepContainer.setLayout(functionlayout);
+		snapshotviewer = new SnapshotViewer(sf, getStyle(),controller);
+		
+				
+			
+		return parent;	
+			
+		}
+	
+	
+	
+	private Composite createViewWithoutsnapshotViewer() {
+		Composite parent = new Composite(maincontainer, getStyle());
+		parent.setLayout(new FillLayout());
+		stepcontainerwithoutsnapshot = new Composite(parent, getStyle());
+		stepcontainerwithoutsnapshot.setLayout(functionlayout);
+		
+		
+		
+		
+	return parent;	
+	}
+	
+	public void setSnapshotLayout( boolean  issnapshotlayout) {
+		this.isSnapshotlayout=issnapshotlayout;
+		ActionView currentaction = (ActionView) functionlayout.topControl;
+		
+		
+		if(issnapshotlayout == false) { // view without snapshot viewer		
+			if(currentaction != null) {
+				currentaction.setParent(stepcontainerwithoutsnapshot);
+				currentaction.removePropertyChangeListener(snapshotviewer);
+				
+			}
+			
+			
+		maincontainerlayout.topControl = viewWitoutSnapshot;	
+		
+			
+		}else { // view with snapshot viewer 
+			if(currentaction != null) {
+			currentaction.setParent(stepContainer);
+			currentaction.addPropertyChangeListener("currentStepExpanded", snapshotviewer);
+			}
+			maincontainerlayout.topControl = viewwithSnapshot;
+		
+		
+	}
+		maincontainer.layout(true,true);
+layout(true,true);
+	}
 
 
 	public void showSelectedLibrary(String libname) {
 		
-		Control	ctrl = librariesView.get(libname);
-		funclayout.topControl=ctrl;
+		LibraryView	ctrl = librariesView.get(libname);
+		
+		LibraryView old = (LibraryView)functionlayout.topControl ;
+		if(old != null) {
+			old.removePropertyChangeListener(snapshotviewer);	
+			
+		}
+
+		if(isSnapshotlayout) {
+			ctrl.addPropertyChangeListener("currentStepExpanded", snapshotviewer);	
+		}
+		
+		
+		
+		
+		functionlayout.topControl=ctrl;
 		layout(true,true);
 		
 		
@@ -165,7 +254,7 @@ public class LibraryViewer extends Composite {
 			for (Iterator iterator = allLib.iterator(); iterator.hasNext();) {
 				String name = (String) iterator.next();
 				
-				LibraryView libv = new LibraryView(name,functionContainer, this.getStyle(), controller);
+				LibraryView libv = new LibraryView(name,stepContainer, this.getStyle(), controller);
 				libv.buildLibrary(libmap.get(name));
 				librariesView.put(name, libv);
 				
