@@ -10,11 +10,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-public class ImportModel {
+public class ImportModel extends AbstractModel {
 	
 
 
-	private PropertyChangeSupport propertyChangeSupport;
+	
 	
 	private List<String> parameters;
 	
@@ -78,7 +78,7 @@ public class ImportModel {
 
 	public ImportModel() {
 		
-		propertyChangeSupport = new PropertyChangeSupport(this);
+		super();
 		parameters = new ArrayList<String>();
 		libraries = new ArrayList<String>();
 		
@@ -130,14 +130,7 @@ public class ImportModel {
 	}
 	
 	
-	public void addPropertyChangeListener(String propertyName,
-		      PropertyChangeListener listener) {
-		    propertyChangeSupport.addPropertyChangeListener(propertyName, listener);
-		  }
 
-		  public void removePropertyChangeListener(PropertyChangeListener listener) {
-		    propertyChangeSupport.removePropertyChangeListener(listener);
-		  }
 
 
 }

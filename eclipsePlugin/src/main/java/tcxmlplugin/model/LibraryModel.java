@@ -5,7 +5,7 @@ import java.beans.PropertyChangeSupport;
 import java.util.ArrayList;
 import java.util.List;
 
-public class LibraryModel {
+public class LibraryModel extends AbstractModel{
 
 
 
@@ -16,7 +16,7 @@ public class LibraryModel {
 
 	public static final String LIBRARY_SELECTED = "librarySelected";
 
-	private PropertyChangeSupport propertyChangeSupport;
+	
 	
 	private List<String> allLibraries;
 	
@@ -49,7 +49,7 @@ public class LibraryModel {
 
 	public LibraryModel() {
 		
-		propertyChangeSupport = new PropertyChangeSupport(this);
+		super();
 		allLibraries = new ArrayList<String>();
 		
 	}
@@ -76,14 +76,7 @@ public class LibraryModel {
 	}
 	
 	
-	public void addPropertyChangeListener(String propertyName,
-		      PropertyChangeListener listener) {
-		    propertyChangeSupport.addPropertyChangeListener(propertyName, listener);
-		  }
-
-		  public void removePropertyChangeListener(PropertyChangeListener listener) {
-		    propertyChangeSupport.removePropertyChangeListener(listener);
-		  }
+	
 
 
 

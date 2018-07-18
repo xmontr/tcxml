@@ -4,7 +4,7 @@ import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
 
 
-public class ProjectTcxmlModel {
+public class ProjectTcxmlModel extends AbstractModel {
 	
 	private String projectName ;
 	
@@ -18,7 +18,7 @@ public class ProjectTcxmlModel {
 		this.projectPath = projectPath);
 	}
 
-	private PropertyChangeSupport propertyChangeSupport = new PropertyChangeSupport(this);
+	
 
 	public String getProjectName() {
 		return projectName;
@@ -31,14 +31,7 @@ public class ProjectTcxmlModel {
 	}
 	
 	
-	public void addPropertyChangeListener(String propertyName,
-		      PropertyChangeListener listener) {
-		    propertyChangeSupport.addPropertyChangeListener(propertyName, listener);
-		  }
 
-		  public void removePropertyChangeListener(PropertyChangeListener listener) {
-		    propertyChangeSupport.removePropertyChangeListener(listener);
-		  }
 	
 
 

@@ -16,6 +16,7 @@ import tcxmlplugin.composite.view.BasicView;
 import tcxmlplugin.composite.view.BlockView;
 import tcxmlplugin.composite.view.CallActionView;
 import tcxmlplugin.composite.view.CallFunctionView;
+import tcxmlplugin.composite.view.CommentView;
 import tcxmlplugin.composite.view.EvaluateJavascriptView;
 import tcxmlplugin.composite.view.FunctionView;
 import tcxmlplugin.composite.view.TestObjectView;
@@ -103,6 +104,7 @@ public class StepViewerFactory {
 		switch(action){
 		case"Evaluate JavaScript":tv = getEvaluateJavascriptViewer(step, stepContainer, controller); break;
 		case "Wait": tv = getWaitViewer(step, stepContainer, controller) ;  break;
+		case "Comment":tv = getCommentViewer(step, stepContainer, controller) ;  break;
 		default:tv = getDefaultViewer(step, stepContainer, controller);
 			
 		}
@@ -111,6 +113,16 @@ public class StepViewerFactory {
 	}
 	
 	
+
+	private static StepViewer getCommentViewer(Step step, StepContainer stepContainer, TcXmlController controller) throws TcXmlException {
+		CommentView view = new CommentView(stepContainer.getBar(), SWT.NONE,controller);
+		StepViewer stepviewer = new StepViewer( SWT.NONE,view,stepContainer);
+
+		stepviewer.populate(step);
+		return stepviewer;
+	}
+
+
 
 	private static StepViewer getWaitViewer(Step step, StepContainer stepContainer, TcXmlController controller) throws TcXmlException {
 		WaitView view = new WaitView(stepContainer.getBar(), SWT.NONE,controller);

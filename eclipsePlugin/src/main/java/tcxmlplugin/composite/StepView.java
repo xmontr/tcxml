@@ -113,7 +113,7 @@ public abstract class StepView extends Composite  {
 		model.setLibName(mo.getLibName());
 		model.setMethodName(mo.getMethodName());
 		model.setName(mo.getName());
-		model.setNewAttribute(mo.getNewAttribute());
+		model.setComment(mo.getComment());
 		model.setObjectTimeout(mo.getObjectTimeout());
 		model.setOverwriteUI(mo.getOverwriteUI());
 		model.setTestObject(mo.getTestObject());

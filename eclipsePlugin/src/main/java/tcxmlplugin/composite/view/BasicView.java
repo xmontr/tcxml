@@ -98,6 +98,13 @@ public class BasicView   extends StepView {
 		indextext = new Text(this, SWT.BORDER);
 		indextext.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		
+		lblComment = new Label(this, SWT.NONE);
+		lblComment.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
+		lblComment.setText("comment");
+		
+		commenttext = new Text(this, SWT.BORDER);
+		commenttext.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
+		
 		
 		
 	
@@ -123,6 +130,8 @@ private Text indextext;
 private Label argumentlabel;
 private Label categorynamelabel;
 private Text categorynametext;
+private Label lblComment;
+private Text commenttext;
 
 
 	
@@ -178,6 +187,10 @@ private Text categorynametext;
 		IObservableValue categoryNameModelObserveValue = BeanProperties.value("categoryName").observe(model);
 		bindingContext.bindValue(observeTextCategorynametextObserveWidget, categoryNameModelObserveValue, null, null);
 		//
+		IObservableValue observeTextCommenttextObserveWidget = WidgetProperties.text(SWT.Modify).observe(commenttext);
+		IObservableValue commentNameModelObserveValue = BeanProperties.value("comment").observe(model);
+		bindingContext.bindValue(observeTextCommenttextObserveWidget, commentNameModelObserveValue, null, null);
+		
 		return bindingContext;
 	}
 	

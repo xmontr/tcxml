@@ -7,13 +7,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-public class ActionsModel {
+public class ActionsModel extends AbstractModel{
 	
 	public static final String ALL_ACTIONS = "allActions";
 
 	public static final String ACTION_SELECTED = "actionSelected";
 
-	private PropertyChangeSupport propertyChangeSupport;
+	
 	
 	private List<String> allActions;
 	
@@ -46,7 +46,7 @@ public class ActionsModel {
 
 	public ActionsModel() {
 		
-		propertyChangeSupport = new PropertyChangeSupport(this);
+	super();
 		allActions = new ArrayList<String>();
 		
 	}
@@ -73,14 +73,7 @@ public class ActionsModel {
 	}
 	
 	
-	public void addPropertyChangeListener(String propertyName,
-		      PropertyChangeListener listener) {
-		    propertyChangeSupport.addPropertyChangeListener(propertyName, listener);
-		  }
 
-		  public void removePropertyChangeListener(PropertyChangeListener listener) {
-		    propertyChangeSupport.removePropertyChangeListener(listener);
-		  }
 
 
 

@@ -4,11 +4,11 @@ import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
 import java.util.List;
 
-public class ParameterViewerModel {
+public class ParameterViewerModel extends AbstractModel {
 	
 	public static final String PARAMETER_SELECTED = "parameterSelected";
 
-	private PropertyChangeSupport propertyChangeSupport;
+	
 	public List<String> getAllParameters() {
 		return allParameters;
 	}
@@ -39,19 +39,12 @@ public class ParameterViewerModel {
 	
 	
 	public ParameterViewerModel() {
+		super();
 		
-		propertyChangeSupport = new PropertyChangeSupport(this);
 	}
 	
 	
-	public void addPropertyChangeListener(String propertyName,
-		      PropertyChangeListener listener) {
-		    propertyChangeSupport.addPropertyChangeListener(propertyName, listener);
-		  }
 
-		  public void removePropertyChangeListener(PropertyChangeListener listener) {
-		    propertyChangeSupport.removePropertyChangeListener(listener);
-		  }
 	
 	
 	
