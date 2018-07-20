@@ -51,7 +51,7 @@ public class ImportModel extends AbstractModel {
 
 
 	public void setSnapshots(List<String> snapshots) {
-		;
+		
 		propertyChangeSupport.firePropertyChange("snapshots", this.snapshots,
 				this.snapshots = snapshots);
 	}

@@ -18,6 +18,7 @@ import tcxmlplugin.composite.view.CallActionView;
 import tcxmlplugin.composite.view.CallFunctionView;
 import tcxmlplugin.composite.view.CommentView;
 import tcxmlplugin.composite.view.EvaluateJavascriptView;
+import tcxmlplugin.composite.view.ForView;
 import tcxmlplugin.composite.view.FunctionView;
 import tcxmlplugin.composite.view.TestObjectView;
 import tcxmlplugin.composite.view.WaitView;
@@ -29,6 +30,7 @@ public class StepViewerFactory {
 		StepViewer tv = null;
 		
 		String typeOfStep = step.getType();
+		String action = step.getAction();
 		switch (typeOfStep) {
 		case "callFunction":
 			tv = getCallFunctionViewer(step,stepContainer,controller)	;
@@ -55,7 +57,25 @@ public class StepViewerFactory {
 				tv=getTestObjectViewer(step,stepContainer,controller);
 				break;
 				
-		case "control":tv=getCallActionViwer(step,stepContainer,controller);
+		case "control":
+			
+			switch(action) {
+			case "Call Action" :tv=getCallActionViewer(step,stepContainer,controller); break;
+			case "For" : tv=getForViewer(step,stepContainer,controller); break;
+			default: throw new TcXmlException(" not implemented", new IllegalStateException());
+			
+			
+			}
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
 			
 		
 		break;
@@ -74,7 +94,18 @@ public class StepViewerFactory {
 
 
 
-	private static StepViewer getCallActionViwer(Step step, StepContainer stepContainer, TcXmlController controller) throws TcXmlException {
+	private static StepViewer getForViewer(Step step, StepContainer stepContainer, TcXmlController controller) throws TcXmlException {
+		ForView view = new ForView(stepContainer.getBar(), SWT.NONE,controller);
+		StepViewer sv =  new StepViewer( SWT.NONE, view, stepContainer);
+		sv.populate(step);
+		return sv;
+		
+		
+	}
+
+
+
+	private static StepViewer getCallActionViewer(Step step, StepContainer stepContainer, TcXmlController controller) throws TcXmlException {
 		CallActionView view = new CallActionView(stepContainer.getBar(), SWT.NONE,controller);
 		StepViewer sv =  new StepViewer( SWT.NONE, view, stepContainer);
 		sv.populate(step);

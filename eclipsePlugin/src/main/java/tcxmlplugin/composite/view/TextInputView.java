@@ -38,7 +38,10 @@ public class TextInputView extends Composite implements SelectionListener{
 	
 	
 	
- 	public static class TextInputViewModel {
+ 	public TextInputViewModel getInputtextmodel() {
+		return inputtextmodel;
+	}
+	public static class TextInputViewModel {
 		
 		private boolean javascript;
 		private String inputData;
