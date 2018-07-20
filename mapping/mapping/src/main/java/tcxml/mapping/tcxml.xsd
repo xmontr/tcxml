@@ -39,7 +39,7 @@
     	<attribute name="endEvent" type="string"></attribute>
     	<attribute name="objectTimeout" type="string"></attribute>
     	<attribute name="catch" type="string"></attribute>
-    	<attribute name="NewAttribute" type="string"></attribute>
+    	<attribute name="comment" type="string"></attribute>
     	<attribute name="name" type="string"></attribute>
     	<attribute name="overwriteUI" type="string"></attribute>
 
