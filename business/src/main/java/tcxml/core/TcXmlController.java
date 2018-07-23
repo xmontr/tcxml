@@ -203,7 +203,9 @@ public class TcXmlController {
     }
     
  
-    public List<Function> getFunctionsForLib( String libname) throws TcXmlException {
+  
+
+	public List<Function> getFunctionsForLib( String libname) throws TcXmlException {
     	List<Function> ret = new ArrayList<Function>();
     TruLibrary lib = libraries.get(libname);	
     if(lib == null) {
@@ -875,6 +877,15 @@ return ret;
 	
 }
 
+
+public ScriptEngine  getJSengine() {
+	
+	return  scriptFactory.getEngineByName("nashorn");
+	
+}
+
+
+
 /***
  * 
  *  evaluate the javascript code. 
@@ -890,7 +901,7 @@ return ret;
 public Object evaluateJS(String code, PlayingContext ctx) throws TcXmlException {
 	
 	 
-	ScriptEngine engine = scriptFactory.getEngineByName("nashorn");
+	ScriptEngine engine = getJSengine();
 	   ScriptContext context = ctx.getJsContext();
 	   
 	   log.info(" evaluationg javascript:\n " + code);
@@ -988,7 +999,7 @@ private Object evaluate(CallFunctionAttribut callFunctionAttribut, PlayingContex
 
 public  ScriptContext   buildInitialJavascriptContext(PlayingContext ctx) throws TcXmlException {
 	
-	ScriptEngine engine = scriptFactory.getEngineByName("nashorn");
+	ScriptEngine engine = getJSengine();
 	ScriptContext context = new SimpleScriptContext();
 
 	context.setBindings(engine.createBindings(), ScriptContext.GLOBAL_SCOPE);

@@ -11,6 +11,7 @@ import tcxmlplugin.composite.StepView;
 import tcxmlplugin.composite.stepViewer.StepContainer;
 import tcxmlplugin.composite.stepViewer.StepViewer;
 import tcxmlplugin.composite.stepViewer.StepViewerFactory;
+import tcxmlplugin.job.MultipleStepRunner;
 import tcxmlplugin.model.ForModel;
 
 import org.eclipse.swt.layout.GridLayout;
@@ -22,6 +23,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.json.JsonObject;
+import javax.script.ScriptContext;
+import javax.script.ScriptEngine;
+import javax.script.ScriptException;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.ExpandEvent;
@@ -94,14 +98,45 @@ public class ForView extends StepView  implements StepContainer, ExpandListener 
 
 	@Override
 	public String buildTitle() {
-		String ret = formatTitle(model.getIndex(), " " +  model.getAction());
+		String ret = formatTitle(model.getIndex(), " " +  buildLoopString() );
 		return ret;
+	}
+	
+	
+	
+	private String buildLoopString() {
+	return "for(" + initString +";" + conditionString + ";" + incrementString + ")" ;	
+		
+	}
+	
+	
+	private String buildPlayingCommand() {
+		StringBuffer sb = new StringBuffer();
+		sb.append(buildLoopString()).append("{ctx = mc.runSteps(ctx);};");
+		
+		return sb.toString();
+		
 	}
 
 	@Override
 	public PlayingContext play(PlayingContext ctx) throws TcXmlException {
-		// TODO Auto-generated method stub
-		return null;
+	MultipleStepRunner mc = new MultipleStepRunner(stepViwerChildren);
+	ScriptEngine engine = controller.getJSengine();
+	   ScriptContext context = ctx.getJsContext();
+		// store the global variables 
+	   context.setAttribute("mc", mc, ScriptContext.GLOBAL_SCOPE);
+	   context.setAttribute("ctx", ctx, ScriptContext.GLOBAL_SCOPE);
+	  try {
+		engine.eval(buildPlayingCommand(),context);
+	} catch (ScriptException e) {
+	
+		throw new TcXmlException(" failure in For loop", e);
+	} 
+	   
+	   
+	   
+	
+		return ctx;
 	}
 
 	@Override
