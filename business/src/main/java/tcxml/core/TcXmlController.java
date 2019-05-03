@@ -514,7 +514,10 @@ private InputStream addExpectedNamespace(String element, String ns, FileInputStr
 	rep.append(old.toString()). append(" ").append(ns).append("  ");
 	
 	java.util.function.Function<String,String> addNS= (String line ) ->{
-		String ret = line.replace(old.toString(), rep.toString());
+		
+		
+		
+		String  ret = line.replace(old.toString(), rep.toString());
 		
 		return ret;
 	};

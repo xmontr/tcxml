@@ -542,8 +542,8 @@ return ret;
 		// create the folder structure
 		IFolder newTC = addTestCase2project(currentProject, tcname);
 		File source = new File(model.getMainScript());
-		 File withNS  = TcxmlUtils.addNameSpaceToXmlFile(source); 
-		importFileAndRename(currentProject, newTC , withNS.getAbsolutePath(), monitor,source.getName());
+		 //File withNS  = TcxmlUtils.addNameSpaceToXmlFile(source); adding namespace is done on the fly
+		importFileAndRename(currentProject, newTC , source.getAbsolutePath(), monitor,source.getName());
 		
 		
 		
@@ -607,14 +607,14 @@ return ret;
 			String filename = new Path(lib).lastSegment();
 			
 			File source = new File(lib);
-			 File withNS  = TcxmlUtils.addNameSpaceToXmlFile(source); 
+			// File withNS  = TcxmlUtils.addNameSpaceToXmlFile(source); 
 	
 			
 			
 			
 			IFile thefile = libfolder.getFile(filename);		
 			
-			InputStream in = new FileInputStream(withNS);
+			InputStream in = new FileInputStream(source);
 			thefile.create(in, true, monitor);
 			this.info("library " + filename + " imported");
 			
