@@ -1,18 +1,25 @@
 package tcxml.core;
 
+import java.io.BufferedOutputStream;
+import java.io.BufferedReader;
+import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.PrintWriter;
 import java.io.Reader;
 import java.io.StringReader;
+import java.io.Writer;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardCopyOption;
 import java.nio.file.attribute.FileAttribute;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -23,6 +30,9 @@ import java.util.Set;
 import java.util.UUID;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.stream.Collector;
+import java.util.stream.Collectors;
+
 import javax.json.Json;
 import javax.json.JsonObject;
 import javax.json.JsonReader;
@@ -66,6 +76,8 @@ import tcxml.model.Ident;
 import tcxml.model.ObjectFactory;
 import tcxml.model.Step;
 import tcxml.model.TestObject;
+import tcxml.model.Transaction;
+import tcxml.model.Transactions;
 import tcxml.model.TruLibrary;
 import tcxml.model.TruScript;
 
@@ -437,7 +449,7 @@ try {
 	 throw new TcXmlException("invalid  path for script : no default.xml  founded in " + pathdir  ,  new FileNotFoundException());
 }
 
-loadScript(in);
+loadScript(addExpectedNamespace("truScript", "xmlns=\"http://www.example.org/tcxml\"", in));
 // browse al libraries
 if(libdir.exists()) {
 	
@@ -445,7 +457,7 @@ if(libdir.exists()) {
 	for (File file2 : libfiles) {
 		try {
 			FileInputStream fin = new FileInputStream(file2);
-			TruLibrary li = loadLibrary(fin);
+			TruLibrary li = loadLibrary(addExpectedNamespace("truLibrary", "xmlns=\"http://www.example.org/tcxml\"", fin));
 			String libname = li.getStep().getAction();
 			
 			libraries.put(libname, li);
@@ -483,6 +495,34 @@ if(parameterFile.exists()) {
 
 setPath(file);
 	
+}
+/**
+ * 
+ *  the default.xml doesn't contains any namespace for truScript so add xmlns="http://www.example.org/tcxml" to eanable the jaxb parsing
+ * 
+ * 
+ * @param in
+ * @return
+ */
+private InputStream addExpectedNamespace(String element, String ns, FileInputStream in) {
+	// xmlns=\"http://www.example.org/tcxml\"
+	
+	BufferedReader br = new BufferedReader(new InputStreamReader(in));
+	StringBuffer old = new StringBuffer();
+	StringBuffer rep = new StringBuffer();
+	old.append("<").append(element);
+	rep.append(old.toString()). append(" ").append(ns).append("  ");
+	
+	java.util.function.Function<String,String> addNS= (String line ) ->{
+		String ret = line.replace(old.toString(), rep.toString());
+		
+		return ret;
+	};
+	
+String tmp = br.lines().map(addNS).collect(Collectors.joining());
+	
+	
+	return new ByteArrayInputStream(tmp.getBytes());
 }
 
 /***
@@ -1298,8 +1338,36 @@ public void removeArgsFromJsContext(PlayingContext playingContext, ExecutionCont
 	
 }
 
-
-
+/**
+ *  return the list of the transactions declared in the script or in the libs
+ * @return 
+ * 
+ * 
+ * 
+ */
+public List<Transaction> getAlltransactions() {
+	
+	List<Transaction> ret = new ArrayList<Transaction>();
+	
+	
+	ret.addAll(script.getTransactions().getTransaction());
+	
+	Collection<TruLibrary> liblist = libraries.values();
+	for (TruLibrary truLibrary : liblist) {
+		
+		
+		ret.addAll(truLibrary.getTransaction().getTransaction());
+		
+	}	
+	return ret;
+	
+	
+	
+	
+	
+	
+	
+}
 
 
 

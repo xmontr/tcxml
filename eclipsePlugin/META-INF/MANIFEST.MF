@@ -53,4 +53,5 @@ Bundle-ClassPath: .,
  lib/selenium-opera-driver-3.7.1.jar,
  lib/selenium-remote-driver-3.7.1.jar,
  lib/selenium-safari-driver-3.7.1.jar,
- lib/selenium-support-3.7.1.jar
+ lib/selenium-support-3.7.1.jar,
+ extra/nashorn.jar

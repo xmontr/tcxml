@@ -60,6 +60,9 @@ public class TcViewer extends Composite implements PropertyChangeListener, IJobC
 	
 	
 	private ParameterViewer parameterviewer;
+	
+	
+	private TransactionViewer transactionViewer;
 
 	private LibraryViewer libraryViewer;
 	private TcXmlController controller;
@@ -97,6 +100,10 @@ public class TcViewer extends Composite implements PropertyChangeListener, IJobC
 		
 		
 		this.parameterviewer = new ParameterViewer(tabFolder, SWT.BORDER,controller);
+		this.transactionViewer = new TransactionViewer(tabFolder, SWT.BORDER,controller);
+		
+		
+		
 		
 		
 		
@@ -141,6 +148,11 @@ public class TcViewer extends Composite implements PropertyChangeListener, IJobC
 		CTabItem CTabItemparameterTab = new CTabItem(tabFolder, SWT.NONE);
 		CTabItemparameterTab.setText("Parameters");
 		CTabItemparameterTab.setControl(parameterviewer);
+		
+		
+		CTabItem CTabItemtransactionTab = new CTabItem(tabFolder, SWT.NONE);
+		CTabItemtransactionTab.setText("transactions");
+		CTabItemtransactionTab.setControl(transactionViewer);
 		
 	}
 

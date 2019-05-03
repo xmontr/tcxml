@@ -1,4 +1,4 @@
-<truScript xmlns="http://www.example.org/tcxml" platform="FF40.0.3"
+<truScript   platform="FF40.0.3"
 	engineVersion="12.55.1333.0"
 	timestamp="Fri Oct 27 2017 16:08:13 GMT+0200 (Romance Standard Time)">
 	<step type="block" stepId="step:{00000000-0000-0000-0000-000000000001}"
