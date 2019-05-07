@@ -120,8 +120,8 @@ TcXmlPluginController.getInstance().error("fail to play step ", e1);
 
 	protected void play() throws TcXmlException {
 		
-				
-		currrentJob = stepviewer.getplayInteractiveJob( new PlayingContext(stepviewer.getController() ));
+		PlayingContext context = new PlayingContext(stepviewer.getController() );		
+		currrentJob = stepviewer.getplayInteractiveJob(  context);
 		currrentJob.schedule();
 	
 	}

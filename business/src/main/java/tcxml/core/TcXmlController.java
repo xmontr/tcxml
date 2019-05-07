@@ -450,6 +450,13 @@ try {
 }
 
 loadScript(addExpectedNamespace("truScript", "xmlns=\"http://www.example.org/tcxml\"", in));
+try {
+	in.close();
+} catch (IOException e1) {
+	
+	e1.printStackTrace();
+}
+
 // browse al libraries
 if(libdir.exists()) {
 	
@@ -462,6 +469,12 @@ if(libdir.exists()) {
 			
 			libraries.put(libname, li);
 			log.info("adding library " + libname  + " to script");
+			try {
+				fin.close();
+			} catch (IOException e1) {
+				
+				e1.printStackTrace();
+			}
 			
 			
 			
@@ -948,6 +961,7 @@ public Object evaluateJS(String code, PlayingContext ctx) throws TcXmlException 
 	   ScriptContext context = ctx.getJsContext();
 	   
 	   log.info(" evaluationg javascript:\n " + code);
+	   log.info(" context id is" + context);
 	try {
 		Object ret = engine.eval(code, context);
 		
@@ -958,6 +972,7 @@ public Object evaluateJS(String code, PlayingContext ctx) throws TcXmlException 
 		
 		return ret;
 	} catch (ScriptException e) {
+		ctx.dumpJsContext();
 		throw new TcXmlException("fail to evaluate js code ", e);
 	
 	}
@@ -1254,6 +1269,7 @@ public WebDriver getDriver() {
 public void closeBrowser() {
 	
 	if(driver != null) {
+		driver.quit();
 		driver.close();
 	}
 	

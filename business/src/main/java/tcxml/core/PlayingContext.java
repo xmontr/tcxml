@@ -44,10 +44,11 @@ public class PlayingContext {
 	
 
 public void  pushContext(ExecutionContext ec) throws TcXmlException {
+	controller.getLog().info(" adding executioncontext " + ec.getName());
 	ec.setParent(this);
 	controller.addFuncArg2context(this,ec);
 	stack.push(ec);
-	controller.getLog().info(" adding executioncontext " + ec.getName());
+	
 }
 	
 	
@@ -77,7 +78,7 @@ public ExecutionContext getCurrentExecutionContext() {
 
 public void dumpJsContext() {
 	Logger log = controller.getLog();
-	log.info(" browsing global variable for JS context");
+	log.info(" browsing global variable for JS context" + jsContext);
 	Bindings nashorn_global = (Bindings) jsContext.getAttribute("nashorn.global");
 
 	
@@ -85,7 +86,7 @@ public void dumpJsContext() {
 	for (Entry<String, Object> entry : globalval) {
 		log.info("   found global var " + entry.getKey() + " value= " + entry.getValue());
 	}
-	log.info(" browsing local variable for JS context");
+	log.info(" browsing local variable for JS context"  + jsContext );
 	Set<Entry<String, Object>> localval = jsContext.getBindings(ScriptContext.ENGINE_SCOPE).entrySet();
 	for (Entry<String, Object> entry : localval) {
 		

@@ -58,7 +58,7 @@ public class CommentView extends StepView{
 	@Override
 	public PlayingContext play(PlayingContext ctx) throws TcXmlException {
 		// TODO Auto-generated method stub
-		return null;
+		return ctx;
 	}
 
 	protected DataBindingContext initDataBindings() {

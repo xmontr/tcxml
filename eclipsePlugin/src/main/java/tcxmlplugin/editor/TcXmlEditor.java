@@ -120,5 +120,14 @@ public class TcXmlEditor  extends EditorPart   {
 		
 	}
 	
+	@Override
+	public void dispose() {
+		// TODO Auto-generated method stub
+		super.dispose();
+		closeBrowser();
+	}
+	
+	
+	
 
 }
