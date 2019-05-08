@@ -2,6 +2,7 @@ package tcxmlplugin.composite.view;
 
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
+import java.io.PrintWriter;
 
 import javax.json.JsonObject;
 import javax.json.JsonValue;
@@ -213,6 +214,14 @@ super.populate(mo);
 	public String buildTitle() throws TcXmlException {
 		String ret = formatTitle(model.getIndex(), "Wait "+ waitmodel.getInterval() + " seconds" ) ;
 		return ret;
+	}
+
+
+
+	@Override
+	public void eexport(PrintWriter pw) throws TcXmlException {
+		pw.println(getTitle());
+		
 	}
 
 

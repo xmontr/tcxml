@@ -12,6 +12,9 @@ import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Text;
+
+import java.io.PrintWriter;
+
 import org.eclipse.core.databinding.DataBindingContext;
 import org.eclipse.core.databinding.observable.value.IObservableValue;
 import org.eclipse.jface.databinding.swt.WidgetProperties;
@@ -78,6 +81,15 @@ public class CommentView extends StepView{
 		// TODO Auto-generated method stub
 		super.populate(mo);
 		commentModel.setComment(mo.getComment());
+	}
+
+	@Override
+	public void eexport(PrintWriter pw) throws TcXmlException {
+		StringBuffer sb = new StringBuffer("// code for ").append(buildTitle());
+		pw.println(sb.toString());
+		StringBuffer sb2 = new StringBuffer("//").append(commentModel.getComment());
+		pw.println(sb2.toString());
+		
 	}
 	
 	

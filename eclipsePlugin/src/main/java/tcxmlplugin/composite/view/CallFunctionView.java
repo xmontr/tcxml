@@ -25,8 +25,10 @@ import model.CallFunctionAttribut;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
+import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Vector;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Combo;
@@ -414,6 +416,38 @@ public static class CallFunctionViewModel {
 	public String buildTitle() {
 		String ret = formatTitle(model.getIndex(), " Call Function " + model.getLibName() + "." + model.getFuncName()) ;
 		return ret;
+	}
+
+
+
+
+
+
+
+
+
+
+	@Override
+	public void eexport(PrintWriter pw) throws TcXmlException {
+		Vector<String> liparam = new Vector<String>();
+		String[] tab;
+		StringBuffer sb = new StringBuffer("// code for ").append(buildTitle());
+		pw.println(sb.toString());
+		StringBuffer sb2 = new StringBuffer();
+		sb2.append(callfunctmodel.selectedLib).append(".").append(callfunctmodel.selectedFunction).append("(");
+		//add param of function call 
+		CallFunctionArg temp = (CallFunctionArg)theArgument;
+		List<CallFunctionAttribut> li = temp.getCallArguments() ;
+		for (CallFunctionAttribut callFunctionAttribut : li) {
+		liparam.add(callFunctionAttribut.getValue())	;
+				
+		}
+		tab= liparam.toArray(new String[liparam.size()]);
+		
+		sb2.append(String.join(",", tab));
+		sb2.append(");");
+		
+		pw.println(sb2.toString());	
 	}
 
 

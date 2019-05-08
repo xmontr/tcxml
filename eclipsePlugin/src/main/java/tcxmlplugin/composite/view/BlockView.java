@@ -1,5 +1,6 @@
 package tcxmlplugin.composite.view;
 
+import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -179,6 +180,18 @@ public class BlockView  extends StepView implements StepContainer, ExpandListene
 		controller.getLog().info("***************     block **********expanded");
 		
 		bar.layout();
+		
+	}
+
+
+	@Override
+	public void eexport(PrintWriter pw) throws TcXmlException {
+		StringBuffer sb = new StringBuffer(" // code section ").append(getTitle());
+		pw.println(sb.toString());
+		for (StepViewer stepViewer : stepViwerChildren) {
+			stepViewer.export(pw);
+			
+		}
 		
 	}
 

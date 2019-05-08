@@ -1,5 +1,6 @@
 package tcxmlplugin.composite;
 
+import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -97,7 +98,15 @@ public class ActionView extends AStepContainer implements TopStepContainer{
 	}
 
 
-
+	public void eexport(PrintWriter pw) throws TcXmlException {
+		StringBuffer sb = new StringBuffer(" // code for action ").append( getActionName());
+		pw.println(sb.toString());
+		for (StepViewer stepViewer : stepViwerChildren) {
+			stepViewer.export(pw);
+			
+		}
+		
+	}
 
 
 

@@ -1,5 +1,6 @@
 package tcxmlplugin.composite.view;
 
+import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -225,6 +226,12 @@ controller.getLog().info("***************     function  **********collpased ");
 		controller.getLog().info("***************     function **********expanded");
 		
 
+		
+	}
+
+	@Override
+	public void eexport(PrintWriter pw) throws TcXmlException {
+		pw.println(getTitle());
 		
 	}
 

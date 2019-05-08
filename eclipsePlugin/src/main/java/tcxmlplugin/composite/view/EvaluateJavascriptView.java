@@ -12,6 +12,7 @@ import org.eclipse.swt.widgets.Label;
 
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
+import java.io.PrintWriter;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Text;
@@ -158,6 +159,17 @@ return ctx;
 	public String buildTitle() {
 		String ret = formatTitle(model.getIndex(), "Evaluate Javascript code " +  getShortCode());
 		return ret;
+	}
+
+
+
+
+	@Override
+	public void eexport(PrintWriter pw) throws TcXmlException {
+		StringBuffer sb = new StringBuffer("// code for ").append(buildTitle());
+		pw.println(sb.toString());
+		pw.println(evaljsmodel.code);
+		
 	}
 
 

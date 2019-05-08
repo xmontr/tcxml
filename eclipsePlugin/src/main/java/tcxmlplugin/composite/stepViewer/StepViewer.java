@@ -21,6 +21,7 @@ import tcxmlplugin.job.PlayingJob;
 import static org.hamcrest.Matchers.instanceOf;
 
 import java.beans.PropertyChangeListener;
+import java.io.PrintWriter;
 
 import javax.sql.rowset.Joinable;
 
@@ -446,6 +447,16 @@ public void removeBreakpoint() {
 	
 	this.breakPoint = null;
 	this.setBackground(SWTResourceManager.getColor(SWT.COLOR_LIST_BACKGROUND));
+	
+}
+
+
+
+
+
+
+public void export(PrintWriter pw) throws TcXmlException {
+	view.eexport(pw);
 	
 }
 

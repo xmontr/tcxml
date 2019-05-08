@@ -2,6 +2,7 @@ package tcxmlplugin.composite;
 
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
+import java.io.PrintWriter;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
@@ -158,6 +159,8 @@ public abstract class StepView extends Composite  {
 	}
 
 	public abstract  PlayingContext play(PlayingContext ctx) throws TcXmlException  ;
+	
+	public abstract void eexport(PrintWriter pw) throws TcXmlException  ;
 	
 	
 	

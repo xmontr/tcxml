@@ -4,8 +4,10 @@ import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.PrintWriter;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
@@ -693,6 +695,37 @@ public Image createImage(String absolutepath, Display display) throws TcXmlExcep
 	
 	
 }
+
+/**
+ * 
+ *  export as protractor script the step list
+ * 
+ * @param li
+ */
+
+	public void export(List<StepViewer> li) {
+		File target = new File("c:/protractor.js");
+		FileOutputStream out;
+		try {
+			out = new FileOutputStream(target);
+			PrintWriter pw = new PrintWriter(out);
+			for (StepViewer stepViewer : li) {
+				stepViewer.export(pw);
+			}
+			pw.flush();
+			pw.close();
+			out.flush();
+			out.close();
+			
+			
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		
+		
+	}
 	
 	
 

@@ -19,6 +19,7 @@ import org.eclipse.swt.widgets.Label;
 
 import com.kscs.util.jaxb.BoundList;
 
+import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -279,6 +280,12 @@ public class ForView extends StepView  implements StepContainer, ExpandListener 
 		JsonObject Obj = arg.getJsonObject(name);
 		String val = Obj.getJsonString("value").getString();
 		return val;
+		
+	}
+
+	@Override
+	public void eexport(PrintWriter pw) throws TcXmlException {
+		pw.println(getTitle());
 		
 	}
 	

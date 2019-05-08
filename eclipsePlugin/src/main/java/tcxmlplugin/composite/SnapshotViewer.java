@@ -216,7 +216,7 @@ try {
 	viewRecord.showImage(recimage);
 	
 } catch (TcXmlException e) {
-	TcXmlPluginController.getInstance().error("failure with record snapshot", e);
+	TcXmlPluginController.getInstance().error("failure with record snapshot", null);
 }
 	
 	

@@ -3,6 +3,7 @@ package tcxmlplugin.composite.view;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
+import java.io.PrintWriter;
 import java.util.List;
 
 import org.eclipse.swt.layout.GridLayout;
@@ -307,6 +308,12 @@ public class TestObjectView extends StepView implements PropertyChangeListener {
 		
 
 		return ret;
+	}
+
+	@Override
+	public void eexport(PrintWriter pw) throws TcXmlException {
+		pw.println(getTitle());
+		
 	}
 
 

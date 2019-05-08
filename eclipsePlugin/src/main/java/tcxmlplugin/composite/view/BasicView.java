@@ -1,5 +1,7 @@
 package tcxmlplugin.composite.view;
 
+import java.io.PrintWriter;
+
 import org.eclipse.core.databinding.DataBindingContext;
 import org.eclipse.core.databinding.beans.BeanProperties;
 import org.eclipse.core.databinding.observable.value.IObservableValue;
@@ -225,6 +227,13 @@ super.populate(mo);
 	public String buildTitle() {
 		String ret = formatTitle(model.getIndex(), "step #" +  model.getStepId());
 		return ret;
+	}
+
+
+	@Override
+	public void eexport(PrintWriter pw) throws TcXmlException {
+		pw.println(getTitle());
+		
 	}
 
 

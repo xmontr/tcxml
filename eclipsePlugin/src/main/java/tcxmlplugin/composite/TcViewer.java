@@ -230,6 +230,24 @@ public class TcViewer extends Composite implements PropertyChangeListener, IJobC
 			}
 		});
 		
+		ToolItem exportitem = new ToolItem(toolBar, SWT.PUSH);
+		exportitem.setToolTipText("Export current run Logic ");
+		exportitem.setText("Export");
+		exportitem.addSelectionListener(new SelectionListener() {
+			
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				List<StepViewer> li = runLogicViewer.stepViwerChildren ;
+				TcXmlPluginController.getInstance().export(li);
+				
+			}
+			
+			@Override
+			public void widgetDefaultSelected(SelectionEvent e) {
+				// TODO Auto-generated method stub
+				
+			}
+		});
 		
 		
 		progressBar = new ProgressBar(this, SWT.NONE);

@@ -1,5 +1,6 @@
 package tcxmlplugin.composite.view;
 
+import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -125,5 +126,19 @@ public void populate(Step mo) throws TcXmlException {
 		bindingContext.bindValue(observeSelectionComboActionsObserveWidget, actionSelectedActionmodelObserveValue, null, null);
 		//
 		return bindingContext;
+	}
+
+
+
+	@Override
+	public void eexport(PrintWriter pw) throws TcXmlException {
+		TcViewer tcviewer = TcXmlPluginController.getInstance().getTcviewer();
+		
+		String actionName = actionmodel.getActionSelected();
+		
+	ActionView action	= tcviewer.getActionsViewer().getActionView(actionName);
+		
+	action.eexport(pw);
+		
 	}
 }
