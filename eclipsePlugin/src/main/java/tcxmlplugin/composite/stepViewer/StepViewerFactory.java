@@ -57,6 +57,10 @@ public class StepViewerFactory {
 				tv=getTestObjectViewer(step,stepContainer,controller);
 				break;
 				
+		case "alternative":
+			tv=getAlernativeStep(step,stepContainer,controller);
+			break;
+				
 		case "control":
 			
 			switch(action) {
@@ -90,6 +94,16 @@ public class StepViewerFactory {
 		
 
 		return tv;
+	}
+
+
+
+	private static StepViewer getAlernativeStep(Step step, StepContainer stepContainer, TcXmlController controller)   throws TcXmlException {
+		// step type alternative. the real step is the child at index activestep
+		int index = Integer.parseInt(step.getActiveStep()) ;
+		Step altstep = step.getStep().get(index);	
+		altstep.setIndex(step.getIndex());		
+		return getViewer(altstep, stepContainer, controller);
 	}
 
 
