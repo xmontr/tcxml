@@ -812,6 +812,15 @@ if(!stru.getValueType().equals(ValueType.OBJECT)) {
  */
 
 public String getXpathForTestObject( TestObject obj) throws TcXmlException {
+
+	
+	return getIdentForTestObject(obj, "XPath");
+	
+	
+}
+
+
+public String getIdentForTestObject( TestObject obj, String idmethod) throws TcXmlException {
 	String ret =null;
 	boolean isXpathDefined = false;
 	
@@ -819,7 +828,7 @@ public String getXpathForTestObject( TestObject obj) throws TcXmlException {
 	
 	
 	for (Ident ident : identificators) {
-		if(ident.getType().equals("XPath")){
+		if(ident.getType().equals(idmethod)){
 			isXpathDefined =true;
 			String json= ident.getValue();
 			JsonObject arg = readJsonObject(json) ;
@@ -833,7 +842,7 @@ public String getXpathForTestObject( TestObject obj) throws TcXmlException {
 	
 	if(!isXpathDefined) {
 		
-		throw new TcXmlException("no xpath defined to identify testobject id:" + obj.getTestObjId(), new IllegalStateException());
+		throw new TcXmlException("no id method " + idmethod + " defined to identify testobject id:" + obj.getTestObjId(), new IllegalStateException());
 		
 		
 		
@@ -843,6 +852,38 @@ public String getXpathForTestObject( TestObject obj) throws TcXmlException {
 	
 	
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+/**
+ * 
+ *  return the identification mode that is active for the testobject : javascript, xpath, automatic ..
+ * 
+ * @param obj
+ * @return
+ * @throws TcXmlException
+ */
+public String getActiveIdentificationForTestObject(TestObject  obj) throws TcXmlException {
+	
+return obj.getIdents().getActive();	
+	
+	
+	
+	
+	
+}
+
+
 
 
 /**
@@ -1197,17 +1238,18 @@ try {
 	 * @throws TcXmlException
 	 */
 	
-	public void typeTextXpath(String xpath,String text, long typingInterval) throws TcXmlException {
+	public void typeText(TestObject to ,String text, long typingInterval) throws TcXmlException {
 		ensureDriver();
-		final ByXPath xp2 = new ByXPath(xpath);
-		List<WebElement> elements = driver.findElements(xp2);
-		checkUnicity(elements, xpath);
 		
-		 highlight(driver.findElements(xp2).get(0));
+		WebElement finded = this.identifyElement(to);
+		
+	
+		
+		 highlight(finded);
 
 			final String[] aletter = text.split(StringUtils.EMPTY);
 			for(int i = 0 ; i < aletter.length ; i++) {
-				elements.get(0).sendKeys(aletter[i]);
+				finded.sendKeys(aletter[i]);
 				try {
 					Thread.sleep(typingInterval);
 				} catch (InterruptedException e) {
@@ -1386,6 +1428,41 @@ public List<Transaction> getAlltransactions() {
 	
 	
 	
+}
+/**
+ *  uniquely identify the testobject acording the identification method or theow TcxmlExceptio
+ * 
+ * 
+ * @param to
+ * @return
+ */
+
+
+public WebElement identifyElement(TestObject to) throws  TcXmlException{
+	String method = to.getIdents().getActive();
+	WebElement ret = null;
+	switch (method) {
+	case "XPath":
+		String xp = getIdentForTestObject(to, method);
+		this.ensureDriver();
+		WebDriver driver = this.getDriver();
+		final ByXPath xp2 = new ByXPath(xp);	
+		List<WebElement> elements = driver.findElements(xp2);
+		this.checkUnicity(elements, xp);
+		ret = elements.get(0);
+		
+		
+		
+		break;
+	case "JavaScript":
+		
+		break;
+
+	default:
+		throw new TcXmlException("identification method not supported " + method, new IllegalArgumentException());
+		
+	}
+	return ret;
 }
 
 

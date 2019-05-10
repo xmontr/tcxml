@@ -71,11 +71,11 @@ public class TestObjectRunner extends StepRunner{
 	
 		switch (step.getAction()) {
 			
-		case "Type": typeText( thexpath,ctx);
+		case "Type": typeText( to,ctx);
 		break;
-		case "Click":click(thexpath,ctx);
+		case "Click":click(to,ctx);
 		break;
-		case "Wait":waitOn(thexpath, ctx);
+		case "Wait":waitOn(to, ctx);
 	break;
 		
 		default: notImplemented();
@@ -84,19 +84,55 @@ public class TestObjectRunner extends StepRunner{
 	return ctx;	
 		
 	}
+	
+	
+	
+	private PlayingContext runTestObjectStep2( PlayingContext ctx) throws TcXmlException {
+		TestObject to;
+		if (library == null) {
+			to = tcXmlController.getTestObjectById(step.getTestObject());
+
+		} else {
+			to = tcXmlController.getTestObjectById(step.getTestObject(), library);
+
+		}
+		
+		
+		
+		
+	
+	
+		switch (step.getAction()) {
+			
+		case "Type": typeText( to,ctx);
+		break;
+		case "Click":click(to,ctx);
+		break;
+		case "Wait":waitOn(to, ctx);
+	break;
+		
+		default: notImplemented();
+		}
+		
+	return ctx;	
+		
+	}
+	
+	
+	
 
 	
 	/**
 	 * 
 	 * wait for the html element to be present 
-	 * @param thexpath
+	 * @param to
 	 * @param ctx
 	 * @throws TcXmlException 
 	 */
 	
 
 
-	private void click(String thexpath, PlayingContext ctx) throws TcXmlException {
+	private void click(TestObject to, PlayingContext ctx) throws TcXmlException {
 		
 		String button ="left";
 		
@@ -106,10 +142,10 @@ public class TestObjectRunner extends StepRunner{
 	
 		 switch (button) {
 		case "left":
-			clickLeft(thexpath);
+			clickLeft(to);
 			break;
 		case "right":
-			clickRight(thexpath);
+			clickRight(to);
 			break;
 
 		default:notImplemented();
@@ -118,13 +154,13 @@ public class TestObjectRunner extends StepRunner{
 		
 	}
 
-	private void clickRight(String thexpath) throws TcXmlException {
+	private void clickRight(TestObject to) throws TcXmlException {
 		notImplemented();
 		
 	}
 
-	private void clickLeft(String thexpath) throws TcXmlException {
-		clickByXpath(thexpath);
+	private void clickLeft(TestObject to) throws TcXmlException {
+		click(to);
 		
 		
 	}
@@ -134,7 +170,7 @@ public class TestObjectRunner extends StepRunner{
 		
 	}
 
-	private void typeText(String thexpath, PlayingContext ctx) throws TcXmlException {
+	private void typeText(TestObject to, PlayingContext ctx) throws TcXmlException {
 		JsonObject val = arg.getJsonObject("Value");
 		String txt = val.getJsonString("value").getString();
 			 boolean isj = val.getBoolean("evalJavaScript",false);
@@ -146,7 +182,7 @@ public class TestObjectRunner extends StepRunner{
 			txt =(String) tcXmlController.evaluateJS(txt,ctx);	 
 			 }
 			 
-			 tcXmlController.typeTextXpath(thexpath, txt, 20);
+			 tcXmlController.typeText(to, txt, 20);
 		
 	}
 
@@ -207,30 +243,28 @@ public class TestObjectRunner extends StepRunner{
 	}
 	
 	
-	public void clickByXpath(String xpath) throws TcXmlException {
-		tcXmlController.ensureDriver();
-		WebDriver driver = tcXmlController.getDriver();
-		final ByXPath xp2 = new ByXPath(xpath);	
-		List<WebElement> elements = driver.findElements(xp2);
-		tcXmlController.checkUnicity(elements, xpath);
+	public void click(TestObject to) throws TcXmlException {
+		
+		
 
-		tcXmlController.highlight(driver.findElements(xp2).get(0));
-			final Actions actions = new Actions(driver);
-			actions.moveToElement(driver.findElements(xp2).get(0)).click().perform();
+		
+		WebElement finded = tcXmlController.identifyElement(to);
+		tcXmlController.highlight(finded);
+			final Actions actions = new Actions(tcXmlController.getDriver());
+			actions.moveToElement(tcXmlController.identifyElement(to)).click().perform();
 		 
 
 		
 	}
 	
-	private void waitOn(String thexpath, PlayingContext ctx) throws TcXmlException {
-		WebDriver dr = tcXmlController.getDriver();
-		tcXmlController.ensureDriver();
-		ByXPath xp = new ByXPath(thexpath);
+	private void waitOn(TestObject to, PlayingContext ctx) throws TcXmlException {
+		WebElement finded = tcXmlController.identifyElement(to);
+		tcXmlController.highlight(finded);
 
 		long TIMEOUTWAIT = 20000;
-		WebDriverWait w = new WebDriverWait(dr, TIMEOUTWAIT );
-		w.until(ExpectedConditions.presenceOfElementLocated(xp));	
-		tcXmlController.highLightXpath(thexpath);
+		WebDriverWait w = new WebDriverWait(tcXmlController.getDriver(), TIMEOUTWAIT );
+		w.until(ExpectedConditions.elementToBeClickable(finded));	
+
 		
 		
 		
