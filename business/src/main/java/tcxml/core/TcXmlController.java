@@ -834,7 +834,7 @@ public String getIdentForTestObject( TestObject obj, String idmethod) throws TcX
 			JsonObject arg = readJsonObject(json) ;
 			arg = arg.getJsonObject("implData");
 			ret =arg.getJsonString("value").getString();
-			ret=StringEscapeUtils.unescapeJavaScript(ret);
+			//ret=StringEscapeUtils.unescapeJavaScript(ret);
 			
 		}
 		
@@ -1227,8 +1227,26 @@ try {
 		
 		
 	}
+	
+	
+	public WebElement evalXPath(String xpath) throws TcXmlException {
+		ensureDriver();
+		final ByXPath xp2 = new ByXPath(xpath);
+		List<WebElement> elements = driver.findElements(xp2);
+		checkUnicity(elements, xpath);
+		return elements.get(0);
+		
+		
+	}
+	
+	
+	
+	
+	
+	
 	/***
 	 *  type text in a input
+	 * @param ctx 
 	 * 
 	 * 
 	 * 
@@ -1238,10 +1256,10 @@ try {
 	 * @throws TcXmlException
 	 */
 	
-	public void typeText(TestObject to ,String text, long typingInterval) throws TcXmlException {
+	public void typeText(PlayingContext ctx, TestObject to ,String text, long typingInterval) throws TcXmlException {
 		ensureDriver();
 		
-		WebElement finded = this.identifyElement(to);
+		WebElement finded = this.identifyElement(to,ctx);
 		
 	
 		
@@ -1434,11 +1452,12 @@ public List<Transaction> getAlltransactions() {
  * 
  * 
  * @param to
+ * @param ctx 
  * @return
  */
 
 
-public WebElement identifyElement(TestObject to) throws  TcXmlException{
+public WebElement identifyElement(TestObject to, PlayingContext ctx) throws  TcXmlException{
 	String method = to.getIdents().getActive();
 	WebElement ret = null;
 	switch (method) {
@@ -1455,6 +1474,9 @@ public WebElement identifyElement(TestObject to) throws  TcXmlException{
 		
 		break;
 	case "JavaScript":
+		String identjs = getIdentForTestObject(to, method);
+		ret = evalJavascriptForIdentification(identjs,ctx);
+		
 		
 		break;
 
@@ -1464,6 +1486,68 @@ public WebElement identifyElement(TestObject to) throws  TcXmlException{
 	}
 	return ret;
 }
+
+/**
+ * 
+ * evaluate the javascript code in the case of a javascript identification 
+ * 
+ * 
+ * @param identjs
+ * @param ctx
+ * @return
+ * @throws TcXmlException
+ */
+
+private WebElement evalJavascriptForIdentification(String identjs, PlayingContext ctx) throws  TcXmlException{
+	ExecutionContext curentexeccontext = ctx.getCurrentExecutionContext();
+	ScriptContext currentjscontext = ctx.getJsContext();
+	ScriptContext identificationcontext = buildIdentificationJavascriptContext(curentexeccontext,currentjscontext);
+	ScriptEngine engine = getJSengine();
+	
+	   log.info(" evaluationg javascript for identification :\n " + identjs);
+	   log.info(" context id is" + identificationcontext);
+	   try {
+		   WebElement ret =(WebElement) engine.eval(identjs, identificationcontext);
+			
+			log.info("return for evaluateJS is " + ret);
+
+			
+			return ret;
+		} catch (ScriptException e) {
+			ctx.dumpJsContext();
+			throw new TcXmlException("fail to evaluate js code for identification ", e);
+		
+		}   
+	   
+	   
+	
+
+}
+
+
+/***
+ *  build the javascript context for the identification
+ *  ie with evalXpath method and ArgsContext object
+ * 
+ * 
+ * @param curentexeccontext
+ * @param currentjscontext
+ * @return
+ */
+private ScriptContext buildIdentificationJavascriptContext(ExecutionContext curentexeccontext, ScriptContext currentjscontext) {
+	ScriptEngine engine = getJSengine();
+	ScriptContext context = new SimpleScriptContext();
+	context.setBindings(engine.createBindings(), ScriptContext.GLOBAL_SCOPE);
+	
+	// the evalXPath function
+	EvalXpathFunction evalXPath = new EvalXpathFunction(this);
+	
+	 context.setAttribute("evalXPath", evalXPath, ScriptContext.GLOBAL_SCOPE);
+	 
+	return context;
+}
+
+
 
 
 

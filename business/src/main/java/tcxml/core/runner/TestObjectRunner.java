@@ -67,7 +67,7 @@ public class TestObjectRunner extends StepRunner{
 
 		}
 		
-		String thexpath = tcXmlController.getXpathForTestObject(to);
+
 	
 		switch (step.getAction()) {
 			
@@ -142,10 +142,10 @@ public class TestObjectRunner extends StepRunner{
 	
 		 switch (button) {
 		case "left":
-			clickLeft(to);
+			clickLeft(to,ctx);
 			break;
 		case "right":
-			clickRight(to);
+			clickRight(to,ctx);
 			break;
 
 		default:notImplemented();
@@ -154,13 +154,13 @@ public class TestObjectRunner extends StepRunner{
 		
 	}
 
-	private void clickRight(TestObject to) throws TcXmlException {
+	private void clickRight(TestObject to, PlayingContext ctx) throws TcXmlException {
 		notImplemented();
 		
 	}
 
-	private void clickLeft(TestObject to) throws TcXmlException {
-		click(to);
+	private void clickLeft(TestObject to, PlayingContext ctx) throws TcXmlException {
+		doclick(to,ctx);
 		
 		
 	}
@@ -182,7 +182,7 @@ public class TestObjectRunner extends StepRunner{
 			txt =(String) tcXmlController.evaluateJS(txt,ctx);	 
 			 }
 			 
-			 tcXmlController.typeText(to, txt, 20);
+			 tcXmlController.typeText(ctx,to, txt, 20);
 		
 	}
 
@@ -243,22 +243,22 @@ public class TestObjectRunner extends StepRunner{
 	}
 	
 	
-	public void click(TestObject to) throws TcXmlException {
+	public void doclick(TestObject to, PlayingContext ctx) throws TcXmlException {
 		
 		
 
 		
-		WebElement finded = tcXmlController.identifyElement(to);
+		WebElement finded = tcXmlController.identifyElement(to,ctx);
 		tcXmlController.highlight(finded);
 			final Actions actions = new Actions(tcXmlController.getDriver());
-			actions.moveToElement(tcXmlController.identifyElement(to)).click().perform();
+			actions.moveToElement(tcXmlController.identifyElement(to, ctx)).click().perform();
 		 
 
 		
 	}
 	
 	private void waitOn(TestObject to, PlayingContext ctx) throws TcXmlException {
-		WebElement finded = tcXmlController.identifyElement(to);
+		WebElement finded = tcXmlController.identifyElement(to, ctx);
 		tcXmlController.highlight(finded);
 
 		long TIMEOUTWAIT = 20000;
