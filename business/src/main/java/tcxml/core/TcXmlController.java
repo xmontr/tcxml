@@ -1434,8 +1434,10 @@ public List<Transaction> getAlltransactions() {
 	Collection<TruLibrary> liblist = libraries.values();
 	for (TruLibrary truLibrary : liblist) {
 		
+		if( truLibrary.getTransaction()  != null) {
+			ret.addAll(truLibrary.getTransaction().getTransaction());			
+		}
 		
-		ret.addAll(truLibrary.getTransaction().getTransaction());
 		
 	}	
 	return ret;
@@ -1533,16 +1535,47 @@ private WebElement evalJavascriptForIdentification(String identjs, PlayingContex
  * @param curentexeccontext
  * @param currentjscontext
  * @return
+ * @throws TcXmlException 
  */
-private ScriptContext buildIdentificationJavascriptContext(ExecutionContext curentexeccontext, ScriptContext currentjscontext) {
+private ScriptContext buildIdentificationJavascriptContext(ExecutionContext curentexeccontext, ScriptContext currentjscontext) throws TcXmlException {
 	ScriptEngine engine = getJSengine();
 	ScriptContext context = new SimpleScriptContext();
 	context.setBindings(engine.createBindings(), ScriptContext.GLOBAL_SCOPE);
 	
 	// the evalXPath function
-	EvalXpathFunction evalXPath = new EvalXpathFunction(this);
-	
+	EvalXpathFunction evalXPath = new EvalXpathFunction(this);	
 	 context.setAttribute("evalXPath", evalXPath, ScriptContext.GLOBAL_SCOPE);
+	 
+	 //build Argscontext objet
+		JSObject objConstructor;
+		try {
+			objConstructor = (JSObject)engine.eval("Object");
+		} catch (ScriptException e) {
+	throw new TcXmlException(" failure in javascript for identification ", e);
+		}
+		   JSObject argscontext = (JSObject) objConstructor.newObject();
+		   context.setAttribute("ArgsContext", argscontext, ScriptContext.GLOBAL_SCOPE);
+	 
+	 //copy already exsiting global variables as member of  ARgsContext	   
+	 
+		Bindings nashorn_global = (Bindings) context.getAttribute("nashorn.global");
+		Set<String>  keys = nashorn_global.keySet();
+		for (String key : keys) {
+			Object var = nashorn_global.get(key);
+			 argscontext.setMember(key, var);
+			 log.info("adding entry to ArgsContext: "+key);		 
+	
+			 
+			
+			
+			
+			
+			
+		}
+		
+		context.getBindings( ScriptContext.ENGINE_SCOPE ).putAll(nashorn_global);	 
+	 
+	 // FunctArgs under ArgsContext
 	 
 	return context;
 }

@@ -11,6 +11,7 @@ import org.eclipse.swt.widgets.Composite;
 
 import tcxml.core.TcXmlException;
 import tcxmlplugin.composite.view.TextInputView;
+import tcxmlplugin.model.ArgModel;
 
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Label;
@@ -52,12 +53,18 @@ public class CallFunctionArg extends StepArgument {
 		
 	Set<String> keys = arg.keySet();
 	for (String key : keys) {
-		JsonObject att = arg.getJsonObject(key);
-		JsonString val = att.getJsonString("value");
+		
+	
 		
 		
+		JsonObject att  = arg.getJsonObject(key);
+		
+		
+		 JsonString val = att.getJsonString("value");		
 		Boolean evalJavaScript = att.getBoolean("evalJavaScript", false);
 		CallFunctionAttribut callatt = new CallFunctionAttribut(key,val.getString(),evalJavaScript);
+		
+		
 		
 		callArguments.add(callatt);
 		
@@ -78,8 +85,16 @@ public class CallFunctionArg extends StepArgument {
 	newName.setLayoutData(new GridData(SWT.CENTER, SWT.CENTER, true, false, 1, 1));
 	
 	TextInputView tinpu = new TextInputView(this,SWT.NONE);
-	tinpu.setInputData(callatt.getValue());
+	ArgModel newArgmo = new ArgModel(callatt.getName());
+	newArgmo.setIsJavascript(callatt.isJs());
+	newArgmo.setName(callatt.getName());
+	newArgmo.setValue(callatt.getValue());
+	tinpu.SetArgModel(newArgmo);
+	
+/*	tinpu.setInputData(callatt.getValue());
 	tinpu.setJavascript(callatt.isJs());
+	
+	*/
 	tinpu.setLayoutData(new GridData(SWT.CENTER, SWT.CENTER, true, false, 1, 1));
 	
 		

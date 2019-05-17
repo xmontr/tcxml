@@ -14,6 +14,8 @@ import javax.json.JsonObject;
 
 import org.eclipse.swt.SWT;
 import tcxmlplugin.composite.view.TextInputView;
+import tcxmlplugin.model.ArgModel;
+
 import org.eclipse.swt.layout.GridData;
 
 public class TypeTextArgs extends StepArgument {
@@ -21,47 +23,38 @@ public class TypeTextArgs extends StepArgument {
 	
 	public static class TypeTextArgsModel {
 		
-		private String text;
-		
-		private boolean isJavascript;
+		private ArgModel text;
 		
 		
 		
-		public boolean isJavascript() {
-			return isJavascript;
-		}
+		
+		
+	
 
-		public void setJavascript(boolean isJavascript) {
-			propertyChangeSupport.firePropertyChange("isJavascript", this.isJavascript,
-					this.isJavascript = isJavascript);
-			
-		}
+	
 
-		private PropertyChangeSupport propertyChangeSupport;
+		
 		
 		
 		public TypeTextArgsModel() {
 			
-			propertyChangeSupport = new PropertyChangeSupport(this);
+			text = new ArgModel("text");
+			
+			
 			
 		}
 		
-		public void addPropertyChangeListener(String propertyName,
-			      PropertyChangeListener listener) {
-			    propertyChangeSupport.addPropertyChangeListener(propertyName, listener);
-			  }
+	
 
-			  public void removePropertyChangeListener(PropertyChangeListener listener) {
-			    propertyChangeSupport.removePropertyChangeListener(listener);
-			  }
+			
 
-			public String getText() {
+			public ArgModel getText() {
 				return text;
 			}
 
-			public void setText(String text) {
-				propertyChangeSupport.firePropertyChange("text", this.text,
-						this.text = text);
+			public void setText(ArgModel text) {
+			
+						this.text = text;
 				
 			}	
 		
@@ -88,17 +81,10 @@ public class TypeTextArgs extends StepArgument {
 		boolean isj=false;
 		
 		super.populate(jsonargl);
-	JsonObject val = arg.getJsonObject("Value");
-		String txt = val.getJsonString("value").getString();
-		typemodel.setText(txt);
-		if(val.containsKey("evalJavaScript")) {
-			 isj = val.getBoolean("evalJavaScript",false);
-			
-		}
-	 
-	 typemodel.setJavascript(isj);
-	textInputView.setJavascript(isj);
-	textInputView.setInputData(txt);
+		typemodel.getText().populateFromJson(arg.getJsonObject("Value"));
+		textInputView.SetArgModel(typemodel.getText());
+		
+
 	}
 
 }

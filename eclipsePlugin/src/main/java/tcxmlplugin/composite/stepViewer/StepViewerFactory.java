@@ -20,6 +20,7 @@ import tcxmlplugin.composite.view.CommentView;
 import tcxmlplugin.composite.view.EvaluateJavascriptView;
 import tcxmlplugin.composite.view.ForView;
 import tcxmlplugin.composite.view.FunctionView;
+import tcxmlplugin.composite.view.GenericAPIStepView;
 import tcxmlplugin.composite.view.TestObjectView;
 import tcxmlplugin.composite.view.WaitView;
 
@@ -66,23 +67,14 @@ public class StepViewerFactory {
 			switch(action) {
 			case "Call Action" :tv=getCallActionViewer(step,stepContainer,controller); break;
 			case "For" : tv=getForViewer(step,stepContainer,controller); break;
-			default: throw new TcXmlException(" not implemented", new IllegalStateException());
+			default: throw new TcXmlException("type=" + typeOfStep + " action="+action + " not implemented", new IllegalStateException());
 			
 			
-			}
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-		
+			}		
 		break;
+		
+		case "genericAPIStep" : 
+			tv=getGenericAPIStepViewer(step,stepContainer,controller); break;
 			
 		}
 		
@@ -94,6 +86,17 @@ public class StepViewerFactory {
 		
 
 		return tv;
+	}
+
+
+
+	private static StepViewer getGenericAPIStepViewer(Step step, StepContainer stepContainer,
+			TcXmlController controller) throws TcXmlException {
+		GenericAPIStepView view = new GenericAPIStepView(stepContainer.getBar(), SWT.NONE,controller);
+		StepViewer stepviewer = new StepViewer( SWT.NONE, view, stepContainer);
+		stepviewer.populate(step);
+		return stepviewer;
+		
 	}
 
 

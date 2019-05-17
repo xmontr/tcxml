@@ -3,6 +3,9 @@ package tcxmlplugin.composite.view;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Text;
+
+import tcxmlplugin.model.ArgModel;
+
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.MenuEvent;
 import org.eclipse.swt.events.MenuListener;
@@ -31,6 +34,9 @@ public class TextInputView extends Composite implements SelectionListener{
 	private Button displayButton;
 	
 	private TextInputViewModel inputtextmodel;
+	
+	
+	private ArgModel arggModel ;
 
 	
 
@@ -143,7 +149,7 @@ public class TextInputView extends Composite implements SelectionListener{
 		
 	}
 
-	public void setJavascript(boolean isj) {
+	public  void  setJavascript(boolean isj) {
 		inputtextmodel.setJavascript(isj);
 		if(isj == true) {
 			displayButton.setText(mntmJs.getText());
@@ -155,7 +161,7 @@ public class TextInputView extends Composite implements SelectionListener{
 		
 	}
 
-	public void setInputData(String inputData) {
+	public  void setInputData(String inputData) {
 		inputtextmodel.setInputData(inputData);
 		
 	}
@@ -175,4 +181,27 @@ public class TextInputView extends Composite implements SelectionListener{
 		//
 		return bindingContext;
 	}
+	
+	
+	
+	public void SetArgModel( ArgModel  mo) {
+		
+		this.arggModel = mo;
+	setInputData(mo.getValue());
+	setJavascript(mo.getIsJavascript());
+		
+	
+		
+	}
+	
+	public ArgModel getArgModel() {
+		
+		arggModel.setIsJavascript(inputtextmodel.getJavascript());	
+		arggModel.setValue(inputtextmodel.getInputData());
+		return arggModel;
+		
+	}
+	
+	
+	
 }

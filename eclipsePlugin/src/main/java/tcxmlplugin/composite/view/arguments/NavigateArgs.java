@@ -15,6 +15,7 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.swt.layout.GridData;
 import tcxmlplugin.composite.view.TextInputView;
+import tcxmlplugin.model.ArgModel;
 
 public class NavigateArgs extends StepArgument{
 	
@@ -24,49 +25,26 @@ public class NavigateArgs extends StepArgument{
 	
 	public static class NavigateArgsModel {
 		
-		private String location;
-		
-		private boolean isJavascript;
-		
-		
-		
-		public boolean isJavascript() {
-			return isJavascript;
-		}
+		private ArgModel location;
 
-		public void setJavascript(boolean isJavascript) {
-			propertyChangeSupport.firePropertyChange("isJavascript", this.isJavascript,
-					this.isJavascript = isJavascript);
-			
-		}
-
-		private PropertyChangeSupport propertyChangeSupport;
+		
 		
 		
 		public NavigateArgsModel() {
 			
-			propertyChangeSupport = new PropertyChangeSupport(this);
+		this.location = new ArgModel("Location");
 			
 		}
 		
-		public void addPropertyChangeListener(String propertyName,
-			      PropertyChangeListener listener) {
-			    propertyChangeSupport.addPropertyChangeListener(propertyName, listener);
-			  }
+	
 
-			  public void removePropertyChangeListener(PropertyChangeListener listener) {
-			    propertyChangeSupport.removePropertyChangeListener(listener);
-			  }
+			
 
-			public String getLocation() {
+			public ArgModel getLocation() {
 				return location;
 			}
 
-			public void setLocation(String location) {
-				propertyChangeSupport.firePropertyChange("location", this.location,
-						this.location = location);
-				
-			}	
+	
 		
 	}
 	
@@ -93,13 +71,9 @@ public class NavigateArgs extends StepArgument{
 	public void populate(String jsonarg) throws TcXmlException {
 		
 		super.populate(jsonarg);
-	JsonObject locobj = arg.getJsonObject("Location");
-		String location = locobj.getJsonString("value").getString();
-		navmodel.setLocation(location);
-	 boolean isj = locobj.getBoolean("evalJavaScript");
-	navmodel.setJavascript(isj);
-	textInputView.setJavascript(isj);
-	textInputView.setInputData(location);
+		navmodel.getLocation().populateFromJson(arg.getJsonObject("Location"));
+		textInputView.SetArgModel(navmodel.getLocation());
+
 	}
 	
 	

@@ -1,8 +1,12 @@
 package tcxmlplugin.composite.view.arguments;
 
+import org.eclipse.swt.SWT;
+
 import tcxml.core.TcXmlException;
 import tcxmlplugin.composite.StepView;
 import tcxmlplugin.composite.view.CallFunctionView;
+import tcxmlplugin.composite.view.GenericAPIStepView;
+import tcxmlplugin.composite.view.arguments.vts.VtcConnectArgView;
 
 
 public class ArgumentFactory {
@@ -62,6 +66,36 @@ public class ArgumentFactory {
 	public static StepArgument getArgumentForFUnction(String functName, CallFunctionView callFunctionView)  throws TcXmlException {
 		CallFunctionArg ret = new CallFunctionArg(callFunctionView, callFunctionView.getStyle());
 		ret.populate(callFunctionView.getModel().getArguments());
+		return ret;
+	}
+
+	public static StepArgument getArgumentForGenericApi(String newmethod, String category, GenericAPIStepView genericAPIStepView) throws TcXmlException {
+		StepArgument ret= null;
+		switch (category) {
+		case "VTS":
+			ret = getVtsArgumentForMethod(newmethod,genericAPIStepView);
+			break;
+			default : ret= getDefaultArgument(genericAPIStepView);
+
+		
+			
+		}
+		return ret;
+	}
+
+	private static StepArgument getVtsArgumentForMethod(String newmethod,  GenericAPIStepView genericAPIStepView) throws TcXmlException {
+		StepArgument ret = null;
+		switch (newmethod) {
+		 
+		case "vtcConnect":
+			ret = new VtcConnectArgView(genericAPIStepView, SWT.NONE);
+			ret.populate(genericAPIStepView.getModel().getArguments());
+			break;
+			
+			default : ret= getDefaultArgument(genericAPIStepView);
+
+
+		}
 		return ret;
 	}
 
