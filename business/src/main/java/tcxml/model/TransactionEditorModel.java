@@ -1,4 +1,4 @@
-package tcxmlplugin.model;
+package tcxml.model;
 
 import java.util.ArrayList;
 import java.util.List;

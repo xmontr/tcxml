@@ -1,4 +1,4 @@
-package model;
+package tcxml.model;
 
 public class CallFunctionAttribut {
 	

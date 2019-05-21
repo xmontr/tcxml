@@ -4,7 +4,7 @@ import java.util.Iterator;
 
 import org.eclipse.swt.widgets.Composite;
 
-import model.Function;
+import tcxml.model.Function;
 import tcxml.core.TcXmlController;
 import tcxml.core.TcXmlException;
 import tcxml.model.TruLibrary;

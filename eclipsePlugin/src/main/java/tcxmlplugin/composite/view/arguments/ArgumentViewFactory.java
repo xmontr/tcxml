@@ -6,10 +6,12 @@ import tcxml.core.TcXmlException;
 import tcxmlplugin.composite.StepView;
 import tcxmlplugin.composite.view.CallFunctionView;
 import tcxmlplugin.composite.view.GenericAPIStepView;
+import tcxmlplugin.composite.view.arguments.tc.TlcLogArgView;
 import tcxmlplugin.composite.view.arguments.vts.VtcConnectArgView;
+import tcxml.core.ArgumentFactory;
 
 
-public class ArgumentFactory {
+public class ArgumentViewFactory {
 	
 	
 	
@@ -21,6 +23,7 @@ public class ArgumentFactory {
 		case "Navigate":ret = getNavigateArgument(view); break;
 		case "Type":ret = getTypeTextArgument(view);break;
 		case "Click":ret=getClickArgument(view);break;
+		case "Set":ret=getSetArgument(view);break;
 		
 		default: ret=getDefaultArgument(view); break;
 		
@@ -39,15 +42,21 @@ public class ArgumentFactory {
 		
 	}
 
+	private static StepArgument getSetArgument(StepView view) throws TcXmlException {
+		SetArgument ret = new SetArgument(view, SWT.NONE);	
+		ret.populate(view.getController().getArguments(view.getModel().getArguments()));
+		return ret;
+	}
+
 	private static StepArgument getClickArgument(StepView view) throws TcXmlException {
 		ClickArgs ret = new ClickArgs(view, view.getStyle());
-		ret.populate(view.getModel().getArguments());
+		ret.populate(view.getController().getArguments(view.getModel().getArguments()));
 		return ret;
 	}
 
 	private static StepArgument getTypeTextArgument(StepView view) throws TcXmlException {
 		TypeTextArgs ret = new TypeTextArgs(view, view.getStyle());
-		ret.populate(view.getModel().getArguments());
+		ret.populate(view.getController().getArguments(view.getModel().getArguments()));
 		return ret;
 	}
 
@@ -58,14 +67,14 @@ public class ArgumentFactory {
 
 	private static StepArgument getNavigateArgument(StepView view) throws TcXmlException {
 		NavigateArgs ret = new NavigateArgs(view, view.getStyle());
-		ret.populate(view.getModel().getArguments());
+		ret.populate(view.getController().getArguments(view.getModel().getArguments()));
 		
 		return ret;
 	}
 
 	public static StepArgument getArgumentForFUnction(String functName, CallFunctionView callFunctionView)  throws TcXmlException {
 		CallFunctionArg ret = new CallFunctionArg(callFunctionView, callFunctionView.getStyle());
-		ret.populate(callFunctionView.getModel().getArguments());
+		ret.populate(callFunctionView.getController().getArguments(callFunctionView.getModel().getArguments()));
 		return ret;
 	}
 
@@ -75,10 +84,28 @@ public class ArgumentFactory {
 		case "VTS":
 			ret = getVtsArgumentForMethod(newmethod,genericAPIStepView);
 			break;
+		case "TC":
+			ret=getTCargumentForMethod(newmethod,genericAPIStepView);
 			default : ret= getDefaultArgument(genericAPIStepView);
 
 		
 			
+		}
+		return ret;
+	}
+
+	private static StepArgument getTCargumentForMethod(String newmethod, GenericAPIStepView genericAPIStepView) throws TcXmlException {
+		StepArgument ret = null;
+		switch (newmethod) {
+		 
+		case "log":
+			ret = new TlcLogArgView(genericAPIStepView, SWT.NONE);
+			ret.populate(genericAPIStepView.getController().getArguments(genericAPIStepView.getModel().getArguments()));
+			break;
+			
+			default : ret= getDefaultArgument(genericAPIStepView);
+
+
 		}
 		return ret;
 	}
@@ -89,7 +116,7 @@ public class ArgumentFactory {
 		 
 		case "vtcConnect":
 			ret = new VtcConnectArgView(genericAPIStepView, SWT.NONE);
-			ret.populate(genericAPIStepView.getModel().getArguments());
+			ret.populate(genericAPIStepView.getController().getArguments(genericAPIStepView.getModel().getArguments()));
 			break;
 			
 			default : ret= getDefaultArgument(genericAPIStepView);

@@ -12,15 +12,15 @@ import tcxmlplugin.TcXmlPluginController;
 import tcxmlplugin.composite.StepView;
 import tcxmlplugin.composite.TcViewer;
 import tcxmlplugin.composite.stepViewer.StepViewer;
-import tcxmlplugin.composite.view.arguments.ArgumentFactory;
+import tcxmlplugin.composite.view.arguments.ArgumentViewFactory;
 import tcxmlplugin.composite.view.arguments.CallFunctionArg;
 import tcxmlplugin.composite.view.arguments.StepArgument;
 import tcxmlplugin.job.PlayingJob;
-import tcxmlplugin.model.ActionsModel;
+import tcxml.model.ActionsModel;
 
 import org.eclipse.swt.widgets.Label;
 
-import model.CallFunctionAttribut;
+import tcxml.model.CallFunctionAttribut;
 
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
@@ -342,7 +342,7 @@ public static class CallFunctionViewModel {
 		
 		StepArgument ar;
 		try {
-			ar = ArgumentFactory.getArgumentForFUnction(functName, this);
+			ar = ArgumentViewFactory.getArgumentForFUnction(functName, this);
 			setArgumentView(ar);
 			controller.getLog().info("setting nw argument for function : " + functName);
 		} catch (TcXmlException e) {

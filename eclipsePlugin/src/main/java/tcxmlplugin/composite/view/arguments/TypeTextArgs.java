@@ -9,12 +9,13 @@ import tcxml.model.Step;
 
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
+import java.util.HashMap;
 
 import javax.json.JsonObject;
 
 import org.eclipse.swt.SWT;
 import tcxmlplugin.composite.view.TextInputView;
-import tcxmlplugin.model.ArgModel;
+import tcxml.model.ArgModel;
 
 import org.eclipse.swt.layout.GridData;
 
@@ -77,12 +78,12 @@ public class TypeTextArgs extends StepArgument {
 	}
 	
 	@Override
-	public void populate(String jsonargl) throws TcXmlException {
-		boolean isj=false;
+	public void populate(HashMap<String, ArgModel> argu) throws TcXmlException {
 		
-		super.populate(jsonargl);
-		typemodel.getText().populateFromJson(arg.getJsonObject("Value"));
-		textInputView.SetArgModel(typemodel.getText());
+		
+		super.populate(argu);
+	// 	typemodel.getText().populateFromJson(arg.getJsonObject("Value"));
+		textInputView.SetArgModel(argu.get("Value"));
 		
 
 	}

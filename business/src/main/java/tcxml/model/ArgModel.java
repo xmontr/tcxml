@@ -1,6 +1,8 @@
-package tcxmlplugin.model;
+package tcxml.model;
 
 import javax.json.JsonObject;
+import javax.json.JsonValue;
+import javax.json.JsonValue.ValueType;
 
 public class ArgModel extends AbstractModel{
 	
@@ -60,10 +62,29 @@ public class ArgModel extends AbstractModel{
 	}
 	
 	
-	public void populateFromJson( JsonObject src) {
-		
+	public void populateFromJson( JsonObject src) {		
+	JsonValue val = src.get("value")	;
+	ValueType ty = val.getValueType();
+	if(ty.equals(ty.STRING))
+	{
 		setValue(src.getJsonString("value").getString());
-		setIsJavascript( src.getBoolean("evalJavaScript",false));
+		setIsJavascript( src.getBoolean("evalJavaScript",false));		
+		
+	}
+	
+	if(ty.equals(ty.NUMBER))
+	{
+	Long loval = src.getJsonNumber("value").longValueExact();
+		setValue(loval.toString());
+		setIsJavascript( false);		
+		
+	}
+			
+		
+		
+	
+		
+
 	}
 	
 	

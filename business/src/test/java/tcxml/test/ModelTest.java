@@ -20,10 +20,10 @@ import org.junit.Test;
 
 import com.kscs.util.jaxb.BoundList;
 
-import model.Function;
 import tcxml.core.TcXmlController;
 import tcxml.core.TcXmlException;
 import tcxml.core.parameter.StepParameter;
+import tcxml.model.Function;
 import tcxml.model.Step;
 import tcxml.model.TestObject;
 import tcxml.model.TestObjects;

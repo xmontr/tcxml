@@ -33,7 +33,7 @@ import org.eclipse.swt.widgets.Listener;
 import tcxml.core.TcXmlException;
 import tcxmlplugin.composite.TcViewer;
 import tcxmlplugin.composite.stepViewer.StepViewer;
-import tcxmlplugin.model.ImportModel;
+import tcxml.model.ImportModel;
 import tcxmlplugin.nature.NatureTcXml;
 import util.TcxmlUtils;
 

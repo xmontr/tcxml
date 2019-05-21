@@ -1,4 +1,4 @@
-package tcxmlplugin.model;
+package tcxml.model;
 
 public class CommentModel extends AbstractModel {
 	

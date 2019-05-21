@@ -1,4 +1,4 @@
-package tcxmlplugin.model;
+package tcxml.model;
 
 public class VtcConnectArgModel extends AbstractModel{
 	

@@ -9,7 +9,7 @@ import org.eclipse.swt.widgets.Text;
 import tcxml.core.TcXmlException;
 import tcxmlplugin.TcXmlPluginController;
 import tcxmlplugin.TcXmlPluginException;
-import tcxmlplugin.model.ImportModel;
+import tcxml.model.ImportModel;
 
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.List;

@@ -7,7 +7,7 @@ import tcxml.core.TcXmlController;
 import tcxml.core.TcXmlException;
 import tcxml.model.Step;
 import tcxmlplugin.composite.StepView;
-import tcxmlplugin.model.CommentModel;
+import tcxml.model.CommentModel;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Group;

@@ -2,6 +2,7 @@ package tcxmlplugin.composite.view.arguments;
 
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
+import java.util.HashMap;
 
 import javax.json.JsonObject;
 
@@ -15,7 +16,7 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.swt.layout.GridData;
 import tcxmlplugin.composite.view.TextInputView;
-import tcxmlplugin.model.ArgModel;
+import tcxml.model.ArgModel;
 
 public class NavigateArgs extends StepArgument{
 	
@@ -68,11 +69,10 @@ public class NavigateArgs extends StepArgument{
 	
 	
 	@Override
-	public void populate(String jsonarg) throws TcXmlException {
+	public void populate(HashMap<String, ArgModel> argu) throws TcXmlException {
 		
-		super.populate(jsonarg);
-		navmodel.getLocation().populateFromJson(arg.getJsonObject("Location"));
-		textInputView.SetArgModel(navmodel.getLocation());
+		super.populate(argu);	
+		textInputView.SetArgModel(argu.get("Location"));
 
 	}
 	

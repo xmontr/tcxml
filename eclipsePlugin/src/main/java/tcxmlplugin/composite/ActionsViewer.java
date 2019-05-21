@@ -10,7 +10,7 @@ import tcxml.core.TcXmlException;
 import tcxml.model.Step;
 import tcxmlplugin.TcXmlPluginController;
 import tcxmlplugin.composite.stepViewer.MainStepContainer;
-import tcxmlplugin.model.ActionsModel;
+import tcxml.model.ActionsModel;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.SashForm;

@@ -1,48 +1,61 @@
-package tcxmlplugin.model;
+package tcxml.model;
 
 public class ForModel extends AbstractModel {
 	
 	
 	
 	
-	private String init;
+	private ArgModel init;
 	
-	private String condition;
+	private ArgModel condition;
 	
 	
-	private String increment ;
+	private ArgModel increment ;
+	
+	
+	
+	public ForModel() {
+		
+		
+		init = new ArgModel("init");
+		condition = new ArgModel("condition");
+		
+		increment = new ArgModel("increment");
+	}
+	
+	
 
 
-	public String getInit() {
+	public ArgModel getInit() {
 		return init;
 	}
 
 
-	public void setInit(String init) {
+	public void setInit(ArgModel init) {
 		propertyChangeSupport.firePropertyChange("init", this.init,
 				this.init = init);
 
 	}
 
 
-	public String getCondition() {
+	public ArgModel getCondition() {
 		return condition;
 	}
 
 
-	public void setCondition(String condition) {
+	public void setCondition(ArgModel condition) {
 		propertyChangeSupport.firePropertyChange("condition", this.condition,
 				this.condition = condition);
 		this.condition = condition;
 	}
 
 
-	public String getIncrement() {
+	public ArgModel getIncrement() {
 		return increment;
 	}
 
 
-	public void setIncrement(String increment) {
+	public void setIncrement(ArgModel increment) {
 		propertyChangeSupport.firePropertyChange("increment", this.increment,
 				this.increment = increment);
 		

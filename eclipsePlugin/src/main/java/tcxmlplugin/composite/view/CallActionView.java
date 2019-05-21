@@ -18,7 +18,7 @@ import tcxmlplugin.composite.StepView;
 import tcxmlplugin.composite.TcViewer;
 import tcxmlplugin.composite.stepViewer.StepContainer;
 import tcxmlplugin.composite.stepViewer.StepViewer;
-import tcxmlplugin.model.ActionsModel;
+import tcxml.model.ActionsModel;
 
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Label;

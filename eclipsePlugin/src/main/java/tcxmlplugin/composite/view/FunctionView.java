@@ -20,7 +20,7 @@ import org.eclipse.swt.widgets.ExpandItem;
 
 import com.kscs.util.jaxb.BoundList;
 
-import model.Function;
+import tcxml.model.Function;
 import tcxml.core.PlayingContext;
 import tcxml.core.TcXmlController;
 import tcxml.core.TcXmlException;

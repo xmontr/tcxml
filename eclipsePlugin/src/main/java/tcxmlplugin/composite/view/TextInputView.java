@@ -4,7 +4,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Text;
 
-import tcxmlplugin.model.ArgModel;
+import tcxml.model.ArgModel;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.MenuEvent;
@@ -149,7 +149,7 @@ public class TextInputView extends Composite implements SelectionListener{
 		
 	}
 
-	public  void  setJavascript(boolean isj) {
+	private  void  setJavascript(boolean isj) {
 		inputtextmodel.setJavascript(isj);
 		if(isj == true) {
 			displayButton.setText(mntmJs.getText());
@@ -161,7 +161,7 @@ public class TextInputView extends Composite implements SelectionListener{
 		
 	}
 
-	public  void setInputData(String inputData) {
+	private  void setInputData(String inputData) {
 		inputtextmodel.setInputData(inputData);
 		
 	}

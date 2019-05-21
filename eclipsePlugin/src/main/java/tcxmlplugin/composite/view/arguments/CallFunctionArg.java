@@ -1,6 +1,7 @@
 package tcxmlplugin.composite.view.arguments;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Set;
 
@@ -11,7 +12,7 @@ import org.eclipse.swt.widgets.Composite;
 
 import tcxml.core.TcXmlException;
 import tcxmlplugin.composite.view.TextInputView;
-import tcxmlplugin.model.ArgModel;
+import tcxml.model.ArgModel;
 
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Label;
@@ -19,7 +20,7 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.wb.swt.SWTResourceManager;
 
-import model.CallFunctionAttribut;
+import tcxml.model.CallFunctionAttribut;
 
 public class CallFunctionArg extends StepArgument {
 	
@@ -46,23 +47,25 @@ public class CallFunctionArg extends StepArgument {
 	
 	
 	@Override
-	public void populate(String jsonArg) throws TcXmlException {
+	public void populate(HashMap<String, ArgModel> argu) throws TcXmlException {
 		// TODO Auto-generated method stub
-		super.populate(jsonArg);
+		super.populate(argu);
 		
 		
-	Set<String> keys = arg.keySet();
+	Set<String> keys = argu.keySet();
 	for (String key : keys) {
 		
 	
 		
 		
-		JsonObject att  = arg.getJsonObject(key);
+	 ArgModel att = argu.get(key);
 		
 		
-		 JsonString val = att.getJsonString("value");		
-		Boolean evalJavaScript = att.getBoolean("evalJavaScript", false);
-		CallFunctionAttribut callatt = new CallFunctionAttribut(key,val.getString(),evalJavaScript);
+		String val = att.getValue();		
+		Boolean evalJavaScript = att.getIsJavascript();
+		
+		
+		CallFunctionAttribut callatt = new CallFunctionAttribut(key,val,evalJavaScript);
 		
 		
 		

@@ -8,7 +8,7 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
 
 import tcxmlplugin.TcXmlPluginController;
-import tcxmlplugin.model.ProjectTcxmlModel;
+import tcxml.model.ProjectTcxmlModel;
 
 import org.eclipse.core.databinding.Binding;
 import org.eclipse.core.databinding.DataBindingContext;

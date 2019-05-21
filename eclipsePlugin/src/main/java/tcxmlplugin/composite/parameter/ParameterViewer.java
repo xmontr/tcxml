@@ -6,7 +6,7 @@ import tcxml.core.TcXmlController;
 import tcxml.core.TcXmlException;
 import tcxml.core.parameter.StepParameter;
 import tcxmlplugin.TcXmlPluginController;
-import tcxmlplugin.model.ParameterViewerModel;
+import tcxml.model.ParameterViewerModel;
 
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Group;

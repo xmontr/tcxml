@@ -3,11 +3,14 @@ package tcxmlplugin.composite.view.arguments.vts;
 import org.eclipse.swt.widgets.Composite;
 
 import tcxmlplugin.composite.view.arguments.StepArgument;
-import tcxmlplugin.model.VtcConnectArgModel;
+import tcxml.model.ArgModel;
+import tcxml.model.VtcConnectArgModel;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Label;
 
 import tcxml.core.TcXmlException;
+
+import java.util.HashMap;
 
 import javax.json.JsonObject;
 
@@ -51,26 +54,18 @@ public class VtcConnectArgView extends StepArgument{
 	}
 	
 	@Override
-	public void populate(String jsonArg) throws TcXmlException {
+	public void populate(HashMap<String, ArgModel> argu) throws TcXmlException {
 		// TODO Auto-generated method stub
-		super.populate(jsonArg);
-		// server value		
-		model.getServer().populateFromJson(arg.getJsonObject("serverName"));
-		// port value
-		model.getPort().populateFromJson(arg.getJsonObject("port"));
-		// Variable value
-		model.getVariable().populateFromJson(arg.getJsonObject("Variable"));
-		// vtsname value
-		model.getVtsName().populateFromJson(arg.getJsonObject("vtsName"));
+		super.populate(argu);
+
 		
+		nameInput.SetArgModel(argu.get("serverName"));
 		
-		nameInput.SetArgModel(model.getVtsName());
+		porttInput.SetArgModel(argu.get("port"));
 		
-		porttInput.SetArgModel(model.getPort());
-		
-		variableInput.SetArgModel(model.getVariable());
+		variableInput.SetArgModel(argu.get("Variable"));
 		;
-		serverInput.SetArgModel(model.getServer());
+		serverInput.SetArgModel(argu.get("vtsName"));
 		
 		
 		

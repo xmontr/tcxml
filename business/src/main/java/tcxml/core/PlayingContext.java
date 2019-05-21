@@ -9,7 +9,7 @@ import java.util.Map.Entry;
 import javax.script.Bindings;
 import javax.script.ScriptContext;
 
-import model.CallFunctionAttribut;
+import tcxml.model.CallFunctionAttribut;
 
 public class PlayingContext {
 	

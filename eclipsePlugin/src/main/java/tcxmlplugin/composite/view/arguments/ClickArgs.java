@@ -2,6 +2,7 @@ package tcxmlplugin.composite.view.arguments;
 
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
+import java.util.HashMap;
 
 import javax.json.JsonObject;
 
@@ -12,7 +13,9 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Text;
 
 import tcxml.core.TcXmlException;
+import tcxml.model.ArgModel;
 import tcxml.model.Step;
+import tcxmlplugin.composite.view.TextInputView;
 
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.core.databinding.DataBindingContext;
@@ -28,80 +31,80 @@ public class ClickArgs extends StepArgument{
 		
 		private PropertyChangeSupport propertyChangeSupport;
 		
-		private long xcoordinate;
+		private ArgModel xcoordinate;
 		
-		private String button;
+		private ArgModel button;
 		
 		
-		private String ctrlkey;
+		private ArgModel ctrlkey;
 		
-		public String getButton() {
+		public ArgModel getButton() {
 			return button;
 		}
 
-		public void setButton(String button) {
+		public void setButton(ArgModel button) {
 			propertyChangeSupport.firePropertyChange("button", this.button,
 					this.button = button);
 			;
 		}
 
-		public String getCtrlkey() {
+		public ArgModel getCtrlkey() {
 			return ctrlkey;
 		}
 
-		public void setCtrlkey(String ctrlkey) {
+		public void setCtrlkey(ArgModel ctrlkey) {
 			propertyChangeSupport.firePropertyChange("ctrlkey", this.ctrlkey,
 					this.ctrlkey = ctrlkey);
 			
 		}
 
-		public String getAltkey() {
+		public ArgModel getAltkey() {
 			return altkey;
 		}
 
-		public void setAltkey(String altkey) {
+		public void setAltkey(ArgModel altkey) {
 			propertyChangeSupport.firePropertyChange("altkey", this.altkey,
 					this.altkey = altkey);
 			
 		}
 
-		public String getShiftkey() {
+		public ArgModel getShiftkey() {
 			return shiftkey;
 		}
 
-		public void setShiftkey(String shiftkey) {
+		public void setShiftkey(ArgModel shiftkey) {
 			propertyChangeSupport.firePropertyChange("shiftkey", this.shiftkey,
 					this.shiftkey = shiftkey);
 			;
 		}
 
-		private String altkey ;
+		private ArgModel altkey ;
 		
 		
-		private String shiftkey ;
+		private ArgModel shiftkey ;
 		
 		
 		
-		public long getXcoordinate() {
+		public ArgModel getXcoordinate() {
 			return xcoordinate;
 		}
 
-		public void setXcoordinate(long xcoordinate) {
+		public void setXcoordinate(ArgModel xcoordinate) {
 			propertyChangeSupport.firePropertyChange("xcoordinate", this.xcoordinate,
 					this.xcoordinate = xcoordinate);
 			
 		}
 
-		public long getYcoordinate() {
+		public ArgModel getYcoordinate() {
 			return ycoordinate;
 		}
 
-		public void setYcoordinate(long ycoordinate) {
+		public void setYcoordinate(ArgModel ycoordinate) {
 			propertyChangeSupport.firePropertyChange("ycoordinate", this.ycoordinate,
 					this.ycoordinate = ycoordinate);
 		}
 
-		private long ycoordinate ;
+		private ArgModel ycoordinate ;
 		
 		
 		
@@ -109,6 +112,16 @@ public class ClickArgs extends StepArgument{
 public ClickArgModel() {
 			
 			propertyChangeSupport = new PropertyChangeSupport(this);
+			
+			altkey = new ArgModel("Alt Key");
+			button = new ArgModel("Button");
+			ctrlkey = new ArgModel("Ctrl Key");
+			shiftkey = new ArgModel("Shift Key");
+			xcoordinate = new ArgModel("X Coordinate");
+			ycoordinate = new ArgModel("Y Coordinate");
+			
+			
+			
 			
 		}
 		
@@ -128,12 +141,12 @@ public ClickArgModel() {
 	
 	
 	private ClickArgModel clickmodel;
-	private Text textButton;
-	private Text textXcoor;
-	private Text textYcoor;
-	private Text text_CtrlKey;
-	private Text text_AltKey;
-	private Text text_ShiftKey;
+	private TextInputView textButton;
+	private TextInputView textXcoor;
+	private TextInputView textYcoor;
+	private TextInputView text_CtrlKey;
+	private TextInputView text_AltKey;
+	private TextInputView text_ShiftKey;
 	
 	
 	
@@ -146,52 +159,82 @@ public ClickArgModel() {
 		lblButton.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
 		lblButton.setText("button");
 		
-		textButton = new Text(this, SWT.BORDER);
+		textButton = new TextInputView(this, SWT.BORDER);
 		textButton.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		
 		Label lblXcoor = new Label(this, SWT.NONE);
 		lblXcoor.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
 		lblXcoor.setText("X coordinate");
 		
-		textXcoor = new Text(this, SWT.BORDER);
+		textXcoor = new TextInputView(this, SWT.BORDER);
 		textXcoor.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		
 		Label lblNewLabel = new Label(this, SWT.NONE);
 		lblNewLabel.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
 		lblNewLabel.setText("Y coordinate");
 		
-		textYcoor = new Text(this, SWT.BORDER);
+		textYcoor = new TextInputView(this, SWT.BORDER);
 		textYcoor.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		
 		Label lblCtrlKey = new Label(this, SWT.NONE);
 		lblCtrlKey.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
 		lblCtrlKey.setText("Ctrl Key");
 		
-		text_CtrlKey = new Text(this, SWT.BORDER);
+		text_CtrlKey = new TextInputView(this, SWT.BORDER);
 		text_CtrlKey.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		
 		Label lblAltkey = new Label(this, SWT.NONE);
 		lblAltkey.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
 		lblAltkey.setText("Altkey");
 		
-		text_AltKey = new Text(this, SWT.BORDER);
+		text_AltKey = new TextInputView(this, SWT.BORDER);
 		text_AltKey.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		
 		Label lblShiftKey = new Label(this, SWT.NONE);
 		lblShiftKey.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
 		lblShiftKey.setText("Shift Key");
 		
-		text_ShiftKey = new Text(this, SWT.BORDER);
+		text_ShiftKey = new TextInputView(this, SWT.BORDER);
 		text_ShiftKey.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
-		m_bindingContext = initDataBindings();
+		
 		
 		
 	}
 	
-	@Override
-	public void populate(String jsonarg) throws TcXmlException {
+	private ArgModel nonEmptyArg(HashMap<String, ArgModel> argu , String name ) {
+		ArgModel ret = argu.get(name);
+		if( ret == null) {
+			
+			ret = new ArgModel(name);
+			ret.setValue("");
+			
+		}
 		
-		super.populate(jsonarg);
+		
+		
+		return ret;
+		
+		
+	}
+	
+	
+	
+	@Override
+	public void populate(HashMap<String, ArgModel> argu) throws TcXmlException {
+		
+		super.populate(argu);
+		
+		
+		text_AltKey.SetArgModel(nonEmptyArg(argu,"Alt Key"));
+		text_CtrlKey.SetArgModel(nonEmptyArg(argu,"Ctrl Key"));
+		text_ShiftKey.SetArgModel(nonEmptyArg(argu,"Shift Key"));
+		textButton.SetArgModel(nonEmptyArg(argu,"Button"));
+		textXcoor.SetArgModel(nonEmptyArg(argu,"X Coordinate"));
+		textYcoor.SetArgModel(nonEmptyArg(argu,"Y Coordinate"));
+		
+		
+		/*
+		
 		long xcoor=0;
 		long ycoor=0;
 		String button="left";
@@ -232,35 +275,10 @@ public ClickArgModel() {
 		clickmodel.setShiftkey(shiftkey);
 		clickmodel.setXcoordinate(xcoor);
 		clickmodel.setYcoordinate(ycoor);
+		
+		
+		*/
 	
 	}
-	protected DataBindingContext initDataBindings() {
-		DataBindingContext bindingContext = new DataBindingContext();
-		//
-		IObservableValue observeTextTextButtonObserveWidget = WidgetProperties.text(SWT.Modify).observe(textButton);
-		IObservableValue buttonClickmodelObserveValue = BeanProperties.value("button").observe(clickmodel);
-		bindingContext.bindValue(observeTextTextButtonObserveWidget, buttonClickmodelObserveValue, null, null);
-		//
-		IObservableValue observeTextTextXcoorObserveWidget = WidgetProperties.text(SWT.Modify).observe(textXcoor);
-		IObservableValue xcoordinateClickmodelObserveValue = BeanProperties.value("xcoordinate").observe(clickmodel);
-		bindingContext.bindValue(observeTextTextXcoorObserveWidget, xcoordinateClickmodelObserveValue, null, null);
-		//
-		IObservableValue observeTextTextYcoorObserveWidget = WidgetProperties.text(SWT.Modify).observe(textYcoor);
-		IObservableValue ycoordinateClickmodelObserveValue = BeanProperties.value("ycoordinate").observe(clickmodel);
-		bindingContext.bindValue(observeTextTextYcoorObserveWidget, ycoordinateClickmodelObserveValue, null, null);
-		//
-		IObservableValue observeTextText_CtrlKeyObserveWidget = WidgetProperties.text(SWT.Modify).observe(text_CtrlKey);
-		IObservableValue ctrlkeyClickmodelObserveValue = BeanProperties.value("ctrlkey").observe(clickmodel);
-		bindingContext.bindValue(observeTextText_CtrlKeyObserveWidget, ctrlkeyClickmodelObserveValue, null, null);
-		//
-		IObservableValue observeTextText_AltKeyObserveWidget = WidgetProperties.text(SWT.Modify).observe(text_AltKey);
-		IObservableValue altkeyClickmodelObserveValue = BeanProperties.value("altkey").observe(clickmodel);
-		bindingContext.bindValue(observeTextText_AltKeyObserveWidget, altkeyClickmodelObserveValue, null, null);
-		//
-		IObservableValue observeTextText_ShiftKeyObserveWidget = WidgetProperties.text(SWT.Modify).observe(text_ShiftKey);
-		IObservableValue shiftkeyClickmodelObserveValue = BeanProperties.value("shiftkey").observe(clickmodel);
-		bindingContext.bindValue(observeTextText_ShiftKeyObserveWidget, shiftkeyClickmodelObserveValue, null, null);
-		//
-		return bindingContext;
-	}
+
 }

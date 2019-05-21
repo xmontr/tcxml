@@ -4,7 +4,7 @@ import java.util.List;
 
 import javax.script.ScriptContext;
 
-import model.CallFunctionAttribut;
+import tcxml.model.CallFunctionAttribut;
 
 public class ExecutionContext {
 	

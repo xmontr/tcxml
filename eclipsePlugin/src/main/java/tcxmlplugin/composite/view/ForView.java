@@ -12,7 +12,7 @@ import tcxmlplugin.composite.stepViewer.StepContainer;
 import tcxmlplugin.composite.stepViewer.StepViewer;
 import tcxmlplugin.composite.stepViewer.StepViewerFactory;
 import tcxmlplugin.job.MultipleStepRunner;
-import tcxmlplugin.model.ForModel;
+import tcxml.model.ForModel;
 
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Label;
@@ -223,31 +223,22 @@ public class ForView extends StepView  implements StepContainer, ExpandListener 
 	}
 	
 	public void populate(Step mo) throws TcXmlException {
-		// add argument of the for loop
+		super.populate(mo);
 		arg = controller.readJsonObject(mo.getArguments());
 		
- initString = readArgValue("Init");
- conditionString = readArgValue("Condition");
- incrementString = readArgValue("Increment");
- 
- formodel.setCondition(conditionString);
- formodel.setIncrement(incrementString);
- formodel.setInit(initString);
- 
- 
- conditionTxt.setJavascript(true);
- conditionTxt.setInputData(conditionString);
- incrementTxt.setJavascript(true);
- incrementTxt.setInputData(incrementString);
- 
- initText.setJavascript(true);
- initText.setInputData(initString);
+		formodel.getInit().populateFromJson(arg.getJsonObject("Init"));
+		formodel.getCondition().populateFromJson(arg.getJsonObject("Condition"));
+		formodel.getIncrement().populateFromJson(arg.getJsonObject("Increment"));
+		
+initText.SetArgModel(formodel.getInit());
+conditionTxt.SetArgModel(formodel.getCondition());
+incrementTxt.SetArgModel(formodel.getIncrement());
 			
 		
 		// {"Init":{"value":"var i = 0","evalJavaScript":true},"Condition":{"value":"i < 1","evalJavaScript":true},"Increment":{"value":"i++","evalJavaScript":true}}
 		
 	
-		super.populate(mo);
+		
 		// add cildren
 		BoundList<Step> li = mo.getStep();
 		//firdt dtep is block interval, skip it

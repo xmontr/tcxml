@@ -23,7 +23,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
 
-import model.CallFunctionAttribut;
+import tcxml.model.CallFunctionAttribut;
 import tcxml.core.PlayingContext;
 import tcxml.core.TcXmlController;
 import tcxml.core.TcXmlException;
@@ -33,7 +33,7 @@ import tcxmlplugin.TcXmlPluginController;
 
 import tcxmlplugin.composite.stepViewer.MainStepContainer;
 import tcxmlplugin.composite.stepViewer.StepViewer;
-import tcxmlplugin.model.LibraryModel;
+import tcxml.model.LibraryModel;
 
 public class LibraryViewer extends Composite {
 	

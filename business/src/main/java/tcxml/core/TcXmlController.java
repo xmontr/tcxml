@@ -69,9 +69,10 @@ import jdk.nashorn.api.scripting.JSObject;
 
 import com.kscs.util.jaxb.BoundList;
 
-import model.CallFunctionAttribut;
-import model.Function;
 import tcxml.core.parameter.StepParameter;
+import tcxml.model.ArgModel;
+import tcxml.model.CallFunctionAttribut;
+import tcxml.model.Function;
 import tcxml.model.Ident;
 import tcxml.model.ObjectFactory;
 import tcxml.model.Step;
@@ -236,6 +237,35 @@ public class TcXmlController {
     return ret;
     	
     }
+	
+	
+	
+	public  HashMap<String, ArgModel> getArguments(String src) throws TcXmlException{
+		
+		HashMap<String, ArgModel> ret = new HashMap<String, ArgModel>() ;
+		JsonObject arg = this.readJsonObject(src);
+		Set<String> keys = arg.keySet();
+		for (String key : keys) {
+		
+			addArgument(ret, src, key);
+		}
+
+		
+		return ret;
+		
+	}
+	
+	
+	private  void addArgument(HashMap<String, ArgModel> li , String src, String name  ) throws TcXmlException {
+		
+		JsonObject arg = this.readJsonObject(src);		
+		ArgModel p = new ArgModel(name);				
+		p.populateFromJson(arg.getJsonObject(name));
+		li.put( name,p);
+		
+		
+	}
+	
     
     
     

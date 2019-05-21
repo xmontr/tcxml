@@ -12,9 +12,9 @@ import tcxml.core.TcXmlException;
 import tcxml.model.Step;
 import tcxmlplugin.TcXmlPluginController;
 import tcxmlplugin.composite.StepView;
-import tcxmlplugin.composite.view.arguments.ArgumentFactory;
+import tcxmlplugin.composite.view.arguments.ArgumentViewFactory;
 import tcxmlplugin.composite.view.arguments.StepArgument;
-import tcxmlplugin.model.GenericAPIModel;
+import tcxml.model.GenericAPIModel;
 
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Group;
@@ -131,7 +131,7 @@ public class GenericAPIStepView extends StepView implements PropertyChangeListen
 			String newmethod = (String) evt.getNewValue();
 			StepArgument ar;
 			try {
-				ar = ArgumentFactory.getArgumentForGenericApi(newmethod, genericapimodel.getSelectedCategory(), this);
+				ar = ArgumentViewFactory.getArgumentForGenericApi(newmethod, genericapimodel.getSelectedCategory(), this);
 				setArgumentView(ar);
 				controller.getLog().info("setting nw argument for method : " + newmethod);
 			} catch (TcXmlException e) {

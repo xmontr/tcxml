@@ -20,9 +20,9 @@ import tcxml.model.TestObject;
 import tcxml.model.TruLibrary;
 import tcxmlplugin.TcXmlPluginController;
 import tcxmlplugin.composite.StepView;
-import tcxmlplugin.composite.view.arguments.ArgumentFactory;
+import tcxmlplugin.composite.view.arguments.ArgumentViewFactory;
 import tcxmlplugin.composite.view.arguments.StepArgument;
-import tcxmlplugin.model.AbstractModel;
+import tcxml.model.AbstractModel;
 
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.SWT;
@@ -257,7 +257,7 @@ public class TestObjectView extends StepView implements PropertyChangeListener {
 		String newAction = (String) evt.getNewValue();
 		StepArgument ar;
 		try {
-			ar = ArgumentFactory.getArgumentForTestObject(newAction, this);
+			ar = ArgumentViewFactory.getArgumentForTestObject(newAction, this);
 			setArgumentView(ar);
 			controller.getLog().info("setting nw action for step : " + newAction);
 		} catch (TcXmlException e) {

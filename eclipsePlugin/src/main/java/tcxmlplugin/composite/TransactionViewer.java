@@ -3,7 +3,7 @@ package tcxmlplugin.composite;
 import org.eclipse.swt.widgets.Composite;
 
 import tcxml.core.TcXmlController;
-import tcxmlplugin.model.TransactionEditorModel;
+import tcxml.model.TransactionEditorModel;
 
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Group;
