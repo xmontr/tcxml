@@ -56,6 +56,7 @@ public class PanelImportComposite extends Composite {
 	
 	private String tcName;
 	private List snapshotlist;
+	private List extraFileslist;
 	
 	
 	
@@ -106,8 +107,12 @@ public class PanelImportComposite extends Composite {
 		
 		parametersList = new List(this, SWT.BORDER);
 		parametersList.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
-		new Label(this, SWT.NONE);
-		new Label(this, SWT.NONE);
+		
+		Label lblExtrafiles = new Label(this, SWT.NONE);
+		lblExtrafiles.setText("ExtraFiles");
+		
+		extraFileslist = new List(this, SWT.BORDER);
+		extraFileslist.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		
 		Label lblSnapshots = new Label(this, SWT.NONE);
 		lblSnapshots.setText("snapshots:");
@@ -181,6 +186,9 @@ public class PanelImportComposite extends Composite {
 		
 		java.util.List<String> listsnap = TcXmlPluginController.getInstance().getSnapshots(selectedDirectory);
 		model.setSnapshots(listsnap);
+		
+		java.util.List<String> listextrafiles = TcXmlPluginController.getInstance().getExtraFiles(selectedDirectory);
+		model.setExtrafiles(listextrafiles);
 	
 	}
 	protected DataBindingContext initDataBindings() {
@@ -202,6 +210,9 @@ public class PanelImportComposite extends Composite {
 		IObservableList snapshotsModelObserveList = BeanProperties.list("snapshots").observe(model);
 		bindingContext.bindList(itemsSnapshotlistObserveWidget, snapshotsModelObserveList, null, null);
 		//
+		IObservableList itemsExtraFileslistObserveWidget = WidgetProperties.items().observe(extraFileslist);
+		IObservableList extraFilesModelObserveList = BeanProperties.list("extrafiles").observe(model);
+		bindingContext.bindList(itemsExtraFileslistObserveWidget, extraFilesModelObserveList, null, null);
 		return bindingContext;
 	}
 }

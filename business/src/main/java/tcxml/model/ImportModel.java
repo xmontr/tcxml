@@ -27,7 +27,33 @@ public class ImportModel extends AbstractModel {
 	
 	private List<String> snapshots;
 	
+	private List<String> extrafiles ; 
 	
+	
+	public List<String> getExtrafiles() {
+		return extrafiles;
+	}
+
+
+
+
+
+
+
+
+	public void setExtrafiles(List<String> extrafiles) {
+		propertyChangeSupport.firePropertyChange("extrafiles", this.extrafiles,
+				this.extrafiles = extrafiles);
+		
+	}
+
+
+
+
+
+
+
+
 	public String getMainScript() {
 		return mainScript;
 	}

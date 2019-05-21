@@ -404,10 +404,13 @@ public class TcXmlPluginController
     IFolder newtc = testcasefolder.getFolder(name);
     IFolder libfolder = newtc.getFolder("Libraries");
     IFolder snapshotfolder= newtc.getFolder("snapshots");
+    IFolder extraFilesfolder= newtc.getFolder("extraFiles");
 	try {
 		newtc .create(true, true, null);
 		libfolder.create(true, true, null);
 		snapshotfolder.create(true, true, null);
+		extraFilesfolder.create(true, true, null);
+		
 	    QualifiedName key = new QualifiedName("tcxmlplug", "folderType");
 	    newtc.setPersistentProperty(key , TESTCASE_FOLDER);
 	    libfolder.setPersistentProperty(key , TESTCASE_LIB);
@@ -434,6 +437,16 @@ public class TcXmlPluginController
 		
 		
 	}
+	
+	
+	private IFolder getExtraFilesFolder(IFolder testcase) {
+		
+		 IFolder libfolder = testcase.getFolder("extraFiles");
+		 return libfolder;
+		
+		
+	}
+	
 
 	public boolean isAlreadyExistingTestCase(String el, IFolder targetFolder) {
 		
@@ -552,6 +565,7 @@ return ret;
 		importParameters( model.getParameters(),  currentProject,  newTC,monitor);
 		importLibrary( model.getLibraries(),  currentProject,  newTC,monitor);
 		importSnapshot(model.getSnapshots(),currentProject,  newTC,monitor);
+		importExtraFiles(model.getExtrafiles(), currentProject, testCaseFolder, monitor);
 		
 	}
 
@@ -582,17 +596,41 @@ return ret;
 			
 			
 			
-		}
-		
-		
-		
-		
-		
-		
-		
-		
-		
+		}		
 	}
+	
+	
+	private void importExtraFiles(List<String> snapshots, IProject currentProject, IFolder testCaseFolder,
+			IProgressMonitor monitor) throws FileNotFoundException, CoreException {
+		
+	for (String snap : snapshots) {
+			
+			IFolder extrapathfolder = getExtraFilesFolder(testCaseFolder);
+			
+			String filename = new Path(snap).lastSegment();
+			
+			File source = new File(snap);
+		 
+	
+			
+			
+			
+			IFile thefile = extrapathfolder.getFile(filename);		
+			
+			InputStream in = new FileInputStream(source);
+			thefile.create(in, true, monitor);
+			this.info("extra file " + filename + " imported");
+			
+			
+			
+		}		
+	}
+	
+	
+	
+	
+	
+	
 
 	private IFolder getSnapshotFolder(IFolder testCaseFolder) {
 		 IFolder libfolder = testCaseFolder.getFolder("snapshots");
@@ -726,6 +764,37 @@ public Image createImage(String absolutepath, Display display) throws TcXmlExcep
 		
 		
 	}
+
+public List<String> getExtraFiles(String selectedDirectory) throws TcXmlPluginException {
+	List<String> ret =new ArrayList<String>() ;
+	IPath mainpath = new Path(selectedDirectory);
+	String dirname = mainpath.lastSegment();
+	IPath usrpath = mainpath.append("/").append(dirname  + ".usr");
+	File usrfile = usrpath.toFile() ;
+	
+	if(usrfile.exists()) {
+		
+	try {
+	List<String> li = TcxmlUtils.listExtraFilesinUsrfiles(usrfile);
+	for (String foundedfile : li) {
+		ret.add(foundedfile);
+		
+	}
+		
+		
+		
+	} catch (TcXmlException e) {
+		throw new TcXmlPluginException("failure when processing usr file " + usrpath, e);
+		
+	
+	}
+		
+	}
+	
+	
+	
+	return ret;
+}
 	
 	
 

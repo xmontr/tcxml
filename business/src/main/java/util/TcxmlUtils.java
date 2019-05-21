@@ -87,6 +87,40 @@ public class TcxmlUtils {
 	return ret;	
 	}
 	
+	
+	public static List<String> listExtraFilesinUsrfiles(File usrFile) throws TcXmlException {
+		
+		
+		
+		
+		ArrayList<String> ret = new ArrayList<String>() ;
+		
+		HierarchicalINIConfiguration conf;
+		try {
+			conf = new HierarchicalINIConfiguration(usrFile);
+		} catch (ConfigurationException e) {
+		throw new TcXmlException("unable to parse usr config file", e);
+		}
+		
+		SubnodeConfiguration se =	conf.getSection("ManuallyExtraFiles");
+		
+		
+		Iterator keys = se.getKeys();
+		while (keys.hasNext()) {
+			String file = (String) keys.next();
+			String basedir = usrFile.getParentFile().getAbsolutePath() + File.separator;
+			ret.add(basedir + file );			 // bug 2 points in string
+		}		
+	return ret;	
+	}
+	
+	
+	
+	
+	
+	
+	
+	
 	/**
 	 * 
 	 *  root tag for xml file doesn't contain always a namespace. prevent jaxb from mapping to java classes.

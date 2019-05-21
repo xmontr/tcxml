@@ -8,7 +8,7 @@ import tcxmlplugin.composite.view.CallFunctionView;
 import tcxmlplugin.composite.view.GenericAPIStepView;
 import tcxmlplugin.composite.view.arguments.tc.TlcLogArgView;
 import tcxmlplugin.composite.view.arguments.vts.VtcConnectArgView;
-import tcxml.core.ArgumentFactory;
+
 
 
 public class ArgumentViewFactory {
