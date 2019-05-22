@@ -68,7 +68,16 @@ public class ArgModel extends AbstractModel{
 	if(ty.equals(ty.STRING))
 	{
 		setValue(src.getJsonString("value").getString());
-		setIsJavascript( src.getBoolean("evalJavaScript",false));		
+		if(src.containsKey("evalJavaScript")) {
+			setIsJavascript( src.getBoolean("evalJavaScript",false));
+			
+		}
+		else {
+		setIsJavascript(false);	
+			
+		}
+		
+			
 		
 	}
 	

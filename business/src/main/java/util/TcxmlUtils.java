@@ -109,7 +109,7 @@ public class TcxmlUtils {
 		while (keys.hasNext()) {
 			String file = (String) keys.next();
 			String basedir = usrFile.getParentFile().getAbsolutePath() + File.separator;
-			ret.add(basedir + file );			 // bug 2 points in string
+			ret.add(basedir + fixBugInName(file ) );			 // bug 2 points in string
 		}		
 	return ret;	
 	}
@@ -121,6 +121,14 @@ public class TcxmlUtils {
 	
 	
 	
+	private static String fixBugInName(String file) {
+		// remove .. in the string
+		
+		
+		return file.replaceFirst("\\.\\.", "\\.");
+	}
+
+
 	/**
 	 * 
 	 *  root tag for xml file doesn't contain always a namespace. prevent jaxb from mapping to java classes.

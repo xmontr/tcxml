@@ -1,0 +1,123 @@
+[General]
+Type=TruClientWeb
+DefaultCfg=default.cfg
+MajorVersion=12
+MinorVersion=61
+ParameterFile=tcAll_esubmission_final.prm
+GlobalParameterFile=
+NewFunctionHeader=1
+LastActiveAction=Action
+DevelopTool=Vugen
+LastModifyVer=12.61.0.971
+ActiveTypes=TruClientWeb
+AdditionalTypes=TruClientWeb
+GenerateTypes=TruClientWeb
+ParamLeftBrace={
+ParamRightBrace=}
+ScriptLanguage=C
+RunType=cci
+LastCodeGenerationVer=12.61.0.971
+DisableRegenerate=0
+Encoding=
+Description=
+ScriptLocale=en-GB
+[Actions]
+vuser_init=vuser_init.c
+Lib-View=Lib-View.c
+Action=Action.c
+BT01=BT01.c
+BT03=BT03.c
+vuser_end=vuser_end.c
+[VisibleActions]
+Lib-View=1
+vuser_init=1
+Action=1
+BT01=1
+BT03=1
+vuser_end=1
+[VuserProfiles]
+Profiles=Default Profile
+[CfgFiles]
+"Default Profile"=default.cfg
+[RunLogicFiles]
+"Default Profile"=default.usp
+[ExtraFiles]
+C-functions.c=
+globals.h=
+JS-functions.js=
+[Interpreters]
+vuser_init=no
+Lib-View=no
+Action=no
+BT01=no
+BT03=no
+vuser_end=no
+[Recorded Actions]
+vuser_init=0
+Lib-View=1
+Action=0
+BT01=0
+BT03=0
+vuser_end=0
+[Modified Actions]
+vuser_init=0
+Lib-View=0
+Action=0
+BT01=0
+BT03=0
+vuser_end=0
+[Replayed Actions]
+vuser_init=1
+Lib-View=1
+Action=1
+BT01=1
+BT03=1
+vuser_end=1
+[TransactionsOrder]
+Order="BT01 A06 New Party__*delimiter*__BT01 A07 Role Search__*delimiter*__BT01 A08 Role Select__*delimiter*__BT01 A09 DeclarationHonourUpload__*delimiter*__BT01 A10 Done__*delimiter*__BT01 A00 ECAS Login Homepage__*delimiter*__BT01 A01 ECAS Next__*delimiter*__BT01 A02 ECAS Login Esubmission Homepage__*delimiter*__BT01 A03 Terms&Conditions__*delimiter*__BT01 A04 New Tender__*delimiter*__BT01 A05 Next__*delimiter*__BT01 A11 Next__*delimiter*__BT03 A03 Add Financial Attachment__*delimiter*__BT03 A04 Add Technical Attachment__*delimiter*__BT03 A05 Save__*delimiter*__BT03 A01 Select Tender Draft__*delimiter*__BT03 A00 Terms&Conditions__*delimiter*__BT03 A02 Selected Lots Next__*delimiter*__BT03 A06 Next__*delimiter*__BT03 A07 Download Tender__*delimiter*__BT03 A08 Upload Signed Tender__*delimiter*__BT03 A09 Next__*delimiter*__BT03 A10 Submit"
+[StateManagement]
+LastReplayStatus=1
+[ActiveReplay]
+LastReplayedRunName=result1
+ActiveRunName=
+[ManuallyExtraFiles]
+declarationhonour1.pdf=
+declarationhonour2.pdf=
+declarationhonour3.pdf=
+financialguide1.pdf=
+financialguide2.pdf=
+financialguide3.pdf=
+SignedTenderReport.pdf=
+technicalguide1.pdf=
+technicalguide2.pdf=
+technicalguide3.pdf=
+[Transactions]
+"BT01 A06 New Party"=
+"BT01 A07 Role Search"=
+"BT01 A08 Role Select"=
+"BT01 A09 DeclarationHonourUpload"=
+"BT01 A10 Done"=
+"BT01 A00 ECAS Login Homepage"=
+"BT01 A01 ECAS Next"=
+"BT01 A02 ECAS Login Esubmission Homepage"=
+"BT01 A03 Terms&Conditions"=
+"BT01 A04 New Tender"=
+"BT01 A05 Next"=
+"BT01 A11 Next"=
+"BT03 A03 Add Financial Attachment"=
+"BT03 A04 Add Technical Attachment"=
+"BT03 A05 Save"=
+"BT03 A01 Select Tender Draft"=
+"BT03 A00 Terms&Conditions"=
+"BT03 A02 Selected Lots Next"=
+"BT03 A06 Next"=
+"BT03 A07 Download Tender"=
+"BT03 A08 Upload Signed Tender"=
+"BT03 A09 Next"=
+"BT03 A10 Submit"=
+[ParameterSimulation]
+NumVusers=5
+IsDurationIndefinite=0
+NumIterationsUntilCompletion=3
+IterationFromRTS=0
+NumIterationIndefinitely=1

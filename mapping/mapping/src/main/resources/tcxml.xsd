@@ -46,6 +46,7 @@
     	<attribute name="overwriteUI" type="string"></attribute>
 
     	<attribute name="argsSchema" type="string"></attribute>
+    	<attribute name="disabled" type="boolean"></attribute>
     </complexType>
 
     <complexType name="testObjects">

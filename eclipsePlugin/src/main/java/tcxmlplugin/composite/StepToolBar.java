@@ -45,13 +45,14 @@ public class StepToolBar extends Composite implements IJobChangeListener   {
 	private Label label;
 	
 	private boolean playable;
+	private Button btnDisabled;
 	
 	
 
 
 	public StepToolBar(Composite parent, int style) {
 		super(parent, style);
-		setLayout(new GridLayout(4, false));
+		setLayout(new GridLayout(5, false));
 		
 		
 		playButton = new Button(this, SWT.NONE);
@@ -80,13 +81,17 @@ TcXmlPluginController.getInstance().error("fail to play step ", e1);
 		nookbutton.setLayoutData(new GridData(SWT.FILL, SWT.FILL, false, false, 1, 1));
 		nookbutton.setVisible(false);
 		
+		btnDisabled = new Button(this, SWT.CHECK);
+		btnDisabled.setText("Disabled");
+		
 
 		progressBar = new ProgressBar(this , SWT.INDETERMINATE);
 		progressBar.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		progressBar.setVisible(false);
 		
 		label = new Label(this, SWT.SEPARATOR | SWT.HORIZONTAL);
-		label.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 4, 1));
+		label.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 5, 1));
+		new Label(this, SWT.NONE);
 		new Label(this, SWT.NONE);
 		new Label(this, SWT.NONE);
 		new Label(this, SWT.NONE);
@@ -251,6 +256,20 @@ TcXmlPluginController.getInstance().error("fail to play step ", e1);
 	public void setPlayable( boolean isPlayable) {
 		this.playable = isPlayable ;
 		playButton.setVisible(isPlayable);
+		btnDisabled.setVisible(isPlayable);
+		
+	}
+
+
+
+
+
+
+
+
+
+	public void populate(Step mo) {		
+		btnDisabled.setSelection(mo.isDisabled() != null?mo.isDisabled():false);
 		
 	}
 	

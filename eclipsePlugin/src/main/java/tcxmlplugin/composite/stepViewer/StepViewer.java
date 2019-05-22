@@ -291,6 +291,7 @@ setMenu(buildMenu());
 		
 		
 		view.populate( mo  );
+		stepToolBar.populate( mo  );
 		
 		
 	}

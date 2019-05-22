@@ -67,6 +67,8 @@ public class StepViewerFactory {
 			switch(action) {
 			case "Call Action" :tv=getCallActionViewer(step,stepContainer,controller); break;
 			case "For" : tv=getForViewer(step,stepContainer,controller); break;
+			case "If" : tv=getDefaultViewer(step,stepContainer,controller); break;
+			case "If2" : tv=getDefaultViewer(step,stepContainer,controller); break;
 			default: throw new TcXmlException("type=" + typeOfStep + " action="+action + " not implemented", new IllegalStateException());
 			
 			

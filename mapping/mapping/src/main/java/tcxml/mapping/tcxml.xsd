@@ -17,7 +17,9 @@
 
     <complexType name="step">
     	<sequence>
-    		<element ref="tns:step" maxOccurs="unbounded" minOccurs="0"></element>
+    		<element ref="tns:step" maxOccurs="unbounded"
+    			minOccurs="0">
+    		</element>
     	</sequence>
     	<attribute name="type" type="string"></attribute>
     	<attribute name="stepId" type="string"></attribute>
@@ -43,6 +45,7 @@
     	<attribute name="name" type="string"></attribute>
     	<attribute name="overwriteUI" type="string"></attribute>
 
+    	<attribute name="disabled" type="boolean"></attribute>
     </complexType>
 
     <complexType name="testObjects">

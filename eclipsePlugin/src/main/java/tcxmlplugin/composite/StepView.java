@@ -99,7 +99,7 @@ public abstract class StepView extends Composite  {
 
 	public  void populate(Step mo) throws TcXmlException   {
 		
-		
+		model.setDisabled(mo.isDisabled());
 		model.setAction(mo.getAction());
 		model.setActionName(mo.getActionName());
 		model.setActiveStep(mo.getActiveStep());

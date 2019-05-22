@@ -404,12 +404,12 @@ public class TcXmlPluginController
     IFolder newtc = testcasefolder.getFolder(name);
     IFolder libfolder = newtc.getFolder("Libraries");
     IFolder snapshotfolder= newtc.getFolder("snapshots");
-    IFolder extraFilesfolder= newtc.getFolder("extraFiles");
+   
 	try {
 		newtc .create(true, true, null);
 		libfolder.create(true, true, null);
 		snapshotfolder.create(true, true, null);
-		extraFilesfolder.create(true, true, null);
+		
 		
 	    QualifiedName key = new QualifiedName("tcxmlplug", "folderType");
 	    newtc.setPersistentProperty(key , TESTCASE_FOLDER);
@@ -439,13 +439,7 @@ public class TcXmlPluginController
 	}
 	
 	
-	private IFolder getExtraFilesFolder(IFolder testcase) {
-		
-		 IFolder libfolder = testcase.getFolder("extraFiles");
-		 return libfolder;
-		
-		
-	}
+
 	
 
 	public boolean isAlreadyExistingTestCase(String el, IFolder targetFolder) {
@@ -565,7 +559,7 @@ return ret;
 		importParameters( model.getParameters(),  currentProject,  newTC,monitor);
 		importLibrary( model.getLibraries(),  currentProject,  newTC,monitor);
 		importSnapshot(model.getSnapshots(),currentProject,  newTC,monitor);
-		importExtraFiles(model.getExtrafiles(), currentProject, testCaseFolder, monitor);
+		importExtraFiles(model.getExtrafiles(), currentProject, newTC, monitor);
 		
 	}
 
@@ -605,7 +599,7 @@ return ret;
 		
 	for (String snap : snapshots) {
 			
-			IFolder extrapathfolder = getExtraFilesFolder(testCaseFolder);
+			IFolder extrapathfolder = testCaseFolder;
 			
 			String filename = new Path(snap).lastSegment();
 			
