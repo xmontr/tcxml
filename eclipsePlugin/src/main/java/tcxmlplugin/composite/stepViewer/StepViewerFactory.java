@@ -21,6 +21,7 @@ import tcxmlplugin.composite.view.EvaluateJavascriptView;
 import tcxmlplugin.composite.view.ForView;
 import tcxmlplugin.composite.view.FunctionView;
 import tcxmlplugin.composite.view.GenericAPIStepView;
+import tcxmlplugin.composite.view.IfView;
 import tcxmlplugin.composite.view.TestObjectView;
 import tcxmlplugin.composite.view.WaitView;
 
@@ -67,7 +68,7 @@ public class StepViewerFactory {
 			switch(action) {
 			case "Call Action" :tv=getCallActionViewer(step,stepContainer,controller); break;
 			case "For" : tv=getForViewer(step,stepContainer,controller); break;
-			case "If" : tv=getDefaultViewer(step,stepContainer,controller); break;
+			case "If" : tv=getIfViewer(step,stepContainer,controller); break;
 			case "If2" : tv=getDefaultViewer(step,stepContainer,controller); break;
 			default: throw new TcXmlException("type=" + typeOfStep + " action="+action + " not implemented", new IllegalStateException());
 			
@@ -88,6 +89,15 @@ public class StepViewerFactory {
 		
 
 		return tv;
+	}
+
+
+
+	private static StepViewer getIfViewer(Step step, StepContainer stepContainer, TcXmlController controller) throws TcXmlException {
+		IfView view = new IfView(stepContainer.getBar(), SWT.NONE,controller);
+		StepViewer sv =  new StepViewer( SWT.NONE, view, stepContainer);
+		sv.populate(step);
+		return sv;
 	}
 
 
