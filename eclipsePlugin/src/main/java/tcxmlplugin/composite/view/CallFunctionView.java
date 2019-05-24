@@ -8,6 +8,7 @@ import tcxml.core.PlayingContext;
 import tcxml.core.TcXmlController;
 import tcxml.core.TcXmlException;
 import tcxml.model.Step;
+import tcxml.model.TruLibrary;
 import tcxmlplugin.TcXmlPluginController;
 import tcxmlplugin.composite.StepView;
 import tcxmlplugin.composite.TcViewer;
@@ -148,8 +149,8 @@ public static class CallFunctionViewModel {
 
 	
 
-	public CallFunctionView(Composite parent, int style, TcXmlController controller) {
-		super(parent,  style,controller);
+	public CallFunctionView(Composite parent, int style, TcXmlController controller,TruLibrary truLibrary) {
+		super(parent,  style,controller,truLibrary);
 	
 		
 		// color for the viewer

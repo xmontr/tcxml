@@ -41,7 +41,7 @@ import org.eclipse.wb.swt.SWTResourceManager;
 public class FunctionView extends StepView implements StepContainer, ExpandListener {
 	private ExpandBar bar;
 
-	private TruLibrary Library;
+	
 
 	private Function function;
 
@@ -57,16 +57,10 @@ public class FunctionView extends StepView implements StepContainer, ExpandListe
 		this.libName = libName;
 	}
 
-	public TruLibrary getLibrary() {
-		return Library;
-	}
 
-	public void setLibrary(TruLibrary library) {
-		Library = library;
-	}
 
-	public FunctionView(Composite parent, int style, TcXmlController controller) {
-		super(parent, style, controller);
+	public FunctionView(Composite parent, int style, TcXmlController controller,TruLibrary lib) {
+		super(parent, style, controller,lib);
 		
 		// color for the viewer
 		color=SWT.COLOR_DARK_BLUE ;
@@ -84,7 +78,7 @@ public class FunctionView extends StepView implements StepContainer, ExpandListe
 
 	public void addStep(Step step) throws TcXmlException {
 
-		StepViewer tv = StepViewerFactory.getViewer(step, this, controller);
+		StepViewer tv = StepViewerFactory.getViewer(step, this, controller,getLibrary());
 		
 		
 		 

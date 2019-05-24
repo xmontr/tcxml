@@ -10,6 +10,7 @@ import tcxml.core.PlayingContext;
 import tcxml.core.TcXmlController;
 import tcxml.core.TcXmlException;
 import tcxml.model.Step;
+import tcxml.model.TruLibrary;
 import tcxmlplugin.TcXmlPluginController;
 import tcxmlplugin.composite.StepView;
 import tcxmlplugin.composite.view.arguments.ArgumentViewFactory;
@@ -39,8 +40,8 @@ public class GenericAPIStepView extends StepView implements PropertyChangeListen
 	private Combo methodCombo;
 	
 
-	public GenericAPIStepView(Composite parent, int style, TcXmlController controller) {
-		super(parent, style, controller);
+	public GenericAPIStepView(Composite parent, int style, TcXmlController controller,TruLibrary truLibrary) {
+		super(parent, style, controller,truLibrary);
 		setLayout(new GridLayout(1, false));
 		genericapimodel = new GenericAPIModel();
 		Group maingroup = new Group(this, SWT.NONE);

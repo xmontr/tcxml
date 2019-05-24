@@ -26,13 +26,14 @@ import tcxml.core.TcXmlController;
 import tcxml.core.TcXmlException;
 import tcxml.model.IfModel;
 import tcxml.model.Step;
+import tcxml.model.TestObject;
 import tcxml.model.TruLibrary;
 import tcxmlplugin.composite.StepView;
 import tcxmlplugin.composite.stepViewer.StepContainer;
 import tcxmlplugin.composite.stepViewer.StepViewer;
 import tcxmlplugin.composite.stepViewer.StepViewerFactory;
 
-public class IfView extends StepView  implements StepContainer, ExpandListener{
+public class IF2View extends StepView  implements StepContainer, ExpandListener{
 	
 	private TextInputView conditionTxt;
 	
@@ -45,8 +46,9 @@ public class IfView extends StepView  implements StepContainer, ExpandListener{
 	private IfModel ifmodel ;
 	
 	private JsonObject arg;
+	private IdentificationView identview ;
 
-	public IfView(Composite parent, int style, TcXmlController controller,TruLibrary truLibrary) {
+	public IF2View(Composite parent, int style, TcXmlController controller,TruLibrary truLibrary) {
 		super(parent, style, controller,truLibrary);
 		// color for the viewer
 		color=SWT.COLOR_DARK_MAGENTA ;
@@ -54,6 +56,15 @@ public class IfView extends StepView  implements StepContainer, ExpandListener{
 		ifmodel = new IfModel();
 		
 		setLayout(new GridLayout(1, false));
+		
+		Group grpObject = new Group(this, SWT.NONE);
+		grpObject.setLayout(new FillLayout(SWT.HORIZONTAL));
+		identview = new IdentificationView(grpObject, SWT.NONE, controller);
+		
+		GridData gd_grpObject = new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1);
+		gd_grpObject.heightHint = 214;
+		grpObject.setLayoutData(gd_grpObject);
+		grpObject.setText("Object");
 		
 		Group grpArguments = new Group(this, SWT.NONE);
 		grpArguments.setLayout(new GridLayout(2, false));
@@ -160,24 +171,35 @@ public class IfView extends StepView  implements StepContainer, ExpandListener{
 		super.populate(mo);
 		arg = controller.readJsonObject(mo.getArguments());
 		
-		
-		ifmodel.getCondition().populateFromJson(arg.getJsonObject("Condition"));
-		conditionString=ifmodel.getCondition().getValue();
+		if(arg.containsKey("Condition")) {
+			ifmodel.getCondition().populateFromJson(arg.getJsonObject("Condition"));
+			conditionString=ifmodel.getCondition().getValue();
+			
+		}else {
+			
+			conditionString="";
+		}
+	
 		
 		
 
 conditionTxt.SetArgModel(ifmodel.getCondition());
 
-			
-		
-		// {"Init":{"value":"var i = 0","evalJavaScript":true},"Condition":{"value":"i < 1","evalJavaScript":true},"Increment":{"value":"i++","evalJavaScript":true}}
-		
-	
 		
 		// add cildren
 		BoundList<Step> li = mo.getStep();
-		//firdt dtep is block interval, skip it
-		Step firstchild = li.get(0);				
+		
+		//add object to test	
+		 Step tostep = li.get(0);
+		String referencedob = tostep.getTestObject() ;
+	TestObject to = controller.getTestObjectById(referencedob, getLibrary());
+	identview.populate(to);
+	
+	
+		
+		
+		//add children
+		Step firstchild = li.get(1);				
 				sanitycheck(firstchild);
 		li=firstchild.getStep();
 		
@@ -235,5 +257,8 @@ conditionTxt.SetArgModel(ifmodel.getCondition());
 	}
 		
 	}
+	
+	
+	
 
 }

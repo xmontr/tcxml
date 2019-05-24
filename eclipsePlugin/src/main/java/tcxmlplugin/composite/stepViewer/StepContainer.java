@@ -6,6 +6,7 @@ import org.eclipse.swt.widgets.ExpandBar;
 
 import tcxml.core.TcXmlException;
 import tcxml.model.Step;
+import tcxml.model.TruLibrary;
 
 public interface StepContainer {
 	

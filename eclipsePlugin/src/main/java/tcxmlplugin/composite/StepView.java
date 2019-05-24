@@ -11,6 +11,7 @@ import tcxml.core.PlayingContext;
 import tcxml.core.TcXmlController;
 import tcxml.core.TcXmlException;
 import tcxml.model.Step;
+import tcxml.model.TruLibrary;
 import tcxmlplugin.composite.stepViewer.StepViewer;
 import tcxmlplugin.composite.view.arguments.StepArgument;
 
@@ -25,6 +26,19 @@ public abstract class StepView extends Composite  {
 	protected Step model;
 	
 	protected StepArgument theArgument;
+	
+	protected TruLibrary Library;
+	
+	
+	protected TruLibrary getLibrary() {
+		return Library;
+	}
+
+	protected void setLibrary(TruLibrary library) {
+		Library = library;
+	}
+	
+	
 	
 	public StepArgument getTheArgument() {
 		return theArgument;
@@ -57,9 +71,10 @@ public abstract class StepView extends Composite  {
 		this.viewer = viewer;
 	}
 
-	public StepView(Composite parent, int style, TcXmlController controller) {
+	public StepView(Composite parent, int style, TcXmlController controller, TruLibrary lib) {
 		super(parent, style);
 		this.controller=controller;
+		this.Library = lib;
 		this.model = new Step();
 		propertyChangeSupport = new PropertyChangeSupport(this);
 		

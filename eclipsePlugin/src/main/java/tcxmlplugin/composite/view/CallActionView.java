@@ -12,6 +12,7 @@ import tcxml.core.PlayingContext;
 import tcxml.core.TcXmlController;
 import tcxml.core.TcXmlException;
 import tcxml.model.Step;
+import tcxml.model.TruLibrary;
 import tcxmlplugin.TcXmlPluginController;
 import tcxmlplugin.composite.ActionView;
 import tcxmlplugin.composite.StepView;
@@ -43,8 +44,8 @@ public class CallActionView extends StepView {
 	
 
 
-	public CallActionView(Composite parent, int style, TcXmlController controller) {
-		super(parent, style, controller);
+	public CallActionView(Composite parent, int style, TcXmlController controller,TruLibrary truLibrary) {
+		super(parent, style, controller,truLibrary);
 		// color for the viewer
 		color=SWT.COLOR_DARK_CYAN ;
 		

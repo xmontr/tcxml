@@ -45,23 +45,21 @@ import org.eclipse.swt.events.MouseEvent;
 public class TestObjectView extends StepView implements PropertyChangeListener {
 	private DataBindingContext m_bindingContext;
 
-	private TruLibrary library;
+	//private TruLibrary library;
 
 	
 
 	private Group grpArguments;
 
-	public TruLibrary getLibrary() {
-		return library;
-	}
+	/*
+	 * public TruLibrary getLibrary() { return library; }
+	 * 
+	 * public void setLibrary(TruLibrary library) { this.library = library; }
+	 */
 
-	public void setLibrary(TruLibrary library) {
-		this.library = library;
-	}
+	public TestObjectView(Composite parent, int style, TcXmlController controller,TruLibrary truLibrary) {
 
-	public TestObjectView(Composite parent, int style, TcXmlController controller) {
-
-		super(parent, style, controller);
+		super(parent, style, controller,truLibrary);
 		testobjectmodel = new TestObjectModel();
 
 		testobjectmodel.addPropertyChangeListener("selectedAction", this);
@@ -286,7 +284,7 @@ public class TestObjectView extends StepView implements PropertyChangeListener {
 	public void populate(Step mo) throws TcXmlException {
 
 		super.populate(mo);
-		testobjectmodel.setAllActions(controller.getAvailableActionForStep(mo, library));
+		testobjectmodel.setAllActions(controller.getAvailableActionForStep(mo, getLibrary()));
 		testobjectmodel.setSelectedAction(mo.getAction());
 		
 		
@@ -302,14 +300,10 @@ public class TestObjectView extends StepView implements PropertyChangeListener {
 
 			showXpath();
 			// find the testobject in the script or in the lib
-			if (library == null) {
-				to = controller.getTestObjectById(mo.getTestObject());
 
-			} else {
-				to = controller.getTestObjectById(mo.getTestObject(), library);
+				to = controller.getTestObjectById(mo.getTestObject(), getLibrary());
 
-			}
-			
+						
 			
 			// the selected method
 	String act = controller.getActiveIdentificationForTestObject(to);
@@ -391,7 +385,7 @@ public class TestObjectView extends StepView implements PropertyChangeListener {
 
 	@Override
 	public PlayingContext play( PlayingContext ctx) throws TcXmlException {
-		TestObjectRunner runner = new TestObjectRunner(model,library, controller);
+		TestObjectRunner runner = new TestObjectRunner(model,getLibrary(), controller);
 		
 	PlayingContext ret = runner.runStep(ctx);
 	return ret;
@@ -404,13 +398,10 @@ public class TestObjectView extends StepView implements PropertyChangeListener {
 		String ret;
 		TestObject to = null;
 		if (!controller.isBrowserStep(model)) { // testobject is not browser
-			if (library == null) {
-				to = controller.getTestObjectById(model.getTestObject());
 
-			} else {
-				to = controller.getTestObjectById(model.getTestObject(), library);
+				to = controller.getTestObjectById(model.getTestObject(), getLibrary());
 
-			}
+			
 			
 			
 			 ret = formatTitle(model.getIndex(), model.getAction() + " on " + to.getAutoName());

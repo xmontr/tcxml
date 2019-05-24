@@ -7,6 +7,7 @@ import tcxml.core.PlayingContext;
 import tcxml.core.TcXmlController;
 import tcxml.core.TcXmlException;
 import tcxml.model.Step;
+import tcxml.model.TruLibrary;
 import tcxmlplugin.composite.StepView;
 import tcxmlplugin.composite.stepViewer.StepContainer;
 import tcxmlplugin.composite.stepViewer.StepViewer;
@@ -53,8 +54,8 @@ public class ForView extends StepView  implements StepContainer, ExpandListener 
 	private String conditionString;
 	private String incrementString;
 
-	public ForView(Composite parent, int style, TcXmlController controller) {
-		super(parent, style, controller);
+	public ForView(Composite parent, int style, TcXmlController controller,TruLibrary truLibrary) {
+		super(parent, style, controller,truLibrary);
 		
 		formodel = new ForModel();
 		
@@ -193,7 +194,7 @@ public class ForView extends StepView  implements StepContainer, ExpandListener 
 
 	@Override
 	public void addStep(Step step) throws TcXmlException {
-		 StepViewer tv = StepViewerFactory.getViewer(step,this, controller);
+		 StepViewer tv = StepViewerFactory.getViewer(step,this, controller,getLibrary());
 		 
 		 if(tv.getViewer() instanceof StepContainer) {
 			 

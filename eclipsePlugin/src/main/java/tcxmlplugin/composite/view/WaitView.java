@@ -16,6 +16,7 @@ import tcxml.core.TcXmlException;
 import tcxml.core.runner.TestObjectRunner;
 import tcxml.core.runner.WaitRunner;
 import tcxml.model.Step;
+import tcxml.model.TruLibrary;
 import tcxmlplugin.composite.StepView;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.SWT;
@@ -121,8 +122,8 @@ public class WaitView extends StepView  {
 	private Text UnitText;
 	
 
-	public WaitView(Composite parent, int style, TcXmlController controller) {
-		super(parent, style, controller);
+	public WaitView(Composite parent, int style, TcXmlController controller,TruLibrary truLibrary) {
+		super(parent, style, controller,truLibrary);
 		
 		// color for the viewer
 		color=SWT.COLOR_BLUE ;

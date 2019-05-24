@@ -17,6 +17,7 @@ import tcxml.core.PlayingContext;
 import tcxml.core.TcXmlController;
 import tcxml.core.TcXmlException;
 import tcxml.model.Step;
+import tcxml.model.TruLibrary;
 import tcxmlplugin.TcXmlPluginController;
 import tcxmlplugin.composite.stepViewer.StepContainer;
 import tcxmlplugin.composite.stepViewer.StepViewer;
@@ -106,6 +107,13 @@ public class ActionView extends AStepContainer implements TopStepContainer{
 			
 		}
 		
+	}
+
+
+	@Override
+	public TruLibrary getLibrary() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 

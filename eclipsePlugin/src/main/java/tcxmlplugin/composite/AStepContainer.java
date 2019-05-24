@@ -22,6 +22,7 @@ import org.eclipse.ui.internal.ide.dialogs.CreateLinkedResourceGroup;
 import tcxml.core.TcXmlController;
 import tcxml.core.TcXmlException;
 import tcxml.model.Step;
+import tcxml.model.TruLibrary;
 import tcxmlplugin.TcXmlPluginController;
 import tcxmlplugin.composite.stepViewer.StepContainer;
 import tcxmlplugin.composite.stepViewer.StepViewer;
@@ -29,6 +30,10 @@ import tcxmlplugin.composite.stepViewer.StepViewerFactory;
 import tcxmlplugin.composite.stepViewer.TitleListener;
 
 public abstract class AStepContainer extends Composite   implements StepContainer, ExpandListener {
+	
+	
+	
+	public abstract TruLibrary getLibrary() ;
 	
 	protected TcXmlController controller;
 	
@@ -173,7 +178,7 @@ content.setSize(newsize);
 	
 	public void addStep(Step step) throws TcXmlException {
 		
-		 StepViewer tv = StepViewerFactory.getViewer(step,this, controller);		 
+		 StepViewer tv = StepViewerFactory.getViewer(step,this, controller,getLibrary());		 
 		 stepViwerChildren.add(tv);
 		
 		ExpandItem xpndtmNewExpanditem = new ExpandItem(bar, SWT.NONE);		

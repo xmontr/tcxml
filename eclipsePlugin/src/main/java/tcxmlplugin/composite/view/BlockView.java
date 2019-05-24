@@ -21,6 +21,7 @@ import tcxml.core.PlayingContext;
 import tcxml.core.TcXmlController;
 import tcxml.core.TcXmlException;
 import tcxml.model.Step;
+import tcxml.model.TruLibrary;
 import tcxmlplugin.TcXmlPluginController;
 import tcxmlplugin.composite.StepView;
 import tcxmlplugin.composite.stepViewer.StepViewer;
@@ -33,8 +34,8 @@ public class BlockView  extends StepView implements StepContainer, ExpandListene
 	
 	private List<StepViewer> stepViwerChildren ;
 
-	public BlockView(Composite parent, int style, TcXmlController controller) {		
-		super(parent, style,controller);
+	public BlockView(Composite parent, int style, TcXmlController controller, TruLibrary truLibrary) {		
+		super(parent, style,controller,truLibrary);
 		
 		// color for the viewer
 		color=SWT.COLOR_DARK_YELLOW ;
@@ -59,7 +60,7 @@ public class BlockView  extends StepView implements StepContainer, ExpandListene
 	
 	public void addStep(Step step) throws TcXmlException {
 		
-		 StepViewer tv = StepViewerFactory.getViewer(step,this, controller);
+		 StepViewer tv = StepViewerFactory.getViewer(step,this, controller,getLibrary());
 		 
 		 if(tv.getViewer() instanceof StepContainer) {
 			 

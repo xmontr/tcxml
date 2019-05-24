@@ -69,7 +69,7 @@ public class LibraryView extends AStepContainer implements TopStepContainer{
 
 	public void buildLibrary(TruLibrary truLibrary) {
 
-		;
+	setLibrary(truLibrary);
 		List<Step> list = truLibrary.getStep().getStep();
 		for (Step step2 : list) { // add the step
 			try {
@@ -130,11 +130,13 @@ public void refreshSize() {
 	
 }
 
-
-
-
-
 }
+
+
+
+
+
+
 	
 
 

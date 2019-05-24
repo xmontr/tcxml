@@ -6,6 +6,7 @@ import tcxml.core.PlayingContext;
 import tcxml.core.TcXmlController;
 import tcxml.core.TcXmlException;
 import tcxml.model.Step;
+import tcxml.model.TruLibrary;
 import tcxmlplugin.composite.StepView;
 import tcxml.model.CommentModel;
 import org.eclipse.swt.layout.FillLayout;
@@ -26,8 +27,8 @@ public class CommentView extends StepView{
 	private CommentModel commentModel;
 	private Text commentText;
 
-	public CommentView(Composite parent, int style, TcXmlController controller) {
-		super(parent, style, controller);
+	public CommentView(Composite parent, int style, TcXmlController controller,TruLibrary truLibrary) {
+		super(parent, style, controller,truLibrary);
 		setLayout(new FillLayout(SWT.HORIZONTAL));
 		
 		Group grpComment = new Group(this, SWT.NONE);

@@ -7,6 +7,7 @@ import tcxml.core.PlayingContext;
 import tcxml.core.TcXmlController;
 import tcxml.core.TcXmlException;
 import tcxml.model.Step;
+import tcxml.model.TruLibrary;
 import tcxmlplugin.composite.StepView;
 import org.eclipse.swt.widgets.Label;
 
@@ -73,8 +74,8 @@ public class EvaluateJavascriptView extends StepView{
 
 
 
-	public EvaluateJavascriptView(Composite parent, int style, TcXmlController controller) {
-		super(parent, style, controller);		
+	public EvaluateJavascriptView(Composite parent, int style, TcXmlController controller, TruLibrary truLibrary) {
+		super(parent, style, controller,truLibrary);		
 		evaljsmodel = new EvaluateJavascriptModel();
 		this.setLayout(new GridLayout(2, false));
 		
