@@ -22,9 +22,15 @@ public class GenericApiStepRunner extends StepRunner {
 		
 		switch(category) {
 		
-		case "VTS": break;
+		case "VTS":log.info(" ****************************** warning not implemented VTS ");		
+			
+			break;
 		
-		
+		case "TC":
+			
+			log.info(" ****************************** warning not implemented VTS ");		
+				
+				break;
 		
 		
 		
@@ -33,7 +39,7 @@ public class GenericApiStepRunner extends StepRunner {
 		
 		}
 		
-		return null;
+		return ctx;
 	}
 
 }

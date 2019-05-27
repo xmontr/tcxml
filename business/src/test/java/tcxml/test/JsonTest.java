@@ -14,6 +14,7 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.HashMap;
 
 import javax.json.JsonObject;
 import javax.json.JsonString;
@@ -28,6 +29,7 @@ import org.junit.Test;
 
 import tcxml.core.TcXmlController;
 import tcxml.core.TcXmlException;
+import tcxml.model.ArgModel;
 
 public class JsonTest {
 	
@@ -80,9 +82,12 @@ public class JsonTest {
 		 try {
 			 String json =	 fileResourceToString("/argEvalJavascript.json");
 		
+HashMap<String, ArgModel> li = controller.getArguments(json);
+ArgModel codearg = li.get("Code");
+
 
 		
-		String ret = controller.JSCodefromJSON(json);	
+		String ret = codearg.getValue();	
 	
 	assertThat(ret, containsString("document.createNSResolver( contextNode.ownerDocument == null ? contextNode.documentElement"));	
 	

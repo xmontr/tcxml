@@ -1,5 +1,7 @@
 package tcxmlplugin.composite.view.arguments;
 
+import java.util.ArrayList;
+
 import org.eclipse.swt.SWT;
 
 import tcxml.core.TcXmlException;
@@ -49,9 +51,23 @@ public class ArgumentViewFactory {
 	}
 
 	private static StepArgument getClickArgument(StepView view) throws TcXmlException {
-		ClickArgs ret = new ClickArgs(view, view.getStyle());
+		ArrayList<String> li = new ArrayList<String>();
+		li.add("Alt Key");
+		li.add("Ctrl Key");
+		li.add("Shift Key");
+		li.add("Button");
+		li.add("X Coordinate");
+		li.add("Y Coordinate");
+		
+		
+		DynamicArgumentView ret = new DynamicArgumentView(view, view.getStyle(), li);
+		
+
 		ret.populate(view.getController().getArguments(view.getModel().getArguments()));
+		
 		return ret;
+		
+
 	}
 
 	private static StepArgument getTypeTextArgument(StepView view) throws TcXmlException {
@@ -66,7 +82,10 @@ public class ArgumentViewFactory {
 	}
 
 	private static StepArgument getNavigateArgument(StepView view) throws TcXmlException {
-		NavigateArgs ret = new NavigateArgs(view, view.getStyle());
+		ArrayList<String> li = new ArrayList<String>();
+		li.add("Location");
+		DynamicArgumentView ret = new DynamicArgumentView(view, view.getStyle(), li);		
+	
 		ret.populate(view.getController().getArguments(view.getModel().getArguments()));
 		
 		return ret;

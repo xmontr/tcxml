@@ -6,6 +6,7 @@ import org.eclipse.swt.widgets.Composite;
 import tcxml.core.PlayingContext;
 import tcxml.core.TcXmlController;
 import tcxml.core.TcXmlException;
+import tcxml.model.ArgModel;
 import tcxml.model.Step;
 import tcxml.model.TruLibrary;
 import tcxmlplugin.composite.StepView;
@@ -94,9 +95,12 @@ public class EvaluateJavascriptView extends StepView{
 
 public void populate(Step mo  ) throws TcXmlException {	
 	
-
-evaljsmodel.setCode(controller.JSCodefromJSON(mo.getArguments()));
-super.populate(mo);	
+	super.populate(mo);
+	
+	ArgModel codeArg = argumentMap.get("Code");
+	
+evaljsmodel.setCode(codeArg.getValue());
+	
 	
 	
 	
@@ -106,7 +110,7 @@ super.populate(mo);
 
 private String getShortCode() {
 	
-	String co = evaljsmodel.getCode() ;
+	String co = argumentMap.get("Code").getValue();
 	String ret= co ;
 	int size = co.length();
 	if(size > 30) {

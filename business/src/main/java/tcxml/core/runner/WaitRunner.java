@@ -6,8 +6,10 @@ import tcxml.core.PlayingContext;
 import tcxml.core.StepRunner;
 import tcxml.core.TcXmlController;
 import tcxml.core.TcXmlException;
+import tcxml.model.ArgModel;
 import tcxml.model.Step;
 import tcxml.model.TruLibrary;
+import tcxml.model.WaitModel;
 
 public class WaitRunner extends StepRunner{
 
@@ -18,13 +20,25 @@ public class WaitRunner extends StepRunner{
 
 	@Override
 	public PlayingContext runStep(PlayingContext ctx) throws TcXmlException {
-		String json = step.getArguments();
-		String rootKey="Interval";
-		JsonObject arg = tcXmlController.readJsonObject(json);
-	String duration = arg.getString("value","3");
+	ArgModel interval = argumentMap.get("Interval");
+	if(interval == null) {
+		interval = WaitModel.getDefaultArgInterval();	
 		
+	}
+	
+	long l =0L;
+	String val = tcXmlController.evaluateJsArgument(interval, ctx);
+	
 	try {
-		Thread.currentThread().sleep(3000);
+	 l = Long.parseLong(val);
+	
+	}catch (NumberFormatException e) {
+		throw new TcXmlException("unable to read argument as a long", new IllegalArgumentException(val));
+	}
+	
+	
+	try {
+		Thread.currentThread().sleep(l);
 	} catch (InterruptedException e) {
 		throw new TcXmlException("interrupted", e);
 	}	

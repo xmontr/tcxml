@@ -243,12 +243,18 @@ public class TcXmlController {
 	public  HashMap<String, ArgModel> getArguments(String src) throws TcXmlException{
 		
 		HashMap<String, ArgModel> ret = new HashMap<String, ArgModel>() ;
-		JsonObject arg = this.readJsonObject(src);
-		Set<String> keys = arg.keySet();
-		for (String key : keys) {
-		
-			addArgument(ret, src, key);
+		if(src != null) {
+			
+			JsonObject arg = this.readJsonObject(src);
+			Set<String> keys = arg.keySet();
+			for (String key : keys) {
+			
+				addArgument(ret, src, key);
+			}
+			
+			
 		}
+
 
 		
 		return ret;
@@ -745,20 +751,22 @@ public void playSingleStep( Step theStep, TruLibrary lib) throws TcXmlException{
 }
 
 
-public String JSCodefromJSON( String json) throws TcXmlException {
-	String ret = null;
-	
-	
-	 JsonObject codeobj = readJsonObject(json, "Code");
-	JsonString js = codeobj.getJsonString("value");
-
-ret =js.getString();
-	
-
-
-	return ret;
-	
-}
+	/*
+	 * public String JSCodefromJSON( String json) throws TcXmlException { String ret
+	 * = null;
+	 * 
+	 * 
+	 * JsonObject codeobj = readJsonObject(json, "Code"); JsonString js =
+	 * codeobj.getJsonString("value");
+	 * 
+	 * ret =js.getString();
+	 * 
+	 * 
+	 * 
+	 * return ret;
+	 * 
+	 * }
+	 */
 
 
 
@@ -1138,6 +1146,7 @@ public  ScriptContext   buildInitialJavascriptContext(PlayingContext ctx) throws
 	   
 	  
 	   context.setAttribute("LR", api, ScriptContext.GLOBAL_SCOPE);
+	   context.setAttribute("TC", api, ScriptContext.GLOBAL_SCOPE);
 	   
 	   // import Utils obj
 	   Object utils = new UtilsAPI(this);
@@ -1610,9 +1619,26 @@ private ScriptContext buildIdentificationJavascriptContext(ExecutionContext cure
 	return context;
 }
 
+public String evaluateJsArgument(ArgModel theArg, PlayingContext ctx) throws TcXmlException {
+	boolean isj = theArg.getIsJavascript();
+	
+	String ret = theArg.getValue();
+	 
+	log.fine("evaluation of argument" + theArg.getName());
+		 
+		 if(isj == true) { // need to evaluate js argument
+	ret =		(this.evaluateJS(theArg.getValue(),ctx)).toString(); 
+	
+	log.fine("before eval JS " +  theArg.getName() + "is:" + theArg.getValue());	
+	log.fine("after eval JS " +  theArg.getName() + "is:" + ret); 
+
+}
 
 
 
+return ret;
 
+
+}
 
 }

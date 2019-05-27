@@ -3,6 +3,7 @@ package tcxmlplugin.composite;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
 import java.io.PrintWriter;
+import java.util.HashMap;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
@@ -10,6 +11,7 @@ import org.eclipse.swt.widgets.Composite;
 import tcxml.core.PlayingContext;
 import tcxml.core.TcXmlController;
 import tcxml.core.TcXmlException;
+import tcxml.model.ArgModel;
 import tcxml.model.Step;
 import tcxml.model.TruLibrary;
 import tcxmlplugin.composite.stepViewer.StepViewer;
@@ -57,6 +59,8 @@ public abstract class StepView extends Composite  {
 	protected StepViewer viewer;
 	
 	protected int color = SWT.COLOR_DARK_GREEN;
+
+	protected HashMap<String, ArgModel> argumentMap;
 	
 	
 	public int getColor() {
@@ -141,6 +145,7 @@ public abstract class StepView extends Composite  {
 		model.setStepId(mo.getStepId());
 		model.setTestObject(mo.getTestObject());
 		model.getStep().addAll(mo.getStep());
+		argumentMap = controller.getArguments(mo.getArguments());
 		setTitle(buildTitle());
 		
 		

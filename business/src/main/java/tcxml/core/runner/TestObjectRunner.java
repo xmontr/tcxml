@@ -19,6 +19,7 @@ import tcxml.core.StepRunner;
 import tcxml.core.StepStat;
 import tcxml.core.TcXmlController;
 import tcxml.core.TcXmlException;
+import tcxml.model.ArgModel;
 import tcxml.model.Step;
 import tcxml.model.TestObject;
 import tcxml.model.TruLibrary;
@@ -136,8 +137,10 @@ public class TestObjectRunner extends StepRunner{
 		
 		String button ="left";
 		
-		if(arg.containsKey("Button")) {
-			 button = arg.getJsonObject("Button").getJsonString("value").getString() ;
+	ArgModel buttonarg = argumentMap.get("Button");
+		
+		if(buttonarg != null) {
+			 button = buttonarg.getValue();
 	}
 	
 		 switch (button) {
@@ -171,9 +174,12 @@ public class TestObjectRunner extends StepRunner{
 	}
 
 	private void typeText(TestObject to, PlayingContext ctx) throws TcXmlException {
-		JsonObject val = arg.getJsonObject("Value");
-		String txt = val.getJsonString("value").getString();
-			 boolean isj = val.getBoolean("evalJavaScript",false);
+		
+		ArgModel txtarg = argumentMap.get("Value");
+		String txt = txtarg.getValue();
+		 boolean isj = txtarg.getIsJavascript();		
+		
+		
 			 
 			 
 	/// if argument is in js it should be evaluated before
@@ -213,15 +219,16 @@ public class TestObjectRunner extends StepRunner{
 		WebDriver dr = tcXmlController.getDriver();
 		tcXmlController.ensureDriver();
 		
-		JsonObject locobj = arg.getJsonObject("Location");
-		String location = locobj.getJsonString("value").getString();
-		 boolean isj = locobj.getBoolean("evalJavaScript");
-	log.fine("found location for navigate:" + location);
+		/*
+		 * JsonObject locobj = arg.getJsonObject("Location"); String location =
+		 * locobj.getJsonString("value").getString(); boolean isj =
+		 * locobj.getBoolean("evalJavaScript");
+		 */
 		 
-		 if(isj == true) { // need to evaluate js argument
-	location =		(tcXmlController.evaluateJS(location,ctx)).toString(); 
-		log.fine("after eval JS location is:" + location);	 
-		 }
+		ArgModel locationArg = argumentMap.get("Location") ;
+		
+		String location =  tcXmlController.evaluateJsArgument(locationArg,ctx);	
+		
 		
 		 stat.setTimeStart(System.currentTimeMillis());
 		 try {
