@@ -239,10 +239,33 @@ public class TcXmlController {
     }
 	
 	
-	
 	public  HashMap<String, ArgModel> getArguments(String src) throws TcXmlException{
-		
 		HashMap<String, ArgModel> ret = new HashMap<String, ArgModel>() ;
+	if(src != null) {
+			
+			JsonObject arg = this.readJsonObject(src);
+			Set<String> keys = arg.keySet();
+			for (String key : keys) {
+			
+				addArgument(ret, src, key);
+			}
+			
+			
+		}	
+	return ret;	
+		
+	}
+	
+	
+	
+	public  HashMap<String, ArgModel> getArguments(Step step) throws TcXmlException{
+		
+	String src = step.getArguments();			
+		HashMap<String, ArgModel> ret = new HashMap<String, ArgModel>() ;
+		
+	DefaultArgumentStepFactory fac = new DefaultArgumentStepFactory(step);
+	List<ArgModel> def = fac.getDefaultArg();
+	
 		if(src != null) {
 			
 			JsonObject arg = this.readJsonObject(src);
@@ -255,7 +278,17 @@ public class TcXmlController {
 			
 		}
 
+ // add default arg
+		
+for (ArgModel val : def) {
+	String k = val.getName();
+	if( !ret.containsKey(k)) {
+		ret.put(k, val);
+		
+	}
+	
 
+}
 		
 		return ret;
 		

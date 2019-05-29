@@ -8,13 +8,18 @@ import tcxml.core.TcXmlException;
 import tcxml.model.Step;
 import tcxml.model.TruLibrary;
 import tcxmlplugin.composite.StepView;
+import tcxml.model.AbstractModel;
+import tcxml.model.ArgModel;
 import tcxml.model.CommentModel;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Text;
 
+import static org.hamcrest.Matchers.nullValue;
+
 import java.io.PrintWriter;
+import java.util.List;
 
 import org.eclipse.core.databinding.DataBindingContext;
 import org.eclipse.core.databinding.observable.value.IObservableValue;
@@ -92,6 +97,8 @@ public class CommentView extends StepView{
 		pw.println(sb2.toString());
 		
 	}
+
+
 	
 	
 	

@@ -23,6 +23,7 @@ import tcxmlplugin.composite.StepView;
 import tcxmlplugin.composite.view.arguments.ArgumentViewFactory;
 import tcxmlplugin.composite.view.arguments.StepArgument;
 import tcxml.model.AbstractModel;
+import tcxml.model.ArgModel;
 
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.SWT;
@@ -51,11 +52,7 @@ public class TestObjectView extends StepView implements PropertyChangeListener {
 
 	private Group grpArguments;
 
-	/*
-	 * public TruLibrary getLibrary() { return library; }
-	 * 
-	 * public void setLibrary(TruLibrary library) { this.library = library; }
-	 */
+
 
 	public TestObjectView(Composite parent, int style, TcXmlController controller,TruLibrary truLibrary) {
 
@@ -236,6 +233,8 @@ public class TestObjectView extends StepView implements PropertyChangeListener {
 		
 		}
 
+	
+
 
 	}
 
@@ -255,7 +254,8 @@ public class TestObjectView extends StepView implements PropertyChangeListener {
 		String newAction = (String) evt.getNewValue();
 		StepArgument ar;
 		try {
-			ar = ArgumentViewFactory.getArgumentForTestObject(newAction, this);
+			getModel().setAction(newAction);
+			ar = ArgumentViewFactory.getArgumentViewForStep(getModel(), this);
 			setArgumentView(ar);
 			controller.getLog().info("setting nw action for step : " + newAction);
 		} catch (TcXmlException e) {
@@ -424,5 +424,7 @@ public class TestObjectView extends StepView implements PropertyChangeListener {
 		
 	}
 
-
 }
+
+
+

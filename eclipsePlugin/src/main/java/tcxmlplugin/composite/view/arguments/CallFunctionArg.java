@@ -27,8 +27,8 @@ public class CallFunctionArg extends StepArgument {
 	
 	private List<CallFunctionAttribut>   callArguments;
 
-	public CallFunctionArg(Composite parent, int style) {
-		super(parent, style);
+	public CallFunctionArg(Composite parent, int style, HashMap<String, ArgModel> arguuu) {
+		super(parent, style, arguuu);
 		
 		callArguments = new ArrayList<CallFunctionAttribut>();
 		
@@ -42,23 +42,25 @@ public class CallFunctionArg extends StepArgument {
 		headerLabelValue.setFont(SWTResourceManager.getFont("Segoe UI", 9, SWT.BOLD));
 		headerLabelValue.setLayoutData(new GridData(SWT.CENTER, SWT.CENTER, true, false, 1, 1));
 		headerLabelValue.setText("Value");
-		// TODO Auto-generated constructor stub
+
+
+		populate();
 	}
 	
 	
-	@Override
-	public void populate(HashMap<String, ArgModel> argu) throws TcXmlException {
+	
+	public void populate()  {
 		// TODO Auto-generated method stub
-		super.populate(argu);
 		
 		
-	Set<String> keys = argu.keySet();
+		
+	Set<String> keys = arg.keySet();
 	for (String key : keys) {
 		
 	
 		
 		
-	 ArgModel att = argu.get(key);
+	 ArgModel att = arg.get(key);
 		
 		
 		String val = att.getValue();		

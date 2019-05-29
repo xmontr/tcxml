@@ -1,5 +1,8 @@
 package tcxml.model;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class ForModel extends AbstractModel {
 	
 	
@@ -18,9 +21,12 @@ public class ForModel extends AbstractModel {
 		
 		
 		init = new ArgModel("init");
+		init.setValue("");
 		condition = new ArgModel("condition");
+		condition.setValue("");
 		
 		increment = new ArgModel("increment");
+		increment.setValue("");
 	}
 	
 	
@@ -60,6 +66,11 @@ public class ForModel extends AbstractModel {
 				this.increment = increment);
 		
 	}
+
+
+
+
+
 	
 	
 	

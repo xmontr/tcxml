@@ -132,7 +132,7 @@ public class WaitView extends StepView  {
 
 	@Override
 	public String buildTitle() throws TcXmlException {
-		String ret = formatTitle(model.getIndex(), "Wait "+ waitmodel.getInterval() + " seconds" ) ;
+		String ret = formatTitle(model.getIndex(), "Wait "+ waitmodel.getInterval().getValue() + " seconds" ) ;
 		return ret;
 	}
 

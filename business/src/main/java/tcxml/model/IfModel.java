@@ -1,5 +1,8 @@
 package tcxml.model;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class IfModel extends AbstractModel{
 	
 	private ArgModel condition;
@@ -8,6 +11,7 @@ public class IfModel extends AbstractModel{
 	
 	public IfModel() {
 		condition = new ArgModel("condition");
+		condition.setValue("");
 	}
 	
 	
@@ -22,6 +26,10 @@ public class IfModel extends AbstractModel{
 				this.condition = condition);
 		this.condition = condition;
 	}
+
+
+
+
 	
 	
 

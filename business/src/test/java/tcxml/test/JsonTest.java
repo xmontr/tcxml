@@ -25,6 +25,7 @@ import org.apache.commons.lang.StringEscapeUtils;
 import org.hamcrest.CoreMatchers;
 import org.hamcrest.Matcher;
 import org.hamcrest.core.IsNot;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import tcxml.core.TcXmlController;

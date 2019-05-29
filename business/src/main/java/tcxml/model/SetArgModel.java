@@ -1,5 +1,8 @@
 package tcxml.model;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class SetArgModel extends AbstractModel{
 	
 	
@@ -10,6 +13,7 @@ public class SetArgModel extends AbstractModel{
 	public SetArgModel() {
 		
 		path = new ArgModel("Path");
+		path.setValue("");
 		
 	}
 
@@ -24,5 +28,9 @@ public class SetArgModel extends AbstractModel{
 	public void setPath(ArgModel path) {
 		this.path = path;
 	}
+
+
+
+
 
 }

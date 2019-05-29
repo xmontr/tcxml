@@ -4,6 +4,7 @@ import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
 import java.io.PrintWriter;
 import java.util.HashMap;
+import java.util.List;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
@@ -100,7 +101,7 @@ public abstract class StepView extends Composite  {
 	 */
 	public abstract String buildTitle() throws TcXmlException;
 	
-	
+
 	
 	public Step getModel() {
 		// TODO Auto-generated method stub

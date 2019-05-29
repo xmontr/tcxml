@@ -44,7 +44,7 @@ protected StepStat stat;
 		this.tcXmlController = tcXmlController;
 		this.library =lib;
 		arg = tcXmlController.readJsonObject(step.getArguments());
-		argumentMap = tcXmlController.getArguments(step.getArguments());
+		argumentMap = tcXmlController.getArguments(step);
 		stat = new StepStat();
 	}
 

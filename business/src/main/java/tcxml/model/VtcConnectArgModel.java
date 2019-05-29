@@ -1,5 +1,8 @@
 package tcxml.model;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class VtcConnectArgModel extends AbstractModel{
 	
 	
@@ -16,9 +19,13 @@ public class VtcConnectArgModel extends AbstractModel{
 	public VtcConnectArgModel() {
 		
 		server = new ArgModel("serverName");
+		server.setValue("");
 		port =  new ArgModel("port");
+		port.setValue("");
 		vtsName =  new ArgModel("vtsName");
+		vtsName.setValue("");
 		variable =  new ArgModel("Variable");
+		variable.setValue("");
 		
 		
 	}
@@ -62,6 +69,9 @@ public class VtcConnectArgModel extends AbstractModel{
 	public ArgModel getVariable() {
 		return variable;
 	}
+
+
+
 	
 
 	

@@ -2,6 +2,7 @@ package tcxml.model;
 
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
+import java.util.List;
 
 
 public class ProjectTcxmlModel extends AbstractModel {
@@ -29,6 +30,8 @@ public class ProjectTcxmlModel extends AbstractModel {
 				this.projectName = projectName);
 		
 	}
+
+
 	
 	
 

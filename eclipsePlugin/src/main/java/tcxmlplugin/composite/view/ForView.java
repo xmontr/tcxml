@@ -107,7 +107,7 @@ public class ForView extends StepView  implements StepContainer, ExpandListener 
 	
 	
 	private String buildLoopString() {
-	return "for(" + initString +";" + conditionString + ";" + incrementString + ")" ;	
+	return "for(" + argumentMap.get("Init").getValue() +";" + argumentMap.get("Condition").getValue() + ";" + argumentMap.get("Increment").getValue() + ")" ;	
 		
 	}
 	
@@ -225,20 +225,16 @@ public class ForView extends StepView  implements StepContainer, ExpandListener 
 	
 	public void populate(Step mo) throws TcXmlException {
 		super.populate(mo);
-		arg = controller.readJsonObject(mo.getArguments());
-		
-		formodel.getInit().populateFromJson(arg.getJsonObject("Init"));
-		formodel.getCondition().populateFromJson(arg.getJsonObject("Condition"));
-		formodel.getIncrement().populateFromJson(arg.getJsonObject("Increment"));
-		
-		initString = formodel.getInit().getValue();
-		incrementString = formodel.getIncrement().getValue();
-		conditionString= formodel.getCondition().getValue();
 		
 		
-initText.SetArgModel(formodel.getInit());
-conditionTxt.SetArgModel(formodel.getCondition());
-incrementTxt.SetArgModel(formodel.getIncrement());
+		
+initText.SetArgModel(argumentMap.get("Init"));
+conditionTxt.SetArgModel(argumentMap.get("Condition"));
+incrementTxt.SetArgModel(argumentMap.get("Increment"));
+
+initString = initText.getArgModel().getValue();
+incrementString = incrementTxt.getArgModel().getValue();
+conditionString= conditionTxt.getArgModel().getValue();
 			
 		
 		// {"Init":{"value":"var i = 0","evalJavaScript":true},"Condition":{"value":"i < 1","evalJavaScript":true},"Increment":{"value":"i++","evalJavaScript":true}}

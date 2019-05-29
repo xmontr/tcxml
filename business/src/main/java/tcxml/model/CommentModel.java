@@ -1,5 +1,7 @@
 package tcxml.model;
 
+import java.util.List;
+
 public class CommentModel extends AbstractModel {
 	
 	
@@ -25,6 +27,10 @@ public class CommentModel extends AbstractModel {
 				this.comment = comment);
 		
 	}
+
+
+
+
 	
 	
 	

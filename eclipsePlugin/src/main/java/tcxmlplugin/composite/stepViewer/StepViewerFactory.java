@@ -212,7 +212,7 @@ public class StepViewerFactory {
 		
 		FunctionView view = new FunctionView(stepContainer.getBar(), SWT.NONE,controller,truLibrary);
 		//view.setLibrary(stepContainer.getLibrary());
-		//view.setLibName(stepContainer.getLibraryName());
+		view.setLibName(stepContainer.getLibraryName());
 		StepViewer stepviewer = new StepViewer( SWT.NONE,view,stepContainer);
 
 		stepviewer.populate(step);

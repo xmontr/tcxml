@@ -34,4 +34,6 @@ public class TransactionEditorModel extends AbstractModel {
 		
 	}
 
+
+
 }

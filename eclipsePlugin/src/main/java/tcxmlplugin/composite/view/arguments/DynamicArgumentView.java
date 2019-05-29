@@ -17,45 +17,32 @@ import tcxmlplugin.composite.view.TextInputView;
 
 public class DynamicArgumentView extends StepArgument{
 	
-	private List<String> requiredValues ;
 
-	public DynamicArgumentView(Composite parent, int style, List<String> values) {
-		super(parent, style);
-		this.requiredValues = values;
+
+	public DynamicArgumentView(Composite parent, int style,HashMap<String, ArgModel> arg ) throws TcXmlException {
+		super(parent, style,arg);
+		
 		setLayout(new GridLayout(2, false));
+		populate();
 	}
 	
-	@Override
-	public void populate(HashMap<String, ArgModel> argu) throws TcXmlException {
+
+	public void populate() throws TcXmlException {
 		// TODO Auto-generated method stub
-		super.populate(argu);
-		ensurePresenceOfValues();
+
 		
-	Set<String> keys = argu.keySet();
+	Set<String> keys = arg.keySet();
 	for (String key : keys) {	
 		
 		
-	 ArgModel att = argu.get(key);		
+	 ArgModel att = arg.get(key);		
 		populateSingleParameter(att);
 	}
 	
 	}
 
 	
-	private void ensurePresenceOfValues() {
-		for (String val : requiredValues) {
-			
-			if( !arg.containsKey(val)) { // value not present so add it with empty val to see it in the GUI
-				ArgModel newmodel = new ArgModel(val);
-				newmodel.setValue("");
-				arg.put(val, newmodel);
-				
-				
-			}
-			
-		}
-		
-	}
+
 
 	private void populateSingleParameter(ArgModel att) {
 	Label newName = new Label(this, SWT.NONE);

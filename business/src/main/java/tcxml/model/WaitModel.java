@@ -19,6 +19,7 @@ public class WaitModel extends AbstractModel {
 		
 		
 		interval = new ArgModel("Interval");
+		interval.setValue("3");
 		
 
 		
@@ -68,6 +69,9 @@ public class WaitModel extends AbstractModel {
 		ret.setValue("3");
 		return ret;
 	}
+
+
+
 
 
 

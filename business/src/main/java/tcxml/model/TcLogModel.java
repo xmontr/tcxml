@@ -1,6 +1,7 @@
 package tcxml.model;
 
-
+import java.util.ArrayList;
+import java.util.List;
 
 public class TcLogModel extends AbstractModel{
 	
@@ -12,6 +13,7 @@ public class TcLogModel extends AbstractModel{
 	public TcLogModel() {
 		
 		text = new ArgModel("text");
+		text.setValue("");
 	}
 
 
@@ -23,6 +25,9 @@ public class TcLogModel extends AbstractModel{
 	public void setText(ArgModel text) {
 		this.text = text;
 	}
+
+
+
 	
 
 }

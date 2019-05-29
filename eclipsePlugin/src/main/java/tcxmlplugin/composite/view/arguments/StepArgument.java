@@ -1,6 +1,7 @@
 package tcxmlplugin.composite.view.arguments;
 
 import java.util.HashMap;
+import java.util.List;
 
 import javax.json.JsonObject;
 import javax.sound.midi.ControllerEventListener;
@@ -19,25 +20,21 @@ public abstract class StepArgument  extends Composite {
 	protected  StepView view;
 	//protected JsonObject arg;
 	
-	
+	// value coming from the persitent model
 	protected HashMap<String, ArgModel> arg;
 	
+	
+	
 
-	public StepArgument(Composite parent, int style) {
+	public StepArgument(Composite parent, int style,HashMap<String, ArgModel> arg  ) {
 		super(parent, style);
 		if(parent instanceof StepView) {
 		this.view = (StepView)parent;
+		this.arg = arg;
+		
 		}
 	}
 
-	public void populate(HashMap<String, ArgModel> arg ) throws TcXmlException {
-this.arg = arg;
 
-//TcXmlController controller = view.getController();
-//arg = controller.readJsonObject(jsonArg);
-
-		
-		
-	}
 
 }
