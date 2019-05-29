@@ -1631,21 +1631,21 @@ private ScriptContext buildIdentificationJavascriptContext(ExecutionContext cure
 	 //copy already exsiting global variables as member of  ARgsContext	   
 	 
 		Bindings nashorn_global = (Bindings) context.getAttribute("nashorn.global");
-		Set<String>  keys = nashorn_global.keySet();
-		for (String key : keys) {
-			Object var = nashorn_global.get(key);
-			 argscontext.setMember(key, var);
-			 log.info("adding entry to ArgsContext: "+key);		 
-	
-			 
+		if(nashorn_global != null ) {
+			
+			Set<String>  keys = nashorn_global.keySet();
+			for (String key : keys) {
+				Object var = nashorn_global.get(key);
+				 argscontext.setMember(key, var);
+				 log.info("adding entry to ArgsContext: "+key);					
+			
+		}		
 			
 			
-			
-			
-			
+			context.getBindings( ScriptContext.ENGINE_SCOPE ).putAll(nashorn_global);	
 		}
 		
-		context.getBindings( ScriptContext.ENGINE_SCOPE ).putAll(nashorn_global);	 
+			 
 	 
 	 // FunctArgs under ArgsContext
 	 
