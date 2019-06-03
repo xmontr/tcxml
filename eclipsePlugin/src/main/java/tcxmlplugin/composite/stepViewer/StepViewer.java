@@ -328,6 +328,18 @@ setMenu(buildMenu());
 		  
 		  public PlayingContext play(PlayingContext ctx) throws TcXmlException {
 			  
+			 if(view.getModel().isDisabled() != null &&  view.getModel().isDisabled() ) {
+				 
+				 TcXmlPluginController.getInstance().info("don't play disabled step  " + getTitle());
+				 
+				 return ctx; }  // don't play a disabled step
+			 
+			 if( !view.getModel().getLevel().equals("1") ) { // don't play a step level != 1
+				 
+				 TcXmlPluginController.getInstance().info("don't play a non level 1 step  " + getTitle());
+				 
+				 return ctx; }  
+			  
 			  
 			  if(breakPoint != null) {
 				  
@@ -355,7 +367,7 @@ setMenu(buildMenu());
 			  
 		  }
 		  
-
+		 
 
 
 		public  PlayingJob  getplayInteractiveJob(PlayingContext ctx )  {

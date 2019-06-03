@@ -139,7 +139,7 @@ public class TestObjectView extends StepView implements PropertyChangeListener {
 
 		grpArguments.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 2, 1));
 		grpArguments.setText("arguments");
-		new Label(this, SWT.NONE);
+		
 		
 		label = new Label(this, SWT.SEPARATOR | SWT.HORIZONTAL);
 		label.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, false, false, 1, 1));
@@ -401,10 +401,10 @@ public class TestObjectView extends StepView implements PropertyChangeListener {
 
 				to = controller.getTestObjectById(model.getTestObject(), getLibrary());
 
+			String name = to.getAutoName() == null ? to.getManualName() : to.getAutoName() ;
 			
 			
-			
-			 ret = formatTitle(model.getIndex(), model.getAction() + " on " + to.getAutoName());
+			 ret = formatTitle(model.getIndex(), model.getAction() + " on " + name );
 			
 			
 		}else {// testobject is browser

@@ -9,6 +9,8 @@ import org.eclipse.swt.widgets.Composite;
 import tcxml.core.PlayingContext;
 import tcxml.core.TcXmlController;
 import tcxml.core.TcXmlException;
+import tcxml.core.runner.GenericApiStepRunner;
+import tcxml.core.runner.TestObjectRunner;
 import tcxml.model.Step;
 import tcxml.model.TruLibrary;
 import tcxmlplugin.TcXmlPluginController;
@@ -114,8 +116,10 @@ public class GenericAPIStepView extends StepView implements PropertyChangeListen
 
 	@Override
 	public PlayingContext play(PlayingContext ctx) throws TcXmlException {
-		// TODO Auto-generated method stub
-		return null;
+		GenericApiStepRunner runner = new GenericApiStepRunner(model,getLibrary(), controller);
+		
+	PlayingContext ret = runner.runStep(ctx);
+	return ret;
 	}
 
 	@Override

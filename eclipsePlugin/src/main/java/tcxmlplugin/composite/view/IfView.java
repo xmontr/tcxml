@@ -24,6 +24,7 @@ import com.kscs.util.jaxb.BoundList;
 import tcxml.core.PlayingContext;
 import tcxml.core.TcXmlController;
 import tcxml.core.TcXmlException;
+import tcxml.model.ArgModel;
 import tcxml.model.IfModel;
 import tcxml.model.Step;
 import tcxml.model.TruLibrary;
@@ -158,15 +159,18 @@ public class IfView extends StepView  implements StepContainer, ExpandListener{
 	
 	public void populate(Step mo) throws TcXmlException {
 		super.populate(mo);
-		arg = controller.readJsonObject(mo.getArguments());
+	ArgModel cond = argumentMap.get("Condition");
 		
 		
-		ifmodel.getCondition().populateFromJson(arg.getJsonObject("Condition"));
-		conditionString=ifmodel.getCondition().getValue();
+	//	ifmodel.getCondition().populateFromJson(arg.getJsonObject("Condition"));
+		
+		
+		conditionString=cond.getValue();
+		
 		
 		
 
-conditionTxt.SetArgModel(ifmodel.getCondition());
+conditionTxt.SetArgModel(cond);
 
 			
 		
@@ -212,7 +216,7 @@ conditionTxt.SetArgModel(ifmodel.getCondition());
 
 	private String buildIfString() {
 		// TODO Auto-generated method stub
-		return "if("  + conditionString  + ")" ;
+		return "if( ("  + argumentMap.get("Condition").getValue()  + ")  == true)" ;
 	}
 
 	@Override

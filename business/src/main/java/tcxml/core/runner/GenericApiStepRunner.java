@@ -28,7 +28,15 @@ public class GenericApiStepRunner extends StepRunner {
 		
 		case "TC":
 			
-			log.info(" ****************************** warning not implemented VTS ");		
+			log.info(" ****************************** warning not implemented TC ");	
+			
+		case "UTILS":
+			ctx = runUtilsMethod(method, ctx); break;
+			
+			
+		case "IO":
+			
+			log.info(" ****************************** warning not implemented IO ");	
 				
 				break;
 		
@@ -41,5 +49,29 @@ public class GenericApiStepRunner extends StepRunner {
 		
 		return ctx;
 	}
+
+	private PlayingContext runUtilsMethod(String method, PlayingContext ctx) throws TcXmlException {
+	switch (method) {
+	case "clearCookies":	ctx = utilsClearcookies(ctx);
+		break;
+	case "clearCache":	ctx = utilsClearCache(ctx);	
+		break;
+			default:throw new TcXmlException(" ****************************** warning not implemented UTILS." + step.getMethodName(), new IllegalArgumentException(step.getMethodName()));	
+
+	}
+		return ctx;
+	}
+
+	private PlayingContext utilsClearCache(PlayingContext ctx) {
+		// TODO Auto-generated method stub
+		return ctx;
+	}
+
+	private PlayingContext utilsClearcookies(PlayingContext ctx) {
+		// TODO Auto-generated method stub
+		return ctx;
+	}
+
+
 
 }

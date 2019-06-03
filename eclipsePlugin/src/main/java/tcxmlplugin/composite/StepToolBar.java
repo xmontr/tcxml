@@ -31,6 +31,7 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.ProgressBar;
 import org.eclipse.swt.events.MouseAdapter;
 import org.eclipse.swt.events.MouseEvent;
+import org.eclipse.swt.widgets.Combo;
 
 public class StepToolBar extends Composite implements IJobChangeListener   {
 	
@@ -46,13 +47,15 @@ public class StepToolBar extends Composite implements IJobChangeListener   {
 	
 	private boolean playable;
 	private Button btnDisabled;
+	private Combo comboLevel;
+	private Label levellabel;
 	
 	
 
 
 	public StepToolBar(Composite parent, int style) {
 		super(parent, style);
-		setLayout(new GridLayout(5, false));
+		setLayout(new GridLayout(7, false));
 		
 		
 		playButton = new Button(this, SWT.NONE);
@@ -84,18 +87,21 @@ TcXmlPluginController.getInstance().error("fail to play step ", e1);
 		btnDisabled = new Button(this, SWT.CHECK);
 		btnDisabled.setText("Disabled");
 		
+		levellabel = new Label(this, SWT.NONE);
+		levellabel.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
+		levellabel.setText("level");
+		
+		comboLevel = new Combo(this, SWT.NONE);
+		comboLevel.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
+		
 
 		progressBar = new ProgressBar(this , SWT.INDETERMINATE);
 		progressBar.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		progressBar.setVisible(false);
 		
 		label = new Label(this, SWT.SEPARATOR | SWT.HORIZONTAL);
-		label.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 5, 1));
-		new Label(this, SWT.NONE);
-		new Label(this, SWT.NONE);
-		new Label(this, SWT.NONE);
-		new Label(this, SWT.NONE);
-		new Label(this, SWT.NONE);
+		label.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 7, 1));
+
 
 		
 
@@ -257,6 +263,8 @@ TcXmlPluginController.getInstance().error("fail to play step ", e1);
 		this.playable = isPlayable ;
 		playButton.setVisible(isPlayable);
 		btnDisabled.setVisible(isPlayable);
+		comboLevel.setVisible(isPlayable);
+		levellabel.setVisible(isPlayable);
 		
 	}
 
@@ -270,7 +278,9 @@ TcXmlPluginController.getInstance().error("fail to play step ", e1);
 
 	public void populate(Step mo) {		
 		btnDisabled.setSelection(mo.isDisabled() != null?mo.isDisabled():false);
+		comboLevel.setItems("1","2","3");
 		
+		comboLevel.select(Integer.parseInt(  mo.getLevel()));
 	}
 	
 	
