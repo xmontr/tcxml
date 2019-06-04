@@ -1533,9 +1533,11 @@ public List<Transaction> getAlltransactions() {
 
 public WebElement identifyElement(TestObject to, PlayingContext ctx) throws  TcXmlException{
 	String method = to.getIdents().getActive();
+	
+IdentificationMethod identmetho = IdentificationMethod.get(method);
 	WebElement ret = null;
-	switch (method) {
-	case "XPath":
+	switch (identmetho) {
+	case XPATH:
 		String xp = getIdentForTestObject(to, method);
 		this.ensureDriver();
 		WebDriver driver = this.getDriver();
@@ -1547,7 +1549,7 @@ public WebElement identifyElement(TestObject to, PlayingContext ctx) throws  TcX
 		
 		
 		break;
-	case "JavaScript":
+	case JAVASCRIPT :   
 		String identjs = getIdentForTestObject(to, method);
 		ret = evalJavascriptForIdentification(identjs,ctx);
 		

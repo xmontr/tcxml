@@ -223,10 +223,24 @@ ret.add(mo);
 		case "Set":addSetArgument(ret);break;
 		case "Evaluate JavaScript":addEvalJavascriptArgument(ret);break;
 		case "Wait":addWaitArgument(ret);break;
+		case "Verify" : addVerifyArgument(ret);break;
 		
 		default: throw new TcXmlException("no default value for step testobject action = " + step.getAction(), new IllegalArgumentException(step.getAction())) ; 
 		
 		}
+		
+	}
+
+
+
+	private void addVerifyArgument(ArrayList<ArgModel> ret) {
+		ArgModel mo;
+		mo = new ArgModel("Property");
+mo.setValue("Visible Text");
+ret.add(mo);
+mo = new ArgModel("Condition");
+mo.setValue("Contain");
+ret.add(mo);
 		
 	}
 

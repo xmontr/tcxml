@@ -7,6 +7,7 @@ import javax.json.JsonObject;
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
+import org.openqa.selenium.By;
 import org.openqa.selenium.By.ByXPath;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.interactions.Actions;
@@ -14,6 +15,7 @@ import org.openqa.selenium.support.ui.ExpectedCondition;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
+import tcxml.core.IdentificationMethod;
 import tcxml.core.PlayingContext;
 import tcxml.core.StepRunner;
 import tcxml.core.StepStat;
@@ -78,6 +80,7 @@ public class TestObjectRunner extends StepRunner{
 		break;
 		case "Wait":waitOn(to, ctx);
 	break;
+		case "Verify":verify(to, ctx);break;
 		
 		default: notImplemented();
 		}
@@ -88,6 +91,11 @@ public class TestObjectRunner extends StepRunner{
 	
 	
 	
+	private void verify(TestObject to, PlayingContext ctx) {
+		// TODO Auto-generated method stub
+		
+	}
+
 	private PlayingContext runTestObjectStep2( PlayingContext ctx) throws TcXmlException {
 		TestObject to;
 		if (library == null) {
@@ -265,14 +273,30 @@ public class TestObjectRunner extends StepRunner{
 	}
 	
 	private void waitOn(TestObject to, PlayingContext ctx) throws TcXmlException {
-		WebElement finded = tcXmlController.identifyElement(to, ctx);
-		tcXmlController.highlight(finded);
-
-		long TIMEOUTWAIT = 20000;
-		WebDriverWait w = new WebDriverWait(tcXmlController.getDriver(), TIMEOUTWAIT );
-		w.until(ExpectedConditions.elementToBeClickable(finded));	
+		
+		String identmethodstr = to.getIdents().getActive();
+		
+		IdentificationMethod identMetho = IdentificationMethod.get(identmethodstr);
+		
+		switch(identMetho) {
+		
+		case JAVASCRIPT: 
+			throw new TcXmlException("wait on with identification by javascript is not implemented", new IllegalArgumentException(identmethodstr));
 
 		
+		case XPATH : 
+		
+		String xpath = tcXmlController.getXpathForTestObject(to);
+		long TIMEOUTWAIT = 20000;
+		WebDriverWait w = new WebDriverWait(tcXmlController.getDriver(), TIMEOUTWAIT );
+			By locator = By.xpath(xpath);
+			w.until(ExpectedConditions.numberOfElementsToBeMoreThan(locator, 0)   );
+			tcXmlController.highLightXpath(xpath);
+			
+			break;
+		
+		
+		}	
 		
 		
 	}

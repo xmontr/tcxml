@@ -4,6 +4,7 @@ import tcxml.core.PlayingContext;
 import tcxml.core.StepRunner;
 import tcxml.core.TcXmlController;
 import tcxml.core.TcXmlException;
+import tcxml.core.UtilsAPI;
 import tcxml.model.Step;
 import tcxml.model.TruLibrary;
 
@@ -63,12 +64,17 @@ public class GenericApiStepRunner extends StepRunner {
 	}
 
 	private PlayingContext utilsClearCache(PlayingContext ctx) {
-		// TODO Auto-generated method stub
+		UtilsAPI util = new UtilsAPI(tcXmlController);
+		
+		util.clearCache();
+		
 		return ctx;
 	}
 
 	private PlayingContext utilsClearcookies(PlayingContext ctx) {
-		// TODO Auto-generated method stub
+		UtilsAPI util = new UtilsAPI(tcXmlController);
+		
+		util.clearCookies();
 		return ctx;
 	}
 
