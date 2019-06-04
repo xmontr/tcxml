@@ -31,6 +31,7 @@ import org.eclipse.jface.databinding.swt.WidgetProperties;
 import org.eclipse.core.databinding.beans.BeanProperties;
 import org.eclipse.core.databinding.beans.PojoProperties;
 import org.eclipse.swt.widgets.Combo;
+import org.eclipse.core.databinding.observable.list.IObservableList;
 
 public class WaitView extends StepView  {
 	private DataBindingContext m_bindingContext;
@@ -76,10 +77,7 @@ public class WaitView extends StepView  {
 
 		
 		ArgModel arguinter = argumentMap.get("Interval");
-		if(arguinter == null) {// no value so set default args
-			arguinter=waitmodel.getDefaultArgInterval();	
-			
-		}
+
 		
 		
 		waitmodel.setInterval(arguinter);
@@ -94,15 +92,10 @@ public class WaitView extends StepView  {
 	
 		textInputView.SetArgModel(arguinter);
 		
-		if(argumentMap.get("Unit") != null) {
-			
+
 			waitmodel.setSelectedunit(argumentMap.get("Unit").getValue());
 			
-			
-		} else {
-			waitmodel.setSelectedunit("Seconds");
-			
-		}
+		
 
 
 
@@ -145,6 +138,14 @@ public class WaitView extends StepView  {
 	}
 	protected DataBindingContext initDataBindings() {
 		DataBindingContext bindingContext = new DataBindingContext();
+		//
+		IObservableList itemsComboUnitObserveWidget = WidgetProperties.items().observe(comboUnit);
+		IObservableList allUnitsWaitmodelObserveList = BeanProperties.list("allUnits").observe(waitmodel);
+		bindingContext.bindList(itemsComboUnitObserveWidget, allUnitsWaitmodelObserveList, null, null);
+		//
+		IObservableValue observeSelectionComboUnitObserveWidget = WidgetProperties.selection().observe(comboUnit);
+		IObservableValue selectedunitWaitmodelObserveValue = BeanProperties.value("selectedunit").observe(waitmodel);
+		bindingContext.bindValue(observeSelectionComboUnitObserveWidget, selectedunitWaitmodelObserveValue, null, null);
 		//
 		return bindingContext;
 	}

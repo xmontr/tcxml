@@ -146,7 +146,7 @@ public abstract class StepView extends Composite  {
 		model.setStepId(mo.getStepId());
 		model.setTestObject(mo.getTestObject());
 		model.getStep().addAll(mo.getStep());
-		argumentMap = controller.getArguments(mo.getArguments());
+		argumentMap = controller.getArguments(mo);
 		setTitle(buildTitle());
 		
 		

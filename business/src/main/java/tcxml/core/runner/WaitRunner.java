@@ -21,10 +21,7 @@ public class WaitRunner extends StepRunner{
 	@Override
 	public PlayingContext runStep(PlayingContext ctx) throws TcXmlException {
 	ArgModel interval = argumentMap.get("Interval");
-	if(interval == null) {
-		interval = WaitModel.getDefaultArgInterval();	
-		
-	}
+    ArgModel unit = argumentMap.get("Unit");
 	
 	long l =0L;
 	String val = tcXmlController.evaluateJsArgument(interval, ctx);
@@ -33,12 +30,18 @@ public class WaitRunner extends StepRunner{
 	 l = Long.parseLong(val);
 	
 	}catch (NumberFormatException e) {
-		throw new TcXmlException("unable to read argument as a long", new IllegalArgumentException(val));
+		throw new TcXmlException("unable to read argument as a long", new IllegalArgumentException(val));	
+		
 	}
 	
+	if(unit.getClass().equals("Seconds")) {
+		l = l*1000 ;
+		
+	}
 	
+	log.info("waiting " + l + unit.getValue());
 	try {
-		Thread.currentThread().sleep(l);
+		Thread.sleep(l );
 	} catch (InterruptedException e) {
 		throw new TcXmlException("interrupted", e);
 	}	
