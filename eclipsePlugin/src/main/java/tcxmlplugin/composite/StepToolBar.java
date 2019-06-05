@@ -46,6 +46,7 @@ public class StepToolBar extends Composite implements IJobChangeListener   {
 	private Label label;
 	
 	private boolean playable;
+	private boolean isRunning;
 	private Button btnDisabled;
 	private Combo comboLevel;
 	private Label levellabel;
@@ -57,22 +58,35 @@ public class StepToolBar extends Composite implements IJobChangeListener   {
 		super(parent, style);
 		setLayout(new GridLayout(7, false));
 		
-		
+		isRunning = false ;
 		playButton = new Button(this, SWT.NONE);
-		playButton.setToolTipText("play");
+
 		playButton.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseDown(MouseEvent e) {
-				
-		
-try {
-	play();
-} catch (TcXmlException e1) {
-TcXmlPluginController.getInstance().error("fail to play step ", e1);
-}
+if(isRunning == false) {
+	try {
+		play();
+	} catch (TcXmlException e1) {
+	TcXmlPluginController.getInstance().error("fail to play step ", e1);
+	}
+	
+}else {// job already launched
+	
+	try {
+		stop();
+	} catch (TcXmlException e1) {
+	TcXmlPluginController.getInstance().error("fail to stop step ", e1);
+	}
 				
 			}
+
+
+		}
+			
 		});
+		
+		playButton.setToolTipText("play");
 		playButton.setImage(ResourceManager.getPluginImage("tcxmlplugin", "icons/media-playback-start-2.png"));
 		
 		okbutton = new Button(this, SWT.NONE);
@@ -124,12 +138,17 @@ TcXmlPluginController.getInstance().error("fail to play step ", e1);
 
 
 
-
+	private void stop() throws TcXmlException {
+		throw new TcXmlException(" stop step not implemented yet", new IllegalAccessException());
+		
+	}
 
 
 
 
 	protected void play() throws TcXmlException {
+		
+		updatePlayingButton();
 		
 		PlayingContext context = new PlayingContext(stepviewer.getController() );		
 		currrentJob = stepviewer.getplayInteractiveJob(  context);
@@ -191,7 +210,7 @@ TcXmlPluginController.getInstance().error("fail to play step ", e1);
 	@Override
 	public void done(IJobChangeEvent event) {
 		
-		
+		updatePlayingButton();
 		getDisplay().asyncExec(new Runnable() {
 			
 			@Override
@@ -210,6 +229,37 @@ TcXmlPluginController.getInstance().error("fail to play step ", e1);
 		
 		
 	}
+
+
+
+	private void updatePlayingButton() {
+		getDisplay().asyncExec(new Runnable() {
+			
+			@Override
+			public void run() {
+				
+			if(isRunning == true) {
+				playButton.setToolTipText("stop");
+				playButton.setImage(ResourceManager.getPluginImage("tcxmlplugin", "icons/media-playback-stop-2.png"));
+				
+				
+			}else {
+				playButton.setToolTipText("play");
+				playButton.setImage(ResourceManager.getPluginImage("tcxmlplugin", "icons/media-playback-start-2.png"));
+				
+				
+			}
+				
+			}
+		});
+		
+	}
+
+
+
+
+
+
 
 
 

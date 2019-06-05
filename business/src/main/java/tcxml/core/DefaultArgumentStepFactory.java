@@ -225,7 +225,7 @@ ret.add(mo);
 		case "Wait":addWaitArgument(ret);break;
 		case "Verify" : addVerifyArgument(ret);break;
 		
-		default: throw new TcXmlException("no default value for step testobject action = " + step.getAction(), new IllegalArgumentException(step.getAction())) ; 
+		default: throw new TcXmlException("no default value for step testobject action = " + step.getAction() + "id=" +step.getStepId()  , new IllegalArgumentException(step.getAction())) ; 
 		
 		}
 		

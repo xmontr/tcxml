@@ -5,6 +5,7 @@ import java.util.List;
 import javax.json.JsonObject;
 
 import org.openqa.selenium.JavascriptExecutor;
+import org.openqa.selenium.TimeoutException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.By;
@@ -287,11 +288,16 @@ public class TestObjectRunner extends StepRunner{
 		case XPATH : 
 		
 		String xpath = tcXmlController.getXpathForTestObject(to);
-		long TIMEOUTWAIT = 20000;
+		long TIMEOUTWAIT = 20;
+		try {
 		WebDriverWait w = new WebDriverWait(tcXmlController.getDriver(), TIMEOUTWAIT );
-			By locator = By.xpath(xpath);
-			w.until(ExpectedConditions.numberOfElementsToBeMoreThan(locator, 0)   );
-			tcXmlController.highLightXpath(xpath);
+		By locator = By.xpath(xpath);
+		w.until(ExpectedConditions.numberOfElementsToBeMoreThan(locator, 0)   );
+		tcXmlController.highLightXpath(xpath);
+		}catch (TimeoutException e) {
+			throw new TcXmlException("timeout " + TIMEOUTWAIT, e);
+		}
+
 			
 			break;
 		

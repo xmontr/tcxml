@@ -31,7 +31,7 @@ public class GenericApiStepRunner extends StepRunner {
 			
 			log.info(" ****************************** warning not implemented TC ");	
 			
-		case "UTILS":
+		case "Utils":
 			ctx = runUtilsMethod(method, ctx); break;
 			
 			

@@ -46,7 +46,7 @@ public class GenericAPIModel extends AbstractModel implements PropertyChangeList
 		ArrayList<String> li = new ArrayList<String>();
 		li.add("IO");
 		li.add("TC");
-		li.add("UTILS");
+		li.add("Utils");
 		li.add("VTS");
 		allCategory = li;
 	
@@ -137,7 +137,7 @@ public class GenericAPIModel extends AbstractModel implements PropertyChangeList
 		case "VTS": ret=getVTSmethods();break;
 		case "IO": ret=getIOmethods();break;
 		case "TC": ret=getTCmethods();break;
-		case "UTILS": ret=getUTILSmethods();break;
+		case "Utils": ret=getUTILSmethods();break;
 		
 		
 		}

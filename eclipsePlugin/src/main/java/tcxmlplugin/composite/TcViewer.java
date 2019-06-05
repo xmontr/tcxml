@@ -47,6 +47,7 @@ import tcxmlplugin.composite.stepViewer.StepViewer;
 import tcxmlplugin.composite.stepViewer.TopStepContainer;
 import tcxmlplugin.composite.view.CallActionView;
 import tcxmlplugin.composite.view.FunctionView;
+import tcxmlplugin.job.PlayingJob;
 import tcxml.model.ActionsModel;
 import tcxml.model.LibraryModel;
 
@@ -66,7 +67,6 @@ public class TcViewer extends Composite implements PropertyChangeListener, IJobC
 
 	private LibraryViewer libraryViewer;
 	private TcXmlController controller;
-	private ProgressBar progressBar;
 	private CTabFolder tabFolder;
 
 
@@ -80,6 +80,7 @@ public class TcViewer extends Composite implements PropertyChangeListener, IJobC
 	
 	
 	private TopStepContainer  currentTopStep=null;
+	private Label statusbar;
 
 	public TcViewer(Composite parent, int style, TcXmlController tccontroller) {
 		super(parent, style);
@@ -101,6 +102,9 @@ public class TcViewer extends Composite implements PropertyChangeListener, IJobC
 		
 		this.parameterviewer = new ParameterViewer(tabFolder, SWT.BORDER,controller);
 		this.transactionViewer = new TransactionViewer(tabFolder, SWT.BORDER,controller);
+		
+		statusbar = new Label(this, SWT.NONE);
+		statusbar.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		
 		
 		
@@ -249,10 +253,6 @@ public class TcViewer extends Composite implements PropertyChangeListener, IJobC
 			}
 		});
 		
-		
-		progressBar = new ProgressBar(this, SWT.NONE);
-		progressBar.setVisible(false);
-		
 	}
 
 	public LibraryViewer getLibraryViewer() {
@@ -389,7 +389,7 @@ this.populateParameter(controller.getParameters());
 			
 			@Override
 			public void run() {
-			progressBar.setVisible(true);	
+			
 			
 				
 			}
@@ -414,7 +414,7 @@ this.populateParameter(controller.getParameters());
 			
 			@Override
 			public void run() {
-				progressBar.setVisible(false);
+				
 				
 				
 			}
@@ -543,6 +543,26 @@ public void ensureVisibility(StepViewer stepviewer) {
 	private void switch2Action(String actionName) {
 		tabFolder.setSelection(1);
 		actionsViewer.showAction(actionName);
+		
+	}
+	
+	
+	public void displayStatus(String status) {
+		
+		
+	getDisplay().asyncExec(new Runnable() {
+			
+			@Override
+			public void run() {
+				
+				statusbar.setText(status);
+				
+			}
+		});
+		
+		
+		
+		
 		
 	}
 	
