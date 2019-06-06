@@ -34,7 +34,7 @@ public class WaitRunner extends StepRunner{
 		
 	}
 	
-	if(unit.getClass().equals("Seconds")) {
+	if(unit.getValue().equals("Seconds")) {
 		l = l*1000 ;
 		
 	}

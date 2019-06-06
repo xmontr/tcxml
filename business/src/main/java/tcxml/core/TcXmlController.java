@@ -1242,6 +1242,8 @@ public void openBrowser (String type, String driverPath) throws TcXmlException {
 	
 	try {
 	driver = new ChromeDriver(options);
+	// ensure at least a page is loaded ( required by utils.clearcache )
+	driver.get("chrome://version/");
 	}
 	catch (Exception e) {
 		throw new TcXmlException("failure opening browser", e);

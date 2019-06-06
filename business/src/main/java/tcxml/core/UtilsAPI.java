@@ -4,6 +4,7 @@ import java.util.Set;
 
 import org.openqa.selenium.Cookie;
 import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.html5.WebStorage;
 
 public class UtilsAPI {
 	
@@ -28,9 +29,11 @@ public class UtilsAPI {
 		for (Cookie cookie : cookies) {
 			String cn = cookie.getName();
 			controller.getLog().info(" found cookie " +cn);
+			dr.manage().deleteCookie(cookie);
+			controller.getLog().info(" delete " +cn);
 			
 		}
-		dr.manage().deleteAllCookies();
+		
 		controller.getLog().info(" all cookies deleted");
 		
 		
@@ -40,7 +43,19 @@ public class UtilsAPI {
 	
 	public void clearCache() {
 		
-		controller.getLog().info(" clear cache is not implemented now !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
+		WebDriver dr = controller.getDriver();
+		if(dr  instanceof WebStorage) {
+			WebStorage ws = (WebStorage)dr;
+			ws.getLocalStorage().clear();
+			controller.getLog().info(" clear cache : clear local storage");
+			ws.getSessionStorage().clear();
+			controller.getLog().info(" clear cache : clear local storage");
+			
+			
+			
+		}
+		
+
 		
 		
 		
