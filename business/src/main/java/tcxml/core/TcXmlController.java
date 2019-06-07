@@ -190,6 +190,8 @@ public class TcXmlController {
 
 	private File highlighterExtension;
 	
+	private File chromeApiExtension;
+	
 	
 	private static  ScriptEngineManager  scriptFactory = new ScriptEngineManager();
 	
@@ -1237,6 +1239,15 @@ public void openBrowser (String type, String driverPath) throws TcXmlException {
 	}
 	 
 	 options.addExtensions(highlighterExtension);
+	 
+	 
+		if(chromeApiExtension == null) {
+			chromeApiExtension = generatePathToLocalTemporaryResource("chromeApiInjector.zip").toFile();
+		}
+		 
+		 options.addExtensions(chromeApiExtension);
+	 
+	 
 
 	options.setExperimentalOption("useAutomationExtension", false);
 	

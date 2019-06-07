@@ -3,6 +3,7 @@ package tcxml.core;
 import java.util.Set;
 
 import org.openqa.selenium.Cookie;
+import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.html5.WebStorage;
 
@@ -33,6 +34,14 @@ public class UtilsAPI {
 			controller.getLog().info(" delete " +cn);
 			
 		}
+		
+	//htponly cooki are not deleted by this way so use the chromeapiextension
+		
+		final JavascriptExecutor js = (JavascriptExecutor) dr;
+		final String scriptSetAttrValue = " window.postMessage({ action:'deleteAllCookies'}, '*'); ";
+		js.executeScript(scriptSetAttrValue, null);
+		
+		
 		
 		controller.getLog().info(" all cookies deleted");
 		
