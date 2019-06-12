@@ -333,10 +333,11 @@ setMenu(buildMenu());
 				 TcXmlPluginController.getInstance().info("don't play disabled step  " + getTitle());
 				 
 				 return ctx; }  // don't play a disabled step
+			 String plevel = view.getModel().getLevel();
 			 
-			 if( !view.getModel().getLevel().equals("1") ) { // don't play a step level != 1
+			 if( ! ( plevel.equals("1")|| plevel.equals("43") ) ) { // don't play a step level != 1
 				 
-				 TcXmlPluginController.getInstance().info("don't play a non level 1 step  " + getTitle());
+				 TcXmlPluginController.getInstance().info("don't play a non level " + plevel  + " step  " + getTitle());
 				 
 				 return ctx; }  
 			  

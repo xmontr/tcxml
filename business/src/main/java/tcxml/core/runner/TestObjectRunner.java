@@ -83,6 +83,8 @@ public class TestObjectRunner extends StepRunner{
 	break;
 		case "Verify":verify(to, ctx);break;
 		
+		case "Evaluate JavaScript":evalJSOnObject(to,ctx);break;
+		
 		default: notImplemented();
 		}
 		
@@ -92,6 +94,15 @@ public class TestObjectRunner extends StepRunner{
 	
 	
 	
+	private void evalJSOnObject(TestObject to, PlayingContext ctx) throws TcXmlException {
+		WebElement finded = tcXmlController.identifyElement(to,ctx);
+		ArgModel code = argumentMap.get("Code");
+		tcXmlController.evalJavascriptOnObject(code.getValue(),finded,ctx);
+		
+		
+		
+	}
+
 	private void verify(TestObject to, PlayingContext ctx) {
 		// TODO Auto-generated method stub
 		
@@ -293,7 +304,7 @@ public class TestObjectRunner extends StepRunner{
 		WebDriverWait w = new WebDriverWait(tcXmlController.getDriver(), TIMEOUTWAIT );
 		By locator = By.xpath(xpath);
 		w.until(ExpectedConditions.numberOfElementsToBeMoreThan(locator, 0)   );
-		tcXmlController.highLightXpath(xpath);
+		//tcXmlController.highLightXpath(xpath);
 		}catch (TimeoutException e) {
 			throw new TcXmlException("timeout " + TIMEOUTWAIT, e);
 		}

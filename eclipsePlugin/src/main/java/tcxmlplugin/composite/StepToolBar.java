@@ -328,9 +328,13 @@ if(isRunning == false) {
 
 	public void populate(Step mo) {		
 		btnDisabled.setSelection(mo.isDisabled() != null?mo.isDisabled():false);
-		comboLevel.setItems("1","2","3");
-		
-		comboLevel.select(Integer.parseInt(  mo.getLevel()));
+		comboLevel.setItems("1","2","3","43");
+		String level = mo.getLevel();
+		if(level == null || level.isEmpty()) {
+			level ="1";
+			
+		}
+		comboLevel.select(Integer.parseInt(  level));
 	}
 	
 	

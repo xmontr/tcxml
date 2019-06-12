@@ -39,7 +39,7 @@ public class UtilsAPI {
 		
 		final JavascriptExecutor js = (JavascriptExecutor) dr;
 		final String scriptSetAttrValue = " window.postMessage({ action:'deleteAllCookies'}, '*'); ";
-		js.executeScript(scriptSetAttrValue, null);
+		js.executeScript(scriptSetAttrValue);
 		
 		
 		

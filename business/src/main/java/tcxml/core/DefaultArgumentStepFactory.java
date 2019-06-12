@@ -64,7 +64,7 @@ public class DefaultArgumentStepFactory {
 			case "Call Action" :break;
 			case "For" :  break;
 			case "If" : addIfArgument(ret); break;
-			case "If2" :  break;
+			case "If2" :addIf2Argument(ret);  break;
 			default: throw new TcXmlException("type=" + typeOfStep + " action="+action + " default value for argument not implemented", new IllegalStateException());
 			
 			
@@ -87,6 +87,14 @@ public class DefaultArgumentStepFactory {
 	private void addIfArgument(ArrayList<ArgModel> ret) {
 		ArgModel mo = new ArgModel("Condition");
 mo.setValue("");
+ret.add(mo);
+		
+	}
+	
+	
+	private void addIf2Argument(ArrayList<ArgModel> ret) {
+		ArgModel mo = new ArgModel("Exists");
+mo.setValue("true");
 ret.add(mo);
 		
 	}

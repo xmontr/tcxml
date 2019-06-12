@@ -1169,7 +1169,7 @@ private Object evaluate(CallFunctionAttribut callFunctionAttribut, PlayingContex
 	return ret;
 }
 
-public  ScriptContext   buildInitialJavascriptContext(PlayingContext ctx) throws TcXmlException {
+public  ScriptContext   buildInitialJavascriptContext() throws TcXmlException {
 	
 	ScriptEngine engine = getJSengine();
 	ScriptContext context = new SimpleScriptContext();
@@ -1613,6 +1613,98 @@ private WebElement evalJavascriptForIdentification(String identjs, PlayingContex
 
 }
 
+
+
+
+public void evalJavascriptOnObject(String identjs,WebElement element, PlayingContext ctx) throws  TcXmlException{
+	ExecutionContext curentexeccontext = ctx.getCurrentExecutionContext();
+	ScriptContext currentjscontext = ctx.getJsContext();
+	ScriptContext identificationcontext = buildEvalOnObjectJavascriptContext(curentexeccontext,currentjscontext, element);
+	ScriptEngine engine = getJSengine();
+	
+	   log.info(" evaluationg javascript for evaljsonobject :\n " + identjs);
+	   log.info(" context id is" + identificationcontext);
+	   try {
+		    engine.eval(identjs, identificationcontext);
+			
+			
+
+			
+			
+		} catch (ScriptException e) {
+			ctx.dumpJsContext();
+			throw new TcXmlException("fail to evaluate js code for evaljsonobject ", e);
+		
+		} 
+	   
+	   
+}
+
+private JSObject createJsObject() throws TcXmlException  {
+
+	JSObject ret = null;
+	ScriptEngine engine = getJSengine();
+	try {
+		JSObject objConstructor= (JSObject)engine.eval("Object");
+		ret= (JSObject) objConstructor.newObject();
+		
+		
+		
+	} catch (ScriptException e) {
+		throw new TcXmlException("fail to create js object constructor", e);
+	}
+	return ret;
+}
+
+
+
+
+
+
+
+
+
+/***
+ * 
+ * build the javascript context that enable the execution of the eval javascript on object step
+ * 
+ * 
+ * @param curentexeccontext
+ * @param currentjscontext
+ * @param element
+ * @return
+ * @throws TcXmlException 
+ */
+
+
+
+private ScriptContext buildEvalOnObjectJavascriptContext(ExecutionContext curentexeccontext,
+		ScriptContext currentcontext, WebElement element) throws TcXmlException {
+	ScriptEngine engine = getJSengine();
+	ScriptContext context = buildInitialJavascriptContext(); 
+	 
+		   JSObject thisobject =createJsObject();
+		   context.setAttribute("object", thisobject, ScriptContext.GLOBAL_SCOPE);
+		  	   
+	 
+	 //copy all properties of the webelement as member of  this.object	 
+		   final JavascriptExecutor js = (JavascriptExecutor) driver;	   
+		   
+	
+		 ArrayList<Object> attList;		 
+		 attList= (ArrayList<Object>) js.executeScript("var items = []; for (index = 0; index < arguments[0].attributes.length; ++index) { items[index]= arguments[0].attributes[index].name }; return items;", element);		  	
+			for (Object key : attList) {
+				
+				thisobject.setMember((String)key, element.getAttribute((String)key));
+				 log.info("adding attribut to this.object: "+key);					
+			
+		}		
+			
+			
+				
+		
+	return context;
+}
 
 /***
  *  build the javascript context for the identification

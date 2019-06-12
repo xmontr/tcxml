@@ -18,9 +18,16 @@ import org.eclipse.swt.widgets.ExpandBar;
 import org.eclipse.swt.widgets.ExpandItem;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
+import org.openqa.selenium.By;
+import org.openqa.selenium.TimeoutException;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.WebDriverWait;
 
 import com.kscs.util.jaxb.BoundList;
 
+import junit.framework.Test;
+import tcxml.core.IdentificationMethod;
 import tcxml.core.PlayingContext;
 import tcxml.core.TcXmlController;
 import tcxml.core.TcXmlException;
@@ -32,6 +39,7 @@ import tcxmlplugin.composite.StepView;
 import tcxmlplugin.composite.stepViewer.StepContainer;
 import tcxmlplugin.composite.stepViewer.StepViewer;
 import tcxmlplugin.composite.stepViewer.StepViewerFactory;
+import tcxmlplugin.job.MultipleStepRunner;
 
 public class IF2View extends StepView  implements StepContainer, ExpandListener{
 	
@@ -43,17 +51,19 @@ public class IF2View extends StepView  implements StepContainer, ExpandListener{
 	
 	private ExpandBar bar;
 	
-	private IfModel ifmodel ;
+	//private IfModel ifmodel ;
 	
 	private JsonObject arg;
 	private IdentificationView identview ;
+
+	private TestObject theTestObject;
 
 	public IF2View(Composite parent, int style, TcXmlController controller,TruLibrary truLibrary) {
 		super(parent, style, controller,truLibrary);
 		// color for the viewer
 		color=SWT.COLOR_DARK_MAGENTA ;
 		
-		ifmodel = new IfModel();
+		//ifmodel = new IfModel();
 		
 		setLayout(new GridLayout(1, false));
 		
@@ -72,7 +82,7 @@ public class IF2View extends StepView  implements StepContainer, ExpandListener{
 		grpArguments.setText("Arguments");
 		
 		Label lblCondition = new Label(grpArguments, SWT.NONE);
-		lblCondition.setText("Condition");
+		lblCondition.setText("Exists");
 		
 		conditionTxt = new TextInputView(grpArguments, SWT.NONE);
 		
@@ -168,32 +178,20 @@ public class IF2View extends StepView  implements StepContainer, ExpandListener{
 	
 	
 	public void populate(Step mo) throws TcXmlException {
-		super.populate(mo);
-		arg = controller.readJsonObject(mo.getArguments());
-		
-		if(arg.containsKey("Condition")) {
-			ifmodel.getCondition().populateFromJson(arg.getJsonObject("Condition"));
-			conditionString=ifmodel.getCondition().getValue();
-			
-		}else {
-			
-			conditionString="";
-		}
-	
-		
-		
-
-conditionTxt.SetArgModel(ifmodel.getCondition());
-
-		
-		// add cildren
 		BoundList<Step> li = mo.getStep();
-		
 		//add object to test	
 		 Step tostep = li.get(0);
 		String referencedob = tostep.getTestObject() ;
-	TestObject to = controller.getTestObjectById(referencedob, getLibrary());
-	identview.populate(to);
+	theTestObject = controller.getTestObjectById(referencedob, getLibrary());
+	identview.populate(theTestObject);	
+		super.populate(mo);
+
+conditionTxt.SetArgModel(argumentMap.get("Exists"));
+	
+		// add children
+		
+		
+
 	
 	
 		
@@ -234,14 +232,98 @@ conditionTxt.SetArgModel(ifmodel.getCondition());
 
 	private String buildIfString() {
 		// TODO Auto-generated method stub
-		return "if("  + conditionString  + ")" ;
+		return "if("  + theTestObject.getAutoName()  + " exists =" +argumentMap.get("Exists").getValue() ;
 	}
 
 	@Override
 	public PlayingContext play(PlayingContext ctx) throws TcXmlException {
-		// TODO Auto-generated method stub
-		return null;
+		String exist = argumentMap.get("Exists").getValue();
+		PlayingContext ret = null ;
+		if(exist== "true") {
+			
+		ret =	runifexist(ctx);
+		}else {
+			
+		ret=	runifnotexist(ctx);
+		}
+		
+	return ret;	
 	}
+
+	private PlayingContext runifnotexist(PlayingContext ctx) throws TcXmlException {
+		throw new TcXmlException(" if exist with exixts = false is not yet implemented", new IllegalArgumentException("runifnotexist"));
+
+	}
+
+	private PlayingContext runifexist(PlayingContext ctx) throws TcXmlException { 
+		BoundList<Step> li = model.getStep();
+		//add object to test	
+		 Step theTestobjectref = li.get(0);
+		 String referencedob = theTestobjectref.getTestObject() ;
+		 TestObject theTestObject = controller.getTestObjectById(referencedob, getLibrary());
+		 
+		 
+		String timeout =  model.getObjectTimeout();
+		long to=0L;
+		
+		if(timeout == "" || timeout == null) {
+			
+			
+		}else {
+			
+		to = Long.parseLong(timeout)	;
+		}
+		 
+		 
+	String identmethodstr = theTestObject.getIdents().getActive();
+		
+		IdentificationMethod identMetho = IdentificationMethod.get(identmethodstr);
+		
+		switch(identMetho) {
+		
+		case JAVASCRIPT: 
+			throw new TcXmlException("if exist with identification by javascript is not implemented", new IllegalArgumentException(identmethodstr));
+
+		
+		case XPATH : 
+		
+		String xpath = controller.getXpathForTestObject(theTestObject);
+		long TIMEOUTWAIT = to;
+		try {
+	WebDriverWait w = new WebDriverWait(controller.getDriver(), TIMEOUTWAIT );
+		By locator = By.xpath(xpath);
+		List<WebElement> lifound = w.until(ExpectedConditions.numberOfElementsToBeMoreThan(locator, 0)   );
+		//tcXmlController.highLightXpath(xpath);
+		
+		runChildSteps(ctx);
+		}catch (TimeoutException e) {
+			
+			controller.getLog().info("timeout of " + TIMEOUTWAIT + " is reached in if exist step ");		
+		
+		}
+		
+
+			
+			break;
+		
+		
+		}	
+		
+		 
+		 
+		 
+		 
+		 
+	return ctx;	 
+		
+		
+	}
+	private void runChildSteps(PlayingContext ctx) throws TcXmlException {
+		MultipleStepRunner mc = new MultipleStepRunner(stepViwerChildren);
+		mc.runSteps(ctx);
+		
+	}
+	
 
 	@Override
 	public void eexport(PrintWriter pw) throws TcXmlException {
