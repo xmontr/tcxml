@@ -32,6 +32,7 @@ import tcxmlplugin.composite.StepView;
 import tcxmlplugin.composite.stepViewer.StepContainer;
 import tcxmlplugin.composite.stepViewer.StepViewer;
 import tcxmlplugin.composite.stepViewer.StepViewerFactory;
+import tcxmlplugin.job.MultipleStepRunner;
 
 public class IfView extends StepView  implements StepContainer, ExpandListener{
 	
@@ -162,7 +163,7 @@ public class IfView extends StepView  implements StepContainer, ExpandListener{
 	ArgModel cond = argumentMap.get("Condition");
 		
 		
-	//	ifmodel.getCondition().populateFromJson(arg.getJsonObject("Condition"));
+
 		
 		
 		conditionString=cond.getValue();
@@ -221,8 +222,19 @@ conditionTxt.SetArgModel(cond);
 
 	@Override
 	public PlayingContext play(PlayingContext ctx) throws TcXmlException {
-		// TODO Auto-generated method stub
-		return null;
+		ArgModel cond = argumentMap.get("Condition");
+		
+	String val = controller.evaluateJsArgument(cond, ctx.getCurrentExecutionContext());
+	
+	boolean ok = Boolean.parseBoolean(val);
+	if(ok) {
+		
+	runChildSteps(ctx);	
+		
+	}
+		
+		
+		return ctx;
 	}
 
 	@Override
@@ -239,5 +251,14 @@ conditionTxt.SetArgModel(cond);
 	}
 		
 	}
+	
+	
+	private void runChildSteps(PlayingContext ctx) throws TcXmlException {
+		MultipleStepRunner mc = new MultipleStepRunner(stepViwerChildren);
+		mc.runSteps(ctx);
+		
+	}
+	
+	
 
 }

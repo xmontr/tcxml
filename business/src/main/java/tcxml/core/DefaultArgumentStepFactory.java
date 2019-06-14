@@ -87,6 +87,7 @@ public class DefaultArgumentStepFactory {
 	private void addIfArgument(ArrayList<ArgModel> ret) {
 		ArgModel mo = new ArgModel("Condition");
 mo.setValue("");
+mo.setIsJavascript(true);
 ret.add(mo);
 		
 	}
@@ -232,10 +233,24 @@ ret.add(mo);
 		case "Evaluate JavaScript":addEvalJavascriptArgument(ret);break;
 		case "Wait":addWaitArgument(ret);break;
 		case "Verify" : addVerifyArgument(ret);break;
+		case "Select":addSelectArgument(ret);break;
 		
-		default: throw new TcXmlException("no default value for step testobject action = " + step.getAction() + "id=" +step.getStepId()  , new IllegalArgumentException(step.getAction())) ; 
+		default: throw new TcXmlException("no default value for step testobject action = " + step.getAction() + " id= " +step.getStepId()  , new IllegalArgumentException(step.getAction())) ; 
 		
 		}
+		
+	}
+
+
+
+	private void addSelectArgument(ArrayList<ArgModel> ret) {
+		ArgModel mo;
+		mo = new ArgModel("Text");
+mo.setValue("");
+ret.add(mo);
+mo = new ArgModel("Ordinal");
+mo.setValue("1");
+ret.add(mo);
 		
 	}
 

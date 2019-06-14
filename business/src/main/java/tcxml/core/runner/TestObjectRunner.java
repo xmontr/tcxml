@@ -14,6 +14,7 @@ import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.ui.ExpectedCondition;
 import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.Select;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
 import tcxml.core.IdentificationMethod;
@@ -84,6 +85,7 @@ public class TestObjectRunner extends StepRunner{
 		case "Verify":verify(to, ctx);break;
 		
 		case "Evaluate JavaScript":evalJSOnObject(to,ctx);break;
+		case "Select":select(to,ctx);break;
 		
 		default: notImplemented();
 		}
@@ -94,10 +96,37 @@ public class TestObjectRunner extends StepRunner{
 	
 	
 	
+	private void select(TestObject to, PlayingContext ctx) throws TcXmlException {
+		ArgModel thetext = argumentMap.get("Text");
+		ArgModel theordinal = argumentMap.get("Ordinal");
+		WebElement theelement = tcXmlController.identifyElement(to, ctx.getCurrentExecutionContext());
+		int index = 1;
+		Select theDrobBox = new Select(theelement);
+		if(thetext != null) {
+		theDrobBox.selectByValue(thetext.getValue());	
+			
+		}else {
+			
+			try {
+	 index = Integer.parseInt(theordinal.getValue())	;
+			}catch ( Exception e) {
+			throw new TcXmlException("fail to parse ordinal parameter for select action", e);
+			}
+	
+			theDrobBox.selectByIndex(index);
+		}
+		
+		
+		
+		
+		
+		
+	}
+
 	private void evalJSOnObject(TestObject to, PlayingContext ctx) throws TcXmlException {
-		WebElement finded = tcXmlController.identifyElement(to,ctx);
+		WebElement finded = tcXmlController.identifyElement(to,ctx.getCurrentExecutionContext());
 		ArgModel code = argumentMap.get("Code");
-		tcXmlController.evalJavascriptOnObject(code.getValue(),finded,ctx);
+		tcXmlController.evalJavascriptOnObject(code.getValue(),finded,ctx.getCurrentExecutionContext());
 		
 		
 		
@@ -205,10 +234,10 @@ public class TestObjectRunner extends StepRunner{
 	/// if argument is in js it should be evaluated before
 			 if(isj) {
 				 
-			txt =(String) tcXmlController.evaluateJS(txt,ctx);	 
+			txt =(String) tcXmlController.evaluateJS(txt,ctx.getCurrentExecutionContext());	 
 			 }
 			 
-			 tcXmlController.typeText(ctx,to, txt, 20);
+			 tcXmlController.typeText(ctx.getCurrentExecutionContext(),to, txt, 20);
 		
 	}
 
@@ -247,7 +276,7 @@ public class TestObjectRunner extends StepRunner{
 		 
 		ArgModel locationArg = argumentMap.get("Location") ;
 		
-		String location =  tcXmlController.evaluateJsArgument(locationArg,ctx);	
+		String location =  tcXmlController.evaluateJsArgument(locationArg,ctx.getCurrentExecutionContext());	
 		
 		
 		 stat.setTimeStart(System.currentTimeMillis());
@@ -275,10 +304,10 @@ public class TestObjectRunner extends StepRunner{
 		
 
 		
-		WebElement finded = tcXmlController.identifyElement(to,ctx);
+		WebElement finded = tcXmlController.identifyElement(to,ctx.getCurrentExecutionContext());
 		tcXmlController.highlight(finded);
 			final Actions actions = new Actions(tcXmlController.getDriver());
-			actions.moveToElement(tcXmlController.identifyElement(to, ctx)).click().perform();
+			actions.moveToElement(tcXmlController.identifyElement(to, ctx.getCurrentExecutionContext())).click().perform();
 		 
 
 		

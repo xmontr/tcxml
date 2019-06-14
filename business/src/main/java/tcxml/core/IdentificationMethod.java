@@ -31,14 +31,14 @@ public enum IdentificationMethod {
     {
         for(IdentificationMethod env : IdentificationMethod.values())
         {
-            lookup.put(env.getName(), env);
+            lookup.put(env.getName().toLowerCase(), env);
         }
     }
   
     //This method can be used for reverse lookup purpose
     public static IdentificationMethod get(String name)
     {
-        return lookup.get(name);
+        return lookup.get(name.toLowerCase());
     }
 	
 	

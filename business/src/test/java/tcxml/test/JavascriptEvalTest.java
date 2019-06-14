@@ -45,10 +45,10 @@ public class JavascriptEvalTest extends JsonTest{
 			JsonString js = code.getJsonString("value");
 		
 			PlayingContext ctx = new PlayingContext(controller);
-			controller.evaluateJS(js.getString(), ctx );
+			controller.evaluateJS(js.getString(), ctx.getCurrentExecutionContext() );
 			
-			assertThat(ctx.getGlobalJsVariable("theselectorname"), instanceOf(String.class) );
-			assertThat(ctx.getGlobalJsVariable("theselectorname"), equalTo("CSIRIBAN") );
+			assertThat(ctx.getCurrentExecutionContext().getGlobalJsVariable("theselectorname"), instanceOf(String.class) );
+			assertThat(ctx.getCurrentExecutionContext().getGlobalJsVariable("theselectorname"), equalTo("CSIRIBAN") );
 			
 		;	
 			
@@ -69,11 +69,11 @@ public class JavascriptEvalTest extends JsonTest{
 			JsonString js = code.getJsonString("value");
 		
 			PlayingContext ctx = new PlayingContext(controller);
-			controller.evaluateJS(js.getString(), ctx );
+			controller.evaluateJS(js.getString(), ctx.getCurrentExecutionContext() );
 			
-			assertThat(ctx.getGlobalJsVariable("user"), instanceOf(String.class) );
-			assertThat(ctx.getGlobalJsVariable("user"), equalTo("montrxa") );
-			ctx.dumpJsContext();
+			assertThat(ctx.getCurrentExecutionContext().getGlobalJsVariable("user"), instanceOf(String.class) );
+			assertThat(ctx.getCurrentExecutionContext().getGlobalJsVariable("user"), equalTo("montrxa") );
+			ctx.getCurrentExecutionContext().dumpJsContext();
 			
 		;	
 			
@@ -122,7 +122,7 @@ public class JavascriptEvalTest extends JsonTest{
 				boolean isjs = loc.getBoolean("evalJavaScript");
 				
 			PlayingContext ctx= new PlayingContext(controller);
-			Object location = controller.evaluateJS(val.getString(),ctx);
+			Object location = controller.evaluateJS(val.getString(),ctx.getCurrentExecutionContext());
 			
 				
 			assertThat(location, equalTo("https://intragate.stress.ec.europa.eu/smtweb"));	

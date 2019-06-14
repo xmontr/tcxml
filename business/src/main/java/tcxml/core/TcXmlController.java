@@ -1068,7 +1068,7 @@ public ScriptEngine  getJSengine() {
  * @throws TcXmlException
  */
 
-public Object evaluateJS(String code, PlayingContext ctx) throws TcXmlException {
+public Object evaluateJS(String code, ExecutionContext ctx) throws TcXmlException {
 	
 	 
 	ScriptEngine engine = getJSengine();
@@ -1102,12 +1102,12 @@ public Logger getLog() {
 	return log;
 }
 
-public void addFuncArg2context(PlayingContext ctx,ExecutionContext ec) throws TcXmlException {
+public ScriptContext buildCallFunctionContext(ExecutionContext ec) throws TcXmlException {
 	try {
 	
 	
 	   
-	   ScriptContext context = ctx.getJsContext();
+	   ScriptContext context = ec.getJsContext();
 	   ScriptEngine engine = scriptFactory.getEngineByName("nashorn");
 	  
 	
@@ -1116,7 +1116,7 @@ public void addFuncArg2context(PlayingContext ctx,ExecutionContext ec) throws Tc
 		 for (Iterator iterator = li.iterator(); iterator.hasNext();) {
 			CallFunctionAttribut callFunctionAttribut = (CallFunctionAttribut) iterator.next();
 			String name = callFunctionAttribut.getName();
-			Object value=evaluate(callFunctionAttribut,ctx);
+			Object value=evaluate(callFunctionAttribut,ec);
 			
 			JSObject objConstructor = (JSObject)engine.eval("Object");
 			   JSObject jsObj = (JSObject) objConstructor.newObject();
@@ -1126,8 +1126,10 @@ public void addFuncArg2context(PlayingContext ctx,ExecutionContext ec) throws Tc
 		      context.setAttribute("FuncArgs", jsObj, ScriptContext.GLOBAL_SCOPE);
 		      
 				
-				log.info("adding entry to FuncArgs: "+name);
+				log.info("jscontext " + context + " adding entry to FuncArgs: "+name + " for execution context " + ec.getName());
 		 	}
+		 
+		 return context;
 				
 		} catch (ScriptException e) {
 				throw new TcXmlException("fail to build FuncArgs object in js context ", e);
@@ -1152,7 +1154,7 @@ public void addFuncArg2context(PlayingContext ctx,ExecutionContext ec) throws Tc
 
 
 
-private Object evaluate(CallFunctionAttribut callFunctionAttribut, PlayingContext ctx) throws TcXmlException {
+private Object evaluate(CallFunctionAttribut callFunctionAttribut, ExecutionContext ctx) throws TcXmlException {
 	Object ret ;
 	if( callFunctionAttribut.isJs()) { // value is js that need to be evaluated
 		String code = callFunctionAttribut.getValue();
@@ -1341,7 +1343,7 @@ try {
 	 * @throws TcXmlException
 	 */
 	
-	public void typeText(PlayingContext ctx, TestObject to ,String text, long typingInterval) throws TcXmlException {
+	public void typeText(ExecutionContext ctx, TestObject to ,String text, long typingInterval) throws TcXmlException {
 		ensureDriver();
 		
 		WebElement finded = this.identifyElement(to,ctx);
@@ -1473,34 +1475,7 @@ public String getRecordSnaphotImage4step( Step st) {
 }
 
 
-public void removeArgsFromJsContext(PlayingContext playingContext, ExecutionContext toremove) throws TcXmlException {
-	   ScriptContext context = playingContext.getJsContext();
-	   ScriptEngine engine = scriptFactory.getEngineByName("nashorn");
-	
-	  
-		 List<CallFunctionAttribut> li = toremove.getArrgumentsList() ;
-		 for (Iterator iterator = li.iterator(); iterator.hasNext();) {
-			CallFunctionAttribut callFunctionAttribut = (CallFunctionAttribut) iterator.next();
-			StringBuffer sb = new StringBuffer();
-			sb.append(" delete FuncArgs['").append(callFunctionAttribut.getName()).append("'];");
-			try {
-				Object ret = engine.eval(sb.toString(), context);
-				
-			} catch (ScriptException e) {
-				throw new TcXmlException("fail to delete FuncArgs object in js context ", e);
-			
-			}
-			
-			
-			
-			
-			
-			
-		
-		   
-	   }
-	
-}
+
 
 /**
  *  return the list of the transactions declared in the script or in the libs
@@ -1544,7 +1519,7 @@ public List<Transaction> getAlltransactions() {
  */
 
 
-public WebElement identifyElement(TestObject to, PlayingContext ctx) throws  TcXmlException{
+public WebElement identifyElement(TestObject to, ExecutionContext ctx) throws  TcXmlException{
 	String method = to.getIdents().getActive();
 	
 IdentificationMethod identmetho = IdentificationMethod.get(method);
@@ -1587,10 +1562,10 @@ IdentificationMethod identmetho = IdentificationMethod.get(method);
  * @throws TcXmlException
  */
 
-private WebElement evalJavascriptForIdentification(String identjs, PlayingContext ctx) throws  TcXmlException{
-	ExecutionContext curentexeccontext = ctx.getCurrentExecutionContext();
+private WebElement evalJavascriptForIdentification(String identjs, ExecutionContext ctx) throws  TcXmlException{
+	
 	ScriptContext currentjscontext = ctx.getJsContext();
-	ScriptContext identificationcontext = buildIdentificationJavascriptContext(curentexeccontext,currentjscontext);
+	ScriptContext identificationcontext = buildIdentificationJavascriptContext(ctx);
 	ScriptEngine engine = getJSengine();
 	
 	   log.info(" evaluationg javascript for identification :\n " + identjs);
@@ -1616,10 +1591,10 @@ private WebElement evalJavascriptForIdentification(String identjs, PlayingContex
 
 
 
-public void evalJavascriptOnObject(String identjs,WebElement element, PlayingContext ctx) throws  TcXmlException{
-	ExecutionContext curentexeccontext = ctx.getCurrentExecutionContext();
+public void evalJavascriptOnObject(String identjs,WebElement element, ExecutionContext ctx) throws  TcXmlException{
+	
 	ScriptContext currentjscontext = ctx.getJsContext();
-	ScriptContext identificationcontext = buildEvalOnObjectJavascriptContext(curentexeccontext,currentjscontext, element);
+	ScriptContext identificationcontext = buildEvalOnObjectJavascriptContext(ctx, element);
 	ScriptEngine engine = getJSengine();
 	
 	   log.info(" evaluationg javascript for evaljsonobject :\n " + identjs);
@@ -1679,29 +1654,10 @@ private JSObject createJsObject() throws TcXmlException  {
 
 
 private ScriptContext buildEvalOnObjectJavascriptContext(ExecutionContext curentexeccontext,
-		ScriptContext currentcontext, WebElement element) throws TcXmlException {
-	ScriptEngine engine = getJSengine();
-	ScriptContext context = buildInitialJavascriptContext(); 
-	 
-		   JSObject thisobject =createJsObject();
-		   context.setAttribute("object", thisobject, ScriptContext.GLOBAL_SCOPE);
-		  	   
-	 
-	 //copy all properties of the webelement as member of  this.object	 
-		   final JavascriptExecutor js = (JavascriptExecutor) driver;	   
-		   
-	
-		 ArrayList<Object> attList;		 
-		 attList= (ArrayList<Object>) js.executeScript("var items = []; for (index = 0; index < arguments[0].attributes.length; ++index) { items[index]= arguments[0].attributes[index].name }; return items;", element);		  	
-			for (Object key : attList) {
-				
-				thisobject.setMember((String)key, element.getAttribute((String)key));
-				 log.info("adding attribut to this.object: "+key);					
-			
-		}		
-			
-			
-				
+		 WebElement element) throws TcXmlException {
+	ScriptContext context = buildInitialJavascriptContext(); 	 
+		   JSObject thisobject = new WebElementWrapper(element);
+		   context.setAttribute("object", thisobject, ScriptContext.GLOBAL_SCOPE);			
 		
 	return context;
 }
@@ -1716,7 +1672,7 @@ private ScriptContext buildEvalOnObjectJavascriptContext(ExecutionContext curent
  * @return
  * @throws TcXmlException 
  */
-private ScriptContext buildIdentificationJavascriptContext(ExecutionContext curentexeccontext, ScriptContext currentjscontext) throws TcXmlException {
+private ScriptContext buildIdentificationJavascriptContext(ExecutionContext curentexeccontext) throws TcXmlException {
 	ScriptEngine engine = getJSengine();
 	ScriptContext context = new SimpleScriptContext();
 	context.setBindings(engine.createBindings(), ScriptContext.GLOBAL_SCOPE);
@@ -1726,40 +1682,35 @@ private ScriptContext buildIdentificationJavascriptContext(ExecutionContext cure
 	 context.setAttribute("evalXPath", evalXPath, ScriptContext.GLOBAL_SCOPE);
 	 
 	 //build Argscontext objet
-		JSObject objConstructor;
-		try {
-			objConstructor = (JSObject)engine.eval("Object");
-		} catch (ScriptException e) {
-	throw new TcXmlException(" failure in javascript for identification ", e);
-		}
-		   JSObject argscontext = (JSObject) objConstructor.newObject();
+		   JSObject argscontext = createJsObject();
 		   context.setAttribute("ArgsContext", argscontext, ScriptContext.GLOBAL_SCOPE);
 	 
 	 //copy already exsiting global variables as member of  ARgsContext	   
 	 
-		Bindings nashorn_global = (Bindings) context.getAttribute("nashorn.global");
-		if(nashorn_global != null ) {
+		
+	Bindings bd = curentexeccontext.getJsContext().getBindings( ScriptContext.GLOBAL_SCOPE );
+		
 			
-			Set<String>  keys = nashorn_global.keySet();
+			Set<String>  keys = bd.keySet();
 			for (String key : keys) {
-				Object var = nashorn_global.get(key);
+				Object var = bd.get(key);
 				 argscontext.setMember(key, var);
 				 log.info("adding entry to ArgsContext: "+key);					
 			
-		}		
+				
 			
 			
-			context.getBindings( ScriptContext.ENGINE_SCOPE ).putAll(nashorn_global);	
+				
 		}
 		
 			 
 	 
-	 // FunctArgs under ArgsContext
+	
 	 
 	return context;
 }
 
-public String evaluateJsArgument(ArgModel theArg, PlayingContext ctx) throws TcXmlException {
+public String evaluateJsArgument(ArgModel theArg, ExecutionContext ctx) throws TcXmlException {
 	boolean isj = theArg.getIsJavascript();
 	
 	String ret = theArg.getValue();

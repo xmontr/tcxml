@@ -149,9 +149,9 @@ private String getShortCode() {
 	public PlayingContext  play( PlayingContext ctx) throws TcXmlException {
 		
 String code = evaljsmodel.getCode();
-controller.evaluateJS(code , ctx);
+controller.evaluateJS(code , ctx.getCurrentExecutionContext());
 controller.getLog().info("after evaljavascript step context is :");
-ctx.dumpJsContext();
+ctx.getCurrentExecutionContext().dumpJsContext();
 return ctx;
 		
 		

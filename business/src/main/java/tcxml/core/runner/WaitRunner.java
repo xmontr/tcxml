@@ -24,7 +24,7 @@ public class WaitRunner extends StepRunner{
     ArgModel unit = argumentMap.get("Unit");
 	
 	long l =0L;
-	String val = tcXmlController.evaluateJsArgument(interval, ctx);
+	String val = tcXmlController.evaluateJsArgument(interval, ctx.getCurrentExecutionContext());
 	
 	try {
 	 l = Long.parseLong(val);
