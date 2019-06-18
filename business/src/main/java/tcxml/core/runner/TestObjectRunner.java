@@ -1,5 +1,6 @@
 package tcxml.core.runner;
 
+import java.io.File;
 import java.util.List;
 
 import javax.json.JsonObject;
@@ -86,6 +87,7 @@ public class TestObjectRunner extends StepRunner{
 		
 		case "Evaluate JavaScript":evalJSOnObject(to,ctx);break;
 		case "Select":select(to,ctx);break;
+		case "Set" : doSet(to,ctx);break;
 		
 		default: notImplemented();
 		}
@@ -96,6 +98,26 @@ public class TestObjectRunner extends StepRunner{
 	
 	
 	
+	private void doSet(TestObject to, PlayingContext ctx) throws TcXmlException  {
+		ArgModel thepath = argumentMap.get("Path");
+		WebElement theelement = tcXmlController.identifyElement(to, ctx.getCurrentExecutionContext());
+		String thefile = tcXmlController.evaluateJsArgument(thepath, ctx.getCurrentExecutionContext());
+		File file = new File(thefile);	
+		if( !file.exists()) {
+			
+		throw new TcXmlException("fail to upload file from location "+ thefile, new IllegalArgumentException(thefile))	;
+			
+		}
+		tcXmlController.getLog().info("uploading file from " + thefile + " on element " + theelement.getTagName());
+		
+		theelement.sendKeys(thefile);
+		
+		
+				
+				
+		
+	}
+
 	private void select(TestObject to, PlayingContext ctx) throws TcXmlException {
 		ArgModel thetext = argumentMap.get("Text");
 		ArgModel theordinal = argumentMap.get("Ordinal");

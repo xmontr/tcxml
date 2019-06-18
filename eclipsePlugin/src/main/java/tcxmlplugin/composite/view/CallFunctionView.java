@@ -32,6 +32,7 @@ import java.util.List;
 import java.util.Vector;
 
 import javax.script.ScriptContext;
+import javax.script.SimpleScriptContext;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Combo;
@@ -273,7 +274,7 @@ public static class CallFunctionViewModel {
 		List<CallFunctionAttribut> listArguments = ((CallFunctionArg)theArgument).getCallArguments();
 		
 		String name = "Call function " +model.getLibName() + "." +  model.getFuncName();
-		ExecutionContext ec = new ExecutionContext(name  ,listArguments,ctx.getCurrentExecutionContext().getJsContext());
+		ExecutionContext ec = new ExecutionContext(name  ,listArguments,controller.buildInitialJavascriptContext()); //ctx.getCurrentExecutionContext().getJsContext()
 		//create new execution context for call
 		
 		ScriptContext  jsctx = controller.buildCallFunctionContext(ec);

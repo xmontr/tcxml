@@ -362,7 +362,9 @@ public class TcXmlPluginController
 	
 	public void info(String message){
 		Activator.getDefault().log(message, IStatus.INFO,null);
+		if(tcviewer!= null) {
 		tcviewer.displayStatus(message);
+		}
 		
 	}
 	

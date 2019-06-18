@@ -1,17 +1,23 @@
 package tcxml.core;
 
+import jdk.nashorn.api.scripting.AbstractJSObject;
+import net.bytebuddy.implementation.bind.annotation.Super;
 import tcxml.core.parameter.StepParameter;
 
-public class LrAPI {
+public class LrAPI   {
 	
 	
 	TcXmlController controller;
+	
+	
+	public  String scriptDir;
 
 	
 	public LrAPI(TcXmlController tcXmlController) {
 		
 		
 		controller = tcXmlController ;
+		scriptDir=controller.getScriptDir();
 		
 	}
 	
@@ -29,5 +35,8 @@ public class LrAPI {
 		
 		
 	}
+	
+
+	
 
 }

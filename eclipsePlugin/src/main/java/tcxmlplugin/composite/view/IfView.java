@@ -161,6 +161,8 @@ public class IfView extends StepView  implements StepContainer, ExpandListener{
 	public void populate(Step mo) throws TcXmlException {
 		super.populate(mo);
 	ArgModel cond = argumentMap.get("Condition");
+	//javascript flag is not set so put it manually
+	cond.setIsJavascript(true);
 		
 		
 
@@ -227,9 +229,15 @@ conditionTxt.SetArgModel(cond);
 	String val = controller.evaluateJsArgument(cond, ctx.getCurrentExecutionContext());
 	
 	boolean ok = Boolean.parseBoolean(val);
+	
+	controller.getLog().info("if clause condition :" + cond.getValue());
+	controller.getLog().info("if value:" + ok);
 	if(ok) {
 		
 	runChildSteps(ctx);	
+		
+	} else {
+		controller.getLog().info("condition not matched, skip inside step" );
 		
 	}
 		

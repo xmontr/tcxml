@@ -191,6 +191,8 @@ public class TcXmlController {
 	private File highlighterExtension;
 	
 	private File chromeApiExtension;
+
+	private String scriptDir;
 	
 	
 	private static  ScriptEngineManager  scriptFactory = new ScriptEngineManager();
@@ -490,6 +492,8 @@ public void loadFromDisk(String pathdir) throws TcXmlException {
 		
 	}
 	
+	this.scriptDir= pathdir;
+	
 //search main script 
 	  listing = Arrays.asList(file.list()) ;
 	 
@@ -580,6 +584,10 @@ if(parameterFile.exists()) {
 setPath(file);
 	
 }
+public String getScriptDir() {
+	return scriptDir;
+}
+
 /**
  * 
  *  the default.xml doesn't contains any namespace for truScript so add xmlns="http://www.example.org/tcxml" to eanable the jaxb parsing
@@ -1103,13 +1111,9 @@ public Logger getLog() {
 }
 
 public ScriptContext buildCallFunctionContext(ExecutionContext ec) throws TcXmlException {
-	try {
-	
-	
-	   
-	   ScriptContext context = ec.getJsContext();
+	ScriptContext context = ec.getJsContext();
 	   ScriptEngine engine = scriptFactory.getEngineByName("nashorn");
-	  
+	  JSObject funcrgsobj = createJsObject();
 	
 	  
 		 List<CallFunctionAttribut> li = ec.getArrgumentsList() ;
@@ -1118,23 +1122,20 @@ public ScriptContext buildCallFunctionContext(ExecutionContext ec) throws TcXmlE
 			String name = callFunctionAttribut.getName();
 			Object value=evaluate(callFunctionAttribut,ec);
 			
-			JSObject objConstructor = (JSObject)engine.eval("Object");
-			   JSObject jsObj = (JSObject) objConstructor.newObject();
-	
-		      jsObj.setMember(name, value);
+			
+				
+			funcrgsobj.setMember(name, value);
 		      
-		      context.setAttribute("FuncArgs", jsObj, ScriptContext.GLOBAL_SCOPE);
+
 		      
 				
-				log.info("jscontext " + context + " adding entry to FuncArgs: "+name + " for execution context " + ec.getName());
+				log.info("jscontext " + context + " adding entry to FuncArgs: "+name + " value is " + value +  " for execution context " + ec.getName());
 		 	}
 		 
+		 log.info("jscontext " + context + " adding new  FuncArgs into context : " + funcrgsobj );
+		 
+    context.setAttribute("FuncArgs", funcrgsobj, ScriptContext.ENGINE_SCOPE);		 
 		 return context;
-				
-		} catch (ScriptException e) {
-				throw new TcXmlException("fail to build FuncArgs object in js context ", e);
-			
-			}
 			
 			
 			
@@ -1675,37 +1676,42 @@ private ScriptContext buildEvalOnObjectJavascriptContext(ExecutionContext curent
 private ScriptContext buildIdentificationJavascriptContext(ExecutionContext curentexeccontext) throws TcXmlException {
 	ScriptEngine engine = getJSengine();
 	ScriptContext context = new SimpleScriptContext();
-	context.setBindings(engine.createBindings(), ScriptContext.GLOBAL_SCOPE);
+	//context.setBindings(engine.createBindings(), ScriptContext.ENGINE_SCOPE);
 	
 	// the evalXPath function
 	EvalXpathFunction evalXPath = new EvalXpathFunction(this);	
-	 context.setAttribute("evalXPath", evalXPath, ScriptContext.GLOBAL_SCOPE);
+	 context.setAttribute("evalXPath", evalXPath, ScriptContext.ENGINE_SCOPE);
 	 
 	 //build Argscontext objet
 		   JSObject argscontext = createJsObject();
-		   context.setAttribute("ArgsContext", argscontext, ScriptContext.GLOBAL_SCOPE);
+		   context.setAttribute("ArgsContext", argscontext, ScriptContext.ENGINE_SCOPE);
 	 
 	 //copy already exsiting global variables as member of  ARgsContext	   
 	 
 		
-	Bindings bd = curentexeccontext.getJsContext().getBindings( ScriptContext.GLOBAL_SCOPE );
+	Bindings bd = curentexeccontext.getJsContext().getBindings( ScriptContext.ENGINE_SCOPE );
 		
 			
 			Set<String>  keys = bd.keySet();
 			for (String key : keys) {
 				Object var = bd.get(key);
 				 argscontext.setMember(key, var);
-				 log.info("adding entry to ArgsContext: "+key);					
+				 log.info("adding entry to ArgsContext: "+key + " value is :" + var);					
 			
 				
 			
 			
 				
 		}
+			
+			
+	// FuncArgs  is accessible in global scope even if it should be accessed via argscontext		
 		
 			 
-	 
-	
+			Object FuncArgs = bd.get("FuncArgs");
+		
+			context.setAttribute("FuncArgs", FuncArgs, ScriptContext.ENGINE_SCOPE); 
+			 log.info("copy funcargs "+FuncArgs + " into context: " + context );
 	 
 	return context;
 }
