@@ -36,6 +36,14 @@ public class LrAPI   {
 		
 	}
 	
+	
+	public void userDataPoint(String name, String value) {
+		
+		
+		controller.getLog().info("userDataPoint=" + value);	
+		
+	}
+	
 
 	
 

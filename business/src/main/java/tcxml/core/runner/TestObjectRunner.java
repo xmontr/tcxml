@@ -125,8 +125,8 @@ public class TestObjectRunner extends StepRunner{
 		int index = 1;
 		Select theDrobBox = new Select(theelement);
 		if(thetext != null) {
-		theDrobBox.selectByValue(thetext.getValue());	
 			
+		theDrobBox.selectByVisibleText(thetext.getValue());	
 		}else {
 			
 			try {
