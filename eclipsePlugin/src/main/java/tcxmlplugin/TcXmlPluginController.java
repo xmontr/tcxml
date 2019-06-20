@@ -9,9 +9,14 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.PrintWriter;
 import java.net.URL;
+import java.nio.file.Files;
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Properties;
+import java.util.Set;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
@@ -30,10 +35,17 @@ import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Listener;
 
+import tcxml.core.TcXmlController;
 import tcxml.core.TcXmlException;
+import tcxmlplugin.composite.ActionView;
+import tcxmlplugin.composite.ActionsViewer;
+import tcxmlplugin.composite.LibraryView;
+import tcxmlplugin.composite.LibraryViewer;
+import tcxmlplugin.composite.RunLogicViewer;
 import tcxmlplugin.composite.TcViewer;
 import tcxmlplugin.composite.stepViewer.StepViewer;
 import tcxml.model.ImportModel;
+import tcxml.model.TruLibrary;
 import tcxmlplugin.nature.NatureTcXml;
 import util.TcxmlUtils;
 
@@ -735,32 +747,140 @@ public Image createImage(String absolutepath, Display display) throws TcXmlExcep
  * 
  *  export as protractor script the step list
  * 
- * @param li
+ * @param runLogicViewer
+ * @param libraryViewer 
+ * @param actionsViewer 
  */
 
-	public void export(List<StepViewer> li) {
-		File target = new File("c:/protractor.js");
-		FileOutputStream out;
+	public void export(RunLogicViewer runLogicViewer, LibraryViewer libraryViewer, ActionsViewer actionsViewer) {
+		
+		TcXmlController controller = tcviewer.getController();
+		//create temporary directory
 		try {
+		java.nio.file.Path exportPath = Files.createTempDirectory("protractor-");
+		controller.getLog().info("tempdirectory for export :" + exportPath.toString() );
+		
+		HashMap<String,File> linkedLib = exportLibraries(libraryViewer,exportPath);		
+		File target = exportPath.resolve("protractor.js").toFile();				
+target.createNewFile();
+		FileOutputStream out;
+	
 			out = new FileOutputStream(target);
 			PrintWriter pw = new PrintWriter(out);
-			for (StepViewer stepViewer : li) {
+			exportSymbols(pw,linkedLib);
+			exportActions(pw , actionsViewer);
+			for (StepViewer stepViewer : runLogicViewer.getChildViewer()) {
 				stepViewer.export(pw);
 			}
 			pw.flush();
 			pw.close();
 			out.flush();
 			out.close();
-			
-			
-		} catch (Exception e) {
+		
+		
+		
+		
+		
+		
+		
+		} catch (IOException e1) {
 			// TODO Auto-generated catch block
-			e.printStackTrace();
+		error("fail to create temporary export directory", e1);
+		} catch (TcXmlException e) {
+			// TODO Auto-generated catch block
+			error("fail to export current script ", e);
 		}
+		
+
+			
+			
+	
 		
 		
 		
 	}
+	
+	private void exportActions(PrintWriter pw, ActionsViewer actionsViewer) throws TcXmlException {
+		{
+			
+		Map<String, ActionView> listview = actionsViewer.getActionsView();	
+		Collection<ActionView> val = listview.values();
+		for (ActionView actionView : val) {
+				actionView.eexport(pw);
+			
+		}
+		
+			
+		}
+	
+}
+
+	/**
+	 * 
+	 *  write the require line that import symbole in the js script  i.e var {toto} = require ('toto');
+	 * 
+	 * 
+	 * @param pw
+	 * @param linkedLib 
+	 */
+
+private void exportSymbols(PrintWriter pw, HashMap<String, File> linkedLib) {
+	// TODO Auto-generated method stub
+	
+}
+
+private HashMap<String, File> exportLibraries(LibraryViewer libraryViewer, java.nio.file.Path exportPath) {
+	HashMap<String, File> ret = new HashMap<>() ;
+	
+	
+	
+	Map<String, LibraryView> libviews = libraryViewer.getLibrariesView();
+	
+	Set<String> libnames = libviews.keySet();
+	for (String libname : libnames) {
+		File exportedLib = exportLib(  exportPath , libname  , libviews.get(libname) ) ;
+		ret.put(libname, exportedLib);
+	}
+	
+	
+	return ret;
+}
+
+private File exportLib(java.nio.file.Path exportPath, String libname, LibraryView libraryView) {
+	File ret = null;
+	try {
+	
+	java.nio.file.Path targetFileName = exportPath.resolve(libname + ".js");
+	 ret = targetFileName.toFile() ;
+	ret.createNewFile();
+	FileOutputStream out;
+	
+	out = new FileOutputStream(ret);
+	PrintWriter pw = new PrintWriter(out);
+	List<StepViewer> li = libraryView.getChildViewer();
+	for (StepViewer stepViewer : li) {
+		
+		stepViewer.export(pw);
+		}
+		pw.flush();
+		pw.close();
+		out.flush();
+		out.close();
+	
+	
+	
+	
+	
+	
+	} catch (IOException e) {
+		// TODO Auto-generated catch block
+	error("fail to export library "+libname, e);
+	} catch (TcXmlException e) {
+		error("fail to export stepviewer in library" + libname, e);
+	}
+	
+	return ret;
+}
 
 public List<String> getExtraFiles(String selectedDirectory) throws TcXmlPluginException {
 	List<String> ret =new ArrayList<String>() ;

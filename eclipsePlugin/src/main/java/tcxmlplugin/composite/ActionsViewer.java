@@ -40,6 +40,15 @@ import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.widgets.ProgressBar;
 
 public class ActionsViewer extends Composite  {
+	public Map<String, ActionView> getActionsView() {
+		return actionsView;
+	}
+
+
+
+
+
+
 	private DataBindingContext m_bindingContext;
 	
 	

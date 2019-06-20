@@ -100,12 +100,17 @@ public class ActionView extends AStepContainer implements TopStepContainer{
 
 
 	public void eexport(PrintWriter pw) throws TcXmlException {
-		StringBuffer sb = new StringBuffer(" // code for action ").append( getActionName());
+		
+		StringBuffer sb = new StringBuffer("// code for action  ").append(actionName);
+		pw.println(sb.toString());
+		 sb = new StringBuffer(" function  ").append( getActionName()).append("(){");
 		pw.println(sb.toString());
 		for (StepViewer stepViewer : stepViwerChildren) {
 			stepViewer.export(pw);
 			
 		}
+		
+		pw.println("}");
 		
 	}
 

@@ -224,9 +224,19 @@ controller.getLog().info("***************     function  **********collpased ");
 	}
 
 	@Override
-	public void eexport(PrintWriter pw) throws TcXmlException {
-		pw.println(getTitle());
+	
+		public void eexport(PrintWriter pw) throws TcXmlException {
+			StringBuffer sb = new StringBuffer(" function  ").append( model.getAction()).append("(){");
+			pw.println(sb.toString());
+			for (StepViewer stepViewer : getChildViewer()) {
+				stepViewer.export(pw);
+				
+			}
+			
+			pw.println("}");
+			
+		}
 		
-	}
+	
 
 }

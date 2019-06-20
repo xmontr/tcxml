@@ -47,6 +47,12 @@ public class LibraryViewer extends Composite {
 	private Map<String, LibraryView> librariesView;
 	
 	
+	public Map<String, LibraryView> getLibrariesView() {
+		return librariesView;
+	}
+
+
+
 	private TcXmlController controller;
 	private Composite maincontainer;
 	private StackLayout maincontainerlayout;

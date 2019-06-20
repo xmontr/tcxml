@@ -133,13 +133,16 @@ public void populate(Step mo) throws TcXmlException {
 
 	@Override
 	public void eexport(PrintWriter pw) throws TcXmlException {
+		
+		StringBuffer sb = new StringBuffer("// code for ").append(buildTitle());
+		pw.println(sb.toString());
 		TcViewer tcviewer = TcXmlPluginController.getInstance().getTcviewer();
 		
 		String actionName = actionmodel.getActionSelected();
 		
-	ActionView action	= tcviewer.getActionsViewer().getActionView(actionName);
-		
-	action.eexport(pw);
+		sb= new StringBuffer(actionName).append("();");
+		pw.println(sb.toString());
+
 		
 	}
 }

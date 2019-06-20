@@ -63,6 +63,11 @@ public class TcViewer extends Composite implements PropertyChangeListener, IJobC
 	private ParameterViewer parameterviewer;
 	
 	
+	public TcXmlController getController() {
+		return controller;
+	}
+
+
 	private TransactionViewer transactionViewer;
 
 	private LibraryViewer libraryViewer;
@@ -242,7 +247,8 @@ public class TcViewer extends Composite implements PropertyChangeListener, IJobC
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 				List<StepViewer> li = runLogicViewer.stepViwerChildren ;
-				TcXmlPluginController.getInstance().export(li);
+				
+				TcXmlPluginController.getInstance().export(runLogicViewer, libraryViewer,actionsViewer);
 				
 			}
 			
