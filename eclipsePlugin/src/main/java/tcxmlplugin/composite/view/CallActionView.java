@@ -134,7 +134,7 @@ public void populate(Step mo) throws TcXmlException {
 	@Override
 	public void eexport(PrintWriter pw) throws TcXmlException {
 		
-		StringBuffer sb = new StringBuffer("// code for ").append(buildTitle());
+		StringBuffer sb = new StringBuffer("// ").append(buildTitle());
 		pw.println(sb.toString());
 		TcViewer tcviewer = TcXmlPluginController.getInstance().getTcviewer();
 		

@@ -133,7 +133,7 @@ public class WaitView extends StepView  {
 
 	@Override
 	public void eexport(PrintWriter pw) throws TcXmlException {
-		pw.println(getTitle());
+		pw.println(" // " + getTitle());
 		
 	}
 	protected DataBindingContext initDataBindings() {

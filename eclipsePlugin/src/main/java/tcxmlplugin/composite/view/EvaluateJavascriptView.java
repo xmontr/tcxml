@@ -171,8 +171,8 @@ return ctx;
 
 	@Override
 	public void eexport(PrintWriter pw) throws TcXmlException {
-		StringBuffer sb = new StringBuffer("// code for ").append(buildTitle());
-		pw.println(sb.toString());
+		pw.println(" // " + getTitle());
+	
 		pw.println(evaljsmodel.code);
 		
 	}

@@ -1266,7 +1266,32 @@ public void openBrowser (String type, String driverPath) throws TcXmlException {
 
 }	
 
+/***
+ * 
+ * 
+ * 
+ * @param exportPath
+ * @return
+ * @throws TcXmlException 
+ */
 
+public File exportTestcentreJSresource(java.nio.file.Path exportPath, String resource) throws TcXmlException {
+	
+	  InputStream src = getClass().getClassLoader().getResourceAsStream(resource) ;
+	Path target = exportPath.resolve(resource);
+	
+	try {
+		Files.copy(src, target, StandardCopyOption.REPLACE_EXISTING);
+	} catch (IOException e) {
+		// TODO Auto-generated catch block
+		throw new TcXmlException("fail to export "+resource+ " file", e);
+	}	
+	
+	return target.toFile();
+	
+	
+	
+}
 
 
 

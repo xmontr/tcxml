@@ -327,7 +327,15 @@ conditionTxt.SetArgModel(argumentMap.get("Exists"));
 
 	@Override
 	public void eexport(PrintWriter pw) throws TcXmlException {
-		// TODO Auto-generated method stub
+		StringBuffer sb = new StringBuffer();
+		pw.println(" // " + getTitle());
+		sb.append(buildIfString()) ;
+		List<StepViewer> list = getChildViewer() ;
+		for (StepViewer stepViewer : list) {
+			stepViewer.export(pw);
+		}		
+		 sb = new StringBuffer("}//fin if ");	
+		pw.println(sb);
 		
 	}
 	

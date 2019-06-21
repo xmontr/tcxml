@@ -420,7 +420,7 @@ public class TestObjectView extends StepView implements PropertyChangeListener {
 
 	@Override
 	public void eexport(PrintWriter pw) throws TcXmlException {
-		pw.println(getTitle());
+		pw.println("//  "  + getTitle());
 		
 	}
 

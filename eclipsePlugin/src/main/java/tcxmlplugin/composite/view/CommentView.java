@@ -91,8 +91,7 @@ public class CommentView extends StepView{
 
 	@Override
 	public void eexport(PrintWriter pw) throws TcXmlException {
-		StringBuffer sb = new StringBuffer("// code for ").append(buildTitle());
-		pw.println(sb.toString());
+		pw.println(" // " + getTitle());
 		StringBuffer sb2 = new StringBuffer("//").append(commentModel.getComment());
 		pw.println(sb2.toString());
 		

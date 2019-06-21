@@ -219,7 +219,7 @@ conditionTxt.SetArgModel(cond);
 
 	private String buildIfString() {
 		// TODO Auto-generated method stub
-		return "if( ("  + argumentMap.get("Condition").getValue()  + ")  == true)" ;
+		return "if( ("  + argumentMap.get("Condition").getValue()  + ")  ) {" ;
 	}
 
 	@Override
@@ -247,7 +247,17 @@ conditionTxt.SetArgModel(cond);
 
 	@Override
 	public void eexport(PrintWriter pw) throws TcXmlException {
-		// TODO Auto-generated method stub
+		StringBuffer sb = new StringBuffer();
+		pw.println(" // " + getTitle());
+		sb.append(buildIfString()) ;
+		pw.println(sb);
+		List<StepViewer> list = getChildViewer() ;
+		for (StepViewer stepViewer : list) {
+			stepViewer.export(pw);
+		}		
+		 sb = new StringBuffer("}//fin if ");	
+		pw.println(sb);
+		
 		
 	}
 	

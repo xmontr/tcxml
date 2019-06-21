@@ -124,7 +124,7 @@ public class GenericAPIStepView extends StepView implements PropertyChangeListen
 
 	@Override
 	public void eexport(PrintWriter pw) throws TcXmlException {
-		// TODO Auto-generated method stub
+		pw.println(" // " + getTitle());
 
 	}
 

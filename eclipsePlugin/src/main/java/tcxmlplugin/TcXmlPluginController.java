@@ -760,8 +760,14 @@ public Image createImage(String absolutepath, Display display) throws TcXmlExcep
 		java.nio.file.Path exportPath = Files.createTempDirectory("protractor-");
 		controller.getLog().info("tempdirectory for export :" + exportPath.toString() );
 		
-		HashMap<String,File> linkedLib = exportLibraries(libraryViewer,exportPath);		
-		File target = exportPath.resolve("protractor.js").toFile();				
+		HashMap<String,File> linkedLib = exportLibraries(libraryViewer,exportPath);	
+		// add the tescentre sript containing TC symbol
+		linkedLib.put("TC", controller.exportTestcentreJSresource(exportPath,"testcentre.js"));
+		// export the conf file
+		controller.exportTestcentreJSresource(exportPath,"conf.js");
+		
+		//fill the spec file
+		File target = exportPath.resolve("spec.js").toFile();				
 target.createNewFile();
 		FileOutputStream out;
 	
@@ -769,9 +775,10 @@ target.createNewFile();
 			PrintWriter pw = new PrintWriter(out);
 			exportSymbols(pw,linkedLib);
 			exportActions(pw , actionsViewer);
-			for (StepViewer stepViewer : runLogicViewer.getChildViewer()) {
-				stepViewer.export(pw);
-			}
+			
+			exportLogic(pw,runLogicViewer);
+			
+
 			pw.flush();
 			pw.close();
 			out.flush();
@@ -800,9 +807,17 @@ target.createNewFile();
 		
 	}
 	
+	private void exportLogic(PrintWriter pw, RunLogicViewer runLogicViewer) throws TcXmlException {
+		pw.println("//start  export logic  **********************************************************************");
+		for (StepViewer stepViewer : runLogicViewer.getChildViewer()) {
+			stepViewer.export(pw);
+		}
+		pw.println("//end  export logic  **********************************************************************");	
+}
+
 	private void exportActions(PrintWriter pw, ActionsViewer actionsViewer) throws TcXmlException {
 		{
-			
+			pw.println("//start  export action  **********************************************************************");		
 		Map<String, ActionView> listview = actionsViewer.getActionsView();	
 		Collection<ActionView> val = listview.values();
 		for (ActionView actionView : val) {
@@ -812,7 +827,8 @@ target.createNewFile();
 		
 			
 		}
-	
+
+		pw.println("//end  export action  **********************************************************************");
 }
 
 	/**
@@ -825,7 +841,17 @@ target.createNewFile();
 	 */
 
 private void exportSymbols(PrintWriter pw, HashMap<String, File> linkedLib) {
-	// TODO Auto-generated method stub
+	pw.println("//start  exportsymbols  **********************************************************************");
+
+	Set<String> symboles = linkedLib.keySet();
+	for (String symbole : symboles) {
+		StringBuffer sb = new StringBuffer();
+		String filename = linkedLib.get(symbole).getName();
+		sb.append("var {").append(symbole).append("} = require(./").append(filename).append(");");
+		pw.println(sb.toString());	
+	}
+	
+	pw.println("//end  export logic  **********************************************************************");
 	
 }
 
@@ -857,11 +883,31 @@ private File exportLib(java.nio.file.Path exportPath, String libname, LibraryVie
 	
 	out = new FileOutputStream(ret);
 	PrintWriter pw = new PrintWriter(out);
+	
+	StringBuffer sb = new StringBuffer();
+	
+	sb.append("var ").append(libname).append(  "={");
+	pw.println(sb);
+	
 	List<StepViewer> li = libraryView.getChildViewer();
 	for (StepViewer stepViewer : li) {
 		
 		stepViewer.export(pw);
 		}
+	
+	
+	
+	pw.println("}");
+	sb = new StringBuffer();
+	sb.append("exports.").append(libname) .append("=").append(libname).append(";") ;
+	
+	pw.println( sb.toString());
+	
+	
+	
+	
+sb = new StringBuffer(" **********************end of library ").append(libname).append(" ***********************************************");
+	pw.println(sb);
 		pw.flush();
 		pw.close();
 		out.flush();

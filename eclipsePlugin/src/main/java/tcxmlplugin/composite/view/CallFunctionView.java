@@ -438,7 +438,7 @@ public static class CallFunctionViewModel {
 	public void eexport(PrintWriter pw) throws TcXmlException {
 		Vector<String> liparam = new Vector<String>();
 		String[] tab;
-		StringBuffer sb = new StringBuffer("// code for ").append(buildTitle());
+		StringBuffer sb = new StringBuffer("// ").append(buildTitle());
 		pw.println(sb.toString());
 		StringBuffer sb2 = new StringBuffer();
 		sb2.append(callfunctmodel.selectedLib).append(".").append(callfunctmodel.selectedFunction).append("(");

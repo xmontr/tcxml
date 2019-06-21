@@ -271,7 +271,19 @@ conditionString= conditionTxt.getArgModel().getValue();
 
 	@Override
 	public void eexport(PrintWriter pw) throws TcXmlException {
-		pw.println(getTitle());
+		StringBuffer sb = new StringBuffer();
+		pw.println(" // " + getTitle());
+		
+	pw.println(buildLoopString()  + " { ");
+	
+	List<StepViewer> list = getChildViewer() ;
+	for (StepViewer stepViewer : list) {
+		stepViewer.export(pw);
+	}		
+	 sb = new StringBuffer("}//fin for ");	
+	pw.println(sb);	
+	
+	
 		
 	}
 	
