@@ -14,6 +14,7 @@ import org.eclipse.swt.widgets.Group;
 import tcxml.core.PlayingContext;
 import tcxml.core.TcXmlController;
 import tcxml.core.TcXmlException;
+import tcxml.core.export.TestObjectExporter;
 import tcxml.core.runner.TestObjectRunner;
 import tcxml.model.Step;
 import tcxml.model.TestObject;
@@ -420,7 +421,11 @@ public class TestObjectView extends StepView implements PropertyChangeListener {
 
 	@Override
 	public void eexport(PrintWriter pw) throws TcXmlException {
-		pw.println("//  "  + getTitle());
+		
+		TestObjectExporter exporter = new TestObjectExporter(model,getLibrary(), controller);
+		String txt = exporter.export();
+		
+		pw.println(txt);
 		
 	}
 

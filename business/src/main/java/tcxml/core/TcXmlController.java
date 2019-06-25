@@ -1763,4 +1763,14 @@ return ret;
 
 }
 
+public String generateJsObject(TestObject to) throws TcXmlException {
+	StringBuffer ret = new StringBuffer() ;
+	String identMethod = to.getIdents().getActive();
+	
+	String ident = getActiveIdentificationForTestObject(to);
+	ret.append("new TC.testObject( ").append("\"").append(identMethod).append("\",\n").append("\"").append(ident ).append("\"").append("\n)") ;
+	
+	return ret.toString();
+}
+
 }
