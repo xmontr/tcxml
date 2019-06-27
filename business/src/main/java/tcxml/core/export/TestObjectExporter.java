@@ -1,10 +1,14 @@
 package tcxml.core.export;
 
+import java.util.ArrayList;
+
 import tcxml.core.TcXmlController;
 import tcxml.core.TcXmlException;
+import tcxml.model.ArgModel;
 import tcxml.model.Step;
 import tcxml.model.TestObject;
 import tcxml.model.TruLibrary;
+import util.TcxmlUtils;
 
 public class TestObjectExporter  extends StepExporter{
 
@@ -73,9 +77,23 @@ public class TestObjectExporter  extends StepExporter{
 		return null;
 	}
 
-	private String select(TestObject to) {
-		// TODO Auto-generated method stub
-		return null;
+	private String select(TestObject to) throws TcXmlException {
+		ArgModel thetext = argumentMap.get("Text");
+		ArgModel theordinal = argumentMap.get("Ordinal");
+		String func = "TC.select";	
+		
+		StringBuilder objarg  = new StringBuilder();
+		objarg.append("{\n");
+		objarg.append("Text:").append(thetext).append("\n");
+		objarg.append("Ordinal:").append(theordinal).append("\n");		
+		objarg.append("}\n");
+		
+		String ret = TcxmlUtils.formatJavascriptFunction(
+					func,objarg.toString(),
+					tcXmlController.generateJsObject(to) 
+					);
+		return ret;	
+		
 	}
 
 	private String evalJSOnObject(TestObject to) {
@@ -88,20 +106,36 @@ public class TestObjectExporter  extends StepExporter{
 		return null;
 	}
 
-	private String waitOn(TestObject to) {
-		// TODO Auto-generated method stub
-		return null;
+	private String waitOn(TestObject to) throws TcXmlException {
+		String func = "TC.click";		
+		String ret = TcxmlUtils.formatJavascriptFunction(
+					func,
+					tcXmlController.generateJsObject(to) 
+					);
+		return ret;
 	}
 
-	private String click(TestObject to) {
-		// TODO Auto-generated method stub
-		return null;
+	private String click(TestObject to) throws TcXmlException {
+		String func = "TC.click";
+		String ret = TcxmlUtils.formatJavascriptFunction(
+					func,
+					tcXmlController.generateJsObject(to) 
+					);
+		return ret;
 	}
 
 	private String typeText(TestObject to) throws TcXmlException {
-		StringBuffer ret = new StringBuffer();
-		ret.append("TC.type('").append(argumentMap.get("Value").getValue()  ).append("',").append(tcXmlController.generateJsObject(to)).append(");");		
-		return ret.toString();
+		ArgModel argtext = argumentMap.get("Value");
+		String value = argtext.getIsJavascript() == true ? argtext.getValue(): TcxmlUtils.escapeStringParameter(argtext.getValue(), "\"");
+		String func = "TC.type";
+		String ret = TcxmlUtils.formatJavascriptFunction(
+					func,
+					value  ,
+					tcXmlController.generateJsObject(to) 
+					);
+		return ret;
+		
+		
 	}
 
 	private String exportBrowserStep() {

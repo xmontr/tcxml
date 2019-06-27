@@ -270,7 +270,7 @@ conditionString= conditionTxt.getArgModel().getValue();
 	}
 
 	@Override
-	public void eexport(PrintWriter pw) throws TcXmlException {
+	public void export(PrintWriter pw) throws TcXmlException {
 		StringBuffer sb = new StringBuffer();
 		pw.println(" // " + getTitle());
 		

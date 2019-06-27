@@ -420,11 +420,13 @@ public class TestObjectView extends StepView implements PropertyChangeListener {
 	}
 
 	@Override
-	public void eexport(PrintWriter pw) throws TcXmlException {
+	public void export(PrintWriter pw) throws TcXmlException {
 		
 		TestObjectExporter exporter = new TestObjectExporter(model,getLibrary(), controller);
+		StringBuffer sb = new StringBuffer();
+		sb.append("//").append(getTitle()).append("\n");		
 		String txt = exporter.export();
-		
+		sb.append(txt);
 		pw.println(txt);
 		
 	}

@@ -14,6 +14,8 @@ import org.eclipse.swt.widgets.Composite;
 import tcxml.core.PlayingContext;
 import tcxml.core.TcXmlController;
 import tcxml.core.TcXmlException;
+import tcxml.core.export.TestObjectExporter;
+import tcxml.core.export.WaitExporter;
 import tcxml.core.runner.TestObjectRunner;
 import tcxml.core.runner.WaitRunner;
 import tcxml.model.ArgModel;
@@ -132,8 +134,13 @@ public class WaitView extends StepView  {
 
 
 	@Override
-	public void eexport(PrintWriter pw) throws TcXmlException {
-		pw.println(" // " + getTitle());
+	public void export(PrintWriter pw) throws TcXmlException {
+		WaitExporter exporter = new WaitExporter(model,getLibrary(), controller);
+		StringBuffer sb = new StringBuffer();
+		sb.append("//").append(getTitle()).append("\n");		
+		String txt = exporter.export();
+		sb.append(txt);
+		pw.println(txt);
 		
 	}
 	protected DataBindingContext initDataBindings() {

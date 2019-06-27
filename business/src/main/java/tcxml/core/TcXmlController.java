@@ -81,6 +81,7 @@ import tcxml.model.Transaction;
 import tcxml.model.Transactions;
 import tcxml.model.TruLibrary;
 import tcxml.model.TruScript;
+import util.TcxmlUtils;
 
 public class TcXmlController {
 	
@@ -1763,12 +1764,76 @@ return ret;
 
 }
 
+/**
+ *  generate the js code that create the funcarggs argument for function  
+ * 
+ * 
+ * @param li
+ * @return
+ */
+
+public String generateJsArgument( List<CallFunctionAttribut> li) {
+	StringBuffer ret = new StringBuffer();
+	ret.append("FuncArgs = {\n"  );
+	for (CallFunctionAttribut callFunctionAttribut : li) {
+		String attname =callFunctionAttribut.getName();
+		boolean isjs = callFunctionAttribut.isJs() ;
+		String value="";
+		if(isjs) { // javascript attribut
+			
+		value = generateAnonymousFunctionForJScode(callFunctionAttribut.getValue());	
+			
+		}else { //plain text attribut
+			
+			value = callFunctionAttribut.getValue();
+			
+		}
+		
+	ret.append(attname).append(":").append(value).append(",\n");	
+		
+	}
+	
+	
+	ret.append("}\n");
+return ( ret.toString() );	
+}
+
+
+
+
+
+
+
+
+
+
+private String generateAnonymousFunctionForJScode(String jscode) {
+	StringBuffer sb = new StringBuffer();
+	sb.append("(function(){");
+	
+	sb.append(StringEscapeUtils.unescapeJavaScript(jscode));
+	sb.append("})();");
+	
+	
+	
+	return sb.toString();
+}
+
 public String generateJsObject(TestObject to) throws TcXmlException {
 	StringBuffer ret = new StringBuffer() ;
 	String identMethod = to.getIdents().getActive();
+
 	
-	String ident = getActiveIdentificationForTestObject(to);
-	ret.append("new TC.testObject( ").append("\"").append(identMethod).append("\",\n").append("\"").append(ident ).append("\"").append("\n)") ;
+	String ident = getIdentForTestObject(to, identMethod);
+	if(identMethod.equals(IdentificationMethod.get("xpath"))) {
+		
+		ident = TcxmlUtils.escapeStringParameter(ident, "\"");
+		
+	ident = 	StringEscapeUtils.escapeJavaScript(ident);
+		
+	}
+	
+	ret.append("new TC.testObject( ").append("\"").append(identMethod).append("\",").append("\"").append(ident ).append("\"").append(")") ;
 	
 	return ret.toString();
 }

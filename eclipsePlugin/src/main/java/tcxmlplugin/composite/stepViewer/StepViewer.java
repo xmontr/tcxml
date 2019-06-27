@@ -470,7 +470,7 @@ public void removeBreakpoint() {
 
 
 public void export(PrintWriter pw) throws TcXmlException {
-	view.eexport(pw);
+	view.export(pw);
 	
 }
 

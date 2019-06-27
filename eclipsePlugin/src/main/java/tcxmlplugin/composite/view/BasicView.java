@@ -232,7 +232,7 @@ super.populate(mo);
 
 
 	@Override
-	public void eexport(PrintWriter pw) throws TcXmlException {
+	public void export(PrintWriter pw) throws TcXmlException {
 		pw.println(getTitle());
 		
 	}

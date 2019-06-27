@@ -186,7 +186,7 @@ public class BlockView  extends StepView implements StepContainer, ExpandListene
 
 
 	@Override
-	public void eexport(PrintWriter pw) throws TcXmlException {
+	public void export(PrintWriter pw) throws TcXmlException {
 		StringBuffer sb = new StringBuffer(" // ").append(getTitle());
 		pw.println(sb.toString());
 		for (StepViewer stepViewer : stepViwerChildren) {

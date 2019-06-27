@@ -225,8 +225,8 @@ controller.getLog().info("***************     function  **********collpased ");
 
 	@Override
 	
-		public void eexport(PrintWriter pw) throws TcXmlException {
-			StringBuffer sb = new StringBuffer(model.getAction()).append( ": function  ").append("(){");
+		public void export(PrintWriter pw) throws TcXmlException {
+			StringBuffer sb = new StringBuffer(model.getAction()).append( ": function  ").append("( FuncArgs ){");
 			pw.println(sb.toString());
 			for (StepViewer stepViewer : getChildViewer()) {
 				stepViewer.export(pw);

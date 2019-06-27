@@ -326,7 +326,7 @@ conditionTxt.SetArgModel(argumentMap.get("Exists"));
 	
 
 	@Override
-	public void eexport(PrintWriter pw) throws TcXmlException {
+	public void export(PrintWriter pw) throws TcXmlException {
 		StringBuffer sb = new StringBuffer();
 		pw.println(" // " + getTitle());
 		sb.append(buildIfString()) ;

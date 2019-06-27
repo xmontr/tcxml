@@ -435,7 +435,7 @@ public static class CallFunctionViewModel {
 
 
 	@Override
-	public void eexport(PrintWriter pw) throws TcXmlException {
+	public void export(PrintWriter pw) throws TcXmlException {
 		Vector<String> liparam = new Vector<String>();
 		String[] tab;
 		StringBuffer sb = new StringBuffer("// ").append(buildTitle());
@@ -445,13 +445,16 @@ public static class CallFunctionViewModel {
 		//add param of function call 
 		CallFunctionArg temp = (CallFunctionArg)theArgument;
 		List<CallFunctionAttribut> li = temp.getCallArguments() ;
-		for (CallFunctionAttribut callFunctionAttribut : li) {
+		
+		
+/*		for (CallFunctionAttribut callFunctionAttribut : li) {
 		liparam.add(callFunctionAttribut.getValue())	;
 				
 		}
-		tab= liparam.toArray(new String[liparam.size()]);
+		tab= liparam.toArray(new String[liparam.size()]);		
+		sb2.append(String.join(",", tab));*/
 		
-		sb2.append(String.join(",", tab));
+		sb2.append(controller.generateJsArgument(li));
 		sb2.append(");");
 		
 		pw.println(sb2.toString());	

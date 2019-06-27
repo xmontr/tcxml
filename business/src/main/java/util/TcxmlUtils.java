@@ -182,5 +182,31 @@ throw new TcXmlException("fail to add name space to file" + source.getAbsolutePa
 	    	    return xml;
 	}
 	
+	
+	
+	public static String formatJavascriptFunction(String funcname, String...  param ) {
+		StringBuffer ret = new StringBuffer();
+		ret.append(funcname).append("(\n");
+		
+			
+		String paramlist = String.join(",\n\t", param);
+		ret.append(paramlist);
+		
+		ret.append("\n);\n");
+		return ret.toString();
+		
+		
+		
+	}
+	
+	
+	public static String escapeStringParameter ( String input, String escapeChar) {
+		
+		StringBuffer sb = new StringBuffer();
+		sb.append(escapeChar).append(input).append(escapeChar);
+		return sb.toString();
+		
+	}
+	
 
 }

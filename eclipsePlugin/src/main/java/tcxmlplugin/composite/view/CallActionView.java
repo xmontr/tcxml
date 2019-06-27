@@ -132,7 +132,7 @@ public void populate(Step mo) throws TcXmlException {
 
 
 	@Override
-	public void eexport(PrintWriter pw) throws TcXmlException {
+	public void export(PrintWriter pw) throws TcXmlException {
 		
 		StringBuffer sb = new StringBuffer("// ").append(buildTitle());
 		pw.println(sb.toString());
