@@ -1772,7 +1772,7 @@ return ret;
  * @return
  */
 
-public String generateJsArgument( List<CallFunctionAttribut> li) {
+public String generateJsFunctArgument( List<CallFunctionAttribut> li) {
 	StringBuffer ret = new StringBuffer();
 	ret.append("FuncArgs = {\n"  );
 	for (CallFunctionAttribut callFunctionAttribut : li) {
@@ -1799,7 +1799,34 @@ return ( ret.toString() );
 }
 
 
-
+public String generateJSobject( ArgModel...  models ) {
+	StringBuffer ret = new StringBuffer();
+	ret.append("{\n"  );
+	for (ArgModel argmo : models) {
+		String attname =argmo.getName();
+		boolean isjs = argmo.getIsJavascript() ;
+		String value="";
+		if(isjs) { // javascript attribut
+			
+		value = generateAnonymousFunctionForJScode(argmo.getValue());	
+			
+		}else { //plain text attribut
+			
+			value = TcxmlUtils.formatAsJsString(argmo.getValue(), "\"");
+			
+		}
+		
+	ret.append(attname).append(":").append(value).append(",\n");	
+		
+	}
+	
+	
+	ret.append("}\n");
+return ( ret.toString() );		
+	
+	
+	
+}
 
 
 
@@ -1819,21 +1846,41 @@ private String generateAnonymousFunctionForJScode(String jscode) {
 	return sb.toString();
 }
 
-public String generateJsObject(TestObject to) throws TcXmlException {
+
+
+/**
+ * 
+ *  generate the code in javascript that create e new testobject
+ * 
+ * 
+ * @param to
+ * @return
+ * @throws TcXmlException
+ */
+
+public String generateJsTestObject(TestObject to) throws TcXmlException {
 	StringBuffer ret = new StringBuffer() ;
 	String identMethod = to.getIdents().getActive();
-
+	String val = null;
 	
 	String ident = getIdentForTestObject(to, identMethod);
-	if(identMethod.equals(IdentificationMethod.get("xpath"))) {
+	if(identMethod.equalsIgnoreCase( IdentificationMethod.get("xpath").getName() )) { //xpath identification
 		
-		ident = TcxmlUtils.escapeStringParameter(ident, "\"");
+		val = TcxmlUtils.formatAsJsString(ident, "\"");
+	
 		
-	ident = 	StringEscapeUtils.escapeJavaScript(ident);
+	}else { //javascript identification
 		
+		
+	 val =	generateAnonymousFunctionForJScode(ident);
 	}
 	
-	ret.append("new TC.testObject( ").append("\"").append(identMethod).append("\",").append("\"").append(ident ).append("\"").append(")") ;
+
+	String txt = TcxmlUtils.formatJavascriptFunction(
+			"TC.testObject",TcxmlUtils.formatAsJsString(identMethod, "\""),val					
+			);
+	
+	ret.append("new ").append(txt) ;
 	
 	return ret.toString();
 }

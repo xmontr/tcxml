@@ -427,7 +427,7 @@ public class TestObjectView extends StepView implements PropertyChangeListener {
 		sb.append("//").append(getTitle()).append("\n");		
 		String txt = exporter.export();
 		sb.append(txt);
-		pw.println(txt);
+		pw.println(sb);
 		
 	}
 

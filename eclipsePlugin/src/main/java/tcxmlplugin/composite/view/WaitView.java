@@ -135,12 +135,13 @@ public class WaitView extends StepView  {
 
 	@Override
 	public void export(PrintWriter pw) throws TcXmlException {
+		
 		WaitExporter exporter = new WaitExporter(model,getLibrary(), controller);
 		StringBuffer sb = new StringBuffer();
 		sb.append("//").append(getTitle()).append("\n");		
 		String txt = exporter.export();
 		sb.append(txt);
-		pw.println(txt);
+		pw.println(sb.toString());
 		
 	}
 	protected DataBindingContext initDataBindings() {

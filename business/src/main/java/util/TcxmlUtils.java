@@ -22,6 +22,7 @@ import javax.xml.transform.stream.StreamResult;
 import org.apache.commons.configuration.ConfigurationException;
 import org.apache.commons.configuration.HierarchicalINIConfiguration;
 import org.apache.commons.configuration.SubnodeConfiguration;
+import org.apache.commons.lang.StringEscapeUtils;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -200,10 +201,10 @@ throw new TcXmlException("fail to add name space to file" + source.getAbsolutePa
 	}
 	
 	
-	public static String escapeStringParameter ( String input, String escapeChar) {
+	public static String formatAsJsString ( String input, String escapeChar) {
 		
 		StringBuffer sb = new StringBuffer();
-		sb.append(escapeChar).append(input).append(escapeChar);
+		sb.append(escapeChar).append(StringEscapeUtils.escapeJavaScript(input)).append(escapeChar);
 		return sb.toString();
 		
 	}

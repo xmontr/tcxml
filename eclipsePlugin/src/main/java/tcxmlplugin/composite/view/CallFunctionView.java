@@ -454,7 +454,7 @@ public static class CallFunctionViewModel {
 		tab= liparam.toArray(new String[liparam.size()]);		
 		sb2.append(String.join(",", tab));*/
 		
-		sb2.append(controller.generateJsArgument(li));
+		sb2.append(controller.generateJsFunctArgument(li));
 		sb2.append(");");
 		
 		pw.println(sb2.toString());	

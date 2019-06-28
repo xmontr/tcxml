@@ -18,15 +18,10 @@ public class WaitExporter extends StepExporter {
 	public String export() throws TcXmlException {
 		ArgModel interval = argumentMap.get("Interval");
 		ArgModel unit = argumentMap.get("Unit");
-		String func = "TC.wait";	
+		String func = "TC.wait";
+		String objarg = tcXmlController.generateJSobject(interval, unit);
 		
-		StringBuilder objarg  = new StringBuilder();
-		objarg.append("{\n");
-		String theinterval = interval.getValue();
-		objarg.append("Interval:").append(theinterval).append("\n");
-		String theunit = unit.getValue();
-		objarg.append("Unit:").append(theunit).append("\n");		
-		objarg.append("}\n");
+
 		
 		String ret = TcxmlUtils.formatJavascriptFunction(
 					func,objarg.toString()					

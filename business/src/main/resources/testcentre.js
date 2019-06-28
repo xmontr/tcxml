@@ -33,13 +33,33 @@ console.log("wait on not implemented");
 		
 	},	
 	
-	set : function(testobject ){
+	set : function(testobject , arg ){
+		
+	console.log("set not implemented");
+		
+		
+	},
+	
+	verify : function(testobject ,arg ){
+		
+	console.log("set not implemented");
+		
+		
+	},
+	
+	navigate : function(arg ){
+		
+	console.log("set not implemented");
+		
+		
+	},          
+
+	evaljsOnObect : function(testobject, arg ){
 		
 	console.log("set not implemented");
 		
 		
 	}
-
 
 };
 

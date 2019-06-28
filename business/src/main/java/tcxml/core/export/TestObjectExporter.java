@@ -2,6 +2,7 @@ package tcxml.core.export;
 
 import java.util.ArrayList;
 
+import tcxml.core.PlayingContext;
 import tcxml.core.TcXmlController;
 import tcxml.core.TcXmlException;
 import tcxml.model.ArgModel;
@@ -72,9 +73,18 @@ public class TestObjectExporter  extends StepExporter{
 		return " step not implemented " + step.getAction();
 	}
 
-	private String doSet(TestObject to) {
-		// TODO Auto-generated method stub
-		return null;
+	private String doSet(TestObject to) throws TcXmlException {
+		ArgModel thepath = argumentMap.get("Path");
+		
+		String func = "TC.set";	
+		
+		String objarg = tcXmlController.generateJSobject(thepath);
+		
+		String ret = TcxmlUtils.formatJavascriptFunction(
+					func,tcXmlController.generateJsTestObject(to) ,
+					
+					objarg );
+		return ret;	
 	}
 
 	private String select(TestObject to) throws TcXmlException {
@@ -82,35 +92,58 @@ public class TestObjectExporter  extends StepExporter{
 		ArgModel theordinal = argumentMap.get("Ordinal");
 		String func = "TC.select";	
 		
-		StringBuilder objarg  = new StringBuilder();
-		objarg.append("{\n");
-		objarg.append("Text:").append(thetext).append("\n");
-		objarg.append("Ordinal:").append(theordinal).append("\n");		
-		objarg.append("}\n");
+		String objarg = tcXmlController.generateJSobject(theordinal,thetext);
 		
 		String ret = TcxmlUtils.formatJavascriptFunction(
-					func,objarg.toString(),
-					tcXmlController.generateJsObject(to) 
+					func,objarg,
+					tcXmlController.generateJsTestObject(to) 
 					);
 		return ret;	
 		
 	}
 
-	private String evalJSOnObject(TestObject to) {
-		// TODO Auto-generated method stub
-		return null;
+	private String evalJSOnObject(TestObject to) throws TcXmlException {
+		ArgModel argcode = argumentMap.get("Code");
+		
+		String argjs = tcXmlController.generateJSobject(argcode);
+		
+		
+		
+	String func = "TC.evaljsOnObect";
+		String ret = TcxmlUtils.formatJavascriptFunction(
+					func,
+					argjs  ,
+					tcXmlController.generateJsTestObject(to) 
+					);
+		return ret;
 	}
 
-	private String verify(TestObject to) {
-		// TODO Auto-generated method stub
-		return null;
+	private String verify(TestObject to) throws TcXmlException {
+		ArgModel argprop = argumentMap.get("Property");
+		ArgModel argcondition = argumentMap.get("Condition");
+	
+		
+		
+		
+		
+		String argjs = tcXmlController.generateJSobject(argprop,argcondition);
+		
+		
+		
+	String func = "TC.verify";
+		String ret = TcxmlUtils.formatJavascriptFunction(
+					func,
+					argjs  ,
+					tcXmlController.generateJsTestObject(to) 
+					);
+		return ret;
 	}
 
 	private String waitOn(TestObject to) throws TcXmlException {
 		String func = "TC.click";		
 		String ret = TcxmlUtils.formatJavascriptFunction(
 					func,
-					tcXmlController.generateJsObject(to) 
+					tcXmlController.generateJsTestObject(to) 
 					);
 		return ret;
 	}
@@ -119,28 +152,54 @@ public class TestObjectExporter  extends StepExporter{
 		String func = "TC.click";
 		String ret = TcxmlUtils.formatJavascriptFunction(
 					func,
-					tcXmlController.generateJsObject(to) 
+					tcXmlController.generateJsTestObject(to) 
 					);
 		return ret;
 	}
 
 	private String typeText(TestObject to) throws TcXmlException {
 		ArgModel argtext = argumentMap.get("Value");
-		String value = argtext.getIsJavascript() == true ? argtext.getValue(): TcxmlUtils.escapeStringParameter(argtext.getValue(), "\"");
-		String func = "TC.type";
+		
+		String argjs = tcXmlController.generateJSobject(argtext);
+		
+		
+		
+	String func = "TC.type";
 		String ret = TcxmlUtils.formatJavascriptFunction(
 					func,
-					value  ,
-					tcXmlController.generateJsObject(to) 
+					argjs  ,
+					tcXmlController.generateJsTestObject(to) 
 					);
 		return ret;
 		
 		
 	}
 
-	private String exportBrowserStep() {
-		// TODO Auto-generated method stub
-		return null;
+	private String exportBrowserStep() throws TcXmlException {
+		String ret;
+		switch (step.getAction()) {
+		case "Navigate":ret = navigate();break;
+
+
+		default:throw new TcXmlException("not implemented", new IllegalStateException());
+		}
+		return ret;
+	}
+
+	private String navigate() {
+		ArgModel argloc = argumentMap.get("Location");
+		
+		String argjs = tcXmlController.generateJSobject(argloc);
+		
+		
+		
+	String func = "TC.navigate";
+		String ret = TcxmlUtils.formatJavascriptFunction(
+					func,
+					argjs  
+				
+					);
+		return ret;
 	}
 
 }
