@@ -761,8 +761,11 @@ public Image createImage(String absolutepath, Display display) throws TcXmlExcep
 		controller.getLog().info("tempdirectory for export :" + exportPath.toString() );
 		
 		HashMap<String,File> linkedLib = exportLibraries(libraryViewer,exportPath);	
-		// add the tescentre sript containing TC symbol
-		linkedLib.put("TC", controller.exportTestcentreJSresource(exportPath,"testcentre.js"));
+		
+		File tclib = controller.exportTestcentreJSresource(exportPath,"testcentre.js");
+		// add the tescentre sript containing TC and LR symbol
+		linkedLib.put("TC", tclib);
+		linkedLib.put("LR", tclib);
 		// export the conf file
 		controller.exportTestcentreJSresource(exportPath,"conf.js");
 		

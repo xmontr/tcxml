@@ -42,6 +42,7 @@
         	<artifactId>target-platform-configuration</artifactId>
         	<version>1.0.0</version>
         	<configuration>
+
             <resolver>p2</resolver>
                      <!-- <pomDependencies>consider</pomDependencies>  -->
         	</configuration>
@@ -81,16 +82,16 @@
   </dependencies>
    <repositories>
     <repository>
-      <id>eclipse-2018-09</id>
-      <url>http://download.eclipse.org/eclipse/updates/4.9/</url>
-    <!--   https://download.eclipse.org/releases/2019-09/  http://download.eclipse.org/releases/2018-09/   -->
+      <id>eclipse-4.12</id>
+      <url>http://download.eclipse.org/releases/2019-09/</url>
+    <!--   https://download.eclipse.org/releases/2019-09/  http://download.eclipse.org/releases/2018-09/       http://download.eclipse.org/eclipse/updates/4.9/R-4.9-201809060745 -->
       <layout>p2</layout>
     </repository>
   </repositories>
    <properties>
-    	<tycho.env.osgi.arch>x86_64</tycho.env.osgi.arch>
+    <!-- 	<tycho.env.osgi.arch>x86_64</tycho.env.osgi.arch>
    	<tycho.env.osgi.os>win32</tycho.env.osgi.os>
-   	<tycho.env.osgi.ws>win32</tycho.env.osgi.ws>  
+   	<tycho.env.osgi.ws>win32</tycho.env.osgi.ws>   -->
    	<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
    </properties>
 </project>

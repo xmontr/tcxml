@@ -1774,7 +1774,7 @@ return ret;
 
 public String generateJsFunctArgument( List<CallFunctionAttribut> li) {
 	StringBuffer ret = new StringBuffer();
-	ret.append("FuncArgs = {\n"  );
+	ret.append(" {\n"  );
 	for (CallFunctionAttribut callFunctionAttribut : li) {
 		String attname =callFunctionAttribut.getName();
 		boolean isjs = callFunctionAttribut.isJs() ;

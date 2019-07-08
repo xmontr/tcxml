@@ -9,6 +9,7 @@ import org.eclipse.swt.widgets.Composite;
 import tcxml.core.PlayingContext;
 import tcxml.core.TcXmlController;
 import tcxml.core.TcXmlException;
+import tcxml.core.export.GenericApiExporter;
 import tcxml.core.runner.GenericApiStepRunner;
 import tcxml.core.runner.TestObjectRunner;
 import tcxml.model.Step;
@@ -124,7 +125,9 @@ public class GenericAPIStepView extends StepView implements PropertyChangeListen
 
 	@Override
 	public void export(PrintWriter pw) throws TcXmlException {
+		GenericApiExporter exporter = new GenericApiExporter(model, getLibrary(), controller) ;
 		pw.println(" // " + getTitle());
+		pw.println(exporter.export());
 
 	}
 

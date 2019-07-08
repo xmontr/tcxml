@@ -49,7 +49,9 @@ console.log("wait on not implemented");
 	
 	navigate : function(arg ){
 		
-	console.log("set not implemented");
+		var targetUrl = arg.Location() ;
+		 await browser.driver.get(targetUrl); 
+	console.log("navigate to " + targetUrl);
 		
 		
 	},          
@@ -65,5 +67,6 @@ console.log("wait on not implemented");
 
 
 exports.TC=TC;
+exports.LR=TC;
 
 
