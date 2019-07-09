@@ -40,6 +40,7 @@ import tcxmlplugin.composite.stepViewer.StepContainer;
 import tcxmlplugin.composite.stepViewer.StepViewer;
 import tcxmlplugin.composite.stepViewer.StepViewerFactory;
 import tcxmlplugin.job.MultipleStepRunner;
+import util.TcxmlUtils;
 
 public class IF2View extends StepView  implements StepContainer, ExpandListener{
 	
@@ -234,6 +235,37 @@ conditionTxt.SetArgModel(argumentMap.get("Exists"));
 		// TODO Auto-generated method stub
 		return "if("  + theTestObject.getAutoName()  + " exists =" +argumentMap.get("Exists").getValue() ;
 	}
+	
+	
+	
+	
+	private String exportIfString() throws TcXmlException {
+		StringBuffer ret = new StringBuffer();
+		
+		//get testobject
+		BoundList<Step> li = model.getStep();
+		//add object to test	
+		 Step theTestobjectref = li.get(0);
+		 String referencedob = theTestobjectref.getTestObject() ;
+		 TestObject theTestObject = controller.getTestObjectById(referencedob, getLibrary());
+		 
+		 
+		String timeout =  model.getObjectTimeout();
+		long to=0L;
+		
+			
+		String func = "TC.exist";
+		String txt = TcxmlUtils.formatJavascriptFunction(
+					func,
+					controller.generateJsTestObject(theTestObject) 
+					);
+		
+		String txt2 = txt.substring(0,txt.length() -2 ); // remove semicolumn 
+		
+		ret.append("if(" ).append(txt2).append(" ) {\n");
+		
+		return ret.toString();
+	}
 
 	@Override
 	public PlayingContext play(PlayingContext ctx) throws TcXmlException {
@@ -329,7 +361,8 @@ conditionTxt.SetArgModel(argumentMap.get("Exists"));
 	public void export(PrintWriter pw) throws TcXmlException {
 		StringBuffer sb = new StringBuffer();
 		pw.println(" // " + getTitle());
-		sb.append(buildIfString()) ;
+		sb.append( exportIfString() ) ;
+		pw.println(sb);
 		List<StepViewer> list = getChildViewer() ;
 		for (StepViewer stepViewer : list) {
 			stepViewer.export(pw);

@@ -12,7 +12,7 @@ var basePath = __dirname +"/../" ;
 console.log("testing protractor script from "  + basePath);
 
 // the jqueryhighlighter module that manage the exetension 
-var {Jqh}= require('../jqh.js');
+var {Jqh}= require('./node_modules/jqueryhiglighter/jqh.js');
 
 
 

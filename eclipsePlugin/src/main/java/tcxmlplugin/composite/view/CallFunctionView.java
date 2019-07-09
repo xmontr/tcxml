@@ -446,13 +446,7 @@ public static class CallFunctionViewModel {
 		CallFunctionArg temp = (CallFunctionArg)theArgument;
 		List<CallFunctionAttribut> li = temp.getCallArguments() ;
 		
-		
-/*		for (CallFunctionAttribut callFunctionAttribut : li) {
-		liparam.add(callFunctionAttribut.getValue())	;
-				
-		}
-		tab= liparam.toArray(new String[liparam.size()]);		
-		sb2.append(String.join(",", tab));*/
+
 		
 		sb2.append(controller.generateJsFunctArgument(li));
 		sb2.append(");");

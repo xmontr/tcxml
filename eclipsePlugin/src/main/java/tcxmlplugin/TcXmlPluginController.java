@@ -850,7 +850,7 @@ private void exportSymbols(PrintWriter pw, HashMap<String, File> linkedLib) {
 	for (String symbole : symboles) {
 		StringBuffer sb = new StringBuffer();
 		String filename = linkedLib.get(symbole).getName();
-		sb.append("var {").append(symbole).append("} = require(./").append(filename).append(");");
+		sb.append("var {").append(symbole).append("} = require('./").append(filename).append("');");
 		pw.println(sb.toString());	
 	}
 	
@@ -909,7 +909,7 @@ private File exportLib(java.nio.file.Path exportPath, String libname, LibraryVie
 	
 	
 	
-sb = new StringBuffer(" **********************end of library ").append(libname).append(" ***********************************************");
+sb = new StringBuffer("//// **********************end of library ").append(libname).append(" ***********************************************");
 	pw.println(sb);
 		pw.flush();
 		pw.close();

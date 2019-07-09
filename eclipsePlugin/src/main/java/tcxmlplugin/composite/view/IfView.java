@@ -221,6 +221,19 @@ conditionTxt.SetArgModel(cond);
 		// TODO Auto-generated method stub
 		return "if( ("  + argumentMap.get("Condition").getValue()  + ")  ) {" ;
 	}
+	
+	
+	private String exportIfString() {
+		
+	StringBuffer ret = new StringBuffer();
+	
+	ret.append("if( (function(){").append(argumentMap.get("Condition").getValue()).append("})() ){");
+	
+	return ret.toString();
+		
+		
+	}
+	
 
 	@Override
 	public PlayingContext play(PlayingContext ctx) throws TcXmlException {
@@ -249,7 +262,7 @@ conditionTxt.SetArgModel(cond);
 	public void export(PrintWriter pw) throws TcXmlException {
 		StringBuffer sb = new StringBuffer();
 		pw.println(" // " + getTitle());
-		sb.append(buildIfString()) ;
+		sb.append(exportIfString()) ;
 		pw.println(sb);
 		List<StepViewer> list = getChildViewer() ;
 		for (StepViewer stepViewer : list) {

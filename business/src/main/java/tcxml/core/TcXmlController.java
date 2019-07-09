@@ -1789,7 +1789,10 @@ public String generateJsFunctArgument( List<CallFunctionAttribut> li) {
 			
 		}
 		
-	ret.append(attname).append(":").append(value).append(",\n");	
+		
+		
+		
+	ret.append(attname).append(":").append(TcxmlUtils.formatAsJsString(value, "\"")).append(",\n");	
 		
 	}
 	
@@ -1838,8 +1841,8 @@ private String generateAnonymousFunctionForJScode(String jscode) {
 	StringBuffer sb = new StringBuffer();
 	sb.append("(function(){");
 	
-	sb.append(StringEscapeUtils.unescapeJavaScript(jscode));
-	sb.append("})();");
+	sb.append(jscode);
+	sb.append("})()");
 	
 	
 	
@@ -1880,7 +1883,9 @@ public String generateJsTestObject(TestObject to) throws TcXmlException {
 			"TC.testObject",TcxmlUtils.formatAsJsString(identMethod, "\""),val					
 			);
 	
-	ret.append("new ").append(txt) ;
+	
+	
+	ret.append("new ").append(txt.substring(0, txt.length()-2)) ;
 	
 	return ret.toString();
 }

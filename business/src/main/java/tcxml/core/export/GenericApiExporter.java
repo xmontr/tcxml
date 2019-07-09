@@ -80,7 +80,7 @@ public class GenericApiExporter extends StepExporter{
 	private String utilsClearcookies() {
 		StringBuffer ret = new StringBuffer();
 		final String scriptSetAttrValue = " window.postMessage({ action:'deleteAllCookies'}, '*'); ";
-		ret.append("browser.executeScript(").append( StringEscapeUtils.escapeJavaScript(scriptSetAttrValue)).append(");");
+		ret.append("browser.executeScript(\"").append(scriptSetAttrValue).append("\");");
 			
 		return ret.toString();
 	}
