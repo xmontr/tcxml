@@ -857,6 +857,7 @@ target.createNewFile();
 		
 		 TableParameter tparam = (TableParameter)stepParameter ;
 		 	Vector<String> arg = new Vector<String>();
+		 	
 		 	arg.add( TcxmlUtils.formatAsJsString( tparam.getColumnName(), "\""));
 		 	arg.add( TcxmlUtils.formatAsJsString( tparam.getDelimiter(), "\""));
 		 	arg.add( TcxmlUtils.formatAsJsString( tparam.getGenerateNewVal(), "\""));
@@ -876,7 +877,7 @@ target.createNewFile();
 		 String[] argli = arg.toArray( new String[arg.size()]);	
 	
 		 
-		 sb.append("parameters.addParameter(new tableParameter(").append(String.join(",", argli)).append(") ); ").append("\n");
+		 sb.append("parameters.addParameter(").append("\"").append(stepParameter.getName()).append("\",").append("new tableParameter(").append(String.join(",", argli)).append(") ); ").append("\n");
 		
 	}
 		
@@ -963,11 +964,9 @@ private File exportLib(java.nio.file.Path exportPath, String libname, LibraryVie
 	out = new FileOutputStream(ret);
 	PrintWriter pw = new PrintWriter(out);
 	// external referece to the main js resource testcentre.js
-	  File tcfile = exportPath.resolve("testcentre.js").toFile();
-	  HashMap<String, File> linkedLib = new HashMap<String, File>();
-	  linkedLib.put("TC", tcfile);
-	  linkedLib.put("LR", tcfile);
-	exportSymbols(pw, linkedLib );
+	// add the tescentre sript containing TC and LR symbol
+	pw.println("var {TC} = require('./node_modules/testcentreJS/testcentre.js'); ");
+	pw.println("var {LR} = require('./node_modules/testcentreJS/testcentre.js'); ");
 	
 	StringBuffer sb = new StringBuffer();
 	
