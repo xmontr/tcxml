@@ -11,13 +11,17 @@ import java.io.PrintWriter;
 import java.net.URL;
 import java.nio.file.Files;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Properties;
 import java.util.Set;
+import java.util.Vector;
 
+import org.apache.commons.lang.StringEscapeUtils;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IProject;
@@ -37,6 +41,9 @@ import org.eclipse.swt.widgets.Listener;
 
 import tcxml.core.TcXmlController;
 import tcxml.core.TcXmlException;
+import tcxml.core.parameter.StepParameter;
+import tcxml.core.parameter.TableParameter;
+import tcxml.core.parameter.StepParameter.StepParameterType;
 import tcxmlplugin.composite.ActionView;
 import tcxmlplugin.composite.ActionsViewer;
 import tcxmlplugin.composite.LibraryView;
@@ -759,15 +766,22 @@ public Image createImage(String absolutepath, Display display) throws TcXmlExcep
 		try {
 		java.nio.file.Path exportPath = Files.createTempDirectory("protractor-");
 		controller.getLog().info("tempdirectory for export :" + exportPath.toString() );
+		//File tclib = controller.exportTestcentreJSresource(exportPath,"testcentre.js");
 		
 		HashMap<String,File> linkedLib = exportLibraries(libraryViewer,exportPath);	
 		
-		File tclib = controller.exportTestcentreJSresource(exportPath,"testcentre.js");
-		// add the tescentre sript containing TC and LR symbol
-		linkedLib.put("TC", tclib);
-		linkedLib.put("LR", tclib);
+	
+
 		// export the conf file
 		controller.exportTestcentreJSresource(exportPath,"conf.js");
+		//export js for parameter management
+		//controller.exportTestcentreJSresource(exportPath,"parameter.js");
+		//export bash script for post install
+		controller.exportTestcentreJSresource(exportPath,"postInstall.sh");
+		// crate script specific lib for the parameter management
+		File customParamtarget = exportPath.resolve("custom-param.js").toFile();
+		customParamtarget.createNewFile();
+		exportCustomParam(customParamtarget);
 		
 		//fill the spec file
 		File target = exportPath.resolve("spec.js").toFile();				
@@ -776,6 +790,10 @@ target.createNewFile();
 	
 			out = new FileOutputStream(target);
 			PrintWriter pw = new PrintWriter(out);
+			// add the tescentre sript containing TC and LR symbol
+			pw.println("var {TC} = require('./node_modules/testcentreJS/testcentre.js'); ");
+			pw.println("var {LR} = require('./node_modules/testcentreJS/testcentre.js'); ");
+			
 			exportSymbols(pw,linkedLib);
 			exportActions(pw , actionsViewer);
 			
@@ -810,6 +828,64 @@ target.createNewFile();
 		
 	}
 	
+	private void exportCustomParam(File customParamtarget) throws IOException {
+		FileOutputStream out;
+		
+		out = new FileOutputStream(customParamtarget);
+		PrintWriter pw = new PrintWriter(out);
+		pw.println("var {parameters , tableParameter}  = require('./parameter.js');");
+		Map<String, StepParameter> liparam = getTcviewer().getController().getParameters();
+		 Collection<StepParameter> paramset = liparam.values();
+		 for (StepParameter stepParameter : paramset) {
+			exportSingleParam(stepParameter, pw);
+		}
+		 pw.println(" exports.paramManager=parameters;");
+		
+		
+		
+		pw.flush();
+		pw.close();
+		out.flush();
+		out.close();
+	
+}
+
+	private void exportSingleParam(StepParameter stepParameter, PrintWriter pw) {
+		StringBuffer sb = new StringBuffer();
+		sb.append(" // export parameter ").append(stepParameter.getName() ).append(" type is ").append(stepParameter.getType()).append("\n");
+	if ( stepParameter instanceof TableParameter ) {
+		
+		 TableParameter tparam = (TableParameter)stepParameter ;
+		 	Vector<String> arg = new Vector<String>();
+		 	arg.add( TcxmlUtils.formatAsJsString( tparam.getColumnName(), "\""));
+		 	arg.add( TcxmlUtils.formatAsJsString( tparam.getDelimiter(), "\""));
+		 	arg.add( TcxmlUtils.formatAsJsString( tparam.getGenerateNewVal(), "\""));
+		 	arg.add( TcxmlUtils.formatAsJsString( tparam.getGenerateNewVal(), "\""));
+		 	arg.add( TcxmlUtils.formatAsJsString( tparam.getOriginalValue(), "\""));
+		 	arg.add( TcxmlUtils.formatAsJsString( tparam.getOutOfRangePolicy(), "\""));
+		 	arg.add( TcxmlUtils.formatAsJsString( tparam.getParamName(), "\""));
+		 	arg.add( TcxmlUtils.formatAsJsString( tparam.getSelectnextrow(), "\""));
+		 	arg.add( TcxmlUtils.formatAsJsString( tparam.getStartrow(), "\""));
+		 	arg.add( TcxmlUtils.formatAsJsString( tparam.getTable(), "\""));
+		 	arg.add( TcxmlUtils.formatAsJsString( tparam.getAutoAllocatBlocSize(), "\""));
+		 	arg.add( TcxmlUtils.formatAsJsString( tparam.getValueForEachUser(), "\""));
+		 	arg.add( TcxmlUtils.formatAsJsString( tparam.getTableLocation(), "\""));
+		 
+		 	
+		 	
+		 String[] argli = arg.toArray( new String[arg.size()]);	
+	
+		 
+		 sb.append("parameters.addParameter(new tableParameter(").append(String.join(",", argli)).append(") ); ").append("\n");
+		
+	}
+		
+		
+		
+		pw.append(sb.toString());
+		
+	}
+
 	private void exportLogic(PrintWriter pw, RunLogicViewer runLogicViewer) throws TcXmlException {
 		pw.println("//start  export logic  **********************************************************************");
 		for (StepViewer stepViewer : runLogicViewer.getChildViewer()) {
@@ -886,6 +962,12 @@ private File exportLib(java.nio.file.Path exportPath, String libname, LibraryVie
 	
 	out = new FileOutputStream(ret);
 	PrintWriter pw = new PrintWriter(out);
+	// external referece to the main js resource testcentre.js
+	  File tcfile = exportPath.resolve("testcentre.js").toFile();
+	  HashMap<String, File> linkedLib = new HashMap<String, File>();
+	  linkedLib.put("TC", tcfile);
+	  linkedLib.put("LR", tcfile);
+	exportSymbols(pw, linkedLib );
 	
 	StringBuffer sb = new StringBuffer();
 	

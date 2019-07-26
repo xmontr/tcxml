@@ -70,6 +70,14 @@ public class TableParameter extends StepParameter {
 
 	}
 
+	public String getTableLocation() {
+		return tableLocation;
+	}
+
+	public void setTableLocation(String tableLocation) {
+		this.tableLocation = tableLocation;
+	}
+
 	public String getDelimiter() {
 		return delimiter;
 	}

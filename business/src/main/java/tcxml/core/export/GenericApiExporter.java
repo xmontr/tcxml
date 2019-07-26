@@ -72,7 +72,7 @@ public class GenericApiExporter extends StepExporter{
 
 	private String utilsClearCache() {
 		StringBuffer ret = new StringBuffer();
-		ret.append("browser.getLocalStorage().clear();");
+		ret.append("browser.executeScript(\"window.localStorage.clear();\");");
 		
 		return ret.toString();
 	}
