@@ -1781,7 +1781,7 @@ public String generateJsFunctArgument( List<CallFunctionAttribut> li) {
 		String value="";
 		if(isjs) { // javascript attribut
 			
-		value = generateAnonymousFunctionForJScode(callFunctionAttribut.getValue());	
+		value = generateNonAnonymousFunctionForJScode(callFunctionAttribut.getValue());	
 			
 		}else { //plain text attribut
 			
@@ -1802,6 +1802,18 @@ return ( ret.toString() );
 }
 
 
+private String generateNonAnonymousFunctionForJScode(String value) {
+	StringBuffer sb = new StringBuffer();
+	sb.append("(function(){");
+	
+	sb.append(value);
+	sb.append("})");
+	
+	
+	
+	return sb.toString();
+}
+
 public String generateJSobject( ArgModel...  models ) {
 	StringBuffer ret = new StringBuffer();
 	ret.append("{\n"  );
@@ -1811,7 +1823,7 @@ public String generateJSobject( ArgModel...  models ) {
 		String value="";
 		if(isjs) { // javascript attribut
 			
-		value = generateAnonymousFunctionForJScode(argmo.getValue());	
+		value = generateNonAnonymousFunctionForJScode(argmo.getValue());	
 			
 		}else { //plain text attribut
 			
