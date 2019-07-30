@@ -103,7 +103,7 @@ public class ActionView extends AStepContainer implements TopStepContainer{
 		
 		StringBuffer sb = new StringBuffer("// code for action  ").append(actionName);
 		pw.println(sb.toString());
-		 sb = new StringBuffer(" function  ").append( getActionName()).append("(){");
+		 sb = new StringBuffer(" async function  ").append( getActionName()).append("(){");
 		pw.println(sb.toString());
 		for (StepViewer stepViewer : stepViwerChildren) {
 			stepViewer.export(pw);

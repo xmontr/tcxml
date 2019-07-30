@@ -18,7 +18,7 @@ public class WaitExporter extends StepExporter {
 	public String export() throws TcXmlException {
 		ArgModel interval = argumentMap.get("Interval");
 		ArgModel unit = argumentMap.get("Unit");
-		String func = "TC.wait";
+		String func = " await TC.wait";
 		String objarg = tcXmlController.generateJSobject(interval, unit);
 		
 

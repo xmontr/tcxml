@@ -441,6 +441,7 @@ public static class CallFunctionViewModel {
 		StringBuffer sb = new StringBuffer("// ").append(buildTitle());
 		pw.println(sb.toString());
 		StringBuffer sb2 = new StringBuffer();
+		sb2.append("await " );
 		sb2.append(callfunctmodel.selectedLib).append(".").append(callfunctmodel.selectedFunction).append("(");
 		//add param of function call 
 		CallFunctionArg temp = (CallFunctionArg)theArgument;

@@ -889,10 +889,17 @@ target.createNewFile();
 
 	private void exportLogic(PrintWriter pw, RunLogicViewer runLogicViewer) throws TcXmlException {
 		pw.println("//start  export logic  **********************************************************************");
+		
+		pw.println("describe('the logic of the test case ', function() {");
+		
+		pw.println("  it('run the Test case',  async  function() {  ");
 		for (StepViewer stepViewer : runLogicViewer.getChildViewer()) {
 			stepViewer.export(pw);
 		}
 		pw.println("//end  export logic  **********************************************************************");	
+		
+		pw.println("} );");
+		pw.println("});");		
 }
 
 	private void exportActions(PrintWriter pw, ActionsViewer actionsViewer) throws TcXmlException {
@@ -965,8 +972,8 @@ private File exportLib(java.nio.file.Path exportPath, String libname, LibraryVie
 	PrintWriter pw = new PrintWriter(out);
 	// external referece to the main js resource testcentre.js
 	// add the tescentre sript containing TC and LR symbol
-	pw.println("var {TC} = require('./node_modules/testcentreJS/testcentre.js'); ");
-	pw.println("var {LR} = require('./node_modules/testcentreJS/testcentre.js'); ");
+	pw.println("var {TC , LR , evalXPath} = require('./node_modules/testcentreJS/testcentre.js'); ");
+
 	
 	StringBuffer sb = new StringBuffer();
 	

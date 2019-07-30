@@ -140,7 +140,7 @@ public class TestObjectExporter  extends StepExporter{
 	}
 
 	private String waitOn(TestObject to) throws TcXmlException {
-		String func = "TC.waitOn";		
+		String func = "await TC.waitOn";		
 		String ret = TcxmlUtils.formatJavascriptFunction(
 					func,
 					tcXmlController.generateJsTestObject(to) 

@@ -1804,10 +1804,10 @@ return ( ret.toString() );
 
 private String generateNonAnonymousFunctionForJScode(String value) {
 	StringBuffer sb = new StringBuffer();
-	sb.append("(function(){");
+	sb.append("function(){");
 	
 	sb.append(value);
-	sb.append("})");
+	sb.append("}");
 	
 	
 	
@@ -1822,8 +1822,11 @@ public String generateJSobject( ArgModel...  models ) {
 		boolean isjs = argmo.getIsJavascript() ;
 		String value="";
 		if(isjs) { // javascript attribut
-			
-		value = generateNonAnonymousFunctionForJScode(argmo.getValue());	
+		StringBuffer sb = new StringBuffer("function () { return (eval('");
+		sb.append(argmo.getValue());
+		 
+		sb.append("'))}");
+		value = sb.toString();
 			
 		}else { //plain text attribut
 			

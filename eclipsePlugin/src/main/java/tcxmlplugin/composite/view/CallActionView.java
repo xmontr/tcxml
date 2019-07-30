@@ -140,7 +140,9 @@ public void populate(Step mo) throws TcXmlException {
 		
 		String actionName = actionmodel.getActionSelected();
 		
-		sb= new StringBuffer(actionName).append("();");
+		sb = new StringBuffer();
+		sb.append("await ");
+		sb.append(actionName).append("();");
 		pw.println(sb.toString());
 
 		
