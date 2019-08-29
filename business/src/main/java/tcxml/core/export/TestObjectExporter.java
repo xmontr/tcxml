@@ -149,7 +149,7 @@ public class TestObjectExporter  extends StepExporter{
 	}
 
 	private String click(TestObject to) throws TcXmlException {
-		String func = "TC.click";
+		String func = "await TC.click";
 		String ret = TcxmlUtils.formatJavascriptFunction(
 					func,
 					tcXmlController.generateJsTestObject(to) 
@@ -193,7 +193,7 @@ public class TestObjectExporter  extends StepExporter{
 		
 		
 		
-	String func = "TC.navigate";
+	String func = "await TC.navigate";
 		String ret = TcxmlUtils.formatJavascriptFunction(
 					func,
 					argjs  

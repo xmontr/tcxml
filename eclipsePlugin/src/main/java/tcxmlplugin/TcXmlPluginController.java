@@ -10,6 +10,7 @@ import java.io.InputStream;
 import java.io.PrintWriter;
 import java.net.URL;
 import java.nio.file.Files;
+import java.nio.file.StandardCopyOption;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -766,7 +767,11 @@ public Image createImage(String absolutepath, Display display) throws TcXmlExcep
 		try {
 		java.nio.file.Path exportPath = Files.createTempDirectory("protractor-");
 		controller.getLog().info("tempdirectory for export :" + exportPath.toString() );
-		//File tclib = controller.exportTestcentreJSresource(exportPath,"testcentre.js");
+		//export all  the  files of the testcase ( param, extrafiles ... )
+		
+		
+		exportAllFilesFromTestcase(exportPath);
+		
 		
 		HashMap<String,File> linkedLib = exportLibraries(libraryViewer,exportPath);	
 		
@@ -778,6 +783,8 @@ public Image createImage(String absolutepath, Display display) throws TcXmlExcep
 		//controller.exportTestcentreJSresource(exportPath,"parameter.js");
 		//export bash script for post install
 		controller.exportTestcentreJSresource(exportPath,"postInstall.sh");
+		//export bash script for debugging protractor 
+		controller.exportTestcentreJSresource(exportPath,"debug_protractor.sh");
 		// crate script specific lib for the parameter management
 		File customParamtarget = exportPath.resolve("custom-param.js").toFile();
 		customParamtarget.createNewFile();
@@ -828,6 +835,38 @@ target.createNewFile();
 		
 	}
 	
+	private void exportAllFilesFromTestcase(java.nio.file.Path exportPath) {
+	
+	String tcname = tcviewer.getController().getName();
+String path = tcviewer.getController().getScriptDir();
+
+System.out.println("exporting from " + path);
+
+File libdir = new File(path);
+if(libdir.exists()) {
+    File[] libfiles = libdir.listFiles();
+    for (File file2 : libfiles) {
+ 
+ java.nio.file.Path targetpath = (new File(exportPath +"\\"  + file2.getName())).toPath();
+
+  try {
+	Files.copy(file2.toPath(), targetpath,StandardCopyOption.REPLACE_EXISTING) ;
+} catch (IOException e) {
+	error("failure in export", e);
+
+}	
+    	
+    }	
+
+
+}	
+	
+		
+		
+		
+	
+}
+
 	private void exportCustomParam(File customParamtarget) throws IOException {
 		FileOutputStream out;
 		

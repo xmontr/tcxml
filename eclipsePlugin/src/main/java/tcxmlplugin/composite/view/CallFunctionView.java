@@ -17,7 +17,9 @@ import tcxmlplugin.composite.view.arguments.ArgumentViewFactory;
 import tcxmlplugin.composite.view.arguments.CallFunctionArg;
 import tcxmlplugin.composite.view.arguments.StepArgument;
 import tcxmlplugin.job.PlayingJob;
+import util.TcxmlUtils;
 import tcxml.model.ActionsModel;
+import tcxml.model.ArgModel;
 
 import org.eclipse.swt.widgets.Label;
 
@@ -442,17 +444,39 @@ public static class CallFunctionViewModel {
 		pw.println(sb.toString());
 		StringBuffer sb2 = new StringBuffer();
 		sb2.append("await " );
-		sb2.append(callfunctmodel.selectedLib).append(".").append(callfunctmodel.selectedFunction).append("(");
-		//add param of function call 
-		CallFunctionArg temp = (CallFunctionArg)theArgument;
-		List<CallFunctionAttribut> li = temp.getCallArguments() ;
+		
+		List<CallFunctionAttribut> listArguments = ((CallFunctionArg)theArgument).getCallArguments();
+		
+		
+		String func = " await TC.callFunction";
+		
+		 sb2.append(callfunctmodel.selectedLib).append(".").append(callfunctmodel.selectedFunction);
+		
+		String objarg = controller.generateFunctArgJSobject(listArguments);
 		
 
 		
-		sb2.append(controller.generateJsFunctArgument(li));
-		sb2.append(");");
+		String ret = TcxmlUtils.formatJavascriptFunction(
+					func,
+					sb2.toString(),
+					objarg.toString()					
+					);
 		
-		pw.println(sb2.toString());	
+		
+		
+		
+		
+		/*
+		 * sb2.append(callfunctmodel.selectedLib).append(".").append(callfunctmodel.
+		 * selectedFunction).append("("); //add param of function call CallFunctionArg
+		 * temp = (CallFunctionArg)theArgument; List<CallFunctionAttribut> li =
+		 * temp.getCallArguments() ;
+		 * 
+		 * 
+		 * 
+		 * sb2.append(controller.generateJsFunctArgument(li)); sb2.append(");");
+		 */
+		pw.println(ret.toString());	
 	}
 
 

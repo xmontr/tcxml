@@ -65,14 +65,15 @@ public class GenericApiExporter extends StepExporter{
 				default:throw new TcXmlException(" ****************************** warning not implemented UTILS." + step.getMethodName(), new IllegalArgumentException(step.getMethodName()));	
 
 		}
-			return ret.toString();
+			return ret.toString();  
 	}
 
 
 
 	private String utilsClearCache() {
 		StringBuffer ret = new StringBuffer();
-		ret.append("browser.executeScript(\"window.localStorage.clear();\");");
+		final String scriptSetAttrValue = " window.postMessage({ action:'clearLocalStorage'}, '*'); ";
+		ret.append("await browser.executeScript(\"").append(scriptSetAttrValue).append("\");");   
 		
 		return ret.toString();
 	}
@@ -80,7 +81,7 @@ public class GenericApiExporter extends StepExporter{
 	private String utilsClearcookies() {
 		StringBuffer ret = new StringBuffer();
 		final String scriptSetAttrValue = " window.postMessage({ action:'deleteAllCookies'}, '*'); ";
-		ret.append("browser.executeScript(\"").append(scriptSetAttrValue).append("\");");
+		ret.append("await browser.executeScript(\"").append(scriptSetAttrValue).append("\");");
 			
 		return ret.toString();
 	}

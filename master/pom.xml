@@ -14,7 +14,83 @@
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<maven.compiler.source>1.8</maven.compiler.source>
 		<maven.compiler.target>1.8</maven.compiler.target>
+		     	<tycho.env.osgi.arch>x86_64</tycho.env.osgi.arch>
+   	<tycho.env.osgi.os>win32</tycho.env.osgi.os>
+   	<tycho.env.osgi.ws>win32</tycho.env.osgi.ws>  
+   	<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 	</properties>
+	
+<!--      <repositories>
+    <repository>    
+      <id>eclipse</id>
+   <name> eclipserepo</name>
+      <url>http://download.eclipse.org/releases/photon</url>
+         <layout>p2</layout>
+      
+    </repository>
+  </repositories> -->
+  <build>
+      <sourceDirectory>src/main/java</sourceDirectory>
+    <testSourceDirectory>src/test/java</testSourceDirectory>
+<resources>
+      <resource>
+        <directory>src/main/resources</directory>
+        <excludes>
+          <exclude>**/*.java</exclude>
+        </excludes>
+      </resource>
+</resources>
+    <plugins>
+      <plugin>
+        <groupId>org.eclipse.tycho</groupId>
+        <artifactId>tycho-maven-plugin</artifactId>
+        <version>1.4.0</version>
+        <extensions>true</extensions>
+      </plugin>
+         <plugin>
+         <groupId>org.eclipse.tycho</groupId>
+         <artifactId>tycho-p2-repository-plugin</artifactId>
+         <version>1.4.0</version>
+         <configuration>
+            <includeAllDependencies>true</includeAllDependencies>
+         </configuration>
+      </plugin>
+        <plugin>
+          <groupId>org.eclipse.tycho</groupId>
+          <artifactId>tycho-compiler-plugin</artifactId>
+          <version>1.4.0</version>
+        </plugin>
+        <plugin>
+        	<groupId>org.eclipse.tycho</groupId>
+        	<artifactId>target-platform-configuration</artifactId>
+        	<version>1.4.0</version>
+        	<configuration>
+        	          <!-- configure the p2 target environments for multi-platform build -->
+          <environments>
+            <environment>
+                  <os>win32</os>
+              <ws>win32</ws>
+              <arch>x86_64</arch>
+            </environment>
+</environments>
+
+              <!--  <resolver>p2</resolver>
+                   <pomDependencies>consider</pomDependencies>  -->
+        	</configuration>
+        </plugin>
+        <plugin>
+        	<groupId>org.eclipse.tycho</groupId>
+        	<artifactId>tycho-packaging-plugin</artifactId>
+        	<version>1.4.0</version>
+        </plugin>
+              
+
+      
+      
+      
+    </plugins>
+
+  </build>
     
     
 
@@ -27,6 +103,9 @@
       <scope>test</scope>
     </dependency>
   </dependencies>
+
+
+
   <modules>
   	<module>../mapping/mapping</module>
   	<module>../business</module>

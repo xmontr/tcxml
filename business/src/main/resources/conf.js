@@ -50,12 +50,12 @@ exports.config = {
    'useAutomationExtension': false,
 'args': ['--disable-dev-shm-usage','--no-sandbox' ],
         'extensions': [Jqh.getExtensionData(),PPWD.getExtensionData(ppwdOption)]
-    },
+    }/*,
 'proxy': {
 'proxyType': 'manual',
 'httpProxy': proxy,
 'sslProxy':proxy
-}
+}*/
   }		
 ,
 afterLaunch: function(exitCode) {

@@ -1814,6 +1814,43 @@ private String generateNonAnonymousFunctionForJScode(String value) {
 	return sb.toString();
 }
 
+
+public String generateFunctArgJSobject(List<CallFunctionAttribut> listArguments) {
+	StringBuffer ret = new StringBuffer();
+	ret.append("{\n"  );
+	for (CallFunctionAttribut argmo : listArguments) {
+		String attname =argmo.getName();
+		boolean isjs = argmo.isJs() ;
+
+			
+			String value = TcxmlUtils.formatAsJsString(argmo.getValue(), "\"");
+			
+		
+		
+	ret.append(attname).append(":").append("{");
+	ret.append("name:").append(TcxmlUtils.formatAsJsString(attname, "\""));
+	ret.append(",");
+	ret.append("value:").append(value);
+	ret.append(",");
+	ret.append("isjs:").append(isjs);
+	
+	
+	
+	
+	ret.append("},\n");	
+		
+	}
+	
+	
+	ret.append("}\n");
+return ( ret.toString() );		
+	
+	
+}
+
+
+
+
 public String generateJSobject( ArgModel...  models ) {
 	StringBuffer ret = new StringBuffer();
 	ret.append("{\n"  );
@@ -1821,20 +1858,22 @@ public String generateJSobject( ArgModel...  models ) {
 		String attname =argmo.getName();
 		boolean isjs = argmo.getIsJavascript() ;
 		String value="";
-		if(isjs) { // javascript attribut
-		StringBuffer sb = new StringBuffer("function () { return (eval('");
-		sb.append(argmo.getValue());
-		 
-		sb.append("'))}");
-		value = sb.toString();
-			
-		}else { //plain text attribut
+
 			
 			value = TcxmlUtils.formatAsJsString(argmo.getValue(), "\"");
 			
-		}
+	
 		
-	ret.append(attname).append(":").append(value).append(",\n");	
+	ret.append(attname).append(":").append("{");
+	ret.append("name:").append(TcxmlUtils.formatAsJsString(attname, "\""));
+	ret.append(",");
+	ret.append("value:").append(value);
+	ret.append(",");
+	ret.append("isjs:").append(isjs);
+	
+	
+	
+	ret.append("},\n");	
 		
 	}
 	
@@ -1851,6 +1890,10 @@ return ( ret.toString() );
 
 
 
+
+public String getName() {
+	return name;
+}
 
 private String generateAnonymousFunctionForJScode(String jscode) {
 	StringBuffer sb = new StringBuffer();

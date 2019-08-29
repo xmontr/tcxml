@@ -6,6 +6,16 @@
   <artifactId>tcxmlplugin</artifactId>
   <version>1.0.0-SNAPSHOT</version>
   <packaging>eclipse-plugin</packaging>
+      <repositories>
+    <repository>
+      <id>eclipse</id>
+      <name>eclipse repo</name>
+      <url>http://download.eclipse.org/releases/2019-09/</url>
+      <layout>p2</layout>
+      
+    </repository>
+  </repositories> 
+  
   <build>
       <sourceDirectory>src/main/java</sourceDirectory>
     <testSourceDirectory>src/test/java</testSourceDirectory>
@@ -17,42 +27,13 @@
         </excludes>
       </resource>
 </resources>
-    <plugins>
-      <plugin>
+    <plugins>    
+          <plugin>
         <groupId>org.eclipse.tycho</groupId>
         <artifactId>tycho-maven-plugin</artifactId>
-        <version>1.0.0</version>
+        <version>1.4.0</version>
         <extensions>true</extensions>
-      </plugin>
-         <plugin>
-         <groupId>org.eclipse.tycho</groupId>
-         <artifactId>tycho-p2-repository-plugin</artifactId>
-         <version>1.0.0</version>
-         <configuration>
-            <includeAllDependencies>true</includeAllDependencies>
-         </configuration>
-      </plugin>
-        <plugin>
-          <groupId>org.eclipse.tycho</groupId>
-          <artifactId>tycho-compiler-plugin</artifactId>
-          <version>1.0.0</version>
-        </plugin>
-        <plugin>
-        	<groupId>org.eclipse.tycho</groupId>
-        	<artifactId>target-platform-configuration</artifactId>
-        	<version>1.0.0</version>
-        	<configuration>
-
-            <resolver>p2</resolver>
-                     <!-- <pomDependencies>consider</pomDependencies>  -->
-        	</configuration>
-        </plugin>
-        <plugin>
-        	<groupId>org.eclipse.tycho</groupId>
-        	<artifactId>tycho-packaging-plugin</artifactId>
-        	<version>1.0.0</version>
-        </plugin>
-              
+      </plugin>          
         <plugin>
     <artifactId>maven-clean-plugin</artifactId>
     <version>3.0.0</version>
@@ -71,6 +52,7 @@
       
       
     </plugins>
+
   </build>
   <dependencies>
   	<dependency>
@@ -80,18 +62,16 @@
   	</dependency>
   	
   </dependencies>
-   <repositories>
-    <repository>
-      <id>eclipse-4.12</id>
-      <url>http://download.eclipse.org/releases/2019-09/</url>
-    <!--   https://download.eclipse.org/releases/2019-09/  http://download.eclipse.org/releases/2018-09/       http://download.eclipse.org/eclipse/updates/4.9/R-4.9-201809060745 -->
-      <layout>p2</layout>
-    </repository>
-  </repositories>
+
    <properties>
-    <!-- 	<tycho.env.osgi.arch>x86_64</tycho.env.osgi.arch>
+     	<tycho.env.osgi.arch>x86_64</tycho.env.osgi.arch>
    	<tycho.env.osgi.os>win32</tycho.env.osgi.os>
-   	<tycho.env.osgi.ws>win32</tycho.env.osgi.ws>   -->
+   	<tycho.env.osgi.ws>win32</tycho.env.osgi.ws>  
    	<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
    </properties>
+   <parent>
+   	<groupId>tcxml</groupId>
+   	<artifactId>master</artifactId>
+   	<version>0.0.1-SNAPSHOT</version>
+   </parent>
 </project>

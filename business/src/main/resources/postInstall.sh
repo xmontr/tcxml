@@ -24,6 +24,12 @@ npm i git+https://${ecuser}:${pas}@webgate.ec.europa.eu/CITnet/stash/scm/tcperf/
 npm i git+https://${ecuser}:${pas}@webgate.ec.europa.eu/CITnet/stash/scm/tcperf/chromeapiinject.git --verbose
 wait $!
 
+
+####install of proxy password module
+#
+npm i git+https://${ecuser}:${pas}@webgate.ec.europa.eu/CITnet/stash/scm/tcperf/proxypassword.git
+
+
 wait $!
 
 npm install --save  
@@ -44,3 +50,9 @@ cd node_modules/jqueryhiglighter/
 npm install --save 
 wait $!
 cd $basepath
+
+cd node_modules/proxypassword/
+npm install --save 
+wait $!
+cd $basepath
+
