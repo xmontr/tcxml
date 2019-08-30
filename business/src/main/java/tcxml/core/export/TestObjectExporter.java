@@ -164,7 +164,7 @@ public class TestObjectExporter  extends StepExporter{
 		
 		
 		
-	String func = "TC.type";
+	String func = "await TC.type";
 		String ret = TcxmlUtils.formatJavascriptFunction(
 					func,
 					argjs  ,

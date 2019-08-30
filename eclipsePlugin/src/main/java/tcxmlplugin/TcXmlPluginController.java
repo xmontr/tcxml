@@ -900,7 +900,6 @@ if(libdir.exists()) {
 		 	arg.add( TcxmlUtils.formatAsJsString( tparam.getColumnName(), "\""));
 		 	arg.add( TcxmlUtils.formatAsJsString( tparam.getDelimiter(), "\""));
 		 	arg.add( TcxmlUtils.formatAsJsString( tparam.getGenerateNewVal(), "\""));
-		 	arg.add( TcxmlUtils.formatAsJsString( tparam.getGenerateNewVal(), "\""));
 		 	arg.add( TcxmlUtils.formatAsJsString( tparam.getOriginalValue(), "\""));
 		 	arg.add( TcxmlUtils.formatAsJsString( tparam.getOutOfRangePolicy(), "\""));
 		 	arg.add( TcxmlUtils.formatAsJsString( tparam.getParamName(), "\""));
