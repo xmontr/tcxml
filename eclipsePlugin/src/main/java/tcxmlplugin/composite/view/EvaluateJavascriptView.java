@@ -10,6 +10,8 @@ import tcxml.model.ArgModel;
 import tcxml.model.Step;
 import tcxml.model.TruLibrary;
 import tcxmlplugin.composite.StepView;
+import util.TcxmlUtils;
+
 import org.eclipse.swt.widgets.Label;
 
 import java.beans.PropertyChangeListener;
@@ -172,8 +174,29 @@ return ctx;
 	@Override
 	public void export(PrintWriter pw) throws TcXmlException {
 		pw.println(" // " + getTitle());
+		
+		
+		
+		ArgModel argtext = argumentMap.get("Code");
+		
+		String argjs = controller.generateJSobject(argtext);
+		
+		
+		
+	String func = " TC.evalJavascript";
+		String ret = TcxmlUtils.formatJavascriptFunction(
+					func,
+					argjs  
+					
+					);
+
+		
+		
+		
+		
+		
 	
-		pw.println(evaljsmodel.code);
+		pw.println(ret);
 		
 	}
 

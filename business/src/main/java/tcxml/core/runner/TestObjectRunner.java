@@ -250,7 +250,8 @@ public class TestObjectRunner extends StepRunner{
 		String txt = txtarg.getValue();
 		 boolean isj = txtarg.getIsJavascript();		
 		
-		
+		 ArgModel cleararg = argumentMap.get("Clear");
+		 boolean clear = new Boolean(cleararg.getValue());
 			 
 			 
 	/// if argument is in js it should be evaluated before
@@ -259,7 +260,7 @@ public class TestObjectRunner extends StepRunner{
 			txt =(String) tcXmlController.evaluateJS(txt,ctx.getCurrentExecutionContext());	 
 			 }
 			 
-			 tcXmlController.typeText(ctx.getCurrentExecutionContext(),to, txt, 20);
+			 tcXmlController.typeText(ctx.getCurrentExecutionContext(),to, txt, 20,clear);
 		
 	}
 

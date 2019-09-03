@@ -801,8 +801,13 @@ target.createNewFile();
 			pw.println("var {TC} = require('./node_modules/testcentreJS/testcentre.js'); ");
 			pw.println("var {LR} = require('./node_modules/testcentreJS/testcentre.js'); ");
 			
+			//basedir for the script
+			pw.println("TC.setScriptDir(__dirname);");
+			
 			exportSymbols(pw,linkedLib);
 			exportActions(pw , actionsViewer);
+			
+		
 			
 			exportLogic(pw,runLogicViewer);
 			
@@ -847,7 +852,7 @@ if(libdir.exists()) {
     File[] libfiles = libdir.listFiles();
     for (File file2 : libfiles) {
  
- java.nio.file.Path targetpath = (new File(exportPath +"\\"  + file2.getName())).toPath();
+ java.nio.file.Path targetpath = (new File(exportPath + File.separator + file2.getName())).toPath();
 
   try {
 	Files.copy(file2.toPath(), targetpath,StandardCopyOption.REPLACE_EXISTING) ;

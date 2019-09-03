@@ -314,6 +314,9 @@ ret.add(mo);
 		ArgModel lo = new ArgModel("Value");
 		lo.setValue("");
 		ret.add(lo);
+		ArgModel cl = new ArgModel("Clear");
+		cl.setValue("true");
+		ret.add(cl);
 		
 	}
 

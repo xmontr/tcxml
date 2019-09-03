@@ -76,7 +76,7 @@ public class TestObjectExporter  extends StepExporter{
 	private String doSet(TestObject to) throws TcXmlException {
 		ArgModel thepath = argumentMap.get("Path");
 		
-		String func = "TC.set";	
+		String func = "await TC.set";	
 		
 		String objarg = tcXmlController.generateJSobject(thepath);
 		
@@ -90,7 +90,7 @@ public class TestObjectExporter  extends StepExporter{
 	private String select(TestObject to) throws TcXmlException {
 		ArgModel thetext = argumentMap.get("Text");
 		ArgModel theordinal = argumentMap.get("Ordinal");
-		String func = "TC.select";	
+		String func = "await TC.select";	
 		
 		String objarg = tcXmlController.generateJSobject(theordinal,thetext);
 		
@@ -109,7 +109,7 @@ public class TestObjectExporter  extends StepExporter{
 		
 		
 		
-	String func = "TC.evaljsOnObect";
+	String func = "TC.evaljsOnObject";
 		String ret = TcxmlUtils.formatJavascriptFunction(
 					func,
 					argjs  ,
@@ -159,8 +159,10 @@ public class TestObjectExporter  extends StepExporter{
 
 	private String typeText(TestObject to) throws TcXmlException {
 		ArgModel argtext = argumentMap.get("Value");
+		ArgModel argclear = argumentMap.get("Clear");
 		
-		String argjs = tcXmlController.generateJSobject(argtext);
+		String argjs = tcXmlController.generateJSobject(argtext,argclear);
+		
 		
 		
 		

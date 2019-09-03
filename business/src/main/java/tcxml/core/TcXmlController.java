@@ -1370,7 +1370,7 @@ try {
 	 * @throws TcXmlException
 	 */
 	
-	public void typeText(ExecutionContext ctx, TestObject to ,String text, long typingInterval) throws TcXmlException {
+	public void typeText(ExecutionContext ctx, TestObject to ,String text, long typingInterval, boolean clear) throws TcXmlException {
 		ensureDriver();
 		
 		WebElement finded = this.identifyElement(to,ctx);
@@ -1378,6 +1378,10 @@ try {
 	
 		
 		 highlight(finded);
+		 if(clear) {
+			 finded.clear();
+			 
+		 }
 
 			final String[] aletter = text.split(StringUtils.EMPTY);
 			for(int i = 0 ; i < aletter.length ; i++) {
@@ -1922,19 +1926,11 @@ private String generateAnonymousFunctionForJScode(String jscode) {
 public String generateJsTestObject(TestObject to) throws TcXmlException {
 	StringBuffer ret = new StringBuffer() ;
 	String identMethod = to.getIdents().getActive();
-	String val = null;
-	
 	String ident = getIdentForTestObject(to, identMethod);
-	if(identMethod.equalsIgnoreCase( IdentificationMethod.get("xpath").getName() )) { //xpath identification
-		
-		val = TcxmlUtils.formatAsJsString(ident, "\"");
+	String val = TcxmlUtils.formatAsJsString(ident, "\"");
 	
-		
-	}else { //javascript identification
-		
-		
-	 val =	generateAnonymousFunctionForJScode(ident);
-	}
+	
+
 	
 
 	String txt = TcxmlUtils.formatJavascriptFunction(
