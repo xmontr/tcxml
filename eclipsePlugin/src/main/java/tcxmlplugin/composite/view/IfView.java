@@ -33,6 +33,7 @@ import tcxmlplugin.composite.stepViewer.StepContainer;
 import tcxmlplugin.composite.stepViewer.StepViewer;
 import tcxmlplugin.composite.stepViewer.StepViewerFactory;
 import tcxmlplugin.job.MultipleStepRunner;
+import util.TcxmlUtils;
 
 public class IfView extends StepView  implements StepContainer, ExpandListener{
 	
@@ -227,7 +228,9 @@ conditionTxt.SetArgModel(cond);
 		
 	StringBuffer ret = new StringBuffer();
 	
-	ret.append("if( (function(){").append(argumentMap.get("Condition").getValue()).append("})() ){");
+	String input=argumentMap.get("Condition").getValue();
+	String escapeChar ="\"";
+	ret.append("if( TC.eval(").append( TcxmlUtils.formatAsJsString(input, escapeChar )  ).append(" )){");
 	
 	return ret.toString();
 		
