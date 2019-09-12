@@ -1686,7 +1686,7 @@ private JSObject createJsObject() throws TcXmlException  {
 
 private ScriptContext buildEvalOnObjectJavascriptContext(ExecutionContext curentexeccontext,
 		 WebElement element) throws TcXmlException {
-	ScriptContext context = buildInitialJavascriptContext(); 	 
+	ScriptContext context = curentexeccontext.getJsContext(); 	 
 		   JSObject thisobject = new WebElementWrapper(element);
 		   context.setAttribute("object", thisobject, ScriptContext.GLOBAL_SCOPE);			
 		

@@ -271,14 +271,13 @@ public static class CallFunctionViewModel {
 		PlayingContext ret = ctx;
 		
 		
-
 		
 		List<CallFunctionAttribut> listArguments = ((CallFunctionArg)theArgument).getCallArguments();
 		
 		String name = "Call function " +model.getLibName() + "." +  model.getFuncName();
-		ExecutionContext ec = new ExecutionContext(name  ,listArguments,controller.buildInitialJavascriptContext()); //ctx.getCurrentExecutionContext().getJsContext()
+		ExecutionContext ec = new ExecutionContext(name  ,listArguments,ctx.getCurrentExecutionContext().getJsContext()); // controller.buildInitialJavascriptContext()
 		//create new execution context for call
-		
+		ec.setParent(ctx);
 		ScriptContext  jsctx = controller.buildCallFunctionContext(ec);
 		
 		

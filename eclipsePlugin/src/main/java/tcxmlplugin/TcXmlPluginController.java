@@ -382,7 +382,7 @@ public class TcXmlPluginController
 	
 	public void info(String message){
 		Activator.getDefault().log(message, IStatus.INFO,null);
-		if(tcviewer!= null) {
+		if(tcviewer!= null && !tcviewer.isDisposed()) {
 		tcviewer.displayStatus(message);
 		}
 		
@@ -802,7 +802,7 @@ target.createNewFile();
 			pw.println("var {LR} = require('./node_modules/testcentreJS/testcentre.js'); ");
 			
 			//basedir for the script
-			pw.println("TC.setScriptDir(__dirname);");
+			pw.println("TC.init(__dirname);");
 			
 			exportSymbols(pw,linkedLib);
 			exportActions(pw , actionsViewer);
@@ -878,11 +878,17 @@ if(libdir.exists()) {
 		out = new FileOutputStream(customParamtarget);
 		PrintWriter pw = new PrintWriter(out);
 		pw.println("var {parameters , tableParameter}  = require('./parameter.js');");
+		
+		pw.println("parameters.init = function(thetc){\n");
+		
 		Map<String, StepParameter> liparam = getTcviewer().getController().getParameters();
 		 Collection<StepParameter> paramset = liparam.values();
 		 for (StepParameter stepParameter : paramset) {
-			exportSingleParam(stepParameter, pw);
+			exportSingleParam(stepParameter, pw);	
+			
 		}
+		 pw.println("}//end of init ");
+		 
 		 pw.println(" exports.paramManager=parameters;");
 		
 		
@@ -902,6 +908,7 @@ if(libdir.exists()) {
 		 TableParameter tparam = (TableParameter)stepParameter ;
 		 	Vector<String> arg = new Vector<String>();
 		 	
+		 	arg.add("thetc");
 		 	arg.add( TcxmlUtils.formatAsJsString( tparam.getColumnName(), "\""));
 		 	arg.add( TcxmlUtils.formatAsJsString( tparam.getDelimiter(), "\""));
 		 	arg.add( TcxmlUtils.formatAsJsString( tparam.getGenerateNewVal(), "\""));

@@ -210,14 +210,16 @@ layout(true,true);
 		controller.getLog().info(" snapshot viewer current selection"+ src);
 	Step step = src.getViewer().model ;
 	String absolutepath2snap = controller.getRecordSnaphotImage4step(step);
-try {
+
+	/*try {
+	//xav trmporary remove image management
 	Image recimage = TcXmlPluginController.getInstance().createImage(absolutepath2snap, getDisplay());
 	
 	viewRecord.showImage(recimage);
-	
-} catch (TcXmlException e) {
+	}
+catch (TcXmlException e) {
 	TcXmlPluginController.getInstance().error("failure with record snapshot", null);
-}
+}*/
 	
 	
 	

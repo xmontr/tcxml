@@ -20,6 +20,7 @@ import org.eclipse.core.runtime.jobs.IJobChangeEvent;
 import org.eclipse.core.runtime.jobs.IJobChangeListener;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.SWTException;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.layout.GridData;
@@ -556,6 +557,8 @@ public void ensureVisibility(StepViewer stepviewer) {
 	public void displayStatus(String status) {
 		
 		
+		try {
+		
 	getDisplay().asyncExec(new Runnable() {
 			
 			@Override
@@ -567,7 +570,10 @@ public void ensureVisibility(StepViewer stepviewer) {
 		});
 		
 		
-		
+		} catch(SWTException e)	{
+			
+			
+		}
 		
 		
 	}
