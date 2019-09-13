@@ -1096,7 +1096,7 @@ public Object evaluateJS(String code, ExecutionContext ctx) throws TcXmlExceptio
 		return ret;
 	} catch (ScriptException e) {
 		ctx.dumpJsContext();
-		throw new TcXmlException("fail to evaluate js code ", e);
+		throw new TcXmlException("fail to evaluate js code" + code , e);
 	
 	}
 	
@@ -1630,8 +1630,12 @@ public void evalJavascriptOnObject(String identjs,WebElement element, ExecutionC
 	
 	   log.info(" evaluationg javascript for evaljsonobject :\n " + identjs);
 	   log.info(" context id is" + identificationcontext);
+	   
 	   try {
 		    engine.eval(identjs, identificationcontext);
+			// save global variable in the global context 
+			Bindings nashorn_global = (Bindings) identificationcontext.getAttribute("nashorn.global");
+			identificationcontext.getBindings( ScriptContext.ENGINE_SCOPE ).putAll(nashorn_global);
 			
 			
 
@@ -1704,17 +1708,17 @@ private ScriptContext buildEvalOnObjectJavascriptContext(ExecutionContext curent
  * @throws TcXmlException 
  */
 private ScriptContext buildIdentificationJavascriptContext(ExecutionContext curentexeccontext) throws TcXmlException {
-	ScriptEngine engine = getJSengine();
-	ScriptContext context = new SimpleScriptContext();
+	//ScriptEngine engine = getJSengine();
+	//ScriptContext context = new SimpleScriptContext();
 	//context.setBindings(engine.createBindings(), ScriptContext.ENGINE_SCOPE);
 	
 	// the evalXPath function
 	EvalXpathFunction evalXPath = new EvalXpathFunction(this);	
-	 context.setAttribute("evalXPath", evalXPath, ScriptContext.ENGINE_SCOPE);
+	curentexeccontext.getJsContext().setAttribute("evalXPath", evalXPath, ScriptContext.ENGINE_SCOPE);
 	 
 	 //build Argscontext objet
 		   JSObject argscontext = createJsObject();
-		   context.setAttribute("ArgsContext", argscontext, ScriptContext.ENGINE_SCOPE);
+		   curentexeccontext.getJsContext().setAttribute("ArgsContext", argscontext, ScriptContext.ENGINE_SCOPE);
 	 
 	 //copy already exsiting global variables as member of  ARgsContext	   
 	 
@@ -1740,10 +1744,10 @@ private ScriptContext buildIdentificationJavascriptContext(ExecutionContext cure
 			 
 			Object FuncArgs = bd.get("FuncArgs");
 		
-			context.setAttribute("FuncArgs", FuncArgs, ScriptContext.ENGINE_SCOPE); 
-			 log.info("copy funcargs "+FuncArgs + " into context: " + context );
+			curentexeccontext.getJsContext().setAttribute("FuncArgs", FuncArgs, ScriptContext.ENGINE_SCOPE); 
+			 log.info("copy funcargs "+FuncArgs + " into context: " + curentexeccontext.getJsContext() );
 	 
-	return context;
+	return curentexeccontext.getJsContext();
 }
 
 public String evaluateJsArgument(ArgModel theArg, ExecutionContext ctx) throws TcXmlException {

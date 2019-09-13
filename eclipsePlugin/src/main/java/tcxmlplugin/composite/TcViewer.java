@@ -556,6 +556,7 @@ public void ensureVisibility(StepViewer stepviewer) {
 	
 	public void displayStatus(String status) {
 		
+
 		
 		try {
 		
@@ -564,7 +565,12 @@ public void ensureVisibility(StepViewer stepviewer) {
 			@Override
 			public void run() {
 				
-				statusbar.setText(status);
+				if(!statusbar.isDisposed()) {
+					statusbar.setText(status);	
+					
+				}
+				
+				
 				
 			}
 		});

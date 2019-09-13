@@ -36,6 +36,12 @@ public class LrAPI   {
 		
 	}
 	
+	public void log( String message) {
+		controller.getLog().info("JS message:level=Standard \r\n"+ message);	
+		
+		
+	}
+	
 	
 	public void userDataPoint(String name, String value) {
 		

@@ -124,9 +124,17 @@ public class TestObjectRunner extends StepRunner{
 		WebElement theelement = tcXmlController.identifyElement(to, ctx.getCurrentExecutionContext());
 		int index = 1;
 		Select theDrobBox = new Select(theelement);
-		if(thetext != null) {
+		if(thetext != null  && !thetext.getValue().isEmpty()) {
+		
 			
+			try {
 		theDrobBox.selectByVisibleText(thetext.getValue());	
+			}
+			catch (Exception e) {
+				throw new TcXmlException("fail select by visible text ", e);
+				
+			
+			}
 		}else {
 			
 			try {
@@ -135,7 +143,12 @@ public class TestObjectRunner extends StepRunner{
 			throw new TcXmlException("fail to parse ordinal parameter for select action", e);
 			}
 	
+			try {
 			theDrobBox.selectByIndex(index);
+			}
+			catch (Exception e) {
+				throw new TcXmlException("fail select by index ", e);
+			}
 		}
 		
 		
