@@ -2,6 +2,7 @@ package tcxmlplugin.composite.view;
 
 import java.io.PrintWriter;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import javax.json.JsonObject;
@@ -31,6 +32,7 @@ import tcxml.core.IdentificationMethod;
 import tcxml.core.PlayingContext;
 import tcxml.core.TcXmlController;
 import tcxml.core.TcXmlException;
+import tcxml.model.ArgModel;
 import tcxml.model.IfModel;
 import tcxml.model.Step;
 import tcxml.model.TestObject;
@@ -250,13 +252,21 @@ conditionTxt.SetArgModel(argumentMap.get("Exists"));
 		 TestObject theTestObject = controller.getTestObjectById(referencedob, getLibrary());
 		 
 		 
-		String timeout =  model.getObjectTimeout();
-		long to=0L;
+	
 		
-			
-		String func = "TC.exist";
+		
+	HashMap<String, ArgModel> amap = controller.getArguments(model);
+	 ArgModel[] lia = amap.values().toArray(new  ArgModel[amap.size()]);
+		String argjs = controller.generateJSobject(lia);
+	
+	
+	
+	
+		
+		String func = "await TC.exist";
 		String txt = TcxmlUtils.formatJavascriptFunction(
 					func,
+					argjs,
 					controller.generateJsTestObject(theTestObject) 
 					);
 		

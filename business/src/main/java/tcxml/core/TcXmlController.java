@@ -1872,7 +1872,7 @@ public String generateJSobject( ArgModel...  models ) {
 			
 	
 		
-	ret.append(attname).append(":").append("{");
+	ret.append(TcxmlUtils.formatAsJsString(attname, "\"")).append(":").append("{");
 	ret.append("name:").append(TcxmlUtils.formatAsJsString(attname, "\""));
 	ret.append(",");
 	ret.append("value:").append(value);
