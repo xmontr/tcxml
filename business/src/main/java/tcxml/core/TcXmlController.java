@@ -192,8 +192,24 @@ public class TcXmlController {
 	private File highlighterExtension;
 	
 	private File chromeApiExtension;
+	
+	/**
+	 *  absolute base dir for all the files of the testcase : default.xml , extrafile , .dat , .prm ...
+	 * 
+	 */
 
 	private String scriptDir;
+	
+	
+	   /**
+     *  map for the connection to Virtual Table Server
+     * 
+     */
+    private Map<String,Vts> vtsConnections;
+	
+	
+	
+	
 	
 	
 	private static  ScriptEngineManager  scriptFactory = new ScriptEngineManager();
@@ -210,6 +226,8 @@ public class TcXmlController {
     	
     actionMap = new HashMap<String, Step>();
     parameters = new HashMap<String,StepParameter>();
+    
+    vtsConnections = new HashMap<String, Vts>();
     
     libraries = new HashMap<String,TruLibrary>();
     	
@@ -1947,5 +1965,99 @@ public String generateJsTestObject(TestObject to) throws TcXmlException {
 	
 	return ret.toString();
 }
+
+
+
+public void vtsConnect(String name, String server, String port) throws TcXmlException {
+	
+	Vts newVts = new Vts( server,name, port);
+	newVts.handShake() ;
+		
+		addVtsConnection(newVts);
+	
+	
+	
+}
+
+
+
+
+private void addVtsConnection(Vts newVts) throws TcXmlException {
+	
+	if(hasVtsConnection(newVts.getName()) ) {
+		
+	throw new TcXmlException("vts connection " + newVts.getName() , new IllegalArgumentException())	;
+	}
+	
+	String newname = newVts.getName();
+	this.log.info(" VTS adding new connection with name " + newname);
+	this.vtsConnections.put(newname, newVts);
+	
+}
+
+private boolean hasVtsConnection(String name) {
+	
+	return (this.vtsConnections.containsKey(name));
+
+}
+
+public JsonObject vtsAddCells(String vtsname, String colnames, String values, String option) throws TcXmlException {
+	int theoption = 0;
+	try {
+		theoption = Integer.parseInt(option);
+	}
+	catch (NumberFormatException e) {
+		throw new TcXmlException(" bad option for vtsAddCells " , e) ;
+	}
+	
+	Vts thevts = getVtsConnection(vtsname);
+	JsonObject retjs = thevts.addCells(colnames,values,theoption);
+	
+	return retjs;
+}
+
+private Vts getVtsConnection(String vtsname) throws TcXmlException {
+	Vts ret =null;
+	if(!hasVtsConnection(vtsname)) throw new TcXmlException("No vts connection with name " + vtsname + " available", new IllegalArgumentException(vtsname));
+		
+	ret= this.vtsConnections.get(vtsname);	
+		
+	return ret;
+}
+
+public JsonObject vtsPopCells(String vtsname, String variable) throws TcXmlException {
+	Vts theVts = getVtsConnection(vtsname);
+	JsonObject retjs = theVts.popcells();	
+	return retjs;
+}
+
+
+
+public void addToCurrentJScontext(PlayingContext ctx, String variable, JsonObject value) {
+	if(variable == null || variable.isEmpty()) {
+	variable = "data" ;	
+		
+	}
+	
+	ScriptContext jscontext = ctx.getCurrentExecutionContext().getJsContext() ;	
+ 
+	jscontext.setAttribute(variable, value, ScriptContext.GLOBAL_SCOPE);
+	
+	
+	
+	
+}
+
+public JsonObject vtsDisconnect(String vtsname) throws TcXmlException {
+	Vts vts = getVtsConnection(vtsname);
+	log.info(" VTS removing connection " + vts.getName() );
+	this.vtsConnections.remove(vtsname);
+	
+	
+	return null;
+}
+
+
+
 
 }

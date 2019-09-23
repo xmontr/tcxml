@@ -1,5 +1,7 @@
 package tcxml.core.export;
 
+import java.util.HashMap;
+
 import org.apache.commons.lang.StringEscapeUtils;
 
 import tcxml.core.TcXmlController;
@@ -24,9 +26,10 @@ public class GenericApiExporter extends StepExporter{
 		
 		switch(category) {
 		
-		case "VTS":ret.append(" //  ****************************** warning not implemented VTS ");		
+		case "VTS":	
+		ret.append( exportVTSMethod(method)); break;
 			
-			break;
+			
 		
 		case "TC":
 			
@@ -51,6 +54,27 @@ public class GenericApiExporter extends StepExporter{
 		}
 		
 		return ret.toString();
+	}
+
+	private Object exportVTSMethod(String method) throws TcXmlException {
+		
+	
+		HashMap<String, ArgModel> amap = tcXmlController.getArguments(step);
+		 ArgModel[] lia = amap.values().toArray(new  ArgModel[amap.size()]);
+			String argjs = tcXmlController.generateJSobject(lia);
+		
+		
+		
+		
+			
+			String func = "await TC." + method;
+			String txt = TcxmlUtils.formatJavascriptFunction(
+						func,
+						argjs
+						
+						);
+			
+			return txt;
 	}
 
 	private String  exportUtilsMethod(String method) throws TcXmlException {
