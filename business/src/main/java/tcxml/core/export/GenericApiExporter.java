@@ -31,10 +31,9 @@ public class GenericApiExporter extends StepExporter{
 			
 			
 		
-		case "TC":
+		case "TC": ret.append( exportTCMethod(method)); break;
 			
-			ret.append(" //  ****************************** warning not implemented TC ");	
-			break;
+
 			
 		case "Utils":
 			ret.append( exportUtilsMethod(method)); break;
@@ -54,6 +53,36 @@ public class GenericApiExporter extends StepExporter{
 		}
 		
 		return ret.toString();
+	}
+
+	private String  exportTCMethod(String method) throws TcXmlException {
+		String ret ="";
+		switch (method) {
+		case "log": ret=exportMethod(method);  		break;
+
+		default: ret = "\\\\************************************ WARNING NOT IMPLEMENTED *********** " + method  ;
+		
+		}
+		return ret;
+	}
+
+	private String exportMethod(String method) throws TcXmlException {
+		HashMap<String, ArgModel> amap = tcXmlController.getArguments(step);
+		 ArgModel[] lia = amap.values().toArray(new  ArgModel[amap.size()]);
+			String argjs = tcXmlController.generateJSobject(lia);
+		
+		
+		
+		
+			
+			String func = "await TC." + method;
+			String txt = TcxmlUtils.formatJavascriptFunction(
+						func,
+						argjs
+						
+						);
+			
+			return txt;
 	}
 
 	private Object exportVTSMethod(String method) throws TcXmlException {
