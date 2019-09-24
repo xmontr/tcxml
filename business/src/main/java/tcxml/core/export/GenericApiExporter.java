@@ -72,7 +72,10 @@ public class GenericApiExporter extends StepExporter{
 			String argjs = tcXmlController.generateJSobject(lia);
 		
 		
-		
+			//avoid confusion between log of TC api and log of LR api
+			if(method.equals("log")) {
+				method = "logg";
+			}
 		
 			
 			String func = "await TC." + method;
