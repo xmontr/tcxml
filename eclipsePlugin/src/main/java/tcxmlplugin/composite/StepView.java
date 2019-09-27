@@ -33,7 +33,7 @@ public abstract class StepView extends Composite  {
 	protected TruLibrary Library;
 	
 	
-	protected TruLibrary getLibrary() {
+	public TruLibrary getLibrary() {
 		return Library;
 	}
 
@@ -55,7 +55,7 @@ public abstract class StepView extends Composite  {
 
 	private String title ;
 
-	protected TcXmlController controller;
+	public TcXmlController controller;
 	
 	protected StepViewer viewer;
 	

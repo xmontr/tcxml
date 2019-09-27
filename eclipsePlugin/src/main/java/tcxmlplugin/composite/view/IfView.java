@@ -34,8 +34,15 @@ import tcxmlplugin.composite.stepViewer.StepViewer;
 import tcxmlplugin.composite.stepViewer.StepViewerFactory;
 import tcxmlplugin.job.MultipleStepRunner;
 import util.TcxmlUtils;
+import org.eclipse.wb.swt.SWTResourceManager;
 
 public class IfView extends StepView  implements StepContainer, ExpandListener{
+	
+	
+	
+
+	
+	
 	
 	private TextInputView conditionTxt;
 	
@@ -43,11 +50,20 @@ public class IfView extends StepView  implements StepContainer, ExpandListener{
 	
 	private String conditionString;
 	
-	private ExpandBar bar;
+	ExpandBar ifbar;
 	
 	private IfModel ifmodel ;
 	
 	private JsonObject arg;
+	
+	
+	private IfElsecontainer ifcontainer ;
+	
+	private IfElsecontainer elsecontainer ;
+
+	 ExpandBar elsebar;
+
+	private Group grpElse;
 
 	public IfView(Composite parent, int style, TcXmlController controller,TruLibrary truLibrary) {
 		super(parent, style, controller,truLibrary);
@@ -73,12 +89,29 @@ public class IfView extends StepView  implements StepContainer, ExpandListener{
 		grpSteps.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 		grpSteps.setText("Steps");
 		
-		bar = new ExpandBar(grpSteps, SWT.NONE);
 		stepViwerChildren = new ArrayList<StepViewer>();
-		bar.setBackground( getDisplay().getSystemColor( SWT.COLOR_WHITE) );
-		bar.setSpacing(10);
 		
-		bar.addExpandListener(this);
+		ifbar = new ExpandBar(grpSteps, SWT.NONE);		
+		ifbar.setBackground( getDisplay().getSystemColor( SWT.COLOR_WHITE) );
+		ifbar.setSpacing(10);
+		
+		
+		
+		grpElse = new Group(this, SWT.NONE);
+		grpElse.setBackground(SWTResourceManager.getColor(SWT.COLOR_WHITE));
+		grpElse.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
+		grpElse.setText("else");
+		grpElse.setLayout(new FillLayout(SWT.HORIZONTAL));
+		
+		elsebar = new ExpandBar(grpElse, SWT.NONE);
+		elsebar.setBackground( getDisplay().getSystemColor( SWT.COLOR_WHITE) );
+		elsebar.setSpacing(10);
+		
+		ifcontainer = new IfElsecontainer(this , ifbar);
+		ifbar.addExpandListener(ifcontainer);
+		
+		elsecontainer = new IfElsecontainer(this,elsebar);
+		elsebar.addExpandListener(elsecontainer);
 		
 	}
 
@@ -87,8 +120,8 @@ public class IfView extends StepView  implements StepContainer, ExpandListener{
 		ExpandItem ex = (ExpandItem)e.item;
 		StepViewer sv = (StepViewer)ex.getControl();
 		sv.refreshSizeExpanditem(sv);
-		bar.redraw();
-		bar.layout(true,true);
+		ifbar.redraw();
+		ifbar.layout(true,true);
 		controller.getLog().info("***************      if ********colapsed");
 		
 	}
@@ -100,19 +133,19 @@ public class IfView extends StepView  implements StepContainer, ExpandListener{
 		sv.refreshSizeExpanditem(sv);
 		controller.getLog().info("***************     if  **********expanded");
 		
-		bar.layout();
+		ifbar.layout();
 		
 	}
 
 	@Override
 	public ExpandBar getBar() {
 		// TODO Auto-generated method stub
-		return bar;
+		return ifbar;
 	}
 
 	@Override
 	public void clean() {
-		ExpandItem[] li = bar.getItems();
+		ExpandItem[] li = ifbar.getItems();
 		for (ExpandItem expandItem : li) {
 		Control innercontrol = expandItem.getControl();
 		if( innercontrol instanceof StepContainer) {
@@ -129,7 +162,7 @@ public class IfView extends StepView  implements StepContainer, ExpandListener{
 		}
 			
 		}
-		bar.redraw();
+		ifbar.redraw();
 		
 	}
 
@@ -143,7 +176,7 @@ public class IfView extends StepView  implements StepContainer, ExpandListener{
 			 childcont.getBar().addExpandListener(this);
 			 
 		 }		
-		ExpandItem xpndtmNewExpanditem = new ExpandItem(bar, SWT.NONE);
+		ExpandItem xpndtmNewExpanditem = new ExpandItem(ifbar, SWT.NONE);
 
 		xpndtmNewExpanditem.setExpanded(false);
 		xpndtmNewExpanditem.setText(tv.getTitle());
@@ -154,7 +187,7 @@ public class IfView extends StepView  implements StepContainer, ExpandListener{
 		
 		 stepViwerChildren.add(tv);
 		 
-		 bar.layout();
+		 ifbar.layout();
 		
 	}
 	
@@ -163,15 +196,9 @@ public class IfView extends StepView  implements StepContainer, ExpandListener{
 		super.populate(mo);
 	ArgModel cond = argumentMap.get("Condition");
 	//javascript flag is not set so put it manually
-	cond.setIsJavascript(true);
-		
-		
-
-		
+	cond.setIsJavascript(true);	
 		
 		conditionString=cond.getValue();
-		
-		
 		
 
 conditionTxt.SetArgModel(cond);
@@ -180,23 +207,40 @@ conditionTxt.SetArgModel(cond);
 		
 		// {"Init":{"value":"var i = 0","evalJavaScript":true},"Condition":{"value":"i < 1","evalJavaScript":true},"Increment":{"value":"i++","evalJavaScript":true}}
 		
-	
 		
-		// add cildren
+		// add if cildren
 		BoundList<Step> li = mo.getStep();
-		//firdt dtep is block interval, skip it
+		//first step is block interval, skip it
 		Step firstchild = li.get(0);				
 				sanitycheck(firstchild);
-		li=firstchild.getStep();
+			
 		
-		
-		
-		
-		for (Step step : li) {
-			addStep(step);
+		for (Step step : firstchild.getStep()) {
+			ifcontainer.addStep(step);
 		}
 				
-		bar.layout();
+		ifbar.layout();
+		
+		
+	
+		if(li.size() > 1) { 	//add else children
+			
+			Step secondchild = li.get(1);
+			for (Step step : secondchild.getStep()) {
+			elsecontainer.addStep(step);
+			}
+			
+			elsebar.layout();	
+			grpElse.setVisible(true);
+			
+		}else { // not else present
+			
+			grpElse.setVisible(false);	
+			
+		}
+		
+		
+		
 		
 	
 	}
@@ -253,7 +297,9 @@ conditionTxt.SetArgModel(cond);
 	runChildSteps(ctx);	
 		
 	} else {
-		controller.getLog().info("condition not matched, skip inside step" );
+		controller.getLog().info("condition not matched, skip inside step and run else step if exists" );
+		
+		runelseSteps(ctx);
 		
 	}
 		
@@ -267,12 +313,20 @@ conditionTxt.SetArgModel(cond);
 		pw.println(" // " + getTitle());
 		sb.append(exportIfString()) ;
 		pw.println(sb);
-		List<StepViewer> list = getChildViewer() ;
+		List<StepViewer> list =ifcontainer.getChildViewer() ;
 		for (StepViewer stepViewer : list) {
 			stepViewer.export(pw);
 		}		
-		 sb = new StringBuffer("}//fin if ");	
-		pw.println(sb);
+		 
+		 pw.println("}//fin if " ) ;
+		 pw.println(" else { " ) ;
+		 
+			List<StepViewer> listelse =elsecontainer.getChildViewer() ;
+			for (StepViewer stepViewer : listelse) {
+				stepViewer.export(pw);
+			}
+		
+		pw.println("}//fin else " ) ;
 		
 		
 	}
@@ -288,11 +342,41 @@ conditionTxt.SetArgModel(cond);
 	
 	
 	private void runChildSteps(PlayingContext ctx) throws TcXmlException {
-		MultipleStepRunner mc = new MultipleStepRunner(stepViwerChildren);
+		
+		
+		MultipleStepRunner mc = new MultipleStepRunner(ifcontainer.getChildViewer());
 		mc.runSteps(ctx);
 		
 	}
 	
 	
-
+	private void runelseSteps(PlayingContext ctx) throws TcXmlException {
+		
+	List<StepViewer> elsesteps = elsecontainer.getChildViewer() ;
+	
+	if(elsesteps.size() >0 ) {
+		
+		MultipleStepRunner mc = new MultipleStepRunner(elsesteps);
+		mc.runSteps(ctx);
+		
+		
+	}
+	
+		
+		MultipleStepRunner mc = new MultipleStepRunner(ifcontainer.getChildViewer());
+		mc.runSteps(ctx);
+		
+	}
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 }

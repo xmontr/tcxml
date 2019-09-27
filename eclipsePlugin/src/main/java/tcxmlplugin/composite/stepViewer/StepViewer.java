@@ -16,6 +16,7 @@ import tcxmlplugin.TcXmlPluginController;
 import tcxmlplugin.composite.AStepContainer;
 import tcxmlplugin.composite.StepToolBar;
 import tcxmlplugin.composite.StepView;
+import tcxmlplugin.composite.view.IfElsecontainer;
 import tcxmlplugin.job.PlayingJob;
 
 import static org.hamcrest.Matchers.instanceOf;
@@ -116,8 +117,24 @@ public  class StepViewer extends Composite  {
 		StepContainer pa = getContainer();
 		
 		if( ! (pa instanceof TopStepContainer)) {
-			StepView theview = (StepView) pa;
-			theview.getViewer().refreshSizeExpanditem(origin);
+			
+			
+			if(  pa instanceof StepView) {  // bug with if and else container that are not stepview
+				StepView theview = (StepView) pa;
+				theview.getViewer().refreshSizeExpanditem(origin);
+				
+			}else { //manage if and else 
+				
+				if( pa instanceof  IfElsecontainer) {
+					
+					((IfElsecontainer)pa).getIfview()  .getViewer().refreshSizeExpanditem(origin);
+					
+					
+				}
+				
+				
+			}
+
 			
 		} else { // resiize the top container
 			
