@@ -8,6 +8,7 @@ import static org.hamcrest.Matchers.instanceOf;
 
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -19,6 +20,8 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.IJobChangeEvent;
 import org.eclipse.core.runtime.jobs.IJobChangeListener;
 import org.eclipse.core.runtime.jobs.Job;
+import org.eclipse.jface.window.Window;
+import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.SWTException;
 import org.eclipse.swt.widgets.Label;
@@ -49,6 +52,7 @@ import tcxmlplugin.composite.stepViewer.TopStepContainer;
 import tcxmlplugin.composite.view.CallActionView;
 import tcxmlplugin.composite.view.FunctionView;
 import tcxmlplugin.job.PlayingJob;
+import tcxmlplugin.wizzard.ExportScriptTcxmlWizzard;
 import tcxml.model.ActionsModel;
 import tcxml.model.LibraryModel;
 
@@ -249,7 +253,27 @@ public class TcViewer extends Composite implements PropertyChangeListener, IJobC
 			public void widgetSelected(SelectionEvent e) {
 				List<StepViewer> li = runLogicViewer.stepViwerChildren ;
 				
-				TcXmlPluginController.getInstance().export(runLogicViewer, libraryViewer,actionsViewer);
+				ExportScriptTcxmlWizzard wiz = new ExportScriptTcxmlWizzard();
+				
+			WizardDialog dialog = new WizardDialog(getShell(), wiz);
+			
+		
+			
+			
+	        if (dialog.open() == Window.OK) {
+	        	
+	        	Path expath = wiz.getExportPath() ;
+	        	
+	        	TcXmlPluginController.getInstance().export(runLogicViewer, libraryViewer,actionsViewer , expath);
+	        	
+	        	 TcXmlPluginController.getInstance().info("script exported in " + expath.toString() );
+	        	
+	            
+	        } else {
+	            TcXmlPluginController.getInstance().info("export cancelled");
+	        }
+			
+
 				
 			}
 			

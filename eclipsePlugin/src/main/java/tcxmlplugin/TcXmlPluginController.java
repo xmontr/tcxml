@@ -758,14 +758,18 @@ public Image createImage(String absolutepath, Display display) throws TcXmlExcep
  * @param runLogicViewer
  * @param libraryViewer 
  * @param actionsViewer 
+ * @param exportPathDir  
  */
 
-	public void export(RunLogicViewer runLogicViewer, LibraryViewer libraryViewer, ActionsViewer actionsViewer) {
+	public void export(RunLogicViewer runLogicViewer, LibraryViewer libraryViewer, ActionsViewer actionsViewer, java.nio.file.Path exportPathDir ) {
 		
 		TcXmlController controller = tcviewer.getController();
+		
+		
+		
 		//create temporary directory
 		try {
-		java.nio.file.Path exportPath = Files.createTempDirectory("protractor-");
+		java.nio.file.Path exportPath = exportPathDir ;
 		controller.getLog().info("tempdirectory for export :" + exportPath.toString() );
 		//export all  the  files of the testcase ( param, extrafiles ... )
 		
