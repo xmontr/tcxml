@@ -1283,7 +1283,36 @@ public void openBrowser (String type, String driverPath) throws TcXmlException {
 	}
 	
 
-}	
+}
+
+public FfMpegWrapper getFfMpegWrapper( Path p) throws TcXmlException   {
+	
+	File exe = new File(p.toString());
+	
+	if( ! ( exe.exists() && exe.canExecute() ) ) {
+		
+		throw new TcXmlException(" no binary for ffmpeg found in " + p.toString() , new IllegalArgumentException());
+		
+	}
+	
+	FfMpegWrapper ret = new FfMpegWrapper(p);
+	
+	return ret;
+	
+	
+	
+	
+	
+}
+
+
+public String getCurrentWindowTitle() {
+	
+	return this.getDriver().getTitle() ;
+}
+
+
+
 
 /***
  * 

@@ -148,6 +148,8 @@ if(isRunning == false) {
 		
 		updatePlayingButton();
 		
+		
+		
 		PlayingContext context = new PlayingContext(stepviewer.getController() );		
 		currrentJob = stepviewer.getplayInteractiveJob(  context);
 		currrentJob.schedule();

@@ -14,6 +14,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
@@ -87,19 +88,20 @@ public class TcViewer extends Composite implements PropertyChangeListener, IJobC
 
 
 	private ToolBar toolBar;
+	private IFolder tcfolder;
 	
 	
 	private TopStepContainer  currentTopStep=null;
 	private Label statusbar;
 
-	public TcViewer(Composite parent, int style, TcXmlController tccontroller) {
+	public TcViewer(Composite parent, int style, TcXmlController tccontroller, IFolder testcasefolder) {
 		super(parent, style);
 
 		setLayout(new GridLayout(1, false));
 		toolBar = new ToolBar(this, SWT.FLAT | SWT.RIGHT);
 		
 		tabFolder = new CTabFolder(this, SWT.BORDER);
-		
+		this.tcfolder = testcasefolder;
 		this.controller=tccontroller;
 		
 		buildToolbar();
@@ -130,6 +132,10 @@ public class TcViewer extends Composite implements PropertyChangeListener, IJobC
 		
 		
 		
+	}
+
+	public IFolder getTcfolder() {
+		return tcfolder;
 	}
 
 	private void buildTabFolder() {
@@ -174,10 +180,38 @@ public class TcViewer extends Composite implements PropertyChangeListener, IJobC
 		
 		
 		
+		// record button that manage the start/stop of the video recording
 		
+	ToolItem videoToolItem = new ToolItem(toolBar, SWT.CHECK);
+		
+	videoToolItem.setText("record video");
+	videoToolItem.setSelection(false);
+		
+		
+	videoToolItem.addSelectionListener(new SelectionListener() {
+			
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				boolean selection = ((ToolItem)e.getSource()).getSelection();
+				TcXmlPluginController.getInstance().manageVideo(selection, getController());
+			}
+			
+			@Override
+			public void widgetDefaultSelected(SelectionEvent e) {
+				// TODO Auto-generated method stub
+				
+			}
+		});
+		
+		
+		
+		
+		////
 		ToolItem recorditem = new ToolItem(toolBar, SWT.PUSH);
 		recorditem.setToolTipText("Record");
 		recorditem.setImage(ResourceManager.getPluginImage("tcxmlplugin", "icons/media-record-2.png"));
+		
+		
 		
 		
 		

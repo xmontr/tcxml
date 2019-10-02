@@ -5,6 +5,7 @@ import java.beans.PropertyChangeListener;
 import java.io.InputStream;
 import java.util.Map;
 
+import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -75,13 +76,15 @@ public class TcXmlEditor  extends EditorPart   {
 			 
 			 
 			IPath tcpath = fi.getFile().getParent().getFullPath(); 
+			
+		IFolder testcasefolder = (IFolder)fi.getFile().getParent();
 		String testcasename = tcpath.lastSegment();
 		tcpath=fi.getFile().getParent().getLocation();
 		tccontroller = new TcXmlController(testcasename);
 		tccontroller.loadFromDisk(tcpath.toOSString());
 	openBrowser();
 			
-		tcViewer = new TcViewer(parent, SWT.NONE,tccontroller);
+		tcViewer = new TcViewer(parent, SWT.NONE,tccontroller,testcasefolder);
 		TcXmlPluginController.getInstance().setTcviewer(tcViewer);
 		tcViewer.populate();
 		

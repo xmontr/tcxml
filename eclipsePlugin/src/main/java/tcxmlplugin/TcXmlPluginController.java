@@ -10,6 +10,7 @@ import java.io.InputStream;
 import java.io.PrintWriter;
 import java.net.URL;
 import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -36,10 +37,13 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.QualifiedName;
+import org.eclipse.core.runtime.Status;
+import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Listener;
 
+import tcxml.core.FfMpegWrapper;
 import tcxml.core.TcXmlController;
 import tcxml.core.TcXmlException;
 import tcxml.core.parameter.StepParameter;
@@ -74,6 +78,8 @@ public class TcXmlPluginController
 	
 	
 	private static final String TESTCASE_SNAPSHOT = "testcasesnapshot";
+	
+	private static final String TESTCASE_VIDEOS = "testcasevideo";
 
 	private static TcXmlPluginController instance = null;
 	
@@ -84,6 +90,8 @@ public class TcXmlPluginController
 	
 	
 	private Object currentBreakPoint;
+
+	private FfMpegWrapper currentVideoRecorder;
 
 
 
@@ -427,17 +435,21 @@ public class TcXmlPluginController
     IFolder newtc = testcasefolder.getFolder(name);
     IFolder libfolder = newtc.getFolder("Libraries");
     IFolder snapshotfolder= newtc.getFolder("snapshots");
+    IFolder videofolder = newtc.getFolder("videos");
    
 	try {
 		newtc .create(true, true, null);
 		libfolder.create(true, true, null);
 		snapshotfolder.create(true, true, null);
+		videofolder.create(true, true, null);
 		
 		
 	    QualifiedName key = new QualifiedName("tcxmlplug", "folderType");
 	    newtc.setPersistentProperty(key , TESTCASE_FOLDER);
 	    libfolder.setPersistentProperty(key , TESTCASE_LIB);
 	    snapshotfolder.setPersistentProperty(key, TESTCASE_SNAPSHOT);
+	    videofolder.setPersistentProperty(key, TESTCASE_VIDEOS);
+	    
 	return    newtc	;
 		
 	} catch (CoreException e) {
@@ -645,7 +657,10 @@ return ret;
 	
 	
 	
-	
+	private IFolder getVideoFolder(IFolder testCaseFolder) {
+		 IFolder libfolder = testCaseFolder.getFolder("videos");
+		 return libfolder;
+	}
 	
 	
 
@@ -1102,6 +1117,96 @@ public List<String> getExtraFiles(String selectedDirectory) throws TcXmlPluginEx
 	
 	
 	return ret;
+}
+
+public void manageVideo(boolean selection, TcXmlController controller)  {
+	try {
+		
+		
+		
+		
+	String windowTitle = controller.getCurrentWindowTitle();
+	String executableName = "Google Chrome";
+	File outputfile = getVideoFile();
+	
+	String finalWindowTitle = windowTitle + " - " + executableName ;
+	
+
+	String pathffmpeg = Activator.getDefault().getPreferenceStore().getString(tcxmlplugin.composite.preference.TcXmlPreference.PATH2FFMPEG);
+	
+	java.nio.file.Path thepath = Paths.get(pathffmpeg);	
+	
+
+
+
+
+	
+	if(selection == true) {
+		currentVideoRecorder = 	controller.getFfMpegWrapper(thepath);
+		info("video recording enabled");
+		
+		info("window to record is:" + finalWindowTitle);
+		
+		Job recordjob = new Job("recording job") {
+			
+			@Override
+			protected IStatus run(IProgressMonitor monitor) {
+				IStatus ret =  Status.OK_STATUS;;
+				try {
+					currentVideoRecorder.startRecord(finalWindowTitle, executableName, outputfile);
+					
+					
+				} catch (TcXmlException e) {
+					error("unable to launch video recorder" , e);
+					
+					
+					ret = Status.CANCEL_STATUS;
+				}
+				return ret;
+			}
+		};
+	
+		recordjob.schedule();
+		
+		
+	}else {
+		
+		info("video recording disabled");	
+		
+		currentVideoRecorder.stopRecord();
+		currentVideoRecorder = null;
+	}
+	
+	
+	
+	
+	
+	
+	
+	
+} catch (TcXmlException e) {
+error("video recorder error" , e);
+}
+	
+
+	
+}
+
+/**
+ * 
+ * 
+ * 
+ * 
+ * @return current file that the video records in 
+ */
+
+private File getVideoFile() {
+	IFolder tcfolder = getTcviewer().getTcfolder() ;
+	IFolder videofolder = getVideoFolder(tcfolder);
+	
+	String videoname = tcfolder.getFullPath().lastSegment() + ".mpeg" ;
+IFile videofile = videofolder.getFile(videoname);	
+	return new File(videofile.getLocation().toOSString());
 }
 	
 	
