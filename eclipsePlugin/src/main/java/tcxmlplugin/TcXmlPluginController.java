@@ -55,6 +55,7 @@ import tcxmlplugin.composite.LibraryView;
 import tcxmlplugin.composite.LibraryViewer;
 import tcxmlplugin.composite.RunLogicViewer;
 import tcxmlplugin.composite.TcViewer;
+import tcxmlplugin.composite.VideoRecorderComposite;
 import tcxmlplugin.composite.stepViewer.StepViewer;
 import tcxml.model.ImportModel;
 import tcxml.model.TruLibrary;
@@ -1204,12 +1205,21 @@ private File getVideoFile() {
 	IFolder tcfolder = getTcviewer().getTcfolder() ;
 	IFolder videofolder = getVideoFolder(tcfolder);
 	
-	String videoname = tcfolder.getFullPath().lastSegment() + ".mpeg" ;
+	String videoname = getTcviewer().getcurrentVideoName();
 IFile videofile = videofolder.getFile(videoname);	
 	return new File(videofile.getLocation().toOSString());
 }
+
+
+
 	
+
+
+public String getDefaultVideoName() {
 	
+	return getTcviewer().getTcfolder().getFullPath().lastSegment() + ".mpeg" ;
+	
+}
 
 	
 	

@@ -1,11 +1,15 @@
 package tcxmlplugin.composite;
 
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.CoolBar;
+import org.eclipse.swt.widgets.CoolItem;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.ToolBar;
+import org.eclipse.swt.widgets.Button;
 
 import static org.hamcrest.Matchers.instanceOf;
 
+import java.awt.Point;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.nio.file.Path;
@@ -30,6 +34,7 @@ import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.TabFolder;
 import org.eclipse.swt.widgets.TabItem;
+import org.eclipse.swt.widgets.Text;
 import org.eclipse.swt.custom.CTabFolder;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Event;
@@ -87,24 +92,31 @@ public class TcViewer extends Composite implements PropertyChangeListener, IJobC
 	private Map<String, TruLibrary> libraryMap;
 
 
-	private ToolBar toolBar;
+	private ToolBar scriptToolbar;
+	private CoolBar videoRecorderToolbar;
 	private IFolder tcfolder;
 	
 	
 	private TopStepContainer  currentTopStep=null;
 	private Label statusbar;
 
+
+	private VideoRecorderComposite videoRecorderComposite;
+
 	public TcViewer(Composite parent, int style, TcXmlController tccontroller, IFolder testcasefolder) {
 		super(parent, style);
 
 		setLayout(new GridLayout(1, false));
-		toolBar = new ToolBar(this, SWT.FLAT | SWT.RIGHT);
+		scriptToolbar = new ToolBar(this, SWT.FLAT | SWT.RIGHT);
+		videoRecorderToolbar= new CoolBar(this, SWT.FLAT | SWT.RIGHT); 
+
+		
 		
 		tabFolder = new CTabFolder(this, SWT.BORDER);
 		this.tcfolder = testcasefolder;
 		this.controller=tccontroller;
 		
-		buildToolbar();
+
 		
 		actionsViewer = new ActionsViewer(tabFolder, SWT.BORDER,controller);
 		this.libraryViewer = new LibraryViewer(tabFolder, SWT.BORDER,controller);
@@ -127,10 +139,46 @@ public class TcViewer extends Composite implements PropertyChangeListener, IJobC
 		
 		buildTabFolder();
 	
-		
+		buildScriptToolbar();
+		buildVideorecorderToolbar();
 
 		
 		
+		
+	}
+
+	private void buildVideorecorderToolbar() {
+		// record button that manage the start/stop of the video recording
+		videoRecorderToolbar.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
+		
+		CoolItem coolItem = new CoolItem(videoRecorderToolbar, SWT.NONE);
+		
+		videoRecorderComposite = new VideoRecorderComposite(videoRecorderToolbar, SWT.NONE);
+		
+		coolItem.setControl(videoRecorderComposite);
+		
+		videoRecorderComposite.getCheckButton().addSelectionListener(new SelectionListener() {
+			
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				boolean selection = ((Button)e.getSource()).getSelection();
+				TcXmlPluginController.getInstance().manageVideo(selection, getController());
+			}
+			
+			@Override
+			public void widgetDefaultSelected(SelectionEvent e) {
+				// TODO Auto-generated method stub
+				
+			}
+		});
+		
+		videoRecorderComposite.pack();
+		   org.eclipse.swt.graphics.Point size = videoRecorderComposite.getSize();
+;
+		    coolItem.setSize(coolItem.computeSize(size.x, size.y));
+		
+	
+	
 		
 	}
 
@@ -176,38 +224,17 @@ public class TcViewer extends Composite implements PropertyChangeListener, IJobC
 		
 	}
 
-	private void buildToolbar() {
+	private void buildScriptToolbar() {
 		
 		
 		
-		// record button that manage the start/stop of the video recording
-		
-	ToolItem videoToolItem = new ToolItem(toolBar, SWT.CHECK);
-		
-	videoToolItem.setText("record video");
-	videoToolItem.setSelection(false);
-		
-		
-	videoToolItem.addSelectionListener(new SelectionListener() {
-			
-			@Override
-			public void widgetSelected(SelectionEvent e) {
-				boolean selection = ((ToolItem)e.getSource()).getSelection();
-				TcXmlPluginController.getInstance().manageVideo(selection, getController());
-			}
-			
-			@Override
-			public void widgetDefaultSelected(SelectionEvent e) {
-				// TODO Auto-generated method stub
-				
-			}
-		});
+
 		
 		
 		
 		
 		////
-		ToolItem recorditem = new ToolItem(toolBar, SWT.PUSH);
+		ToolItem recorditem = new ToolItem(scriptToolbar, SWT.PUSH);
 		recorditem.setToolTipText("Record");
 		recorditem.setImage(ResourceManager.getPluginImage("tcxmlplugin", "icons/media-record-2.png"));
 		
@@ -215,7 +242,7 @@ public class TcViewer extends Composite implements PropertyChangeListener, IJobC
 		
 		
 		
-		ToolItem startitem = new ToolItem(toolBar, SWT.NONE);
+		ToolItem startitem = new ToolItem(scriptToolbar, SWT.NONE);
 		startitem.setToolTipText("Play");
 		
 		startitem.addListener(SWT.Selection, new Listener() {
@@ -243,21 +270,21 @@ public class TcViewer extends Composite implements PropertyChangeListener, IJobC
 		
 		startitem.setImage(ResourceManager.getPluginImage("tcxmlplugin", "icons/media-playback-start-2.png"));
 		
-		ToolItem pauseitem = new ToolItem(toolBar, SWT.NONE);
+		ToolItem pauseitem = new ToolItem(scriptToolbar, SWT.NONE);
 		pauseitem.setToolTipText("Pause");
 		pauseitem.setImage(ResourceManager.getPluginImage("tcxmlplugin", "icons/media-playback-pause-2.png"));
 		
-		ToolItem saveItem = new ToolItem(toolBar, SWT.NONE);
+		ToolItem saveItem = new ToolItem(scriptToolbar, SWT.NONE);
 		saveItem.setImage(ResourceManager.getPluginImage("tcxmlplugin", "icons/document-export.png"));
 		
-		ToolItem stopItem = new ToolItem(toolBar, SWT.NONE);
+		ToolItem stopItem = new ToolItem(scriptToolbar, SWT.NONE);
 		stopItem.setImage(ResourceManager.getPluginImage("tcxmlplugin", "icons/media-playback-stop-2.png"));
 		
 		
-		ToolItem toolItem = new ToolItem(toolBar, SWT.SEPARATOR);
+		ToolItem toolItem = new ToolItem(scriptToolbar, SWT.SEPARATOR);
 		
 		
-		ToolItem snapshotToolItem = new ToolItem(toolBar, SWT.CHECK);
+		ToolItem snapshotToolItem = new ToolItem(scriptToolbar, SWT.CHECK);
 		
 		snapshotToolItem.setText("view snapshot");
 		snapshotToolItem.setSelection(true);
@@ -278,7 +305,7 @@ public class TcViewer extends Composite implements PropertyChangeListener, IJobC
 			}
 		});
 		
-		ToolItem exportitem = new ToolItem(toolBar, SWT.PUSH);
+		ToolItem exportitem = new ToolItem(scriptToolbar, SWT.PUSH);
 		exportitem.setToolTipText("Export current run Logic ");
 		exportitem.setText("Export");
 		exportitem.addSelectionListener(new SelectionListener() {
@@ -395,26 +422,13 @@ public class TcViewer extends Composite implements PropertyChangeListener, IJobC
 		actionsViewer.showSelectedAction( actName);
 		
 		
-
 		
-		
+	}
 	
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
 	
+	public String getcurrentVideoName() {
+		
+		return videoRecorderComposite.getVideoFilename();
 		
 	}
 
@@ -425,6 +439,8 @@ this.populateAction( controller.getActionMap());
 this.populateLibrary(controller.getLibraries());
 this.populateRunLogic(controller.getRunLogic());
 this.populateParameter(controller.getParameters());
+
+videoRecorderComposite.setDefaultVideoName(TcXmlPluginController.getInstance().getDefaultVideoName());
 		
 	}
 
