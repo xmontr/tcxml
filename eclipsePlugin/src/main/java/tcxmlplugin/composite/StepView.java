@@ -9,6 +9,8 @@ import java.util.List;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
 
+import stepWrapper.AbstractStepWrapper;
+import stepWrapper.StepWrapperFactory;
 import tcxml.core.PlayingContext;
 import tcxml.core.TcXmlController;
 import tcxml.core.TcXmlException;
@@ -27,6 +29,10 @@ public abstract class StepView extends Composite  {
 	private PropertyChangeSupport propertyChangeSupport;
 	
 	protected Step model;
+	
+	protected AbstractStepWrapper stepWrapper ;
+	
+	
 	
 	protected StepArgument theArgument;
 	
@@ -119,6 +125,8 @@ public abstract class StepView extends Composite  {
 
 	public  void populate(Step mo) throws TcXmlException   {
 		
+		stepWrapper  = StepWrapperFactory.getWrapper(mo, controller, getLibrary());
+		
 		model.setDisabled(mo.isDisabled());
 		model.setAction(mo.getAction());
 		model.setActionName(mo.getActionName());
@@ -147,7 +155,8 @@ public abstract class StepView extends Composite  {
 		model.setTestObject(mo.getTestObject());
 		model.getStep().addAll(mo.getStep());
 		argumentMap = controller.getArguments(mo);
-		setTitle(buildTitle());
+		//setTitle(buildTitle());
+		setTitle(stepWrapper.getTitle());
 		
 		
 	

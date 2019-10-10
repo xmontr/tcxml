@@ -81,6 +81,7 @@ import tcxml.model.Transaction;
 import tcxml.model.Transactions;
 import tcxml.model.TruLibrary;
 import tcxml.model.TruScript;
+import tcxml.model.Vertex;
 import util.TcxmlUtils;
 
 public class TcXmlController {
@@ -1562,18 +1563,37 @@ public String getRecordSnaphotImage4step( Step st) {
  * 
  * 
  */
-public List<Transaction> getAlltransactions() {
+public HashMap<Transaction, TruLibrary> getAlltransactions() {
 	
-	List<Transaction> ret = new ArrayList<Transaction>();
+	HashMap<Transaction, TruLibrary> ret = new HashMap<Transaction, TruLibrary>();
+	
+	//script transactions
+	
+	BoundList<Transaction> scriptstrans = script.getTransactions().getTransaction();
+	
+	for (Transaction transaction : scriptstrans) {
+		
+		ret.put(transaction, null);
+	}
+	
+	// lib transaction
 	
 	
-	ret.addAll(script.getTransactions().getTransaction());
+	
 	
 	Collection<TruLibrary> liblist = libraries.values();
 	for (TruLibrary truLibrary : liblist) {
 		
-		if( truLibrary.getTransaction()  != null) {
-			ret.addAll(truLibrary.getTransaction().getTransaction());			
+		if( truLibrary.getTransactions()  != null) {
+		
+			BoundList<Transaction> libtrans = truLibrary.getTransactions().getTransaction();
+			
+			for (Transaction transaction : libtrans) {
+				
+				ret.put(transaction, truLibrary);
+			}
+			
+						
 		}
 		
 		
@@ -2085,6 +2105,236 @@ public JsonObject vtsDisconnect(String vtsname) throws TcXmlException {
 	
 	return null;
 }
+
+/***
+ * 
+ * 
+ * 
+ * @param transaction
+ * @param mode start / end
+ * @return the starting step for the transaction
+ * @throws TcXmlException 
+ */
+
+public Step getStartEndStepForTransactionInScript( Transaction transaction , String mode) throws TcXmlException {
+	Step ret = null;
+	
+	
+	BoundList<Vertex> allvertex = transaction.getVertex();
+	for (Iterator iterator = allvertex.iterator(); iterator.hasNext();) {
+		Vertex vertex = (Vertex) iterator.next();
+		
+		if(vertex.getType() == mode) {
+			
+			String stepid = vertex.getStep();
+			ret = findStepById(stepid);
+			
+			
+			
+			
+			
+		}
+		
+	}
+	
+	
+return ret ;	
+}
+
+
+
+/***
+ * 
+ * 
+ * 
+ * @param transaction
+ * @param mode start / end
+ * @return the starting step for the transaction
+ * @throws TcXmlException 
+ */
+
+public Step getStartEndStepForTransactionInLibrary( Transaction transaction, TruLibrary lib,   String mode) throws TcXmlException {
+	Step ret = null;
+	
+	
+	BoundList<Vertex> allvertex = transaction.getVertex();
+	for (Iterator iterator = allvertex.iterator(); iterator.hasNext();) {
+		Vertex vertex = (Vertex) iterator.next();
+		
+		if(vertex.getType() == mode) {
+			
+			String stepid = vertex.getStep();
+			ret = findStepById(stepid , lib);
+			
+			
+			
+			
+			
+		}
+		
+	}
+	
+	
+return ret ;	
+}
+
+
+
+
+
+
+
+private Step findStepById(String stepid ,TruLibrary lib) throws TcXmlException {
+	Step ret = null;
+	 List<Step> allStep =listAllScriptStep(lib);
+	for (Step step : allStep) {
+		if( step.getStepId() == stepid ) {
+			
+			ret = step;break;
+		}
+		
+		
+	}
+	
+	if(ret == null) {
+		throw new TcXmlException("no such stepid in script:" + stepid, new IllegalStateException());
+		
+	}
+	
+	
+	return ret;
+}
+
+
+/**
+ * 
+ * 
+ * 
+ * @return all the step of the script
+ */
+
+private  List<Step> listAllScriptStep() {
+	
+	Step root = script.getStep().getStep().get(0) ;
+	 List<Step> allStep = getAllStep(root) ;
+	
+	 return allStep;
+	
+}
+
+
+
+private List<Step>listAllScriptStep(TruLibrary lib) {
+	Step root =lib.getStep();
+	 List<Step> allStep = getAllStep(root) ;
+	return allStep ;
+	
+	
+	
+}
+
+
+
+private Step findStepById(String stepid) throws TcXmlException {
+	Step ret = null;
+	 List<Step> allStep = listAllScriptStep();
+	for (Step step : allStep) {
+		if( step.getStepId() == stepid ) {
+			
+			ret = step;break;
+		}
+		
+		
+	}
+	
+	if(ret == null) {
+		throw new TcXmlException("no such stepid in script:" + stepid, new IllegalStateException());
+		
+	}
+	
+	
+	return ret;
+}
+/**
+ * 
+ * 
+ * 
+ * 
+ * 
+ * @return all step for the script 
+ */
+
+
+
+private List<Step> getAllStep(Step root) {
+	ArrayList<Step> ret = new ArrayList<Step>() ;
+	 List<Step> childs = root.getStep();
+	 for (Step step : childs) {
+		 ret.add(step);
+		 ret.addAll(getAllStep(step));
+		
+	}
+	 
+	 
+	 
+	 
+	return ret;
+}
+
+/**
+ * 
+ *  map all the step of the script ( including the corresponding  library if the case )
+ * 
+ * @return
+ */
+
+public HashMap<Step,TruLibrary> listAllStep () {
+	
+	HashMap<Step,TruLibrary> ret =new  HashMap<Step, TruLibrary>();
+	// add step from the script
+	List<Step> stepscripts = listAllScriptStep();
+	for (Step step : stepscripts) {
+		ret.put(step, null);
+	}
+	
+	
+	// add from the libraries
+	Collection<TruLibrary> alllib = libraries.values();
+	for (TruLibrary truLibrary : alllib) {
+		
+		List<Step> libscripts = listAllScriptStep(truLibrary);
+		for (Step step : libscripts) {
+			ret.put(step, truLibrary);
+		}
+		
+	}
+	
+	
+
+	
+	
+	return ret;
+	
+	
+}
+
+/**
+ * 
+ * 
+ * 
+ * @return the script section ( that contains the actions  of the script
+ */
+
+public Step getScriptstep() {
+	
+	 Step ret = script.getStep().getStep().get(0);   
+	 return ret ;
+				
+				
+		
+	}
+
+
 
 
 

@@ -79,31 +79,10 @@ public class SingleViewSnapshot extends Composite {
 		buildGui();
 	}
 	
-	private Image getSampleImage() throws FileNotFoundException {
-		
-	File f = new File("H:/vugenworkspace/SAMPLE_ECASL/snapshots/yasaqqn.png");
-		
-		FileInputStream in = new FileInputStream(f);
-		Image img = new Image(getDisplay(), in);
-		return img;
-		
-		
-		
-		
-	}
+
 	
 	
-	private void  showsampleimage() {
-		
-		try {
-			showImage(getSampleImage());
-		} catch (FileNotFoundException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		
-		
-	}
+
 	
 	
 	

@@ -8,6 +8,9 @@ public class TransactionEditorModel extends AbstractModel {
 	
 	
 	
+	
+	
+	
 	private List<String> allTransactionsName = new ArrayList<String>();
 	
 	

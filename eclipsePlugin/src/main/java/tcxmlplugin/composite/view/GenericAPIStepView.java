@@ -112,7 +112,9 @@ public class GenericAPIStepView extends StepView implements PropertyChangeListen
 		
 		
 		StringBuffer sb  = new StringBuffer("Execute.").append(model.getCategoryName()).append(".").append(model.getMethodName());
-		return sb.toString();
+		
+		return( formatTitle(model.getIndex(), sb.toString()) );
+		 
 	}
 
 	@Override

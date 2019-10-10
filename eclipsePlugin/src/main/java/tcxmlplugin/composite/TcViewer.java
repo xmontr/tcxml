@@ -14,6 +14,7 @@ import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.nio.file.Path;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -49,6 +50,7 @@ import tcxml.core.TcXmlController;
 import tcxml.core.TcXmlException;
 import tcxml.core.parameter.StepParameter;
 import tcxml.model.Step;
+import tcxml.model.Transaction;
 import tcxml.model.TruLibrary;
 import tcxmlplugin.TcXmlPluginController;
 import tcxmlplugin.composite.parameter.ParameterViewer;
@@ -439,8 +441,21 @@ this.populateAction( controller.getActionMap());
 this.populateLibrary(controller.getLibraries());
 this.populateRunLogic(controller.getRunLogic());
 this.populateParameter(controller.getParameters());
+this.populateTransactions(controller.getAlltransactions());
+
+
+
 
 videoRecorderComposite.setDefaultVideoName(TcXmlPluginController.getInstance().getDefaultVideoName());
+		
+	}
+
+	private void populateTransactions(HashMap<Transaction, TruLibrary> hashMap) {
+		try {
+			transactionViewer.populate(hashMap);
+		} catch (TcXmlException e) {
+			TcXmlPluginController.getInstance().error(" fail to load transactions", e);
+		}
 		
 	}
 
