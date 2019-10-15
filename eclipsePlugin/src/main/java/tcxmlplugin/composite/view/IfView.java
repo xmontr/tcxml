@@ -32,7 +32,7 @@ import tcxmlplugin.composite.StepView;
 import tcxmlplugin.composite.stepViewer.StepContainer;
 import tcxmlplugin.composite.stepViewer.StepViewer;
 import tcxmlplugin.composite.stepViewer.StepViewerFactory;
-import tcxmlplugin.job.MultipleStepRunner;
+import tcxmlplugin.job.MultipleStepViewerRunner;
 import util.TcxmlUtils;
 import org.eclipse.wb.swt.SWTResourceManager;
 
@@ -256,11 +256,7 @@ conditionTxt.SetArgModel(cond);
 		return stepViwerChildren;
 	}
 
-	@Override
-	public String buildTitle() throws TcXmlException {
-		String ret = formatTitle(model.getIndex(), " " +  buildIfString() );
-		return ret;
-	}
+
 
 	private String buildIfString() {
 		// TODO Auto-generated method stub
@@ -344,7 +340,7 @@ conditionTxt.SetArgModel(cond);
 	private void runChildSteps(PlayingContext ctx) throws TcXmlException {
 		
 		
-		MultipleStepRunner mc = new MultipleStepRunner(ifcontainer.getChildViewer());
+		MultipleStepViewerRunner mc = new MultipleStepViewerRunner(ifcontainer.getChildViewer());
 		mc.runSteps(ctx);
 		
 	}
@@ -356,14 +352,14 @@ conditionTxt.SetArgModel(cond);
 	
 	if(elsesteps.size() >0 ) {
 		
-		MultipleStepRunner mc = new MultipleStepRunner(elsesteps);
+		MultipleStepViewerRunner mc = new MultipleStepViewerRunner(elsesteps);
 		mc.runSteps(ctx);
 		
 		
 	}
 	
 		
-		MultipleStepRunner mc = new MultipleStepRunner(ifcontainer.getChildViewer());
+		MultipleStepViewerRunner mc = new MultipleStepViewerRunner(ifcontainer.getChildViewer());
 		mc.runSteps(ctx);
 		
 	}

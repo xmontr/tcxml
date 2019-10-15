@@ -110,11 +110,7 @@ public void populate(Step mo) throws TcXmlException {
 
 
 
-	@Override
-	public String buildTitle() throws TcXmlException {
-		String ret = formatTitle(model.getIndex(), " Call Action" );
-		return ret;
-	}
+
 	protected DataBindingContext initDataBindings() {
 		DataBindingContext bindingContext = new DataBindingContext();
 		//
@@ -134,7 +130,7 @@ public void populate(Step mo) throws TcXmlException {
 	@Override
 	public void export(PrintWriter pw) throws TcXmlException {
 		
-		StringBuffer sb = new StringBuffer("// ").append(buildTitle());
+		StringBuffer sb = new StringBuffer("// ").append( stepWrapper.getTitle());
 		pw.println(sb.toString());
 		TcViewer tcviewer = TcXmlPluginController.getInstance().getTcviewer();
 		

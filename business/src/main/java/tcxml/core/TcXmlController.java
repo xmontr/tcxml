@@ -11,8 +11,12 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.io.Reader;
+import java.io.StringBufferInputStream;
 import java.io.StringReader;
+import java.io.UnsupportedEncodingException;
 import java.io.Writer;
+import java.net.URL;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardCopyOption;
@@ -26,6 +30,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Objects;
+import java.util.Properties;
 import java.util.Set;
 import java.util.UUID;
 import java.util.logging.Level;
@@ -48,6 +53,7 @@ import javax.script.SimpleScriptContext;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBElement;
 import javax.xml.bind.JAXBException;
+import javax.xml.bind.Marshaller;
 import javax.xml.bind.Unmarshaller;
 
 import org.apache.commons.configuration.ConfigurationException;
@@ -66,6 +72,9 @@ import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.remote.Augmenter;
 import org.openqa.selenium.remote.DesiredCapabilities;
 import jdk.nashorn.api.scripting.JSObject;
+import stepWrapper.ActionWrapper;
+import stepWrapper.FunctionWrapper;
+import stepWrapper.StepWrapperFactory;
 
 import com.kscs.util.jaxb.BoundList;
 
@@ -207,6 +216,8 @@ public class TcXmlController {
      * 
      */
     private Map<String,Vts> vtsConnections;
+
+	private Properties properties;
 	
 	
 	
@@ -235,6 +246,16 @@ public class TcXmlController {
     this.name = name;	
     
   
+	  URL url = getClass().getResource("/config.properties");
+	 properties = new Properties();
+	 try {
+		
+		 InputStream in = url.openStream();
+		 properties.load(in);
+	} catch (IOException e) {
+		e.printStackTrace();
+		
+	}
     		
     		 
     }
@@ -242,13 +263,13 @@ public class TcXmlController {
  
   
 
+	public Properties getProperties() {
+		return properties;
+	}
+
 	public List<Function> getFunctionsForLib( String libname) throws TcXmlException {
     	List<Function> ret = new ArrayList<Function>();
-    TruLibrary lib = libraries.get(libname);	
-    if(lib == null) {
-    	
-    	throw new TcXmlException("library with name" + libname +" does not exist ", new IllegalStateException());
-    }
+    TruLibrary lib = getLibrary(libname);
     	
     BoundList<Step> li = lib.getStep().getStep();	
     for (Step step : li) {
@@ -282,13 +303,13 @@ public class TcXmlController {
 	
 	
 	
-	public  HashMap<String, ArgModel> getArguments(Step step) throws TcXmlException{
+	public  HashMap<String, ArgModel> getArguments(Step step , List<ArgModel> def) throws TcXmlException{
 		
 	String src = step.getArguments();			
 		HashMap<String, ArgModel> ret = new HashMap<String, ArgModel>() ;
 		
-	DefaultArgumentStepFactory fac = new DefaultArgumentStepFactory(step);
-	List<ArgModel> def = fac.getDefaultArg();
+	/*DefaultArgumentStepFactory fac = new DefaultArgumentStepFactory(step);
+	List<ArgModel> def = fac.getDefaultArg();*/
 	
 		if(src != null) {
 			
@@ -417,26 +438,39 @@ for (ArgModel val : def) {
  */
 
 
-private void loadScript( InputStream inputStream) throws TcXmlException {
+public void loadScript( InputStream inputStream) throws TcXmlException {
 	try {	
     //1. We need to create JAXContext instance
     JAXBContext jaxbContext =  JAXBContext.newInstance(ObjectFactory.class);
 
-
+    
 
     //2. Use JAXBContext instance to create the Unmarshaller.
     Unmarshaller unmarshaller = jaxbContext.createUnmarshaller();
+    
+  
+ 
 
     //3. Use the Unmarshaller to unmarshal the XML document to get an instance of JAXBElement.
-    JAXBElement<TruScript> unmarshalledObject = 
-        (JAXBElement<TruScript>)unmarshaller.unmarshal(
-            inputStream);
+  
+    BufferedReader in = new BufferedReader(new InputStreamReader(inputStream, StandardCharsets.UTF_8 ));
+	
+	
+	
+	
+	
+	   
+	JAXBElement<TruScript> unmarshalledObject = 
+	    (JAXBElement<TruScript>)unmarshaller.unmarshal(
+	    		in);
 
-    //4. Get the instance of the required JAXB Root Class from the JAXBElement.
-    script = unmarshalledObject.getValue();
-    
-    
+	//4. Get the instance of the required JAXB Root Class from the JAXBElement.
+	script = unmarshalledObject.getValue();
+	
+	
 	jaxbContext = JAXBContext.newInstance(ObjectFactory.class);
+    
+
 } catch (JAXBException e) {
 String mess = "fail to load main script" ;
 log.severe(mess);
@@ -615,11 +649,12 @@ public String getScriptDir() {
  * 
  * @param in
  * @return
+ * @throws TcXmlException 
  */
-private InputStream addExpectedNamespace(String element, String ns, FileInputStream in) {
+public InputStream addExpectedNamespace(String element, String ns, FileInputStream in) throws TcXmlException {
 	// xmlns=\"http://www.example.org/tcxml\"
 	
-	BufferedReader br = new BufferedReader(new InputStreamReader(in));
+	BufferedReader br = new BufferedReader(new InputStreamReader(in,StandardCharsets.UTF_8));
 	StringBuffer old = new StringBuffer();
 	StringBuffer rep = new StringBuffer();
 	old.append("<").append(element);
@@ -635,9 +670,17 @@ private InputStream addExpectedNamespace(String element, String ns, FileInputStr
 	};
 	
 String tmp = br.lines().map(addNS).collect(Collectors.joining());
+
+//delete all character before first <
+String s1 = tmp.substring(tmp.indexOf("<"));
+s1.trim();
 	
-	
-	return new ByteArrayInputStream(tmp.getBytes());
+
+	try {
+		return new ByteArrayInputStream(s1.getBytes("UTF-8"));
+	} catch (UnsupportedEncodingException e) {
+	throw new TcXmlException("failure loading xml ", e);
+	}
 }
 
 /***
@@ -694,6 +737,21 @@ public void setPath(File path) {
 
 public Map<String, TruLibrary> getLibraries() {
 	return libraries;
+}
+
+
+
+public TruLibrary getLibrary(String name) throws TcXmlException {
+	
+	if(libraries.containsKey(name)) {
+		
+		return libraries.get(name);
+	}else {
+		
+		throw new TcXmlException(" library not found : "+name, new IllegalArgumentException()) ;
+	}
+	
+	
 }
 
 public void setLibraries(Map<String, TruLibrary> libraries) {
@@ -2124,7 +2182,7 @@ public Step getStartEndStepForTransactionInScript( Transaction transaction , Str
 	for (Iterator iterator = allvertex.iterator(); iterator.hasNext();) {
 		Vertex vertex = (Vertex) iterator.next();
 		
-		if(vertex.getType() == mode) {
+		if(vertex.getType().equals(mode)) {
 			
 			String stepid = vertex.getStep();
 			ret = findStepById(stepid);
@@ -2161,10 +2219,11 @@ public Step getStartEndStepForTransactionInLibrary( Transaction transaction, Tru
 	for (Iterator iterator = allvertex.iterator(); iterator.hasNext();) {
 		Vertex vertex = (Vertex) iterator.next();
 		
-		if(vertex.getType() == mode) {
+		if(vertex.getType().equals(mode)) {
 			
 			String stepid = vertex.getStep();
 			ret = findStepById(stepid , lib);
+			break;
 			
 			
 			
@@ -2174,6 +2233,7 @@ public Step getStartEndStepForTransactionInLibrary( Transaction transaction, Tru
 		
 	}
 	
+
 	
 return ret ;	
 }
@@ -2188,7 +2248,7 @@ private Step findStepById(String stepid ,TruLibrary lib) throws TcXmlException {
 	Step ret = null;
 	 List<Step> allStep =listAllScriptStep(lib);
 	for (Step step : allStep) {
-		if( step.getStepId() == stepid ) {
+		if( step.getStepId().equals(stepid)) {
 			
 			ret = step;break;
 		}
@@ -2239,7 +2299,7 @@ private Step findStepById(String stepid) throws TcXmlException {
 	Step ret = null;
 	 List<Step> allStep = listAllScriptStep();
 	for (Step step : allStep) {
-		if( step.getStepId() == stepid ) {
+		if( step.getStepId().equals(stepid) ) {
 			
 			ret = step;break;
 		}
@@ -2333,6 +2393,34 @@ public Step getScriptstep() {
 				
 		
 	}
+
+public FunctionWrapper getCalledFunction(String libName, String funcName) throws TcXmlException{
+ FunctionWrapper ret =null;
+    TruLibrary lib = getLibrary(libName);
+    	
+    BoundList<Step> li = lib.getStep().getStep();	
+    for (Step step : li) {
+		String functName = step.getAction() ;
+if(functName.equals(funcName)) {
+	
+	ret = (FunctionWrapper) StepWrapperFactory.getWrapper(step, this, lib);
+}
+	
+	}
+    
+    if(ret == null) throw new TcXmlException("fail to find function " + funcName + " in library " + libName, new IllegalStateException());
+	
+	return ret;
+}
+
+public ActionWrapper getCalledAction(String actionName) throws TcXmlException {
+	if(!actionMap.containsKey(actionName)) {
+		throw new TcXmlException(" no action founded:" +actionName, new IllegalArgumentException());
+		
+	} Step act = actionMap.get(actionName);
+	ActionWrapper ret = (ActionWrapper)StepWrapperFactory.getWrapper(act, this, null);
+	return ret;
+}
 
 
 

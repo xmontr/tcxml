@@ -2,6 +2,7 @@ package tcxmlplugin.jfaceprovider;
 
 import static org.hamcrest.Matchers.instanceOf;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.eclipse.jface.viewers.ITreeContentProvider;
@@ -32,12 +33,42 @@ public class StepTreeContentProvider implements ITreeContentProvider  {
 			
 			Step testep = (Step)parentElement ;
 			Step[] ret = testep.getStep().toArray(new Step[testep.getStep().size()]);
-			return ret;
+			return replaceAlternativeStep(ret);
 			
 		} else {
 			
 			return null ;
 		}
+		
+	}
+	
+	/***
+	 *  aletrnative step are not shown in the tree so replace alternativestep by the step alternative.
+	 * 
+	 * 
+	 * @param src
+	 * @return
+	 */
+	private Step[] replaceAlternativeStep( Step[] src) {
+		ArrayList<Step> ret = new ArrayList<Step>() ;
+		for (Step step : src) {
+			if( step.getType().equals("alternative")) {
+				int index = Integer.parseInt(step.getActiveStep()) ;	
+				Step altstep = step.getStep().get(index);	
+				altstep.setIndex(step.getIndex());	
+				ret.add(altstep);
+			}else {
+			ret.add(step);	
+				
+			}
+			
+		}
+		
+		
+	
+	
+	
+	return ret.toArray(new Step[ret.size()]) ; 
 		
 	}
 	

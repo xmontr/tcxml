@@ -416,30 +416,11 @@ public static class CallFunctionViewModel {
 
 
 
-
-
-
-
-	@Override
-	public String buildTitle() {
-		String ret = formatTitle(model.getIndex(), " Call Function " + model.getLibName() + "." + model.getFuncName()) ;
-		return ret;
-	}
-
-
-
-
-
-
-
-
-
-
 	@Override
 	public void export(PrintWriter pw) throws TcXmlException {
 		Vector<String> liparam = new Vector<String>();
 		String[] tab;
-		StringBuffer sb = new StringBuffer("// ").append(buildTitle());
+		StringBuffer sb = new StringBuffer("// ").append(stepWrapper.getTitle());
 		pw.println(sb.toString());
 		StringBuffer sb2 = new StringBuffer();
 		sb2.append("await " );

@@ -393,31 +393,7 @@ public class TestObjectView extends StepView implements PropertyChangeListener {
 		
 	}
 
-	@Override
-	public String buildTitle() throws TcXmlException {
-		
-		String ret;
-		TestObject to = null;
-		if (!controller.isBrowserStep(model)) { // testobject is not browser
 
-				to = controller.getTestObjectById(model.getTestObject(), getLibrary());
-
-			String name = to.getAutoName() == null ? to.getManualName() : to.getAutoName() ;
-			
-			
-			 ret = formatTitle(model.getIndex(), model.getAction() + " on " + name );
-			
-			
-		}else {// testobject is browser
-			
-			ret = formatTitle(model.getIndex(), model.getAction() + " on Browser ");	
-			
-		}
-		
-		
-
-		return ret;
-	}
 
 	@Override
 	public void export(PrintWriter pw) throws TcXmlException {

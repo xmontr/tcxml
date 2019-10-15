@@ -31,7 +31,7 @@ import tcxmlplugin.composite.StepView;
 import tcxmlplugin.composite.stepViewer.StepViewer;
 import tcxmlplugin.composite.stepViewer.StepContainer;
 import tcxmlplugin.composite.stepViewer.StepViewerFactory;
-import tcxmlplugin.job.MultipleStepRunner;
+import tcxmlplugin.job.MultipleStepViewerRunner;
 import tcxmlplugin.job.PlayingJob;
 
 import org.eclipse.swt.layout.GridData;
@@ -168,7 +168,7 @@ public class FunctionView extends StepView implements StepContainer, ExpandListe
 	public PlayingContext play(PlayingContext ctx) throws TcXmlException {
 		
 		
-		MultipleStepRunner mc = new MultipleStepRunner(stepViwerChildren);
+		MultipleStepViewerRunner mc = new MultipleStepViewerRunner(stepViwerChildren);
 		
 		PlayingContext ret = mc.runSteps(ctx);
 		
@@ -182,11 +182,7 @@ public class FunctionView extends StepView implements StepContainer, ExpandListe
 		return stepViwerChildren;
 	}
 
-	@Override
-	public String buildTitle() {
-		String ret = "Function " + model.getAction();
-		return ret;
-	}
+
 	
 	@Override
 	public void itemCollapsed(ExpandEvent e) {

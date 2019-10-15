@@ -12,7 +12,7 @@ import tcxmlplugin.composite.StepView;
 import tcxmlplugin.composite.stepViewer.StepContainer;
 import tcxmlplugin.composite.stepViewer.StepViewer;
 import tcxmlplugin.composite.stepViewer.StepViewerFactory;
-import tcxmlplugin.job.MultipleStepRunner;
+import tcxmlplugin.job.MultipleStepViewerRunner;
 import tcxml.model.ForModel;
 
 import org.eclipse.swt.layout.GridLayout;
@@ -98,11 +98,7 @@ public class ForView extends StepView  implements StepContainer, ExpandListener 
 		bar.addExpandListener(this);
 	}
 
-	@Override
-	public String buildTitle() {
-		String ret = formatTitle(model.getIndex(), " " +  buildLoopString() );
-		return ret;
-	}
+
 	
 	
 	
@@ -122,7 +118,7 @@ public class ForView extends StepView  implements StepContainer, ExpandListener 
 
 	@Override
 	public PlayingContext play(PlayingContext ctx) throws TcXmlException {
-	MultipleStepRunner mc = new MultipleStepRunner(stepViwerChildren);
+	MultipleStepViewerRunner mc = new MultipleStepViewerRunner(stepViwerChildren);
 	ScriptEngine engine = controller.getJSengine();
 	   ScriptContext context = ctx.getJsContext();
 		// store the global variables 

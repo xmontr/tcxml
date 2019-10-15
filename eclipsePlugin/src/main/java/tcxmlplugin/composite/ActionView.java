@@ -24,7 +24,7 @@ import tcxmlplugin.composite.stepViewer.StepViewer;
 import tcxmlplugin.composite.stepViewer.StepViewerFactory;
 import tcxmlplugin.composite.stepViewer.TitleListener;
 import tcxmlplugin.composite.stepViewer.TopStepContainer;
-import tcxmlplugin.job.MultipleStepRunner;
+import tcxmlplugin.job.MultipleStepViewerRunner;
 
 
 /**
@@ -81,7 +81,7 @@ public class ActionView extends AStepContainer implements TopStepContainer{
 	public PlayingContext play(PlayingContext ctx) throws TcXmlException {
 		
 		
-		MultipleStepRunner mc = new MultipleStepRunner(stepViwerChildren);
+		MultipleStepViewerRunner mc = new MultipleStepViewerRunner(stepViwerChildren);
 		
 		PlayingContext ret = mc.runSteps(ctx);
 		

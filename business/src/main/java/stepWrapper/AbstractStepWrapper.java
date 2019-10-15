@@ -1,7 +1,9 @@
 package stepWrapper;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 
+import tcxml.core.PlayingContext;
 import tcxml.core.TcXmlController;
 import tcxml.core.TcXmlException;
 import tcxml.model.ArgModel;
@@ -20,12 +22,33 @@ public abstract class AbstractStepWrapper {
 		this.step = step;
 		this.controller = controller;
 		this.library = library;
-		argumentMap = controller.getArguments(step);
+		argumentMap = controller.getArguments(step , getDefaultArguments());
 	}
 	
 	
 	
 	public abstract  String getTitle() throws TcXmlException ;
+	
+	
+	public abstract PlayingContext runStep (PlayingContext ctx) throws TcXmlException ;
+	
+	
+	public Step getModel() {
+		return step;
+		
+	}
+	
+	public boolean isDisabled() {
+		if(step.isDisabled() != null && step.isDisabled()) {
+			
+			return true;
+		} else {
+			
+			return false;
+		}
+		
+		
+	}
 	
 	
 	
@@ -37,7 +60,7 @@ public abstract class AbstractStepWrapper {
 		
 		//add tag ifstep disabled
 		
-		if(step.isDisabled() != null && step.isDisabled()) {
+		if( isDisabled()) {
 			
 			sb.append(" - disabled");
 		}
@@ -45,6 +68,10 @@ public abstract class AbstractStepWrapper {
 		return sb.toString();
 		
 	}
+	 
+	 
+	 public abstract  ArrayList<ArgModel>  getDefaultArguments() throws TcXmlException ;
+	 
 	
 
 }

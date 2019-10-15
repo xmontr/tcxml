@@ -67,8 +67,8 @@ public class GenericApiExporter extends StepExporter{
 	}
 
 	private String exportMethod(String method) throws TcXmlException {
-		HashMap<String, ArgModel> amap = tcXmlController.getArguments(step);
-		 ArgModel[] lia = amap.values().toArray(new  ArgModel[amap.size()]);
+		//HashMap<String, ArgModel> amap = tcXmlController.getArguments(step);
+		 ArgModel[] lia = argumentMap.values().toArray(new  ArgModel[argumentMap.size()]);
 			String argjs = tcXmlController.generateJSobject(lia);
 		
 		
@@ -91,8 +91,8 @@ public class GenericApiExporter extends StepExporter{
 	private Object exportVTSMethod(String method) throws TcXmlException {
 		
 	
-		HashMap<String, ArgModel> amap = tcXmlController.getArguments(step);
-		 ArgModel[] lia = amap.values().toArray(new  ArgModel[amap.size()]);
+		//HashMap<String, ArgModel> amap = tcXmlController.getArguments(step);
+		 ArgModel[] lia = argumentMap.values().toArray(new  ArgModel[argumentMap.size()]);
 			String argjs = tcXmlController.generateJSobject(lia);
 		
 		

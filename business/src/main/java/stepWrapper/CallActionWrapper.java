@@ -1,7 +1,11 @@
 package stepWrapper;
 
+import java.util.ArrayList;
+
+import tcxml.core.PlayingContext;
 import tcxml.core.TcXmlController;
 import tcxml.core.TcXmlException;
+import tcxml.model.ArgModel;
 import tcxml.model.Step;
 import tcxml.model.TruLibrary;
 
@@ -16,6 +20,25 @@ public class CallActionWrapper extends AbstractStepWrapper {
 	public String getTitle() {
 		String ret = formatTitle(step.getIndex(), " Call Action" );
 		return ret;
+	}
+
+	@Override
+	public ArrayList<ArgModel> getDefaultArguments() throws TcXmlException {
+		ArrayList<ArgModel> ret = new ArrayList<ArgModel>();
+		ArgModel arg = new ArgModel("Action Name");
+		arg.setValue("");
+		arg.setIsJavascript(false);
+		ret.add(arg);
+		
+		return ret ;
+	}
+
+	@Override
+	public PlayingContext runStep(PlayingContext ctx) throws TcXmlException {
+		String actionName = argumentMap.get("Action Name").getValue();
+		ActionWrapper calledaction = controller.getCalledAction(actionName);
+		ctx= calledaction.runStep(ctx);
+		return ctx;
 	}
 
 }

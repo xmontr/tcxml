@@ -7,6 +7,8 @@ import java.util.logging.Logger;
 
 import javax.json.JsonObject;
 
+import stepWrapper.AbstractStepWrapper;
+import stepWrapper.StepWrapperFactory;
 import tcxml.core.StepRunner;
 import tcxml.core.StepStat;
 import tcxml.core.TcXmlController;
@@ -33,6 +35,8 @@ public abstract class StepExporter {
 	
 
 	protected Logger log;
+
+	protected AbstractStepWrapper stepWrapper;
 	
 	
 	
@@ -41,10 +45,11 @@ public abstract class StepExporter {
 		log = Logger.getLogger(StepExporter.class.getName());
 		log.setLevel(Level.ALL);
 		this.step = step;
+		this.stepWrapper = StepWrapperFactory.getWrapper(step, tcXmlController, lib);
 		this.tcXmlController = tcXmlController;
 		this.library =lib;
 		arg = tcXmlController.readJsonObject(step.getArguments());
-		argumentMap = tcXmlController.getArguments(step);
+		argumentMap = tcXmlController.getArguments(step, stepWrapper.getDefaultArguments());
 	
 	}
 	

@@ -97,15 +97,7 @@ public abstract class StepView extends Composite  {
 	}
 	
 	
-	
-	/***
-	 * 
-	 *  cretae the title for the view. is called after populate
-	 * 
-	 * @return
-	 * @throws TcXmlException
-	 */
-	public abstract String buildTitle() throws TcXmlException;
+
 	
 
 	
@@ -154,7 +146,7 @@ public abstract class StepView extends Composite  {
 		model.setStepId(mo.getStepId());
 		model.setTestObject(mo.getTestObject());
 		model.getStep().addAll(mo.getStep());
-		argumentMap = controller.getArguments(mo);
+		argumentMap = controller.getArguments(mo,stepWrapper.getDefaultArguments());
 		//setTitle(buildTitle());
 		setTitle(stepWrapper.getTitle());
 		

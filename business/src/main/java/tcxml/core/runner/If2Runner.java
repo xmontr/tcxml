@@ -29,7 +29,7 @@ public class If2Runner extends StepRunner{
 
 	@Override
 	public PlayingContext runStep(PlayingContext ctx) throws TcXmlException {
-		String exist = argumentMap.get("Exxists").getValue();
+		String exist = argumentMap.get("Exists").getValue();
 		PlayingContext ret = null ;
 		if(exist== "true") {
 			

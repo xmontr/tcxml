@@ -1,7 +1,11 @@
 package stepWrapper;
 
+import java.util.ArrayList;
+
+import tcxml.core.PlayingContext;
 import tcxml.core.TcXmlController;
 import tcxml.core.TcXmlException;
+import tcxml.model.ArgModel;
 import tcxml.model.Step;
 import tcxml.model.TruLibrary;
 
@@ -30,6 +34,18 @@ public class CommentWrapper extends AbstractStepWrapper {
 		String index = step.getIndex() ;
 		
 		return (formatTitle(index, title)) ;
+	}
+
+	@Override
+	public ArrayList<ArgModel> getDefaultArguments() throws TcXmlException{
+		// TODO Auto-generated method stub
+		return new ArrayList<ArgModel>();
+	}
+
+	@Override
+	public PlayingContext runStep(PlayingContext ctx) throws TcXmlException {
+		// TODO Auto-generated method stub
+		return ctx;
 	}
 	
 	

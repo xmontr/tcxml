@@ -58,6 +58,9 @@ public class StepWrapperFactory {
 		case "genericAPIStep" : 
 			ret=getGenericAPIStepWrapper(step,controller,truLibrary); break;
 			
+		case "runLogic"	:
+			ret=getRunLogicStepWrapper(step,controller,truLibrary); break;
+			
 		}
 		
 		
@@ -65,6 +68,12 @@ public class StepWrapperFactory {
 		
 		
 		
+	}
+
+	private static AbstractStepWrapper getRunLogicStepWrapper(Step step, TcXmlController controller,
+			TruLibrary truLibrary) throws TcXmlException {
+		return new RunLogicWrapper(step,controller,truLibrary) ;
+	
 	}
 
 	private static AbstractStepWrapper getGenericAPIStepWrapper(Step step, TcXmlController controller,
@@ -101,7 +110,7 @@ public class StepWrapperFactory {
 
 	private static AbstractStepWrapper getTestObjectWrapper(Step step, TcXmlController controller,
 			TruLibrary truLibrary) throws TcXmlException {
-		return new TestObjectWrapperWrapper(step, controller,truLibrary);
+		return new TestObjectWrapper(step, controller,truLibrary);
 	}
 
 	private static AbstractStepWrapper getFunctionWrapper(Step step, TcXmlController controller,
@@ -110,7 +119,20 @@ public class StepWrapperFactory {
 	}
 
 	private static AbstractStepWrapper getBlockWrapper(Step step, TcXmlController controller, TruLibrary truLibrary) throws TcXmlException {
-		return new  BlockWrapper(step,  controller,truLibrary);
+		
+		
+		switch (step.getAction()) {
+		case "action": return new ActionWrapper(step,  controller,truLibrary);
+		case "Init Block": return new RunBlockWrapper(step,  controller,truLibrary);
+		case "Action Block"	:return new RunBlockWrapper(step,  controller,truLibrary);
+		case "End Block":return new RunBlockWrapper(step,  controller,truLibrary);
+		case "Run Block":return new RunBlockWrapper(step,  controller,truLibrary);
+
+		default:return new  BlockWrapper(step,  controller,truLibrary);
+		
+		}
+		
+
 	}
 
 	private static AbstractStepWrapper getDefaultWrapper(Step step, TcXmlController controller, TruLibrary truLibrary) throws TcXmlException {

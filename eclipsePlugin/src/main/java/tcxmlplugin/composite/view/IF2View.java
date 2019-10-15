@@ -41,7 +41,7 @@ import tcxmlplugin.composite.StepView;
 import tcxmlplugin.composite.stepViewer.StepContainer;
 import tcxmlplugin.composite.stepViewer.StepViewer;
 import tcxmlplugin.composite.stepViewer.StepViewerFactory;
-import tcxmlplugin.job.MultipleStepRunner;
+import tcxmlplugin.job.MultipleStepViewerRunner;
 import util.TcxmlUtils;
 import org.eclipse.wb.swt.SWTResourceManager;
 
@@ -267,11 +267,7 @@ conditionTxt.SetArgModel(argumentMap.get("Exists"));
 		return stepViwerChildren;
 	}
 
-	@Override
-	public String buildTitle() throws TcXmlException {
-		String ret = formatTitle(model.getIndex(), " " +  buildIfString() );
-		return ret;
-	}
+
 
 	private String buildIfString() {
 		// TODO Auto-generated method stub
@@ -295,8 +291,8 @@ conditionTxt.SetArgModel(argumentMap.get("Exists"));
 	
 		
 		
-	HashMap<String, ArgModel> amap = controller.getArguments(model);
-	 ArgModel[] lia = amap.values().toArray(new  ArgModel[amap.size()]);
+	//HashMap<String, ArgModel> amap = controller.getArguments(model);
+	 ArgModel[] lia = argumentMap.values().toArray(new  ArgModel[argumentMap.size()]);
 		String argjs = controller.generateJSobject(lia);
 	
 	
@@ -319,6 +315,7 @@ conditionTxt.SetArgModel(argumentMap.get("Exists"));
 
 	@Override
 	public PlayingContext play(PlayingContext ctx) throws TcXmlException {
+		
 		String exist = argumentMap.get("Exists").getValue();
 		PlayingContext ret = null ;
 		if(exist== "true") {
@@ -401,7 +398,7 @@ conditionTxt.SetArgModel(argumentMap.get("Exists"));
 		
 	}
 	private void runChildSteps(PlayingContext ctx) throws TcXmlException {
-		MultipleStepRunner mc = new MultipleStepRunner(ifcontainer.getChildViewer());
+		MultipleStepViewerRunner mc = new MultipleStepViewerRunner(ifcontainer.getChildViewer());
 		mc.runSteps(ctx);
 		
 	}

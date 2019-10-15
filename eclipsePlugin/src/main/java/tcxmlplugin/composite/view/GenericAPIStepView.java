@@ -107,15 +107,7 @@ public class GenericAPIStepView extends StepView implements PropertyChangeListen
 	
 	
 
-	@Override
-	public String buildTitle() throws TcXmlException {
-		
-		
-		StringBuffer sb  = new StringBuffer("Execute.").append(model.getCategoryName()).append(".").append(model.getMethodName());
-		
-		return( formatTitle(model.getIndex(), sb.toString()) );
-		 
-	}
+
 
 	@Override
 	public PlayingContext play(PlayingContext ctx) throws TcXmlException {

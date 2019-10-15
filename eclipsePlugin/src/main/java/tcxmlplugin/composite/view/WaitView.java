@@ -117,6 +117,9 @@ public class WaitView extends StepView  {
 	@Override
 	public PlayingContext play(PlayingContext ctx) throws TcXmlException {
 		
+		
+	
+		
 		WaitRunner runner = new WaitRunner(model, controller);
 		
 	PlayingContext ret = runner.runStep(ctx);
@@ -125,11 +128,7 @@ public class WaitView extends StepView  {
 
 
 
-	@Override
-	public String buildTitle() throws TcXmlException {
-		String ret = formatTitle(model.getIndex(), "Wait "+ waitmodel.getInterval().getValue() + " seconds" ) ;
-		return ret;
-	}
+
 
 
 

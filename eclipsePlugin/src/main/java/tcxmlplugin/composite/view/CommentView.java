@@ -45,24 +45,7 @@ public class CommentView extends StepView{
 		m_bindingContext = initDataBindings();
 	}
 
-	@Override
-	public String buildTitle() throws TcXmlException {
-		StringBuffer sb =new StringBuffer();
-		String txt = model.getComment();
-		if(txt.length() > 10) {
-			sb.append(txt.substring(0, 10));
-			sb.append(" ... ");
-			
-			
-		}else {
-			sb.append(txt);
-			
-		}
-		
-		
-	
-		return sb.toString();
-	}
+
 
 	@Override
 	public PlayingContext play(PlayingContext ctx) throws TcXmlException {

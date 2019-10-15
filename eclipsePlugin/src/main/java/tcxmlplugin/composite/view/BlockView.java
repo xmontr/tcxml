@@ -27,7 +27,7 @@ import tcxmlplugin.composite.StepView;
 import tcxmlplugin.composite.stepViewer.StepViewer;
 import tcxmlplugin.composite.stepViewer.StepContainer;
 import tcxmlplugin.composite.stepViewer.StepViewerFactory;
-import tcxmlplugin.job.MultipleStepRunner;
+import tcxmlplugin.job.MultipleStepViewerRunner;
 
 public class BlockView  extends StepView implements StepContainer, ExpandListener {
 	private ExpandBar bar;
@@ -136,7 +136,7 @@ public class BlockView  extends StepView implements StepContainer, ExpandListene
 
 	@Override
 	public PlayingContext play(PlayingContext ctx) throws TcXmlException {
-		MultipleStepRunner mc = new MultipleStepRunner(stepViwerChildren);
+		MultipleStepViewerRunner mc = new MultipleStepViewerRunner(stepViwerChildren);
 		
 		PlayingContext ret = mc.runSteps(ctx);
 		
@@ -152,11 +152,7 @@ public class BlockView  extends StepView implements StepContainer, ExpandListene
 	}
 
 
-	@Override
-	public String buildTitle() {
-		String ret = formatTitle(model.getIndex(), "Group " +  model.getAction());
-		return ret;
-	}
+
 
 
 	@Override
