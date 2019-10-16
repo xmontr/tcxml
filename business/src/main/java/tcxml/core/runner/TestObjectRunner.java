@@ -1,6 +1,7 @@
 package tcxml.core.runner;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.json.JsonObject;
@@ -18,6 +19,8 @@ import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.Select;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
+import com.kscs.util.jaxb.BoundList;
+
 import tcxml.core.IdentificationMethod;
 import tcxml.core.PlayingContext;
 import tcxml.core.StepRunner;
@@ -25,6 +28,7 @@ import tcxml.core.StepStat;
 import tcxml.core.TcXmlController;
 import tcxml.core.TcXmlException;
 import tcxml.model.ArgModel;
+import tcxml.model.Roles;
 import tcxml.model.Step;
 import tcxml.model.TestObject;
 import tcxml.model.TruLibrary;
@@ -123,6 +127,86 @@ public class TestObjectRunner extends StepRunner{
 		ArgModel theordinal = argumentMap.get("Ordinal");
 		WebElement theelement = tcXmlController.identifyElement(to, ctx.getCurrentExecutionContext());
 		int index = 1;
+		
+		if(hasRole(to,"listbox")) {
+			
+			selectBySelect(theelement, thetext, theordinal);
+			
+		}else if (hasRole(to,"radiogroup")) {
+			
+			selectByRadioGroup(theelement, thetext, theordinal);
+			
+		}else {
+			
+			
+			throw new TcXmlException("unsupported role for select action", new IllegalArgumentException());
+		}
+		
+	
+		
+		
+		
+		
+		
+		
+	}
+
+	private void selectByRadioGroup(WebElement theelement, ArgModel thetext, ArgModel theordinal) {
+	By path2allRadioInput = new ByXPath("descendant::input[@type='radio']");
+	List<WebElement> listinput = theelement.findElements(path2allRadioInput);
+	List<WebElement> listLabel = new ArrayList<WebElement>();
+	WebElement selection = null;
+	String searchedText = thetext.getValue();
+
+	
+	for (WebElement radioinput : listinput) {
+		String inputid = radioinput.getAttribute("id");
+		By path2label = new ByXPath("//label[@for='" + inputid +"']");
+		List<WebElement> temp = radioinput.findElements(path2label);
+		listLabel.addAll(temp);
+	}//endfor
+		
+		if( ! searchedText.isEmpty() ) {// search by text
+			
+			for (WebElement label : listLabel) {
+				String txt = label.getText();
+				if(txt.equals(searchedText)) {
+					label.click();break;
+				}
+				
+			}
+			
+		
+		
+	}else {// search by ordinal
+		
+		int ordinal = Integer.parseInt(theordinal.getValue());
+		listLabel.get(ordinal).click();
+		
+		
+		
+	}
+	
+		
+	}
+
+	private boolean hasRole(TestObject to, String therole) {
+		boolean ret = false;
+		 BoundList<String> allreoles = to.getRoles().getRole();
+		 
+		 for (String role : allreoles) {
+			 if(role.equals(therole)) {
+				 ret=true;break;
+				 
+			 }
+			
+		}
+		
+		
+		return ret;
+	}
+
+	private void selectBySelect(WebElement theelement, ArgModel thetext, ArgModel theordinal) throws TcXmlException {
 		Select theDrobBox = new Select(theelement);
 		if(thetext != null  && !thetext.getValue().isEmpty()) {
 		
@@ -137,6 +221,7 @@ public class TestObjectRunner extends StepRunner{
 			}
 		}else {
 			
+			int index;
 			try {
 	 index = Integer.parseInt(theordinal.getValue())	;
 			}catch ( Exception e) {
@@ -150,11 +235,6 @@ public class TestObjectRunner extends StepRunner{
 				throw new TcXmlException("fail select by index ", e);
 			}
 		}
-		
-		
-		
-		
-		
 		
 	}
 

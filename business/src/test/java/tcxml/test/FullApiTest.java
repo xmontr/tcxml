@@ -4,6 +4,7 @@ import static org.junit.Assert.*;
 
 import java.io.File;
 
+import org.junit.Ignore;
 import org.junit.Test;
 
 import stepWrapper.AbstractStepWrapper;
@@ -15,7 +16,7 @@ import tcxml.model.Step;
 
 public class FullApiTest {
 
-	@Test
+	@Ignore
 	public void test() {
 		try {
 		File basedir = new File("C:\\vugenworkspace\\testApi");
