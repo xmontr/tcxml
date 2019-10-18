@@ -91,7 +91,7 @@ public void populate(Step mo) throws TcXmlException {
 
 
 	@Override
-	public PlayingContext play(PlayingContext ctx) throws TcXmlException {
+	public PlayingContext doplay(PlayingContext ctx) throws TcXmlException {
 		
 		TcViewer tcviewer = TcXmlPluginController.getInstance().getTcviewer();
 		

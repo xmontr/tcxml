@@ -115,14 +115,14 @@ public class WaitView extends StepView  {
 
 
 	@Override
-	public PlayingContext play(PlayingContext ctx) throws TcXmlException {
+	public PlayingContext doplay(PlayingContext ctx) throws TcXmlException {
 		
 		
 	
 		
 		WaitRunner runner = new WaitRunner(model, controller);
 		
-	PlayingContext ret = runner.runStep(ctx);
+	PlayingContext ret = stepWrapper.play(ctx);
 	return ret;
 	}
 

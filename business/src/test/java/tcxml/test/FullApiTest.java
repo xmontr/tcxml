@@ -35,7 +35,7 @@ public class FullApiTest {
 			controller.openBrowser("chome", driverPath );
 			
 			PlayingContext ctx = new PlayingContext(controller);
-			wr.runStep(ctx );
+			wr.play(ctx);
 			
 			
 			

@@ -314,7 +314,7 @@ conditionTxt.SetArgModel(argumentMap.get("Exists"));
 	}
 
 	@Override
-	public PlayingContext play(PlayingContext ctx) throws TcXmlException {
+	public PlayingContext doplay(PlayingContext ctx) throws TcXmlException {
 		
 		String exist = argumentMap.get("Exists").getValue();
 		PlayingContext ret = null ;

@@ -165,7 +165,7 @@ public class FunctionView extends StepView implements StepContainer, ExpandListe
 	}
 
 	@Override
-	public PlayingContext play(PlayingContext ctx) throws TcXmlException {
+	public PlayingContext doplay(PlayingContext ctx) throws TcXmlException {
 		
 		
 		MultipleStepViewerRunner mc = new MultipleStepViewerRunner(stepViwerChildren);

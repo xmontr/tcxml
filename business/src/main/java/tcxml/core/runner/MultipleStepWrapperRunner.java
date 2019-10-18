@@ -32,7 +32,7 @@ public PlayingContext runSteps( PlayingContext ctx) throws TcXmlException {
 				break;
 			}
 			
-			temp = thestep.runStep(ctx);
+			temp = thestep.play(ctx);
 			try {
 				Thread.currentThread().sleep(interva);
 			} catch (InterruptedException e) {

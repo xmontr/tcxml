@@ -110,10 +110,10 @@ public class GenericAPIStepView extends StepView implements PropertyChangeListen
 
 
 	@Override
-	public PlayingContext play(PlayingContext ctx) throws TcXmlException {
-		GenericApiStepRunner runner = new GenericApiStepRunner(model,getLibrary(), controller);
+	public PlayingContext doplay(PlayingContext ctx) throws TcXmlException {
+
 		
-	PlayingContext ret = runner.runStep(ctx);
+		PlayingContext ret	 = stepWrapper.play(ctx);
 	return ret;
 	}
 

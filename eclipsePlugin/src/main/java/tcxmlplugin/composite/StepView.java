@@ -11,6 +11,7 @@ import org.eclipse.swt.widgets.Composite;
 
 import stepWrapper.AbstractStepWrapper;
 import stepWrapper.StepWrapperFactory;
+import tcxml.core.Playable;
 import tcxml.core.PlayingContext;
 import tcxml.core.TcXmlController;
 import tcxml.core.TcXmlException;
@@ -20,7 +21,7 @@ import tcxml.model.TruLibrary;
 import tcxmlplugin.composite.stepViewer.StepViewer;
 import tcxmlplugin.composite.view.arguments.StepArgument;
 
-public abstract class StepView extends Composite  {
+public abstract class StepView extends Composite  implements Playable{
 	
 	public TcXmlController getController() {
 		return controller;
@@ -179,8 +180,16 @@ public abstract class StepView extends Composite  {
 		return sb.toString();
 		
 	}
+	
+	@Override
+	public PlayingContext play(PlayingContext ctx) throws TcXmlException {
+		controller.manageStartStopTransaction(stepWrapper);
+		PlayingContext ret = doplay(ctx);
+		controller.manageStartStopTransaction(stepWrapper);
+		return ret;
+	}
 
-	public abstract  PlayingContext play(PlayingContext ctx) throws TcXmlException  ;
+	protected abstract  PlayingContext doplay(PlayingContext ctx) throws TcXmlException  ;
 	
 	public abstract void export(PrintWriter pw) throws TcXmlException  ;
 	

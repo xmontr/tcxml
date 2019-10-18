@@ -7,6 +7,8 @@ import tcxml.core.TcXmlException;
 import tcxml.model.Step;
 import tcxml.model.TruLibrary;
 
+
+@Deprecated
 public class EvalJavascriptRunner extends StepRunner {
 
 	public EvalJavascriptRunner(Step step, TruLibrary lib, TcXmlController tcXmlController) throws TcXmlException {

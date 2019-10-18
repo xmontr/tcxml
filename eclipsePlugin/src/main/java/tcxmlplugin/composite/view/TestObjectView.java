@@ -385,10 +385,11 @@ public class TestObjectView extends StepView implements PropertyChangeListener {
 	}
 
 	@Override
-	public PlayingContext play( PlayingContext ctx) throws TcXmlException {
-		TestObjectRunner runner = new TestObjectRunner(model,getLibrary(), controller);
-		
-	PlayingContext ret = runner.runStep(ctx);
+	public PlayingContext doplay( PlayingContext ctx) throws TcXmlException {
+
+	
+	PlayingContext ret = stepWrapper.play(ctx);
+	
 	return ret;
 		
 	}

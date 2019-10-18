@@ -11,6 +11,8 @@ import tcxml.model.Step;
 import tcxml.model.TruLibrary;
 import tcxml.model.WaitModel;
 
+
+@Deprecated
 public class WaitRunner extends StepRunner{
 
 	public WaitRunner(Step step,  TcXmlController tcXmlController) throws TcXmlException {

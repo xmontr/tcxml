@@ -266,7 +266,7 @@ public static class CallFunctionViewModel {
 
 
 	@Override
-	public PlayingContext play(PlayingContext ctx) throws TcXmlException {
+	public PlayingContext doplay(PlayingContext ctx) throws TcXmlException {
 		
 		PlayingContext ret = ctx;
 		

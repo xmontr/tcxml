@@ -33,7 +33,9 @@ import tcxml.model.Step;
 import tcxml.model.TestObject;
 import tcxml.model.TruLibrary;
 
-public class TestObjectRunner extends StepRunner{
+
+@Deprecated
+ public class  TestObjectRunner extends StepRunner{
 	
 
 

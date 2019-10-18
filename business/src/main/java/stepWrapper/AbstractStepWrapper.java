@@ -3,6 +3,7 @@ package stepWrapper;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import tcxml.core.Playable;
 import tcxml.core.PlayingContext;
 import tcxml.core.TcXmlController;
 import tcxml.core.TcXmlException;
@@ -10,7 +11,7 @@ import tcxml.model.ArgModel;
 import tcxml.model.Step;
 import tcxml.model.TruLibrary;
 
-public abstract class AbstractStepWrapper {
+public abstract class AbstractStepWrapper implements Playable{
 	
 	
 	protected Step step ;
@@ -25,12 +26,18 @@ public abstract class AbstractStepWrapper {
 		argumentMap = controller.getArguments(step , getDefaultArguments());
 	}
 	
-	
+	@Override
+	public PlayingContext play(PlayingContext ctx) throws TcXmlException {
+		controller.manageStartStopTransaction(this);
+		PlayingContext ret = runStep(ctx);
+		controller.manageStartStopTransaction(this);
+		return ret;
+	}
 	
 	public abstract  String getTitle() throws TcXmlException ;
 	
 	
-	public abstract PlayingContext runStep (PlayingContext ctx) throws TcXmlException ;
+	protected abstract PlayingContext runStep (PlayingContext ctx) throws TcXmlException ;
 	
 	
 	public Step getModel() {

@@ -72,6 +72,7 @@ import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.remote.Augmenter;
 import org.openqa.selenium.remote.DesiredCapabilities;
 import jdk.nashorn.api.scripting.JSObject;
+import stepWrapper.AbstractStepWrapper;
 import stepWrapper.ActionWrapper;
 import stepWrapper.FunctionWrapper;
 import stepWrapper.StepWrapperFactory;
@@ -854,40 +855,15 @@ private void parseMainXml() throws TcXmlException {
 	 
 	 
 }
-/****
- *  play only one step 
- * 
- * 
- * 
- * @param theStep
- * @throws TcXmlException
- */
-
-public void playSingleStep( Step theStep, TruLibrary lib) throws TcXmlException{
-	
-	log.fine("start running step " +theStep.getStepId() + " type is " + theStep.getType());
-	StepRunner ru = StepRunnerFactory.getRunner(theStep, this, lib);
-	ru.runStep(null);
-	
-}
 
 
-	/*
-	 * public String JSCodefromJSON( String json) throws TcXmlException { String ret
-	 * = null;
-	 * 
-	 * 
-	 * JsonObject codeobj = readJsonObject(json, "Code"); JsonString js =
-	 * codeobj.getJsonString("value");
-	 * 
-	 * ret =js.getString();
-	 * 
-	 * 
-	 * 
-	 * return ret;
-	 * 
-	 * }
-	 */
+
+
+
+
+
+
+
 
 
 
@@ -2423,8 +2399,54 @@ public ActionWrapper getCalledAction(String actionName) throws TcXmlException {
 }
 
 
+public void manageStartStopTransaction(AbstractStepWrapper wrapper) throws TcXmlException {
+	String stepid = wrapper.getModel().getStepId();
+	Transaction startTransaction = getVertexForStepid(stepid,"start");
+	Transaction endTransaction = getVertexForStepid(stepid,"end");
+	if(startTransaction!= null) {startTransaction(startTransaction);}
+	
+	if(endTransaction!= null) {endTransaction(endTransaction);}
 
+		
+	}
 
+private void endTransaction(Transaction startTransaction) {
+	name = startTransaction.getName();
+	getLog().info("ending transaction " + name);
+	
+}
 
+private void startTransaction(Transaction startTransaction) {
+	name = startTransaction.getName();
+	getLog().info("starting transaction " + name);
+	
+}
+
+private Transaction getVertexForStepid(String stepid, String mode) {
+	Transaction founded  =null;
+	 Set<Transaction> alltrans = getAlltransactions().keySet();
+	 for (Transaction transaction : alltrans) {
+		 BoundList<Vertex> allvert = transaction.getVertex();
+		 for (Vertex vert : allvert) {
+			 if( vert.getStep().equals(stepid) && vert.getType().equals(mode)){
+				 
+			founded=transaction;break;	 
+			
+		}
+		
+	}
 
 }
+		return founded;
+		
+	}
+	
+	
+	
+}
+
+
+
+
+
+

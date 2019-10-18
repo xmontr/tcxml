@@ -12,6 +12,8 @@ import tcxml.model.ArgModel;
 import tcxml.model.Step;
 import tcxml.model.TruLibrary;
 
+
+@Deprecated
 public class GenericApiStepRunner extends StepRunner {
 
 	public GenericApiStepRunner(Step step, TruLibrary lib, TcXmlController tcXmlController) throws TcXmlException {

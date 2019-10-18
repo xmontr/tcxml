@@ -9,7 +9,7 @@ import tcxml.core.runner.WaitRunner;
 import tcxml.model.Step;
 import tcxml.model.TruLibrary;
 
-
+@Deprecated
 public class StepRunnerFactory {
 	
 	

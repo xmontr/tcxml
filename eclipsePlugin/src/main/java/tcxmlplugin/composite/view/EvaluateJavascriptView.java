@@ -148,13 +148,16 @@ private String getShortCode() {
 
 
 	@Override
-	public PlayingContext  play( PlayingContext ctx) throws TcXmlException {
+	public PlayingContext  doplay( PlayingContext ctx) throws TcXmlException {
 		
-String code = evaljsmodel.getCode();
+/*String code = evaljsmodel.getCode();
 controller.evaluateJS(code , ctx.getCurrentExecutionContext());
 controller.getLog().info("after evaljavascript step context is :");
 ctx.getCurrentExecutionContext().dumpJsContext();
-return ctx;
+return ctx;*/
+		
+		PlayingContext ct = stepWrapper.play(ctx);
+		return ct ;
 		
 		
 	}

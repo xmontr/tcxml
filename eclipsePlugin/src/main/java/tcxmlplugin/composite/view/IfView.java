@@ -279,7 +279,7 @@ conditionTxt.SetArgModel(cond);
 	
 
 	@Override
-	public PlayingContext play(PlayingContext ctx) throws TcXmlException {
+	public PlayingContext doplay(PlayingContext ctx) throws TcXmlException {
 		ArgModel cond = argumentMap.get("Condition");
 		
 	String val = controller.evaluateJsArgument(cond, ctx.getCurrentExecutionContext());
