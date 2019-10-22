@@ -219,6 +219,8 @@ public class TcXmlController {
     private Map<String,Vts> vtsConnections;
 
 	private Properties properties;
+
+	private Transaction currentTransaction;
 	
 	
 	
@@ -2413,10 +2415,16 @@ public void manageStartStopTransaction(AbstractStepWrapper wrapper) throws TcXml
 private void endTransaction(Transaction startTransaction) {
 	name = startTransaction.getName();
 	getLog().info("ending transaction " + name);
+	this.currentTransaction = null;
 	
 }
 
+public Transaction getCurrentTransaction() {
+	return currentTransaction;
+}
+
 private void startTransaction(Transaction startTransaction) {
+	this.currentTransaction = startTransaction;
 	name = startTransaction.getName();
 	getLog().info("starting transaction " + name);
 	
@@ -2442,6 +2450,26 @@ private Transaction getVertexForStepid(String stepid, String mode) {
 	}
 	
 	
+
+public String getSubtitle(AbstractStepWrapper step) throws TcXmlException {
+	StringBuffer ret = new StringBuffer();
+	StringBuffer firstline = new StringBuffer();
+	
+	
+	StringBuffer secondline = new StringBuffer();
+	if(this.currentTransaction != null) {
+		
+		firstline.append("Transaction:").append(currentTransaction.getName()).append("\r\n");
+	}
+	
+	secondline.append("step:").append(step.getTitle()).append("\r\n");
+	
+	ret.append(firstline);
+	ret.append(secondline);
+	
+	return ret.toString();
+	
+}
 	
 }
 

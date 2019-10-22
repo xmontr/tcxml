@@ -78,6 +78,15 @@ public class TcXmlPluginController
 	private static final String TESTCASE_LIB = "testcaselib";
 	
 	
+	public FfMpegWrapper getCurrentVideoRecorder() {
+		return currentVideoRecorder;
+	}
+
+
+
+
+
+
 	private static final String TESTCASE_SNAPSHOT = "testcasesnapshot";
 	
 	private static final String TESTCASE_VIDEOS = "testcasevideo";
@@ -1217,7 +1226,7 @@ IFile videofile = videofolder.getFile(videoname);
 
 public String getDefaultVideoName() {
 	
-	return getTcviewer().getTcfolder().getFullPath().lastSegment() + ".mpeg" ;
+	return getTcviewer().getTcfolder().getFullPath().lastSegment() + ".mp4" ;
 	
 }
 

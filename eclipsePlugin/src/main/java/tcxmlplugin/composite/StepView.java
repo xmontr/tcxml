@@ -3,6 +3,7 @@ package tcxmlplugin.composite;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
 import java.io.PrintWriter;
+import java.time.LocalTime;
 import java.util.HashMap;
 import java.util.List;
 
@@ -11,6 +12,7 @@ import org.eclipse.swt.widgets.Composite;
 
 import stepWrapper.AbstractStepWrapper;
 import stepWrapper.StepWrapperFactory;
+import tcxml.core.FfMpegWrapper;
 import tcxml.core.Playable;
 import tcxml.core.PlayingContext;
 import tcxml.core.TcXmlController;
@@ -18,6 +20,7 @@ import tcxml.core.TcXmlException;
 import tcxml.model.ArgModel;
 import tcxml.model.Step;
 import tcxml.model.TruLibrary;
+import tcxmlplugin.TcXmlPluginController;
 import tcxmlplugin.composite.stepViewer.StepViewer;
 import tcxmlplugin.composite.view.arguments.StepArgument;
 
@@ -69,6 +72,8 @@ public abstract class StepView extends Composite  implements Playable{
 	protected int color = SWT.COLOR_DARK_GREEN;
 
 	protected HashMap<String, ArgModel> argumentMap;
+
+	private long subTitleInterval;
 	
 	
 	public int getColor() {
@@ -89,6 +94,7 @@ public abstract class StepView extends Composite  implements Playable{
 		this.Library = lib;
 		this.model = new Step();
 		propertyChangeSupport = new PropertyChangeSupport(this);
+		subTitleInterval = Long.parseLong(TcXmlPluginController.getInstance().getProperties().getProperty("RS.interstepInterval"));
 		
 	}
 
@@ -184,6 +190,13 @@ public abstract class StepView extends Composite  implements Playable{
 	@Override
 	public PlayingContext play(PlayingContext ctx) throws TcXmlException {
 		controller.manageStartStopTransaction(stepWrapper);
+		FfMpegWrapper vr = TcXmlPluginController.getInstance().getCurrentVideoRecorder() ;
+		if(vr != null &&  vr.isRecording() ) {
+			
+		String subtitle =	controller.getSubtitle(stepWrapper);			
+		vr.addSubtitle(LocalTime.now(), subtitle,subTitleInterval);
+			
+		}
 		PlayingContext ret = doplay(ctx);
 		controller.manageStartStopTransaction(stepWrapper);
 		return ret;
