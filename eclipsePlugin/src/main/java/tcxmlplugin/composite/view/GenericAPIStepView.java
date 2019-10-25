@@ -24,6 +24,9 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Label;
+
+import stepWrapper.GenericApiWrapper;
+
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Combo;
@@ -43,8 +46,8 @@ public class GenericAPIStepView extends StepView implements PropertyChangeListen
 	private Combo methodCombo;
 	
 
-	public GenericAPIStepView(Composite parent, int style, TcXmlController controller,TruLibrary truLibrary) {
-		super(parent, style, controller,truLibrary);
+	public GenericAPIStepView(Composite parent, int style)  {
+		super(parent, style);
 		setLayout(new GridLayout(1, false));
 		genericapimodel = new GenericAPIModel();
 		Group maingroup = new Group(this, SWT.NONE);
@@ -80,10 +83,10 @@ public class GenericAPIStepView extends StepView implements PropertyChangeListen
 	
 	
 	@Override
-	public void populate(Step mo) throws TcXmlException {	
-		super.populate(mo);
-		genericapimodel.setSelectedCategory(mo.getCategoryName());
-		genericapimodel.setMethodName(mo.getMethodName()); 
+	public void populate() throws TcXmlException {	
+	
+		genericapimodel.setSelectedCategory(model.getCategoryName());
+		genericapimodel.setMethodName(model.getMethodName()); 
 		
 	}
 	
@@ -97,8 +100,6 @@ public class GenericAPIStepView extends StepView implements PropertyChangeListen
 		ar.setParent(argGroup);
 		argGroup.layout();
 		setTheArgument(ar);
-
-		
 
 
 

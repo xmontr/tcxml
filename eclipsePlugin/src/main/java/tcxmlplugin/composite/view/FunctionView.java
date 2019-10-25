@@ -20,6 +20,7 @@ import org.eclipse.swt.widgets.ExpandItem;
 
 import com.kscs.util.jaxb.BoundList;
 
+import stepWrapper.FunctionWrapper;
 import tcxml.model.Function;
 import tcxml.core.PlayingContext;
 import tcxml.core.TcXmlController;
@@ -47,20 +48,20 @@ public class FunctionView extends StepView implements StepContainer, ExpandListe
 
 	private List<StepViewer> stepViwerChildren;
 
-	private String libName;
+	
 
 	public String getLibName() {
-		return libName;
+		return Library.getStep().getAction();
 	}
 
-	public void setLibName(String libName) {
-		this.libName = libName;
-	}
+	/*
+	 * public void setLibName(String libName) { this.libName = libName; }
+	 */
 
 
 
-	public FunctionView(Composite parent, int style, TcXmlController controller,TruLibrary lib) {
-		super(parent, style, controller,lib);
+	public FunctionView(Composite parent, int style)  {
+		super(parent, style);
 		
 		// color for the viewer
 		color=SWT.COLOR_DARK_BLUE ;
@@ -126,21 +127,25 @@ public class FunctionView extends StepView implements StepContainer, ExpandListe
 		stepViwerChildren.clear();
 	}
 
-	public void populate(Step mo) throws TcXmlException {
-		super.populate(mo);
-		sanityCheck(mo);
+	
+	@Override
+	public void populate() throws TcXmlException {
+		
+		sanityCheck(model);
+	
+		
 		function = new Function();
-		function.setName(mo.getAction());
-		function.setId(mo.getStepId());
-		function.setArgumentSchema(mo.getArgsSchema());
-		function.setIndex(mo.getIndex());
-		function.setLevel(mo.getLevel());
+		function.setName(model.getAction());
+		function.setId(model.getStepId());
+		function.setArgumentSchema(model.getArgsSchema());
+		function.setIndex(model.getIndex());
+		function.setLevel(model.getLevel());
 
 		
 		// first step child is internal - skipit
 		
 	
-		BoundList<Step> li = mo.getStep().get(0).getStep();
+		BoundList<Step> li = model.getStep().get(0).getStep();
 		for (Step step : li) {
 			addStep(step);
 		}

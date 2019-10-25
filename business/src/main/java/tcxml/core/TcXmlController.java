@@ -2459,10 +2459,10 @@ public String getSubtitle(AbstractStepWrapper step) throws TcXmlException {
 	StringBuffer secondline = new StringBuffer();
 	if(this.currentTransaction != null) {
 		
-		firstline.append("Transaction:").append(currentTransaction.getName()).append("\r\n");
+		firstline.append("<b>Transaction:</b>").append(currentTransaction.getName()).append("\r\n");
 	}
 	
-	secondline.append("step:").append(step.getTitle()).append("\r\n");
+	secondline.append("<b>step:</b>").append(step.getTitle()).append("\r\n");
 	
 	ret.append(firstline);
 	ret.append(secondline);

@@ -101,11 +101,11 @@ public class StepWrapperFactory {
 	}
 
 	private static AbstractStepWrapper getAlernativeStep(Step step, TcXmlController controller, TruLibrary truLibrary) throws TcXmlException {
-		// step type alternative. the real step is the child at index activestep
-		int index = Integer.parseInt(step.getActiveStep()) ;
-		Step altstep = step.getStep().get(index);	
-		altstep.setIndex(step.getIndex());		
-		return getWrapper(altstep,  controller,truLibrary);
+		
+		AlternativeStepWrapper ret  = new AlternativeStepWrapper(step, controller, truLibrary) ;
+		return ret ;
+		
+
 	}
 
 	private static AbstractStepWrapper getTestObjectWrapper(Step step, TcXmlController controller,

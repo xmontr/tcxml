@@ -38,6 +38,9 @@ import org.eclipse.jface.databinding.swt.WidgetProperties;
 import org.eclipse.core.databinding.beans.BeanProperties;
 import org.eclipse.core.databinding.observable.value.IObservableValue;
 import org.eclipse.wb.swt.SWTResourceManager;
+
+import stepWrapper.TestObjectWrapper;
+
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.wb.swt.ResourceManager;
@@ -55,9 +58,9 @@ public class TestObjectView extends StepView implements PropertyChangeListener {
 
 
 
-	public TestObjectView(Composite parent, int style, TcXmlController controller,TruLibrary truLibrary) {
+	public TestObjectView(Composite parent, int style )  {
 
-		super(parent, style, controller,truLibrary);
+		super(parent, style);
 		testobjectmodel = new TestObjectModel();
 
 		testobjectmodel.addPropertyChangeListener("selectedAction", this);
@@ -281,12 +284,14 @@ public class TestObjectView extends StepView implements PropertyChangeListener {
 
 
 	}
+	
+	
+@Override
+	public void populate() throws TcXmlException {
 
-	public void populate(Step mo) throws TcXmlException {
-
-		super.populate(mo);
-		testobjectmodel.setAllActions(controller.getAvailableActionForStep(mo, getLibrary()));
-		testobjectmodel.setSelectedAction(mo.getAction());
+	
+		testobjectmodel.setAllActions(controller.getAvailableActionForStep(model, getLibrary()));
+		testobjectmodel.setSelectedAction(model.getAction());
 		
 		
 		ArrayList<String> li = new ArrayList<String>();
@@ -297,12 +302,12 @@ public class TestObjectView extends StepView implements PropertyChangeListener {
 
 
 		TestObject to = null;
-		if (!controller.isBrowserStep(mo)) { // testobject is not browser
+		if (!controller.isBrowserStep(model)) { // testobject is not browser
 
 			showXpath();
 			// find the testobject in the script or in the lib
 
-				to = controller.getTestObjectById(mo.getTestObject(), getLibrary());
+				to = controller.getTestObjectById(model.getTestObject(), getLibrary());
 
 						
 			

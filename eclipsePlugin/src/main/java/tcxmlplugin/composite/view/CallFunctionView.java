@@ -23,6 +23,7 @@ import tcxml.model.ArgModel;
 
 import org.eclipse.swt.widgets.Label;
 
+import stepWrapper.CallFunctionWrapper;
 import tcxml.model.CallFunctionAttribut;
 
 import java.beans.PropertyChangeEvent;
@@ -154,8 +155,8 @@ public static class CallFunctionViewModel {
 
 	
 
-	public CallFunctionView(Composite parent, int style, TcXmlController controller,TruLibrary truLibrary) {
-		super(parent,  style,controller,truLibrary);
+	public CallFunctionView(Composite parent, int style, CallFunctionWrapper cwrap )  {
+		super(parent,  style);
 	
 		
 		// color for the viewer
@@ -206,8 +207,8 @@ public static class CallFunctionViewModel {
 
 
 	@Override
-	public void populate(Step mo) throws TcXmlException {
-		super.populate(mo);
+	public void populate() throws TcXmlException {
+
 		
 		ArrayList<String> li = new ArrayList<String>();
 		
@@ -216,14 +217,14 @@ public static class CallFunctionViewModel {
 		
 		
 		
-		callfunctmodel.setSelectedFunction(mo.getFuncName());
-		callfunctmodel.setSelectedLib(mo.getLibName());
+		callfunctmodel.setSelectedFunction(model.getFuncName());
+		callfunctmodel.setSelectedLib(model.getLibName());
 		
 
 		li.addAll(controller.getLibraries().keySet());
 		callfunctmodel.setAllLibs(li);
 		
-		updateFunctionList(mo.getLibName());
+		updateFunctionList(model.getLibName());
 		
 	
 		

@@ -13,6 +13,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
 
+import stepWrapper.DefaultWrapper;
 import tcxml.core.PlayingContext;
 import tcxml.core.TcXmlController;
 import tcxml.core.TcXmlException;
@@ -27,9 +28,9 @@ public class BasicView   extends StepView {
 	
 
 
-	public BasicView(Composite parent, int style, TcXmlController controller ,TruLibrary truLibrary) {
+	public BasicView(Composite parent, int style )  {
 		
-	super(parent, style,controller,truLibrary);
+	super(parent, style);
 		this.setLayout(new GridLayout(2, false));
 		
 
@@ -113,7 +114,7 @@ public class BasicView   extends StepView {
 	
 		
 		
-		m_bindingContext = initDataBindings();
+	
 		// TODO Auto-generated constructor stub
 	}
 	
@@ -205,11 +206,11 @@ private Text commenttext;
 	}*/
 	
 	
+	@Override
+	public void populate(  ) throws TcXmlException {	
 	
-	public void populate(Step mo  ) throws TcXmlException {	
 	
-super.populate(mo);		
-	
+		m_bindingContext = initDataBindings();
 		
 		
 	}

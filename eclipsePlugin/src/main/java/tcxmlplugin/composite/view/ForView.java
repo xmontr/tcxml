@@ -20,6 +20,9 @@ import org.eclipse.swt.widgets.Label;
 
 import com.kscs.util.jaxb.BoundList;
 
+import net.bytebuddy.description.type.TypeDescription.Generic.AnnotationReader.ForWildcardLowerBoundType;
+import stepWrapper.ForWrapper;
+
 import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.List;
@@ -54,8 +57,8 @@ public class ForView extends StepView  implements StepContainer, ExpandListener 
 	private String conditionString;
 	private String incrementString;
 
-	public ForView(Composite parent, int style, TcXmlController controller,TruLibrary truLibrary) {
-		super(parent, style, controller,truLibrary);
+	public ForView(Composite parent, int style){
+		super(parent, style);
 		
 		formodel = new ForModel();
 		
@@ -219,8 +222,9 @@ public class ForView extends StepView  implements StepContainer, ExpandListener 
 		return stepViwerChildren;
 	}
 	
-	public void populate(Step mo) throws TcXmlException {
-		super.populate(mo);
+	@Override
+	public void populate() throws TcXmlException {
+		
 		
 		
 		
@@ -238,7 +242,7 @@ conditionString= conditionTxt.getArgModel().getValue();
 	
 		
 		// add cildren
-		BoundList<Step> li = mo.getStep();
+		BoundList<Step> li = model.getStep();
 		//firdt dtep is block interval, skip it
 		Step firstchild = li.get(0);				
 				sanitycheck(firstchild);

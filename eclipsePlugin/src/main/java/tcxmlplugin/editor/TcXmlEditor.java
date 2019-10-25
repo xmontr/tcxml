@@ -81,6 +81,8 @@ public class TcXmlEditor  extends EditorPart   {
 		String testcasename = tcpath.lastSegment();
 		tcpath=fi.getFile().getParent().getLocation();
 		tccontroller = new TcXmlController(testcasename);
+		setPartName("TCXML - " + testcasename);
+		
 		tccontroller.loadFromDisk(tcpath.toOSString());
 	openBrowser();
 			
@@ -96,6 +98,8 @@ public class TcXmlEditor  extends EditorPart   {
 
 
 	}
+	
+
 
 	public  void openBrowser() {
 		

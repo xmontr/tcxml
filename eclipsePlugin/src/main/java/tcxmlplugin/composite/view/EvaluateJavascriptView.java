@@ -20,6 +20,9 @@ import java.io.PrintWriter;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Text;
+
+import stepWrapper.EvalJavascriptWrapper;
+
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.core.databinding.DataBindingContext;
 import org.eclipse.core.databinding.observable.value.IObservableValue;
@@ -77,8 +80,8 @@ public class EvaluateJavascriptView extends StepView{
 
 
 
-	public EvaluateJavascriptView(Composite parent, int style, TcXmlController controller, TruLibrary truLibrary) {
-		super(parent, style, controller,truLibrary);		
+	public EvaluateJavascriptView(Composite parent, int style ) {
+		super(parent, style);		
 		evaljsmodel = new EvaluateJavascriptModel();
 		this.setLayout(new GridLayout(2, false));
 		
@@ -88,23 +91,23 @@ public class EvaluateJavascriptView extends StepView{
 		
 		text = new Text(this, SWT.BORDER);
 		text.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
-		m_bindingContext = initDataBindings();
+	
 		
 	}
 
 
 
-
-public void populate(Step mo  ) throws TcXmlException {	
+@Override
+public void populate(  ) throws TcXmlException {	
 	
-	super.populate(mo);
+	
 	
 	ArgModel codeArg = argumentMap.get("Code");
 	
 evaljsmodel.setCode(codeArg.getValue());
 	
 	
-	
+m_bindingContext = initDataBindings();	
 	
 	
 }

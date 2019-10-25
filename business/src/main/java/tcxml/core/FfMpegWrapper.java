@@ -290,7 +290,7 @@ if( srtfile.exists()) {
 
 
 	private List<String> builGenerateSubtitleCommand(String inputFimename, String outputfilename) {
-		// ffmpeg.exe -i testApi.mp4 -f srt -i video.srt  -c:v copy  -c:s mov_text testApi-subtitled.mp4	
+		// ffmpeg.exe -i testApi.mp4 -f srt -i video.srt  -c:v copy  -c:s mov_text  testApi-subtitled.mp4	
 		
 		List<String> ret = new ArrayList<String>();
 		// path to exe
@@ -306,6 +306,7 @@ if( srtfile.exists()) {
 		ret.add("-c:v");ret.add("copy");
 		//copy sub title 
 		ret.add("-c:s");ret.add("mov_text");
+
 		// output file for the video with subtitle
 		ret.add(outputfilename);		
 		return ret;

@@ -17,6 +17,7 @@ import org.eclipse.swt.widgets.ExpandItem;
 
 import com.kscs.util.jaxb.BoundList;
 
+import stepWrapper.BlockWrapper;
 import tcxml.core.PlayingContext;
 import tcxml.core.TcXmlController;
 import tcxml.core.TcXmlException;
@@ -34,8 +35,8 @@ public class BlockView  extends StepView implements StepContainer, ExpandListene
 	
 	private List<StepViewer> stepViwerChildren ;
 
-	public BlockView(Composite parent, int style, TcXmlController controller, TruLibrary truLibrary) {		
-		super(parent, style,controller,truLibrary);
+	public BlockView(Composite parent, int style )  {		
+		super(parent, style);
 		
 		// color for the viewer
 		color=SWT.COLOR_DARK_YELLOW ;
@@ -118,9 +119,12 @@ public class BlockView  extends StepView implements StepContainer, ExpandListene
 		bar.redraw();
 	}
 	
-	public void populate(Step mo) throws TcXmlException {
-		super.populate(mo);
-		BoundList<Step> li = mo.getStep();
+	
+	
+	@Override
+	public void populate() throws TcXmlException {
+		
+		BoundList<Step> li = model.getStep();
 		for (Step step : li) {
 			addStep(step);
 		}

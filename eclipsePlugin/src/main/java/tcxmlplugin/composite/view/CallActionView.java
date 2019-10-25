@@ -23,6 +23,9 @@ import tcxml.model.ActionsModel;
 
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Label;
+
+import stepWrapper.CallActionWrapper;
+
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.layout.GridData;
@@ -44,12 +47,12 @@ public class CallActionView extends StepView {
 	
 
 
-	public CallActionView(Composite parent, int style, TcXmlController controller,TruLibrary truLibrary) {
-		super(parent, style, controller,truLibrary);
+	public CallActionView(Composite parent, int style)  {
+		super(parent, style);
 		// color for the viewer
 		color=SWT.COLOR_DARK_CYAN ;
 		
-		this.controller = controller;
+		
 		setLayout(new GridLayout(2, false));
 		
 		Label lblAction = new Label(this, SWT.NONE);
@@ -61,12 +64,7 @@ public class CallActionView extends StepView {
 		
 		
 		
-		
-		 Map<String, Step> actionmap = controller.getActionMap();
-		//build the actions model
-		 List<String> allActions =    new ArrayList<String>(actionmap.keySet())    ;
-		 actionmodel.setAllActions(allActions);
-		 m_bindingContext = initDataBindings();
+
 		
 		
 		
@@ -75,17 +73,22 @@ public class CallActionView extends StepView {
 
 
 @Override
-public void populate(Step mo) throws TcXmlException {
+public void populate() throws TcXmlException {
 	
 	
+	 Map<String, Step> actionmap = controller.getActionMap();
+	//build the actions model
+	 List<String> allActions =    new ArrayList<String>(actionmap.keySet())    ;
+	 actionmodel.setAllActions(allActions);
+	 m_bindingContext = initDataBindings();
 	
 	// populate argument
 	
-	String selectedAction = controller.readStingArgumentByName(mo.getArguments(), "Action Name");
+	String selectedAction = controller.readStingArgumentByName(model.getArguments(), "Action Name");
 	
 	actionmodel.setActionSelected(selectedAction);
 	
-	super.populate(mo);
+
 }
 
 

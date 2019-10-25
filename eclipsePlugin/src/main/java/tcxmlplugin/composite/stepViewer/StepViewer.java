@@ -303,12 +303,12 @@ setMenu(buildMenu());
 	
 	
 	
-	public void populate(Step mo  ) throws TcXmlException  {
+	public void populate(  ) throws TcXmlException  {
 		
 		
 		
-		view.populate( mo  );
-		stepToolBar.populate( mo  );
+		view.populate( );
+		stepToolBar.populate( view.getModel()  );
 		
 		
 	}

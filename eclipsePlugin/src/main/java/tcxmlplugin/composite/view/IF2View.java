@@ -28,6 +28,7 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 import com.kscs.util.jaxb.BoundList;
 
 import junit.framework.Test;
+import stepWrapper.If2Wrapper;
 import tcxml.core.IdentificationMethod;
 import tcxml.core.PlayingContext;
 import tcxml.core.TcXmlController;
@@ -72,12 +73,14 @@ public class IF2View extends StepView  implements StepContainer, ExpandListener{
 	private Group grpElse;
 
 	private ExpandBar elsebar;
+
+	private Group grpObject;
 	
 	
 	
 
-	public IF2View(Composite parent, int style, TcXmlController controller,TruLibrary truLibrary) {
-		super(parent, style, controller,truLibrary);
+	public IF2View(Composite parent, int style)  {
+		super(parent, style);
 		// color for the viewer
 		color=SWT.COLOR_DARK_MAGENTA ;
 		
@@ -85,9 +88,9 @@ public class IF2View extends StepView  implements StepContainer, ExpandListener{
 		
 		setLayout(new GridLayout(1, false));
 		
-		Group grpObject = new Group(this, SWT.NONE);
+		grpObject = new Group(this, SWT.NONE);
 		grpObject.setLayout(new FillLayout(SWT.HORIZONTAL));
-		identview = new IdentificationView(grpObject, SWT.NONE, controller);
+		
 		
 		grpObject.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		grpObject.setText("Object");
@@ -210,15 +213,16 @@ public class IF2View extends StepView  implements StepContainer, ExpandListener{
 		
 	}
 	
-	
-	public void populate(Step mo) throws TcXmlException {
-		BoundList<Step> li = mo.getStep();
+	@Override
+	public void populate() throws TcXmlException {
+		BoundList<Step> li = model.getStep();
 		//add object to test	
 		 Step tostep = li.get(0);
 		String referencedob = tostep.getTestObject() ;
 	theTestObject = controller.getTestObjectById(referencedob, getLibrary());
+	identview = new IdentificationView(grpObject, SWT.NONE, controller);
 	identview.populate(theTestObject);	
-		super.populate(mo);
+	
 
 conditionTxt.SetArgModel(argumentMap.get("Exists"));
 	

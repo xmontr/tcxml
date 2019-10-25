@@ -21,6 +21,7 @@ import org.eclipse.swt.widgets.Label;
 
 import com.kscs.util.jaxb.BoundList;
 
+import stepWrapper.IfWrapper;
 import tcxml.core.PlayingContext;
 import tcxml.core.TcXmlController;
 import tcxml.core.TcXmlException;
@@ -65,8 +66,8 @@ public class IfView extends StepView  implements StepContainer, ExpandListener{
 
 	private Group grpElse;
 
-	public IfView(Composite parent, int style, TcXmlController controller,TruLibrary truLibrary) {
-		super(parent, style, controller,truLibrary);
+	public IfView(Composite parent, int style)  {
+		super(parent, style );
 		// color for the viewer
 		color=SWT.COLOR_DARK_MAGENTA ;
 		
@@ -191,9 +192,9 @@ public class IfView extends StepView  implements StepContainer, ExpandListener{
 		
 	}
 	
-	
-	public void populate(Step mo) throws TcXmlException {
-		super.populate(mo);
+	@Override
+	public void populate() throws TcXmlException {
+
 	ArgModel cond = argumentMap.get("Condition");
 	//javascript flag is not set so put it manually
 	cond.setIsJavascript(true);	
@@ -209,7 +210,7 @@ conditionTxt.SetArgModel(cond);
 		
 		
 		// add if cildren
-		BoundList<Step> li = mo.getStep();
+		BoundList<Step> li = model.getStep();
 		//first step is block interval, skip it
 		Step firstchild = li.get(0);				
 				sanitycheck(firstchild);

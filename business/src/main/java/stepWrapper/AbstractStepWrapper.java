@@ -14,6 +14,19 @@ import tcxml.model.TruLibrary;
 public abstract class AbstractStepWrapper implements Playable{
 	
 	
+	public Step getStep() {
+		return step;
+	}
+
+	public TruLibrary getLibrary() {
+		return library;
+	}
+
+	public TcXmlController getController() {
+		return controller;
+	}
+
+
 	protected Step step ;
 	protected TcXmlController controller;
 	protected TruLibrary library ;

@@ -72,6 +72,9 @@ public class TestObjectWrapper extends AbstractStepWrapper {
 		case "Navigate":addNavigateArgument(ret); break;
 		case "Type":addTypeArgument(ret);break;
 		case "Click":addClickArgument(ret);break;
+		case "Mouse Over":addClickArgument(ret);break;
+		case "Mouse Up":addClickArgument(ret);break;
+		case "Mouse Down":addClickArgument(ret);break;
 		case "Set":addSetArgument(ret);break;
 		case "Evaluate JavaScript":addEvalJavascriptArgument(ret);break;
 		case "Wait":addWaitArgument(ret);break;

@@ -26,6 +26,9 @@ import tcxmlplugin.composite.StepView;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Text;
+
+import stepWrapper.WaitWrapper;
+
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.core.databinding.DataBindingContext;
 import org.eclipse.core.databinding.observable.value.IObservableValue;
@@ -47,8 +50,8 @@ public class WaitView extends StepView  {
 	private Combo comboUnit;
 	
 
-	public WaitView(Composite parent, int style, TcXmlController controller,TruLibrary truLibrary) {
-		super(parent, style, controller,truLibrary);
+	public WaitView(Composite parent, int style )  {
+		super(parent, style );
 		
 		// color for the viewer
 		color=SWT.COLOR_BLUE ;
@@ -73,9 +76,9 @@ public class WaitView extends StepView  {
 	}
 	
 	
-	
-	public void populate(Step mo  ) throws TcXmlException {	
-		super.populate(mo);		
+	@Override
+	public void populate( ) throws TcXmlException {	
+		
 
 		
 		ArgModel arguinter = argumentMap.get("Interval");

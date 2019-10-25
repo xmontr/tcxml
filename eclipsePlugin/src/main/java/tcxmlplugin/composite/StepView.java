@@ -40,14 +40,19 @@ public abstract class StepView extends Composite  implements Playable{
 	
 	protected StepArgument theArgument;
 	
-	protected TruLibrary Library;
+	protected TruLibrary Library; 
+	
+	
+
 	
 	
 	public TruLibrary getLibrary() {
 		return Library;
+		
+		
 	}
 
-	protected void setLibrary(TruLibrary library) {
+	public void setLibrary(TruLibrary library) {
 		Library = library;
 	}
 	
@@ -88,13 +93,26 @@ public abstract class StepView extends Composite  implements Playable{
 		this.viewer = viewer;
 	}
 
-	public StepView(Composite parent, int style, TcXmlController controller, TruLibrary lib) {
+	public StepView(Composite parent, int style )  {
 		super(parent, style);
-		this.controller=controller;
-		this.Library = lib;
-		this.model = new Step();
+	
 		propertyChangeSupport = new PropertyChangeSupport(this);
+		
 		subTitleInterval = Long.parseLong(TcXmlPluginController.getInstance().getProperties().getProperty("RS.interstepInterval"));
+		
+	}
+
+	public void setStepWrapper(AbstractStepWrapper stepWrapper) throws TcXmlException {
+		this.stepWrapper = stepWrapper;
+		
+		this.controller=stepWrapper.getController();
+		this.Library = stepWrapper.getLibrary();
+		this.model = stepWrapper.getModel();
+		argumentMap = controller.getArguments(model,stepWrapper.getDefaultArguments());
+		setTitle(stepWrapper.getTitle());
+		populate();
+
+			
 		
 	}
 
@@ -122,44 +140,7 @@ public abstract class StepView extends Composite  implements Playable{
 	 * @throws TcXmlException
 	 */
 
-	public  void populate(Step mo) throws TcXmlException   {
-		
-		stepWrapper  = StepWrapperFactory.getWrapper(mo, controller, getLibrary());
-		
-		model.setDisabled(mo.isDisabled());
-		model.setAction(mo.getAction());
-		model.setActionName(mo.getActionName());
-		model.setActiveStep(mo.getActiveStep());
-		model.setArguments(mo.getArguments());
-		model.setAutoEndEventFF(mo.getAutoEndEventFF());
-		model.setCatch(mo.getCatch());
-		model.setCategoryName(mo.getCategoryName());
-		model.setEndEvent(mo.getEndEvent());
-		model.setFuncName(mo.getFuncName());
-		model.setIndex(mo.getIndex());
-		model.setLevel(mo.getLevel());
-		model.setLibName(mo.getLibName());
-		model.setMethodName(mo.getMethodName());
-		model.setName(mo.getName());
-		model.setComment(mo.getComment());
-		model.setObjectTimeout(mo.getObjectTimeout());
-		model.setOverwriteUI(mo.getOverwriteUI());
-		model.setTestObject(mo.getTestObject());
-		model.setType(mo.getType());
-		model.setObjectTimeout(mo.getObjectTimeout());
-		model.setRecDuration(mo.getRecDuration());
-		model.setSection(mo.getSection());
-		model.setSnapshotId(mo.getSnapshotId());
-		model.setStepId(mo.getStepId());
-		model.setTestObject(mo.getTestObject());
-		model.getStep().addAll(mo.getStep());
-		argumentMap = controller.getArguments(mo,stepWrapper.getDefaultArguments());
-		//setTitle(buildTitle());
-		setTitle(stepWrapper.getTitle());
-		
-		
-	
-	};
+	public  abstract void populate() throws TcXmlException   ;
 	
 	
 	
@@ -178,14 +159,7 @@ public abstract class StepView extends Composite  implements Playable{
 		
 		}
 	
-	protected String formatTitle (String index , String txt) {
-		
-		StringBuffer sb = new StringBuffer();
-		
-		sb.append(" ").append(index).append(" ").append(txt);
-		return sb.toString();
-		
-	}
+
 	
 	@Override
 	public PlayingContext play(PlayingContext ctx) throws TcXmlException {

@@ -16,6 +16,8 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Text;
 
+import stepWrapper.CommentWrapper;
+
 import static org.hamcrest.Matchers.nullValue;
 
 import java.io.PrintWriter;
@@ -32,8 +34,8 @@ public class CommentView extends StepView{
 	private CommentModel commentModel;
 	private Text commentText;
 
-	public CommentView(Composite parent, int style, TcXmlController controller,TruLibrary truLibrary) {
-		super(parent, style, controller,truLibrary);
+	public CommentView(Composite parent, int style) {
+		super(parent, style);
 		setLayout(new FillLayout(SWT.HORIZONTAL));
 		
 		Group grpComment = new Group(this, SWT.NONE);
@@ -66,10 +68,10 @@ public class CommentView extends StepView{
 	
 	
 	@Override
-	public void populate(Step mo) throws TcXmlException {
+	public void populate() throws TcXmlException {
 		// TODO Auto-generated method stub
-		super.populate(mo);
-		commentModel.setComment(mo.getComment());
+		
+		commentModel.setComment(model.getComment());
 	}
 
 	@Override
