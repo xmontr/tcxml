@@ -41,6 +41,12 @@ public abstract class AbstractStepWrapper implements Playable{
 	
 	@Override
 	public PlayingContext play(PlayingContext ctx) throws TcXmlException {
+		
+		if(isDisabled()) { // don't play a dsabled step
+			
+	controller.getLog().info("step " + getTitle() + " is disabled. don't play it.");		
+			return ctx ;
+		}
 		controller.manageStartStopTransaction(this);
 		PlayingContext ret = runStep(ctx);
 		controller.manageStartStopTransaction(this);
@@ -67,6 +73,18 @@ public abstract class AbstractStepWrapper implements Playable{
 			return false;
 		}
 		
+		
+	}
+	
+	
+	public String getLevel() {
+		
+		String level = step.getLevel();
+		if(level == null || level.isEmpty()) {
+			level ="1";
+			
+		}	
+		return level;
 		
 	}
 	

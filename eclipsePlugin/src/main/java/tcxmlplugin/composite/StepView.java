@@ -116,6 +116,10 @@ public abstract class StepView extends Composite  implements Playable{
 		
 	}
 
+	public AbstractStepWrapper getStepWrapper() {
+		return stepWrapper;
+	}
+
 	public   String getTitle()  {
 		
 		return this.title;

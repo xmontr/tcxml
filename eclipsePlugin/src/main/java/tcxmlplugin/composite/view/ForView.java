@@ -121,6 +121,12 @@ public class ForView extends StepView  implements StepContainer, ExpandListener 
 
 	@Override
 	public PlayingContext doplay(PlayingContext ctx) throws TcXmlException {
+		if(stepWrapper.isDisabled() )  {
+			controller.getLog().info("step" + getTitle() + " is disabled - don't play it");
+			return ctx ;
+		}
+		
+		
 	MultipleStepViewerRunner mc = new MultipleStepViewerRunner(stepViwerChildren);
 	ScriptEngine engine = controller.getJSengine();
 	   ScriptContext context = ctx.getJsContext();

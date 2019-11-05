@@ -79,7 +79,7 @@ public class StepViewerFactory {
 	if(thesteppwrapper instanceof CallFunctionWrapper  ) {
 		
 		CallFunctionWrapper thewrapper  = new CallFunctionWrapper(step, controller, truLibrary);
-		theview = new CallFunctionView(stepContainer.getBar(), SWT.NONE, thewrapper) ;
+		theview = new CallFunctionView(stepContainer.getBar(), SWT.NONE) ;
 		theview.setStepWrapper(thewrapper);
 		founded = true ;
 	}

@@ -162,11 +162,12 @@ public  class StepViewer extends Composite  {
 	
 	
 
-	public   StepViewer( int style, StepView view, StepContainer container) {
+	public   StepViewer( int style, StepView view, StepContainer container) throws TcXmlException {
 		super(container.getBar(), style);
 buildGUI();
 	setView(view);
 	setContainer(container);
+	populate();
 		
 	}
 
@@ -307,8 +308,8 @@ setMenu(buildMenu());
 		
 		
 		
-		view.populate( );
-		stepToolBar.populate( view.getModel()  );
+		
+		stepToolBar.populate( view.getStepWrapper()  );
 		
 		
 	}

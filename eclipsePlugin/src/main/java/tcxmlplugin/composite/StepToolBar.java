@@ -15,6 +15,7 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.wb.swt.ResourceManager;
 
+import stepWrapper.AbstractStepWrapper;
 import tcxml.core.PlayingContext;
 import tcxml.core.TcXmlController;
 import tcxml.core.TcXmlException;
@@ -43,11 +44,12 @@ public class StepToolBar extends Composite implements IJobChangeListener   {
 	private Button playButton;
 	private Label label;
 	
-	private boolean playable;
+
 	private boolean isRunning;
 	private Button btnDisabled;
 	private Combo comboLevel;
 	private Label levellabel;
+	private boolean playable;
 	
 	
 
@@ -326,15 +328,11 @@ if(isRunning == false) {
 
 
 
-	public void populate(Step mo) {		
-		btnDisabled.setSelection(mo.isDisabled() != null?mo.isDisabled():false);
+	public void populate(AbstractStepWrapper wraper) {		
+		btnDisabled.setSelection(wraper.isDisabled());
 		comboLevel.setItems("1","2","3","43");
-		String level = mo.getLevel();
-		if(level == null || level.isEmpty()) {
-			level ="1";
-			
-		}
-		comboLevel.select(Integer.parseInt(  level));
+
+		comboLevel.select(Integer.parseInt(  wraper.getLevel()) - 1);
 	}
 	
 	

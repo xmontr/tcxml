@@ -155,7 +155,7 @@ public static class CallFunctionViewModel {
 
 	
 
-	public CallFunctionView(Composite parent, int style, CallFunctionWrapper cwrap )  {
+	public CallFunctionView(Composite parent, int style )  {
 		super(parent,  style);
 	
 		
