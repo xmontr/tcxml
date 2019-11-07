@@ -1532,7 +1532,8 @@ public void closeBrowser() {
 	
 	if(driver != null) {
 		driver.quit();
-		driver.close();
+		//driver.close();
+
 	}
 	
 	

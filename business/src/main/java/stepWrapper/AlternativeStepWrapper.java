@@ -1,5 +1,6 @@
 package stepWrapper;
 
+import java.io.PrintWriter;
 import java.util.ArrayList;
 
 import tcxml.core.PlayingContext;
@@ -41,6 +42,13 @@ public class AlternativeStepWrapper extends AbstractStepWrapper{
 		Step altstep = step.getStep().get(index);	
 		altstep.setIndex(step.getIndex());
 		return altstep ;
+		
+	}
+
+	@Override
+	public void export(PrintWriter pw) throws TcXmlException {
+	AbstractStepWrapper alstep = StepWrapperFactory.getWrapper(getAlternative(), controller, library);
+	alstep.export(pw);
 		
 	}
 	

@@ -1,5 +1,6 @@
 package stepWrapper;
 
+import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -12,6 +13,8 @@ import tcxml.core.runner.MultipleStepWrapperRunner;
 import tcxml.model.ArgModel;
 import tcxml.model.Step;
 import tcxml.model.TruLibrary;
+
+import util.TcxmlUtils;
 
 
 public class IfWrapper extends AbstractStepWrapper {
@@ -143,6 +146,77 @@ for (Step thestep : firstchild.getStep()) {
 		
 		
 		return ret;
+	}
+	
+	public BoundList<Step> getSteps() throws TcXmlException {
+		
+		BoundList<Step> li = step.getStep();
+		//firdt dtep is block interval, skip it
+		Step firstchild = li.get(0);				
+				sanitycheck(firstchild);
+		li=firstchild.getStep();
+		return li ;
+		
+	}
+	
+	
+	private List<AbstractStepWrapper> getChildren() throws TcXmlException {
+		
+		ArrayList<AbstractStepWrapper> ret = new ArrayList<AbstractStepWrapper>();
+		BoundList<Step> li = step.getStep();
+		//firdt dtep is block interval, skip it
+		Step firstchild = li.get(0);				
+				sanitycheck(firstchild);
+		li=firstchild.getStep();
+		
+		
+		
+		
+		for (Step thestep : li) {
+			
+		AbstractStepWrapper newwrapper = StepWrapperFactory.getWrapper(thestep, controller, library) ;
+			ret.add(newwrapper);
+		}
+		return ret;
+	}
+	
+	
+	@Override
+	public void export(PrintWriter pw) throws TcXmlException {
+		StringBuffer sb = new StringBuffer();
+		pw.println(" // " + getTitle());
+		sb.append(exportIfString()) ;
+		pw.println(sb);
+		List<AbstractStepWrapper> list =getIfChildren() ;
+		for (AbstractStepWrapper child : list) {
+			child.export(pw);
+		}		
+		 
+		 pw.println("}//fin if " ) ;
+		 pw.println(" else { " ) ;
+		 
+			List<AbstractStepWrapper> listelse =getElseChildren() ;
+			for (AbstractStepWrapper child : listelse) {
+				child.export(pw);
+			}
+		
+		pw.println("}//fin else " ) ;
+		
+		
+	}
+	
+	
+	private String exportIfString() {
+		
+	StringBuffer ret = new StringBuffer();
+	
+	String input=argumentMap.get("Condition").getValue();
+	String escapeChar ="\"";
+	ret.append("if( TC.eval(").append( TcxmlUtils.formatAsJsString(input, escapeChar )  ).append(" )){");
+	
+	return ret.toString();
+		
+		
 	}
 	
 	

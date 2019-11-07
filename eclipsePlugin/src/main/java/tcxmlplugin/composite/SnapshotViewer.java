@@ -208,7 +208,7 @@ layout(true,true);
 	public void propertyChange(PropertyChangeEvent evt) {
 		StepViewer src = (StepViewer)evt.getNewValue();
 		controller.getLog().info(" snapshot viewer current selection"+ src);
-	Step step = src.getViewer().model ;
+	Step step = src.getViewer().getModel();
 	String absolutepath2snap = controller.getRecordSnaphotImage4step(step);
 
 	/*try {

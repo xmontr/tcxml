@@ -17,7 +17,9 @@ import org.eclipse.swt.widgets.ExpandItem;
 
 import com.kscs.util.jaxb.BoundList;
 
+import stepWrapper.AbstractStepWrapper;
 import stepWrapper.BlockWrapper;
+import stepWrapper.ForWrapper;
 import tcxml.core.PlayingContext;
 import tcxml.core.TcXmlController;
 import tcxml.core.TcXmlException;
@@ -122,7 +124,15 @@ public class BlockView  extends StepView implements StepContainer, ExpandListene
 	
 	
 	@Override
-	public void populate() throws TcXmlException {
+	public void populate(AbstractStepWrapper stepWrapper2) throws TcXmlException {
+		
+		if(! (stepWrapper2 instanceof BlockWrapper )) {
+			throw new TcXmlException("block  view can only be populated by from a block  wrapper ", new IllegalArgumentException());
+			
+		}
+		
+		Step model = stepWrapper2.getModel();
+		
 		
 		BoundList<Step> li = model.getStep();
 		for (Step step : li) {
@@ -187,10 +197,12 @@ public class BlockView  extends StepView implements StepContainer, ExpandListene
 
 	@Override
 	public void export(PrintWriter pw) throws TcXmlException {
-		StringBuffer sb = new StringBuffer(" // ").append(getTitle());
+		
+		stepWrapper.export(pw);
+	/*	StringBuffer sb = new StringBuffer(" // ").append(getTitle());
 		pw.println(sb.toString());
 		for (StepViewer stepViewer : stepViwerChildren) {
-			stepViewer.export(pw);
+			stepViewer.export(pw);*/
 			
 		}
 		
@@ -199,4 +211,4 @@ public class BlockView  extends StepView implements StepContainer, ExpandListene
 
 
 
-}
+

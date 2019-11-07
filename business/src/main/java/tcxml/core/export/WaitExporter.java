@@ -7,6 +7,8 @@ import tcxml.model.Step;
 import tcxml.model.TruLibrary;
 import util.TcxmlUtils;
 
+
+@Deprecated
 public class WaitExporter extends StepExporter {
 
 	public WaitExporter(Step step, TruLibrary lib, TcXmlController tcXmlController) throws TcXmlException {

@@ -1,5 +1,6 @@
 package stepWrapper;
 
+import java.io.PrintWriter;
 import java.util.ArrayList;
 
 import tcxml.core.PlayingContext;
@@ -60,6 +61,12 @@ public class RunLogicWrapper extends AbstractStepWrapper {
 	public ArrayList<ArgModel> getDefaultArguments() throws TcXmlException {
 		// TODO Auto-generated method stub
 		return new ArrayList<ArgModel>();
+	}
+
+	@Override
+	public void export(PrintWriter pw) throws TcXmlException {
+		// TODO Auto-generated method stub
+		
 	}
 
 }

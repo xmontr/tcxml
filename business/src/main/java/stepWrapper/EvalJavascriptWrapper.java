@@ -1,5 +1,6 @@
 package stepWrapper;
 
+import java.io.PrintWriter;
 import java.util.ArrayList;
 
 import tcxml.core.PlayingContext;
@@ -8,6 +9,7 @@ import tcxml.core.TcXmlException;
 import tcxml.model.ArgModel;
 import tcxml.model.Step;
 import tcxml.model.TruLibrary;
+import util.TcxmlUtils;
 
 public class EvalJavascriptWrapper extends AbstractStepWrapper {
 
@@ -64,6 +66,36 @@ return ret;
 		return ctx;
 				
 	}
+	
+	@Override
+	public void export(PrintWriter pw) throws TcXmlException {
+		pw.println(" // " + getTitle());
+		
+		
+		
+		ArgModel argtext = argumentMap.get("Code");
+		
+		String argjs = controller.generateJSobject(argtext);
+		
+		
+		
+	String func = " TC.evalJavascript";
+		String ret = TcxmlUtils.formatJavascriptFunction(
+					func,
+					argjs  
+					
+					);
+
+		
+		
+		
+		
+		
+	
+		pw.println(ret);
+		
+	}
+	
 	
 	
 	

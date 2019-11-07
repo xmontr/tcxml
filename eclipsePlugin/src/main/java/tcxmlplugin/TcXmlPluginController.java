@@ -355,7 +355,7 @@ public class TcXmlPluginController
 		IFile thefile = testCaseFolder.getFile(filename);		
 		File inputFile = new File(path2import);
 		
-		if(!inputFile.exists()) { // 2parameters can point on the same file
+		if(!thefile.exists()) { // 2parameters can point on the same file
 			InputStream in = new FileInputStream(inputFile);
 			thefile.create(in, true, monitor);
 			this.info("import " + filename +  " ok ");

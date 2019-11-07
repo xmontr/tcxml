@@ -18,7 +18,7 @@ import tcxml.model.Step;
 import tcxml.model.TestObject;
 import tcxml.model.TruLibrary;
 import util.TcxmlUtils;
-
+@Deprecated
 public abstract class StepExporter {
 	
 	

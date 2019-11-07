@@ -11,6 +11,8 @@ import tcxml.model.Step;
 import tcxml.model.TruLibrary;
 import util.TcxmlUtils;
 
+
+@Deprecated
 public class GenericApiExporter extends StepExporter{
 
 	public GenericApiExporter(Step step, TruLibrary lib, TcXmlController tcXmlController) throws TcXmlException {

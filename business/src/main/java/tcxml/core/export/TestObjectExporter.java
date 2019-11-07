@@ -10,7 +10,7 @@ import tcxml.model.Step;
 import tcxml.model.TestObject;
 import tcxml.model.TruLibrary;
 import util.TcxmlUtils;
-
+@Deprecated
 public class TestObjectExporter  extends StepExporter{
 
 	public TestObjectExporter(Step step, TruLibrary lib, TcXmlController tcXmlController) throws TcXmlException {

@@ -4,6 +4,7 @@ import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
 import java.io.PrintWriter;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import javax.json.JsonObject;
 import javax.json.JsonValue;
@@ -27,6 +28,8 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Text;
 
+import stepWrapper.AbstractStepWrapper;
+import stepWrapper.ForWrapper;
 import stepWrapper.WaitWrapper;
 
 import org.eclipse.swt.layout.GridData;
@@ -77,9 +80,14 @@ public class WaitView extends StepView  {
 	
 	
 	@Override
-	public void populate( ) throws TcXmlException {	
+	public void populate(AbstractStepWrapper stepWrapper2 ) throws TcXmlException {	
 		
-
+		if(! (stepWrapper2 instanceof WaitWrapper )) {
+			throw new TcXmlException("wait view can only be populated by from a waitwrapper", new IllegalArgumentException());
+			
+		}
+		
+		HashMap<String, ArgModel> argumentMap = stepWrapper2.getArgumentMap();	
 		
 		ArgModel arguinter = argumentMap.get("Interval");
 
@@ -121,31 +129,24 @@ public class WaitView extends StepView  {
 	public PlayingContext doplay(PlayingContext ctx) throws TcXmlException {
 		
 		
-	
-		
-		WaitRunner runner = new WaitRunner(model, controller);
-		
 	PlayingContext ret = stepWrapper.play(ctx);
 	return ret;
 	}
 
 
 
-
-
-
-
 	@Override
 	public void export(PrintWriter pw) throws TcXmlException {
 		
-		WaitExporter exporter = new WaitExporter(model,getLibrary(), controller);
-		StringBuffer sb = new StringBuffer();
-		sb.append("//").append(getTitle()).append("\n");		
-		String txt = exporter.export();
-		sb.append(txt);
-		pw.println(sb.toString());
+	
+		WaitWrapper waitwrapper = (WaitWrapper)stepWrapper ;
+		waitwrapper.export(pw);
 		
 	}
+
+
+
+
 	protected DataBindingContext initDataBindings() {
 		DataBindingContext bindingContext = new DataBindingContext();
 		//

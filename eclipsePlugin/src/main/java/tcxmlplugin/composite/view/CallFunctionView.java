@@ -23,7 +23,9 @@ import tcxml.model.ArgModel;
 
 import org.eclipse.swt.widgets.Label;
 
+import stepWrapper.AbstractStepWrapper;
 import stepWrapper.CallFunctionWrapper;
+import stepWrapper.ForWrapper;
 import tcxml.model.CallFunctionAttribut;
 
 import java.beans.PropertyChangeEvent;
@@ -207,13 +209,18 @@ public static class CallFunctionViewModel {
 
 
 	@Override
-	public void populate() throws TcXmlException {
+	public void populate(AbstractStepWrapper stepWrapper2) throws TcXmlException {
+		
+		if(! (stepWrapper2 instanceof CallFunctionWrapper )) {
+			throw new TcXmlException("For view can only be populated by from a for wrapper ", new IllegalArgumentException());
+			
+		}
 
 		
 		ArrayList<String> li = new ArrayList<String>();
 		
 		
-		
+		Step model = stepWrapper.getModel();
 		
 		
 		
@@ -245,7 +252,9 @@ public static class CallFunctionViewModel {
 
 
 	private void updateFunctionList(String libName) {
+		Step model = stepWrapper.getModel();
 		try {
+			
 			List<String> listname = controller.getFunctionsNameForLib(model.getLibName());
 			
 			callfunctmodel.setAllFunctions(listname);
@@ -268,6 +277,7 @@ public static class CallFunctionViewModel {
 
 	@Override
 	public PlayingContext doplay(PlayingContext ctx) throws TcXmlException {
+		Step model = stepWrapper.getModel();
 		
 		PlayingContext ret = ctx;
 		

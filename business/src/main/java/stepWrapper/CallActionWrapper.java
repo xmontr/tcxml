@@ -1,5 +1,6 @@
 package stepWrapper;
 
+import java.io.PrintWriter;
 import java.util.ArrayList;
 
 import tcxml.core.PlayingContext;
@@ -8,6 +9,7 @@ import tcxml.core.TcXmlException;
 import tcxml.model.ArgModel;
 import tcxml.model.Step;
 import tcxml.model.TruLibrary;
+
 
 public class CallActionWrapper extends AbstractStepWrapper {
 
@@ -39,6 +41,24 @@ public class CallActionWrapper extends AbstractStepWrapper {
 		ActionWrapper calledaction = controller.getCalledAction(actionName);
 		ctx= calledaction.runStep(ctx);
 		return ctx;
+	}
+	
+	
+	@Override
+	public void export(PrintWriter pw) throws TcXmlException {
+		
+		StringBuffer sb = new StringBuffer("// ").append( getTitle());
+		pw.println(sb.toString());
+	
+		
+		String actionName = step.getActionName();
+		
+		sb = new StringBuffer();
+		sb.append("await ");
+		sb.append(actionName).append("();");
+		pw.println(sb.toString());
+
+		
 	}
 
 }

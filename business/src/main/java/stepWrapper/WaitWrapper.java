@@ -1,13 +1,16 @@
 package stepWrapper;
 
+import java.io.PrintWriter;
 import java.util.ArrayList;
 
 import tcxml.core.PlayingContext;
 import tcxml.core.TcXmlController;
 import tcxml.core.TcXmlException;
+import tcxml.core.export.WaitExporter;
 import tcxml.model.ArgModel;
 import tcxml.model.Step;
 import tcxml.model.TruLibrary;
+import util.TcxmlUtils;
 
 public class WaitWrapper extends AbstractStepWrapper {
 
@@ -67,6 +70,24 @@ return ret;
 		throw new TcXmlException("interrupted", e);
 	}	
 		return ctx;
+		
+	}
+	
+	
+	@Override
+	public void export(PrintWriter pw) throws TcXmlException {
+		
+		ArgModel interval = argumentMap.get("Interval");
+		ArgModel unit = argumentMap.get("Unit");
+		String func = " await TC.wait";
+		String objarg = controller.generateJSobject(interval, unit);
+		
+
+		
+		String ret = TcxmlUtils.formatJavascriptFunction(
+					func,objarg.toString()					
+					);
+		pw.println(ret);
 		
 	}
 	

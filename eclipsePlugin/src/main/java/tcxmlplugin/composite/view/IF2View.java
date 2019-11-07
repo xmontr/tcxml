@@ -28,6 +28,8 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 import com.kscs.util.jaxb.BoundList;
 
 import junit.framework.Test;
+import stepWrapper.AbstractStepWrapper;
+import stepWrapper.ForWrapper;
 import stepWrapper.If2Wrapper;
 import tcxml.core.IdentificationMethod;
 import tcxml.core.PlayingContext;
@@ -214,12 +216,27 @@ public class IF2View extends StepView  implements StepContainer, ExpandListener{
 	}
 	
 	@Override
-	public void populate() throws TcXmlException {
+	public void populate(AbstractStepWrapper stepWrapper2 ) throws TcXmlException {
+		
+		if(! (stepWrapper2 instanceof If2Wrapper )) {
+			throw new TcXmlException("if2 view can only be populated by from a if2 wrapper ", new IllegalArgumentException());
+			
+		}
+		
+		If2Wrapper if2wrapper = (If2Wrapper)stepWrapper;
+		
+		HashMap<String, ArgModel> argumentMap = stepWrapper2.getArgumentMap();
+		Step model = if2wrapper.getModel();
+		
+		
 		BoundList<Step> li = model.getStep();
 		//add object to test	
-		 Step tostep = li.get(0);
-		String referencedob = tostep.getTestObject() ;
-	theTestObject = controller.getTestObjectById(referencedob, getLibrary());
+		theTestObject=if2wrapper.getTestobject();
+		
+		/*
+		 * Step tostep = li.get(0); String referencedob = tostep.getTestObject() ;
+		 * theTestObject = controller.getTestObjectById(referencedob, getLibrary());
+		 */
 	identview = new IdentificationView(grpObject, SWT.NONE, controller);
 	identview.populate(theTestObject);	
 	
@@ -273,52 +290,50 @@ conditionTxt.SetArgModel(argumentMap.get("Exists"));
 
 
 
-	private String buildIfString() {
-		// TODO Auto-generated method stub
-		return "if("  + theTestObject.getAutoName()  + " exists =" +argumentMap.get("Exists").getValue() ;
-	}
+	/*
+	 * private String buildIfString() { // TODO Auto-generated method stub return
+	 * "if(" + theTestObject.getAutoName() + " exists ="
+	 * +argumentMap.get("Exists").getValue() ; }
+	 */
 	
 	
 	
-	
-	private String exportIfString() throws TcXmlException {
-		StringBuffer ret = new StringBuffer();
-		
-		//get testobject
-		BoundList<Step> li = model.getStep();
-		//add object to test	
-		 Step theTestobjectref = li.get(0);
-		 String referencedob = theTestobjectref.getTestObject() ;
-		 TestObject theTestObject = controller.getTestObjectById(referencedob, getLibrary());
-		 
-		 
-	
-		
-		
-	//HashMap<String, ArgModel> amap = controller.getArguments(model);
-	 ArgModel[] lia = argumentMap.values().toArray(new  ArgModel[argumentMap.size()]);
-		String argjs = controller.generateJSobject(lia);
-	
-	
-	
-	
-		
-		String func = "await TC.exist";
-		String txt = TcxmlUtils.formatJavascriptFunction(
-					func,
-					argjs,
-					controller.generateJsTestObject(theTestObject) 
-					);
-		
-		String txt2 = txt.substring(0,txt.length() -2 ); // remove semicolumn 
-		
-		ret.append("if(" ).append(txt2).append(" ) {\n");
-		
-		return ret.toString();
-	}
+	/*
+	 * private String exportIfString() throws TcXmlException { StringBuffer ret =
+	 * new StringBuffer();
+	 * 
+	 * //get testobject BoundList<Step> li = model.getStep(); //add object to test
+	 * Step theTestobjectref = li.get(0); String referencedob =
+	 * theTestobjectref.getTestObject() ; TestObject theTestObject =
+	 * controller.getTestObjectById(referencedob, getLibrary());
+	 * 
+	 * 
+	 * 
+	 * 
+	 * 
+	 * //HashMap<String, ArgModel> amap = controller.getArguments(model); ArgModel[]
+	 * lia = argumentMap.values().toArray(new ArgModel[argumentMap.size()]); String
+	 * argjs = controller.generateJSobject(lia);
+	 * 
+	 * 
+	 * 
+	 * 
+	 * 
+	 * String func = "await TC.exist"; String txt =
+	 * TcxmlUtils.formatJavascriptFunction( func, argjs,
+	 * controller.generateJsTestObject(theTestObject) );
+	 * 
+	 * String txt2 = txt.substring(0,txt.length() -2 ); // remove semicolumn
+	 * 
+	 * ret.append("if(" ).append(txt2).append(" ) {\n");
+	 * 
+	 * return ret.toString(); }
+	 */
 
 	@Override
 	public PlayingContext doplay(PlayingContext ctx) throws TcXmlException {
+		
+		HashMap<String, ArgModel> argumentMap = stepWrapper.getArgumentMap();
 		
 		String exist = argumentMap.get("Exists").getValue();
 		PlayingContext ret = null ;
@@ -338,7 +353,8 @@ conditionTxt.SetArgModel(argumentMap.get("Exists"));
 
 	}
 
-	private PlayingContext runifexist(PlayingContext ctx) throws TcXmlException { 
+	private PlayingContext runifexist(PlayingContext ctx) throws TcXmlException {
+		Step model = stepWrapper.getModel();
 		BoundList<Step> li = model.getStep();
 		//add object to test	
 		 Step theTestobjectref = li.get(0);
@@ -410,23 +426,20 @@ conditionTxt.SetArgModel(argumentMap.get("Exists"));
 
 	@Override
 	public void export(PrintWriter pw) throws TcXmlException {
-		StringBuffer sb = new StringBuffer();
-		pw.println(" // " + getTitle());
-		sb.append( exportIfString() ) ;
-		pw.println(sb);
-		List<StepViewer> list = ifcontainer.getChildViewer() ;
-		for (StepViewer stepViewer : list) {
-			stepViewer.export(pw);
-		}		
-		 pw.println("}//fin if " ) ;
-		 pw.println(" else { " ) ;
-		 
-			List<StepViewer> listelse =elsecontainer.getChildViewer() ;
-			for (StepViewer stepViewer : listelse) {
-				stepViewer.export(pw);
-			}
 		
-		pw.println("}//fin else " ) ;
+		stepWrapper.export(pw);
+		/*
+		 * StringBuffer sb = new StringBuffer(); pw.println(" // " + getTitle());
+		 * sb.append( exportIfString() ) ; pw.println(sb); List<StepViewer> list =
+		 * ifcontainer.getChildViewer() ; for (StepViewer stepViewer : list) {
+		 * stepViewer.export(pw); } pw.println("}//fin if " ) ; pw.println(" else { " )
+		 * ;
+		 * 
+		 * List<StepViewer> listelse =elsecontainer.getChildViewer() ; for (StepViewer
+		 * stepViewer : listelse) { stepViewer.export(pw); }
+		 * 
+		 * pw.println("}//fin else " ) ;
+		 */
 		
 	}
 	

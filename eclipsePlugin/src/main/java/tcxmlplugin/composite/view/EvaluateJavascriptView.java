@@ -17,11 +17,14 @@ import org.eclipse.swt.widgets.Label;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
 import java.io.PrintWriter;
+import java.util.HashMap;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Text;
 
+import stepWrapper.AbstractStepWrapper;
 import stepWrapper.EvalJavascriptWrapper;
+import stepWrapper.ForWrapper;
 
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.core.databinding.DataBindingContext;
@@ -98,9 +101,15 @@ public class EvaluateJavascriptView extends StepView{
 
 
 @Override
-public void populate(  ) throws TcXmlException {	
+public void populate( AbstractStepWrapper stepWrapper2 ) throws TcXmlException {
 	
 	
+	if(! (stepWrapper2 instanceof EvalJavascriptWrapper )) {
+		throw new TcXmlException("evaljavascript  view can only be populated by from a evaljavascript wrapper ", new IllegalArgumentException());
+		
+	}
+	
+	HashMap<String, ArgModel> argumentMap = stepWrapper2.getArgumentMap();		
 	
 	ArgModel codeArg = argumentMap.get("Code");
 	
@@ -113,25 +122,14 @@ m_bindingContext = initDataBindings();
 }
 
 
-private String getShortCode() {
-	
-	String co = argumentMap.get("Code").getValue();
-	String ret= co ;
-	int size = co.length();
-	if(size > 30) {
-		StringBuffer sb = new StringBuffer();
-		sb.append(co.substring(0, 15));
-		sb.append(".......");
-		sb.append(co.substring( size -15 , size )) ;
-		ret = sb.toString();
-	}
-	
-
-
-
-
-	return ret;
-}
+	/*
+	 * private String getShortCode() {
+	 * 
+	 * String co = argumentMap.get("Code").getValue(); String ret= co ; int size =
+	 * co.length(); if(size > 30) { StringBuffer sb = new StringBuffer();
+	 * sb.append(co.substring(0, 15)); sb.append("......."); sb.append(co.substring(
+	 * size -15 , size )) ; ret = sb.toString(); } return ret; }
+	 */
 
 
 
@@ -175,30 +173,7 @@ return ctx;*/
 
 	@Override
 	public void export(PrintWriter pw) throws TcXmlException {
-		pw.println(" // " + getTitle());
-		
-		
-		
-		ArgModel argtext = argumentMap.get("Code");
-		
-		String argjs = controller.generateJSobject(argtext);
-		
-		
-		
-	String func = " TC.evalJavascript";
-		String ret = TcxmlUtils.formatJavascriptFunction(
-					func,
-					argjs  
-					
-					);
-
-		
-		
-		
-		
-		
-	
-		pw.println(ret);
+stepWrapper.export(pw);
 		
 	}
 

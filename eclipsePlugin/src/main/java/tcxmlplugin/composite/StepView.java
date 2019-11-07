@@ -32,7 +32,7 @@ public abstract class StepView extends Composite  implements Playable{
 
 	private PropertyChangeSupport propertyChangeSupport;
 	
-	protected Step model;
+	//protected Step model;
 	
 	protected AbstractStepWrapper stepWrapper ;
 	
@@ -76,7 +76,7 @@ public abstract class StepView extends Composite  implements Playable{
 	
 	protected int color = SWT.COLOR_DARK_GREEN;
 
-	protected HashMap<String, ArgModel> argumentMap;
+	//protected HashMap<String, ArgModel> argumentMap;
 
 	private long subTitleInterval;
 	
@@ -107,10 +107,10 @@ public abstract class StepView extends Composite  implements Playable{
 		
 		this.controller=stepWrapper.getController();
 		this.Library = stepWrapper.getLibrary();
-		this.model = stepWrapper.getModel();
-		argumentMap = controller.getArguments(model,stepWrapper.getDefaultArguments());
+		//this.model = stepWrapper.getModel();
+		//argumentMap = controller.getArguments(model,stepWrapper.getDefaultArguments());
 		setTitle(stepWrapper.getTitle());
-		populate();
+		populate(stepWrapper);
 
 			
 		
@@ -132,19 +132,20 @@ public abstract class StepView extends Composite  implements Playable{
 	
 	public Step getModel() {
 		// TODO Auto-generated method stub
-		return model;
+		return stepWrapper.getModel();
 	}
 	
 	
 	/**
 	 *   fill data in the model
+	 * @param stepWrapper2 
 	 * 
 	 * 
 	 * @param mo
 	 * @throws TcXmlException
 	 */
 
-	public  abstract void populate() throws TcXmlException   ;
+	public  abstract void populate(AbstractStepWrapper stepWrapper2) throws TcXmlException   ;
 	
 	
 	

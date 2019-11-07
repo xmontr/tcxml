@@ -20,6 +20,8 @@ import org.eclipse.swt.widgets.ExpandItem;
 
 import com.kscs.util.jaxb.BoundList;
 
+import stepWrapper.AbstractStepWrapper;
+import stepWrapper.ForWrapper;
 import stepWrapper.FunctionWrapper;
 import tcxml.model.Function;
 import tcxml.core.PlayingContext;
@@ -129,7 +131,16 @@ public class FunctionView extends StepView implements StepContainer, ExpandListe
 
 	
 	@Override
-	public void populate() throws TcXmlException {
+	public void populate(AbstractStepWrapper stepWrapper2) throws TcXmlException {
+		
+		
+		if(! (stepWrapper2 instanceof FunctionWrapper )) {
+			throw new TcXmlException("Function  view can only be populated by from a function  wrapper ", new IllegalArgumentException());
+			
+		}
+		
+		
+		Step model = stepWrapper2.getModel();
 		
 		sanityCheck(model);
 	
@@ -227,6 +238,11 @@ controller.getLog().info("***************     function  **********collpased ");
 	@Override
 	
 		public void export(PrintWriter pw) throws TcXmlException {
+		
+		stepWrapper.export(pw);
+		
+		
+		/*
 			StringBuffer sb = new StringBuffer(model.getAction()).append( ": async function  ").append("( FuncArgs ){");
 			pw.println(sb.toString());
 			for (StepViewer stepViewer : getChildViewer()) {
@@ -234,7 +250,7 @@ controller.getLog().info("***************     function  **********collpased ");
 				
 			}
 			
-			pw.println("},");
+			pw.println("},");*/
 			
 		}
 		

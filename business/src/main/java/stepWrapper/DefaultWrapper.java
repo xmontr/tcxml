@@ -1,5 +1,6 @@
 package stepWrapper;
 
+import java.io.PrintWriter;
 import java.util.ArrayList;
 
 import tcxml.core.PlayingContext;
@@ -31,6 +32,12 @@ public class DefaultWrapper extends AbstractStepWrapper {
 	@Override
 	public PlayingContext runStep(PlayingContext ctx) throws TcXmlException {
 	throw new TcXmlException("step not implemented yet" + step.getStepId(), new IllegalStateException());
+	}
+
+	@Override
+	public void export(PrintWriter pw) throws TcXmlException {
+		// TODO Auto-generated method stub
+		
 	}
 
 }

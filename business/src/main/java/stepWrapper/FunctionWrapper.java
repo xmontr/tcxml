@@ -1,5 +1,6 @@
 package stepWrapper;
 
+import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -12,6 +13,7 @@ import tcxml.core.runner.MultipleStepWrapperRunner;
 import tcxml.model.ArgModel;
 import tcxml.model.Step;
 import tcxml.model.TruLibrary;
+
 
 public class FunctionWrapper extends AbstractStepWrapper {
 
@@ -52,6 +54,42 @@ public class FunctionWrapper extends AbstractStepWrapper {
 		ctx = mc .runSteps(ctx);
 		
 		return ctx;
+	}
+	private List<AbstractStepWrapper> getChildren() throws TcXmlException {
+		
+		ArrayList<AbstractStepWrapper> ret = new ArrayList<AbstractStepWrapper>();
+		BoundList<Step> li = step.getStep();
+		//firdt dtep is block interval, skip it
+		Step firstchild = li.get(0);				
+				//sanitycheck(firstchild);
+		li=firstchild.getStep();
+		
+		
+		
+		
+		for (Step thestep : li) {
+			
+		AbstractStepWrapper newwrapper = StepWrapperFactory.getWrapper(thestep, controller, library) ;
+			ret.add(newwrapper);
+		}
+		return ret;
+	}
+	
+	
+	
+	
+	@Override
+	
+	public void export(PrintWriter pw) throws TcXmlException {
+		StringBuffer sb = new StringBuffer(step.getAction()).append( ": async function  ").append("( FuncArgs ){");
+		pw.println(sb.toString());
+		for (AbstractStepWrapper child : getChildren()) {
+			child.export(pw);
+			
+		}
+		
+		pw.println("},");
+		
 	}
 
 }

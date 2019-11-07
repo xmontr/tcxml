@@ -1,6 +1,7 @@
 package stepWrapper;
 
 import java.io.File;
+import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -568,6 +569,84 @@ public void doclick(TestObject to, PlayingContext ctx) throws TcXmlException {
 			 
 			 controller.typeText(ctx.getCurrentExecutionContext(),to, txt, 20,clear);
 		
+	}
+	
+	
+	@Override
+	public void export(PrintWriter pw) throws TcXmlException {
+		
+		String ret;
+		if(controller.isBrowserStep(step)) { // test object is the browser
+			
+			  ret = exportBrowserStep();
+			
+				
+			}else {
+				
+				
+				 ret =	 exportTestObjectStep();	
+				
+				
+			}
+		pw.println(ret);
+		
+		
+	}
+	
+	private String exportBrowserStep() throws TcXmlException {
+		String ret;
+		switch (step.getAction()) {
+		case "Navigate":ret = exportnavigate();break;
+
+
+		default:throw new TcXmlException("not implemented", new IllegalStateException());
+		}
+		return ret;
+	}
+	
+	private String exportnavigate() {
+		
+		
+	return	genericExport("await TC.navigate");
+		
+
+	}
+	
+	private String exportTestObjectStep() throws TcXmlException {
+		String ret = null;
+		TestObject to;
+		if (library == null) {
+			to = controller.getTestObjectById(step.getTestObject());
+
+		} else {
+			to = controller.getTestObjectById(step.getTestObject(), library);
+
+		}
+		
+
+	
+		switch (step.getAction()) {
+			
+		case "Type": ret = genericExport("await TC.type",to); 
+		break;
+		case "Click":ret = genericExport("await TC.click",to);
+		break;
+		case "Wait":ret = genericExport("await TC.waitOn",to);
+	break;
+		case "Verify": ret = genericExport("await TC.verify",to); break;
+		
+		case "Evaluate JavaScript":ret = genericExport("await TC.evaljsOnObject",to);break;
+		case "Select":ret = genericExport("await TC.select",to);break;
+		case "Set" : ret = genericExport("await TC.set",to);break;
+		
+		default: ret = exportnotImplemented();
+		}
+		return ret;
+	}
+	
+	private String exportnotImplemented() {
+		// TODO Auto-generated method stub
+		return " step not implemented " + step.getAction();
 	}
 	
 

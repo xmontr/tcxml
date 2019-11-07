@@ -2,6 +2,7 @@ package tcxmlplugin.composite.view;
 
 import java.io.PrintWriter;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import javax.json.JsonObject;
@@ -21,6 +22,8 @@ import org.eclipse.swt.widgets.Label;
 
 import com.kscs.util.jaxb.BoundList;
 
+import stepWrapper.AbstractStepWrapper;
+import stepWrapper.ForWrapper;
 import stepWrapper.IfWrapper;
 import tcxml.core.PlayingContext;
 import tcxml.core.TcXmlController;
@@ -193,7 +196,16 @@ public class IfView extends StepView  implements StepContainer, ExpandListener{
 	}
 	
 	@Override
-	public void populate() throws TcXmlException {
+	public void populate(AbstractStepWrapper stepWrapper2) throws TcXmlException {
+		
+		if(! (stepWrapper2 instanceof IfWrapper )) {
+			throw new TcXmlException("If view can only be populated by from a If wrapper ", new IllegalArgumentException());
+			
+		}
+		
+		IfWrapper ifwrapper = (IfWrapper)stepWrapper2 ;
+		
+		HashMap<String, ArgModel> argumentMap = stepWrapper2.getArgumentMap();	
 
 	ArgModel cond = argumentMap.get("Condition");
 	//javascript flag is not set so put it manually
@@ -210,7 +222,8 @@ conditionTxt.SetArgModel(cond);
 		
 		
 		// add if cildren
-		BoundList<Step> li = model.getStep();
+BoundList<Step> li = ifwrapper.getSteps();	
+		
 		//first step is block interval, skip it
 		Step firstchild = li.get(0);				
 				sanitycheck(firstchild);
@@ -258,29 +271,32 @@ conditionTxt.SetArgModel(cond);
 	}
 
 
+	/*
+	 * private String buildIfString() { // TODO Auto-generated method stub return
+	 * "if( (" + argumentMap.get("Condition").getValue() + ")  ) {" ; }
+	 * 
+	 * 
+	 * private String exportIfString() {
+	 * 
+	 * StringBuffer ret = new StringBuffer();
+	 * 
+	 * String input=argumentMap.get("Condition").getValue(); String escapeChar
+	 * ="\""; ret.append("if( TC.eval(").append( TcxmlUtils.formatAsJsString(input,
+	 * escapeChar ) ).append(" )){");
+	 * 
+	 * return ret.toString();
+	 * 
+	 * 
+	 * }
+	 */
+	
 
-	private String buildIfString() {
-		// TODO Auto-generated method stub
-		return "if( ("  + argumentMap.get("Condition").getValue()  + ")  ) {" ;
-	}
 	
 	
-	private String exportIfString() {
-		
-	StringBuffer ret = new StringBuffer();
-	
-	String input=argumentMap.get("Condition").getValue();
-	String escapeChar ="\"";
-	ret.append("if( TC.eval(").append( TcxmlUtils.formatAsJsString(input, escapeChar )  ).append(" )){");
-	
-	return ret.toString();
-		
-		
-	}
-	
-
 	@Override
 	public PlayingContext doplay(PlayingContext ctx) throws TcXmlException {
+		HashMap<String, ArgModel> argumentMap = stepWrapper.getArgumentMap();
+		
 		ArgModel cond = argumentMap.get("Condition");
 		
 	String val = controller.evaluateJsArgument(cond, ctx.getCurrentExecutionContext());
@@ -306,24 +322,22 @@ conditionTxt.SetArgModel(cond);
 
 	@Override
 	public void export(PrintWriter pw) throws TcXmlException {
-		StringBuffer sb = new StringBuffer();
-		pw.println(" // " + getTitle());
-		sb.append(exportIfString()) ;
-		pw.println(sb);
-		List<StepViewer> list =ifcontainer.getChildViewer() ;
-		for (StepViewer stepViewer : list) {
-			stepViewer.export(pw);
-		}		
-		 
-		 pw.println("}//fin if " ) ;
-		 pw.println(" else { " ) ;
-		 
-			List<StepViewer> listelse =elsecontainer.getChildViewer() ;
-			for (StepViewer stepViewer : listelse) {
-				stepViewer.export(pw);
-			}
 		
-		pw.println("}//fin else " ) ;
+		stepWrapper.export(pw);
+		
+		/*
+		 * StringBuffer sb = new StringBuffer(); pw.println(" // " + getTitle());
+		 * sb.append(exportIfString()) ; pw.println(sb); List<StepViewer> list
+		 * =ifcontainer.getChildViewer() ; for (StepViewer stepViewer : list) {
+		 * stepViewer.export(pw); }
+		 * 
+		 * pw.println("}//fin if " ) ; pw.println(" else { " ) ;
+		 * 
+		 * List<StepViewer> listelse =elsecontainer.getChildViewer() ; for (StepViewer
+		 * stepViewer : listelse) { stepViewer.export(pw); }
+		 * 
+		 * pw.println("}//fin else " ) ;
+		 */
 		
 		
 	}

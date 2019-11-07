@@ -25,6 +25,8 @@ import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Label;
 
+import stepWrapper.AbstractStepWrapper;
+import stepWrapper.ForWrapper;
 import stepWrapper.GenericApiWrapper;
 
 import org.eclipse.swt.layout.FillLayout;
@@ -83,7 +85,14 @@ public class GenericAPIStepView extends StepView implements PropertyChangeListen
 	
 	
 	@Override
-	public void populate() throws TcXmlException {	
+	public void populate(AbstractStepWrapper stepWrapper2) throws TcXmlException {	
+		
+		if(! (stepWrapper2 instanceof GenericApiWrapper )) {
+			throw new TcXmlException("GenericApiWrapper view can only be populated by from a GenericApiWrapper wrapper ", new IllegalArgumentException());
+			
+		}
+		
+		Step model = stepWrapper2.getModel();
 	
 		genericapimodel.setSelectedCategory(model.getCategoryName());
 		genericapimodel.setMethodName(model.getMethodName()); 
@@ -120,9 +129,9 @@ public class GenericAPIStepView extends StepView implements PropertyChangeListen
 
 	@Override
 	public void export(PrintWriter pw) throws TcXmlException {
-		GenericApiExporter exporter = new GenericApiExporter(model, getLibrary(), controller) ;
-		pw.println(" // " + getTitle());
-		pw.println(exporter.export());
+
+		
+		stepWrapper.export(pw);
 
 	}
 

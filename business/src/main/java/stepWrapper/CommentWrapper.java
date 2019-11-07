@@ -1,5 +1,6 @@
 package stepWrapper;
 
+import java.io.PrintWriter;
 import java.util.ArrayList;
 
 import tcxml.core.PlayingContext;
@@ -49,7 +50,13 @@ public class CommentWrapper extends AbstractStepWrapper {
 	}
 	
 	
-	
+	@Override
+	public void export(PrintWriter pw) throws TcXmlException {
+		pw.println(" // " + getTitle());
+		StringBuffer sb2 = new StringBuffer("//").append(step.getComment());
+		pw.println(sb2.toString());
+		
+	}	
 	
 
 }

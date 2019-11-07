@@ -1,5 +1,6 @@
 package stepWrapper;
 
+import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -20,6 +21,8 @@ import tcxml.model.ArgModel;
 import tcxml.model.Step;
 import tcxml.model.TestObject;
 import tcxml.model.TruLibrary;
+
+import util.TcxmlUtils;
 
 
 public class If2Wrapper extends AbstractStepWrapper {
@@ -209,6 +212,77 @@ for (Step thestep : firstchild.getStep()) {
 		throw new TcXmlException("not expected element  in For step. internal expected but found  " + step.getAction() + " id of step is "+ step.getStepId(), new IllegalStateException());
 	}
 		
-	}	
+	}
+	
+	public TestObject  getTestobject() throws TcXmlException {
+		BoundList<Step> li = step.getStep();
+	
+		 Step tostep = li.get(0);
+		String referencedob = tostep.getTestObject() ;
+	theTestObject = controller.getTestObjectById(referencedob, getLibrary());	
+	return theTestObject ;
+		
+		
+	}
+	
+	
+	private String exportIfString() throws TcXmlException {
+		StringBuffer ret = new StringBuffer();
+		
+		//get testobject	
+		 TestObject theTestObject = getTestobject();
+		 
+		 
+	
+		
+		
+	//HashMap<String, ArgModel> amap = controller.getArguments(model);
+	 ArgModel[] lia = argumentMap.values().toArray(new  ArgModel[argumentMap.size()]);
+		String argjs = controller.generateJSobject(lia);
+	
+	
+	
+	
+		
+		String func = "await TC.exist";
+		String txt = TcxmlUtils.formatJavascriptFunction(
+					func,
+					argjs,
+					controller.generateJsTestObject(theTestObject) 
+					);
+		
+		String txt2 = txt.substring(0,txt.length() -2 ); // remove semicolumn 
+		
+		ret.append("if(" ).append(txt2).append(" ) {\n");
+		
+		return ret.toString();
+	}
+	
+	
+	
+
+	@Override
+	public void export(PrintWriter pw) throws TcXmlException {
+		StringBuffer sb = new StringBuffer();
+		pw.println(" // " + getTitle());
+		sb.append( exportIfString() ) ;
+		pw.println(sb);
+		List<AbstractStepWrapper> list = getIfChildren() ;
+		for (AbstractStepWrapper child : list) {
+			child.export(pw);
+		}		
+		 pw.println("}//fin if " ) ;
+		 pw.println(" else { " ) ;
+		 
+			List<AbstractStepWrapper> listelse =getElseChildren() ;
+			for (AbstractStepWrapper child : listelse) {
+				child.export(pw);
+			}
+		
+		pw.println("}//fin else " ) ;
+		
+	}
+	
+	
 	
 }

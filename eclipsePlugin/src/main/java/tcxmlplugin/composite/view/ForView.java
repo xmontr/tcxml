@@ -13,6 +13,7 @@ import tcxmlplugin.composite.stepViewer.StepContainer;
 import tcxmlplugin.composite.stepViewer.StepViewer;
 import tcxmlplugin.composite.stepViewer.StepViewerFactory;
 import tcxmlplugin.job.MultipleStepViewerRunner;
+import tcxml.model.ArgModel;
 import tcxml.model.ForModel;
 
 import org.eclipse.swt.layout.GridLayout;
@@ -21,10 +22,12 @@ import org.eclipse.swt.widgets.Label;
 import com.kscs.util.jaxb.BoundList;
 
 import net.bytebuddy.description.type.TypeDescription.Generic.AnnotationReader.ForWildcardLowerBoundType;
+import stepWrapper.AbstractStepWrapper;
 import stepWrapper.ForWrapper;
 
 import java.io.PrintWriter;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import javax.json.JsonObject;
@@ -105,15 +108,13 @@ public class ForView extends StepView  implements StepContainer, ExpandListener 
 	
 	
 	
-	private String buildLoopString() {
-	return "for(" + argumentMap.get("Init").getValue() +";" + argumentMap.get("Condition").getValue() + ";" + argumentMap.get("Increment").getValue() + ")" ;	
-		
-	}
+
 	
 	
 	private String buildPlayingCommand() {
+		ForWrapper forwrapper = (ForWrapper)stepWrapper ;
 		StringBuffer sb = new StringBuffer();
-		sb.append(buildLoopString()).append("{ctx = mc.runSteps(ctx);};");
+		sb.append(forwrapper.buildLoopString()).append("{ctx = mc.runSteps(ctx);};");
 		
 		return sb.toString();
 		
@@ -229,9 +230,16 @@ public class ForView extends StepView  implements StepContainer, ExpandListener 
 	}
 	
 	@Override
-	public void populate() throws TcXmlException {
+	public void populate(AbstractStepWrapper stepWrapper2) throws TcXmlException {
 		
+		if(! (stepWrapper2 instanceof ForWrapper )) {
+			throw new TcXmlException("For view can only be populated by from a for wrapper ", new IllegalArgumentException());
+			
+		}
 		
+		ForWrapper forwrapper = (ForWrapper)stepWrapper2 ;
+		
+		HashMap<String, ArgModel> argumentMap = stepWrapper2.getArgumentMap();	
 		
 		
 initText.SetArgModel(argumentMap.get("Init"));
@@ -247,15 +255,8 @@ conditionString= conditionTxt.getArgModel().getValue();
 		
 	
 		
-		// add cildren
-		BoundList<Step> li = model.getStep();
-		//firdt dtep is block interval, skip it
-		Step firstchild = li.get(0);				
-				sanitycheck(firstchild);
-		li=firstchild.getStep();
-		
-		
-		
+		// add children
+		BoundList<Step> li = forwrapper.getSteps();	
 		
 		for (Step step : li) {
 			addStep(step);
@@ -267,27 +268,15 @@ conditionString= conditionTxt.getArgModel().getValue();
 	}
 	
 
-	private void sanitycheck(Step step) throws TcXmlException {
-	if(!	step.getAction().equals("internal") ) {
-		
-		throw new TcXmlException("not expected element  in For step. internal expected but found  " + step.getAction() + " id of step is "+ step.getStepId(), new IllegalStateException());
-	}
-		
-	}
+
 
 	@Override
 	public void export(PrintWriter pw) throws TcXmlException {
-		StringBuffer sb = new StringBuffer();
-		pw.println(" // " + getTitle());
 		
-	pw.println(buildLoopString()  + " { ");
-	
-	List<StepViewer> list = getChildViewer() ;
-	for (StepViewer stepViewer : list) {
-		stepViewer.export(pw);
-	}		
-	 sb = new StringBuffer("}//fin for ");	
-	pw.println(sb);	
+		ForWrapper forwrapper = (ForWrapper)stepWrapper ;
+		forwrapper.export(pw);
+		
+
 	
 	
 		

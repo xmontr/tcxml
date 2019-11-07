@@ -24,7 +24,9 @@ import tcxml.model.ActionsModel;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Label;
 
+import stepWrapper.AbstractStepWrapper;
 import stepWrapper.CallActionWrapper;
+import stepWrapper.ForWrapper;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Combo;
@@ -73,7 +75,14 @@ public class CallActionView extends StepView {
 
 
 @Override
-public void populate() throws TcXmlException {
+public void populate(AbstractStepWrapper stepWrapper2) throws TcXmlException {
+	
+	if(! (stepWrapper2 instanceof CallActionWrapper )) {
+		throw new TcXmlException("call action view can only be populated by from a cal action  wrapper ", new IllegalArgumentException());
+		
+	}
+	
+	Step model = stepWrapper2.getModel() ;
 	
 	
 	 Map<String, Step> actionmap = controller.getActionMap();

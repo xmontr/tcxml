@@ -13,6 +13,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
 
+import stepWrapper.AbstractStepWrapper;
 import stepWrapper.DefaultWrapper;
 import tcxml.core.PlayingContext;
 import tcxml.core.TcXmlController;
@@ -136,6 +137,7 @@ private Label categorynamelabel;
 private Text categorynametext;
 private Label lblComment;
 private Text commenttext;
+private Step model;
 
 
 	
@@ -207,9 +209,9 @@ private Text commenttext;
 	
 	
 	@Override
-	public void populate(  ) throws TcXmlException {	
+	public void populate( AbstractStepWrapper stepWrapper2 ) throws TcXmlException {	
 	
-	
+	model = stepWrapper2.getModel();
 		m_bindingContext = initDataBindings();
 		
 		

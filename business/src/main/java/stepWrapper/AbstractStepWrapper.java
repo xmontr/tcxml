@@ -1,5 +1,6 @@
 package stepWrapper;
 
+import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -9,7 +10,9 @@ import tcxml.core.TcXmlController;
 import tcxml.core.TcXmlException;
 import tcxml.model.ArgModel;
 import tcxml.model.Step;
+import tcxml.model.TestObject;
 import tcxml.model.TruLibrary;
+import util.TcxmlUtils;
 
 public abstract class AbstractStepWrapper implements Playable{
 	
@@ -39,6 +42,10 @@ public abstract class AbstractStepWrapper implements Playable{
 		argumentMap = controller.getArguments(step , getDefaultArguments());
 	}
 	
+	public HashMap<String, ArgModel> getArgumentMap() {
+		return argumentMap;
+	}
+
 	@Override
 	public PlayingContext play(PlayingContext ctx) throws TcXmlException {
 		
@@ -110,6 +117,48 @@ public abstract class AbstractStepWrapper implements Playable{
 	 
 	 public abstract  ArrayList<ArgModel>  getDefaultArguments() throws TcXmlException ;
 	 
+	 
+	 public abstract void export(PrintWriter pw) throws TcXmlException ;
+	 
+	 
+		protected String genericExport(String targetFuncName) {
+			
+			
+			 ArgModel[] li = argumentMap.values().toArray(new  ArgModel[argumentMap.size()]);
+				String argjs = controller.generateJSobject(li);	
+				
+				
+			
+				String ret = TcxmlUtils.formatJavascriptFunction(
+						targetFuncName,
+							argjs  
+						
+							);
+				return ret;
+			}
+
+		
+		protected String genericExport(String targetFuncName , TestObject to) throws TcXmlException {
+			 ArgModel[] li = argumentMap.values().toArray(new  ArgModel[argumentMap.size()]);
+				String argjs = controller.generateJSobject(li);	
+				
+				
+			
+				String ret = TcxmlUtils.formatJavascriptFunction(
+						targetFuncName,
+							argjs,
+							controller.generateJsTestObject(to)
+						
+							);
+				
+				
+				return ret;
+		}
+		
 	
 
 }
+
+
+
+

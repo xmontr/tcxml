@@ -16,7 +16,9 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Text;
 
+import stepWrapper.AbstractStepWrapper;
 import stepWrapper.CommentWrapper;
+import stepWrapper.ForWrapper;
 
 import static org.hamcrest.Matchers.nullValue;
 
@@ -68,17 +70,22 @@ public class CommentView extends StepView{
 	
 	
 	@Override
-	public void populate() throws TcXmlException {
-		// TODO Auto-generated method stub
+	public void populate(AbstractStepWrapper stepWrapper2) throws TcXmlException {
+		if(! (stepWrapper2 instanceof CommentWrapper )) {
+			throw new TcXmlException("comment  view can only be populated by from a comment wrapper ", new IllegalArgumentException());
+			
+		}
+		
+		CommentWrapper commentwrapper = (CommentWrapper)stepWrapper2 ;
+		
+		Step model = commentwrapper.getModel();
 		
 		commentModel.setComment(model.getComment());
 	}
 
 	@Override
 	public void export(PrintWriter pw) throws TcXmlException {
-		pw.println(" // " + getTitle());
-		StringBuffer sb2 = new StringBuffer("//").append(commentModel.getComment());
-		pw.println(sb2.toString());
+stepWrapper.export(pw);
 		
 	}
 

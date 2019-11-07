@@ -5,6 +5,7 @@ import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
 import java.io.PrintWriter;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import org.eclipse.swt.layout.GridLayout;
@@ -39,6 +40,8 @@ import org.eclipse.core.databinding.beans.BeanProperties;
 import org.eclipse.core.databinding.observable.value.IObservableValue;
 import org.eclipse.wb.swt.SWTResourceManager;
 
+import stepWrapper.AbstractStepWrapper;
+import stepWrapper.ForWrapper;
 import stepWrapper.TestObjectWrapper;
 
 import org.eclipse.swt.graphics.Point;
@@ -287,7 +290,18 @@ public class TestObjectView extends StepView implements PropertyChangeListener {
 	
 	
 @Override
-	public void populate() throws TcXmlException {
+	public void populate(AbstractStepWrapper stepWrapper2) throws TcXmlException {
+	
+	if(! (stepWrapper2 instanceof TestObjectWrapper )) {
+		throw new TcXmlException("TestObject view can only be populated by from a TestObject wrapper ", new IllegalArgumentException());
+		
+	}
+	
+	TestObjectWrapper testobjectwrapper = (TestObjectWrapper)stepWrapper2 ;
+	
+	HashMap<String, ArgModel> argumentMap = stepWrapper2.getArgumentMap();	
+	
+	Step model = testobjectwrapper.getModel();
 
 	
 		testobjectmodel.setAllActions(controller.getAvailableActionForStep(model, getLibrary()));
@@ -404,12 +418,10 @@ public class TestObjectView extends StepView implements PropertyChangeListener {
 	@Override
 	public void export(PrintWriter pw) throws TcXmlException {
 		
-		TestObjectExporter exporter = new TestObjectExporter(model,getLibrary(), controller);
-		StringBuffer sb = new StringBuffer();
-		sb.append("//").append(getTitle()).append("\n");		
-		String txt = exporter.export();
-		sb.append(txt);
-		pw.println(sb);
+		TestObjectWrapper towrapper = (TestObjectWrapper)stepWrapper ;
+		towrapper.export(pw);
+		
+
 		
 	}
 

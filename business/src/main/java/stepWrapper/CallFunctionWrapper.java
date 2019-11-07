@@ -1,7 +1,10 @@
 package stepWrapper;
 
+import java.io.PrintWriter;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Set;
+import java.util.Vector;
 
 import javax.script.ScriptContext;
 
@@ -13,6 +16,8 @@ import tcxml.model.ArgModel;
 import tcxml.model.CallFunctionAttribut;
 import tcxml.model.Step;
 import tcxml.model.TruLibrary;
+
+import util.TcxmlUtils;
 
 public class CallFunctionWrapper extends AbstractStepWrapper {
 
@@ -57,6 +62,70 @@ public class CallFunctionWrapper extends AbstractStepWrapper {
 		
 		return ctx;
 	}
+	
+	
+	private ArrayList<CallFunctionAttribut> getCallFunctionAttribut() {
+		// build the list of the call function parameter		
+		ArrayList<CallFunctionAttribut> callArguments = new ArrayList<CallFunctionAttribut>() ;
+		Set<String> keys = argumentMap.keySet();
+		for (String key : keys) {			
+		 ArgModel att = argumentMap.get(key);			
+			String val = att.getValue();		
+			Boolean evalJavaScript = att.getIsJavascript();			
+			CallFunctionAttribut callatt = new CallFunctionAttribut(key,val,evalJavaScript);			
+			callArguments.add(callatt);
+		}
+	return callArguments;	
+		
+	}
+	
+	
+	
+	
+	
+	@Override
+	public void export(PrintWriter pw) throws TcXmlException {
+		Vector<String> liparam = new Vector<String>();
+		String[] tab;
+		StringBuffer sb = new StringBuffer("// ").append(getTitle());
+		pw.println(sb.toString());
+		StringBuffer sb2 = new StringBuffer();
+		sb2.append("await " );
+		
+		List<CallFunctionAttribut> listArguments = getCallFunctionAttribut() ;
+		
+		
+		String func = " await TC.callFunction";
+		
+		 sb2.append(step.getLibName()).append(".").append(step.getFuncName());
+		
+		String objarg = controller.generateFunctArgJSobject(listArguments);
+		
+
+		
+		String ret = TcxmlUtils.formatJavascriptFunction(
+					func,
+					sb2.toString(),
+					objarg.toString()					
+					);
+		
+		
+		
+		
+		
+		/*
+		 * sb2.append(callfunctmodel.selectedLib).append(".").append(callfunctmodel.
+		 * selectedFunction).append("("); //add param of function call CallFunctionArg
+		 * temp = (CallFunctionArg)theArgument; List<CallFunctionAttribut> li =
+		 * temp.getCallArguments() ;
+		 * 
+		 * 
+		 * 
+		 * sb2.append(controller.generateJsFunctArgument(li)); sb2.append(");");
+		 */
+		pw.println(ret.toString());	
+	}
+	
 
 }
 

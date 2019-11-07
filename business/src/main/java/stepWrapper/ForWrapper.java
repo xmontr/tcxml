@@ -1,5 +1,6 @@
 package stepWrapper;
 
+import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -18,6 +19,7 @@ import tcxml.model.Step;
 import tcxml.model.TruLibrary;
 
 
+
 public class ForWrapper extends AbstractStepWrapper {
 
 	public ForWrapper(Step step, TcXmlController controller, TruLibrary library) throws TcXmlException {
@@ -33,7 +35,7 @@ public class ForWrapper extends AbstractStepWrapper {
 	
 	
 	
-	private String buildLoopString() {
+	public String buildLoopString() {
 	return "for(" + argumentMap.get("Init").getValue() +";" + argumentMap.get("Condition").getValue() + ";" + argumentMap.get("Increment").getValue() + ")" ;	
 		
 	}
@@ -50,6 +52,18 @@ public class ForWrapper extends AbstractStepWrapper {
 		return ret;
 	}
 
+	
+	
+	public BoundList<Step> getSteps() throws TcXmlException {
+		
+		BoundList<Step> li = step.getStep();
+		//firdt dtep is block interval, skip it
+		Step firstchild = li.get(0);				
+				sanitycheck(firstchild);
+		li=firstchild.getStep();
+		return li ;
+		
+	}
 	
 
 	private List<AbstractStepWrapper> getChildren() throws TcXmlException {
@@ -107,6 +121,23 @@ public class ForWrapper extends AbstractStepWrapper {
 		
 		throw new TcXmlException("not expected element  in For step. internal expected but found  " + step.getAction() + " id of step is "+ step.getStepId(), new IllegalStateException());
 	}
+		
+	}
+	
+	public void export(PrintWriter pw) throws TcXmlException {
+		StringBuffer sb = new StringBuffer();
+		pw.println(" // " + getTitle());
+		
+	pw.println(buildLoopString()  + " { ");
+	
+	 List<AbstractStepWrapper> list = getChildren();
+	for (AbstractStepWrapper abstractStepWrapper : list) {
+		abstractStepWrapper.export(pw);
+	}		
+	 sb = new StringBuffer("}//fin for ");	
+	pw.println(sb);	
+	
+	
 		
 	}
 
