@@ -46,6 +46,7 @@ import org.eclipse.swt.widgets.ToolItem;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.wb.swt.ResourceManager;
 
+import stepWrapper.RunLogicWrapper;
 import tcxml.core.TcXmlController;
 import tcxml.core.TcXmlException;
 import tcxml.core.parameter.StepParameter;
@@ -59,6 +60,7 @@ import tcxmlplugin.composite.stepViewer.StepViewer;
 import tcxmlplugin.composite.stepViewer.TopStepContainer;
 import tcxmlplugin.composite.view.CallActionView;
 import tcxmlplugin.composite.view.FunctionView;
+import tcxmlplugin.composite.view.RunBlockView;
 import tcxmlplugin.job.PlayingJob;
 import tcxmlplugin.wizzard.ExportScriptTcxmlWizzard;
 import tcxml.model.ActionsModel;
@@ -255,9 +257,14 @@ public class TcViewer extends Composite implements PropertyChangeListener, IJobC
 				
 				
 				if(TcXmlPluginController.getInstance().isOnBreakpoint()) {
-					TcXmlPluginController.getInstance().releaseBreakpoint();
+					TcXmlPluginController.getInstance().releaseBreakpoint();					
 					
-					
+				} else { // lauch the script
+					try {
+						runLogicViewer.play();
+					} catch (TcXmlException e) {
+						TcXmlPluginController.getInstance().error("failure in playing script ", e);
+					}
 					
 					
 					
@@ -468,7 +475,7 @@ videoRecorderComposite.setDefaultVideoName(TcXmlPluginController.getInstance().g
 		
 	}
 
-	private void populateRunLogic(Step runLogic) {
+	private void populateRunLogic(RunLogicWrapper runLogic) {
 		
 		try {
 			runLogicViewer.populate(runLogic);
@@ -604,7 +611,7 @@ public void ensureVisibility(StepViewer stepviewer) {
 			return;
 		}
 		
-		if(view instanceof CallActionView) {
+		if(view instanceof CallActionView || view instanceof RunBlockView) {
 		switch2runlogic();	
 		currentTopStep =  runLogicViewer;
 			

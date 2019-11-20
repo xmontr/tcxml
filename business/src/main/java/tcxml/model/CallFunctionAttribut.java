@@ -21,17 +21,22 @@ public class CallFunctionAttribut {
 	public boolean isJs() {
 		return isJs;
 	}
+	public boolean isParam() {
+		return isParam;
+	}
 	public void setJs(boolean isJs) {
 		this.isJs = isJs;
 	}
 	private String name;
 	private String value;
 	private boolean isJs;
-	public CallFunctionAttribut(String name, String value, boolean isJs) {
+	private boolean isParam ;
+	public CallFunctionAttribut(String name, String value, boolean isJs, boolean isparam) {
 		super();
 		this.name = name;
 		this.value = value;
 		this.isJs = isJs;
+		this.isParam = isparam ;
 	}
 	
 	

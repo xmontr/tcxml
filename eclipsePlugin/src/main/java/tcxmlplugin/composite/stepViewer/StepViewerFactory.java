@@ -23,6 +23,7 @@ import stepWrapper.FunctionWrapper;
 import stepWrapper.GenericApiWrapper;
 import stepWrapper.If2Wrapper;
 import stepWrapper.IfWrapper;
+import stepWrapper.RunBlockWrapper;
 import stepWrapper.StepWrapperFactory;
 import stepWrapper.TestObjectWrapper;
 import stepWrapper.WaitWrapper;
@@ -45,6 +46,7 @@ import tcxmlplugin.composite.view.FunctionView;
 import tcxmlplugin.composite.view.GenericAPIStepView;
 import tcxmlplugin.composite.view.IF2View;
 import tcxmlplugin.composite.view.IfView;
+import tcxmlplugin.composite.view.RunBlockView;
 import tcxmlplugin.composite.view.TestObjectView;
 import tcxmlplugin.composite.view.WaitView;
 
@@ -64,7 +66,28 @@ public class StepViewerFactory {
 			 theview.setStepWrapper( blockwrapper);
 	
 			founded = true ;
-		}	
+		}
+		
+		
+		
+		
+		if(thesteppwrapper instanceof RunBlockWrapper   ) {			
+			BlockWrapper blockwrapper  = new RunBlockWrapper(step, controller, truLibrary);			
+			 theview = new RunBlockView(stepContainer.getBar(), SWT.NONE) ;
+			 theview.setStepWrapper( blockwrapper);
+	
+			founded = true ;
+		}
+		
+		
+		
+		
+		
+		
+		////
+		
+		
+		
 	
 	if(thesteppwrapper instanceof CallActionWrapper    ) {		
 		CallActionWrapper calactionwrapper  = new CallActionWrapper(step, controller, truLibrary);

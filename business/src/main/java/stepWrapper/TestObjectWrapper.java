@@ -4,9 +4,12 @@ import java.io.File;
 import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
+import java.util.function.Function;
 
 import org.openqa.selenium.By;
 import org.openqa.selenium.JavascriptExecutor;
+import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.TimeoutException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
@@ -14,12 +17,15 @@ import org.openqa.selenium.By.ByXPath;
 import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.ui.ExpectedCondition;
 import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.FluentWait;
 import org.openqa.selenium.support.ui.Select;
+import org.openqa.selenium.support.ui.Wait;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
 import com.kscs.util.jaxb.BoundList;
 
 import tcxml.core.IdentificationMethod;
+import tcxml.core.LocatedByJavascript;
 import tcxml.core.PlayingContext;
 import tcxml.core.StepStat;
 import tcxml.core.TcXmlController;
@@ -49,6 +55,8 @@ public class TestObjectWrapper extends AbstractStepWrapper {
 				to = controller.getTestObjectById(step.getTestObject(), library);
 
 			String name = to.getAutoName() == null ? to.getManualName() : to.getAutoName() ;
+			
+			name = name == null ? to.getFallbackName() : name ;
 			
 			
 			 ret = formatTitle(step.getIndex(), step.getAction() + " on " + name );
@@ -466,18 +474,27 @@ ret.add(mo);
 		
 		IdentificationMethod identMetho = IdentificationMethod.get(identmethodstr);
 		
+		String identjs = controller.getIdentForTestObject(to, identmethodstr);
+		long TIMEOUTWAIT = 20;
+		WebDriverWait w = new WebDriverWait(controller.getDriver(), TIMEOUTWAIT );
 		switch(identMetho) {
 		
-		case JAVASCRIPT: 
-			throw new TcXmlException("wait on with identification by javascript is not implemented", new IllegalArgumentException(identmethodstr));
-
+		case JAVASCRIPT:			
+			ExpectedCondition<Boolean> lo = new LocatedByJavascript(identjs, controller, ctx.getCurrentExecutionContext()) ;
+			try {
+			w.until(lo);
+			
+		}catch (TimeoutException e) {
+			throw new TcXmlException("timeout " + TIMEOUTWAIT, e);
+		}
+			break;
 		
 		case XPATH : 
 		
 		String xpath = controller.getXpathForTestObject(to);
-		long TIMEOUTWAIT = 20;
+		
 		try {
-		WebDriverWait w = new WebDriverWait(controller.getDriver(), TIMEOUTWAIT );
+		
 		By locator = By.xpath(xpath);
 		w.until(ExpectedConditions.numberOfElementsToBeMoreThan(locator, 0)   );
 		//tcXmlController.highLightXpath(xpath);

@@ -148,7 +148,7 @@ for (Step thestep : firstchild.getStep()) {
 		return ret;
 	}
 	
-	public BoundList<Step> getSteps() throws TcXmlException {
+	public BoundList<Step> getIfSteps() throws TcXmlException {
 		
 		BoundList<Step> li = step.getStep();
 		//firdt dtep is block interval, skip it
@@ -156,6 +156,24 @@ for (Step thestep : firstchild.getStep()) {
 				sanitycheck(firstchild);
 		li=firstchild.getStep();
 		return li ;
+		
+	}
+	
+	
+	public BoundList<Step> getElsefSteps() throws TcXmlException {
+		
+	BoundList<Step> li = step.getStep() ;
+	if(li.size() > 1) {
+		
+	return li.get(1).getStep();	
+	}else {
+		
+		return null;
+		
+	}
+	
+		
+		
 		
 	}
 	
@@ -216,6 +234,15 @@ for (Step thestep : firstchild.getStep()) {
 	
 	return ret.toString();
 		
+		
+	}
+	
+	
+	public ArgModel getCondition() {
+		ArgModel cond = argumentMap.get("Condition");
+		//javascript flag is not set so put it manually
+		cond.setIsJavascript(true);
+		return cond;
 		
 	}
 	

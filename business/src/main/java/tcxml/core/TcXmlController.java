@@ -1,6 +1,5 @@
 package tcxml.core;
 
-import java.io.BufferedOutputStream;
 import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
 import java.io.File;
@@ -9,12 +8,9 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.io.PrintWriter;
 import java.io.Reader;
-import java.io.StringBufferInputStream;
 import java.io.StringReader;
 import java.io.UnsupportedEncodingException;
-import java.io.Writer;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
@@ -28,18 +24,17 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
 import java.util.Objects;
 import java.util.Properties;
 import java.util.Set;
 import java.util.UUID;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import java.util.stream.Collector;
 import java.util.stream.Collectors;
 
 import javax.json.Json;
 import javax.json.JsonObject;
+import javax.json.JsonObjectBuilder;
 import javax.json.JsonReader;
 import javax.json.JsonString;
 import javax.json.JsonValue;
@@ -53,7 +48,6 @@ import javax.script.SimpleScriptContext;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBElement;
 import javax.xml.bind.JAXBException;
-import javax.xml.bind.Marshaller;
 import javax.xml.bind.Unmarshaller;
 
 import org.apache.commons.configuration.ConfigurationException;
@@ -71,14 +65,15 @@ import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.remote.Augmenter;
 import org.openqa.selenium.remote.DesiredCapabilities;
+
+import com.kscs.util.jaxb.BoundList;
+
 import jdk.nashorn.api.scripting.JSObject;
 import stepWrapper.AbstractStepWrapper;
 import stepWrapper.ActionWrapper;
 import stepWrapper.FunctionWrapper;
+import stepWrapper.RunLogicWrapper;
 import stepWrapper.StepWrapperFactory;
-
-import com.kscs.util.jaxb.BoundList;
-
 import tcxml.core.parameter.StepParameter;
 import tcxml.model.ArgModel;
 import tcxml.model.CallFunctionAttribut;
@@ -88,7 +83,6 @@ import tcxml.model.ObjectFactory;
 import tcxml.model.Step;
 import tcxml.model.TestObject;
 import tcxml.model.Transaction;
-import tcxml.model.Transactions;
 import tcxml.model.TruLibrary;
 import tcxml.model.TruScript;
 import tcxml.model.Vertex;
@@ -196,7 +190,7 @@ public class TcXmlController {
      * 
      */
     
-    private Step runLogic;
+    private RunLogicWrapper runLogic;
 
 	private WebDriver driver;
 
@@ -304,15 +298,23 @@ public class TcXmlController {
 		
 	}
 	
-	
+	/**
+	 * 
+	 * 
+	 * 
+	 * 
+	 * @param step the step
+	 * @param def the default parameter ( parameter with empty values are note stored )
+	 * @return
+	 * @throws TcXmlException
+	 */
 	
 	public  HashMap<String, ArgModel> getArguments(Step step , List<ArgModel> def) throws TcXmlException{
 		
 	String src = step.getArguments();			
 		HashMap<String, ArgModel> ret = new HashMap<String, ArgModel>() ;
 		
-	/*DefaultArgumentStepFactory fac = new DefaultArgumentStepFactory(step);
-	List<ArgModel> def = fac.getDefaultArg();*/
+
 	
 		if(src != null) {
 			
@@ -340,6 +342,43 @@ for (ArgModel val : def) {
 		
 		return ret;
 		
+	}
+	
+	/**
+	 * 
+	 *  build a json object from the argument list
+	 * 
+	 * 
+	 * @param list
+	 * @return
+	 */
+	
+	
+	public JsonObject argumentsToJson(HashMap<String, ArgModel> list ) {
+		
+	JsonObjectBuilder ret  = Json.createObjectBuilder();	
+	
+	Set<String> keys = list.keySet();
+	
+	for (String key : keys) {
+		
+		JsonObjectBuilder newVal  = Json.createObjectBuilder();
+		
+		ArgModel thearg = list.get(key) ;
+		String thename = thearg.getName();
+		String theval = thearg.getValue();
+		Boolean isjs = thearg.getIsJavascript() ;
+		if(theval != null && ! theval.isEmpty() ) {
+			newVal.add("value", theval) ;	
+			newVal.add("evalJavaScript", isjs);
+			ret.add(thename, newVal);
+			
+		}
+		
+
+		
+	}		
+		return ret.build();
 	}
 	
 	
@@ -769,11 +808,11 @@ public void setScript(TruScript script) {
 	this.script = script;
 }
 
-public Step getRunLogic() {
+public RunLogicWrapper getRunLogic() {
 	return runLogic;
 }
 
-public void setRunLogic(Step runLogic) {
+public void setRunLogic(RunLogicWrapper runLogic) {
 	this.runLogic = runLogic;
 }
 
@@ -833,7 +872,16 @@ private void parseMainXml() throws TcXmlException {
 				
 			}else {
 				
-				runLogic = currentstep;
+				 AbstractStepWrapper wr = StepWrapperFactory.getWrapper(currentstep, this, null);
+				 if( !( wr instanceof  RunLogicWrapper)) {
+					 
+			throw new TcXmlException("bad runlogic step for wrapper", new IllegalStateException())	;	 
+					 
+				 }
+				 
+				 
+				
+				runLogic = (RunLogicWrapper) wr ;
 				log.fine(" found runlogic"  );
 			}
 			
@@ -1219,7 +1267,20 @@ private Object evaluate(CallFunctionAttribut callFunctionAttribut, ExecutionCont
 		
 	}else {
 		
-	ret = callFunctionAttribut.getValue();	
+		
+		
+		if(callFunctionAttribut.isParam()) {//if attribute is a param
+			StepParameter stepParam = getParameterByName(callFunctionAttribut.getValue());
+			 ret = stepParam.evalParameter() ;
+		
+			
+			
+		} else {
+			
+			ret = callFunctionAttribut.getValue();	
+		} 
+		
+
 		
 	}
 	
@@ -1245,6 +1306,10 @@ public  ScriptContext   buildInitialJavascriptContext() throws TcXmlException {
 	   // import Utils obj
 	   Object utils = new UtilsAPI(this);
 	   context.setAttribute("Utils", utils, ScriptContext.GLOBAL_SCOPE);
+	   
+		// the alert function
+		AlertFunction alert = new AlertFunction(this);	
+		context.setAttribute("alert", alert, ScriptContext.ENGINE_SCOPE);
 	
 	   
 
@@ -1697,7 +1762,7 @@ IdentificationMethod identmetho = IdentificationMethod.get(method);
  * @throws TcXmlException
  */
 
-private WebElement evalJavascriptForIdentification(String identjs, ExecutionContext ctx) throws  TcXmlException{
+WebElement evalJavascriptForIdentification(String identjs, ExecutionContext ctx) throws  TcXmlException{
 	
 	ScriptContext currentjscontext = ctx.getJsContext();
 	ScriptContext identificationcontext = buildIdentificationJavascriptContext(ctx);
@@ -2402,15 +2467,30 @@ public ActionWrapper getCalledAction(String actionName) throws TcXmlException {
 }
 
 
-public void manageStartStopTransaction(AbstractStepWrapper wrapper) throws TcXmlException {
-	String stepid = wrapper.getModel().getStepId();
-	Transaction startTransaction = getVertexForStepid(stepid,"start");
-	Transaction endTransaction = getVertexForStepid(stepid,"end");
-	if(startTransaction!= null) {startTransaction(startTransaction);}
+public HashMap<String, Transaction> manageStartStopTransaction(AbstractStepWrapper wrapper, ProgressType... progresslist) throws TcXmlException {
+	HashMap<String,Transaction> res = new HashMap<String,Transaction>();
 	
-	if(endTransaction!= null) {endTransaction(endTransaction);}
-
+	String stepid = wrapper.getModel().getStepId();
+	
+	for (ProgressType progress : progresslist) {
+		Transaction startTransaction = getVertexForStepid(stepid,"start",progress);
+		Transaction endTransaction = getVertexForStepid(stepid,"end",progress);
+		if(startTransaction!= null) {
+			startTransaction(startTransaction);
+			res.put("start", startTransaction);
+		}
 		
+		if(endTransaction!= null) {
+			endTransaction(endTransaction);
+			res.put("end", endTransaction);
+			}
+		
+		
+	}
+	
+
+
+	return res;	
 	}
 
 private void endTransaction(Transaction startTransaction) {
@@ -2431,13 +2511,13 @@ private void startTransaction(Transaction startTransaction) {
 	
 }
 
-private Transaction getVertexForStepid(String stepid, String mode) {
+private Transaction getVertexForStepid(String stepid, String mode, ProgressType progress) {
 	Transaction founded  =null;
 	 Set<Transaction> alltrans = getAlltransactions().keySet();
 	 for (Transaction transaction : alltrans) {
 		 BoundList<Vertex> allvert = transaction.getVertex();
 		 for (Vertex vert : allvert) {
-			 if( vert.getStep().equals(stepid) && vert.getType().equals(mode)){
+			 if( vert.getStep().equals(stepid) && vert.getType().equalsIgnoreCase(mode)  && vert.getProgressType().equalsIgnoreCase(progress.getName())){
 				 
 			founded=transaction;break;	 
 			

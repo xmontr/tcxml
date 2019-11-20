@@ -5,7 +5,8 @@ import java.util.Map;
 
 public enum IdentificationMethod {
 	XPATH("XPath"),
-	JAVASCRIPT("Javascript");
+	JAVASCRIPT("Javascript"),
+	ELECTORS("Electors");
 	
 	
 	private String name;
@@ -36,9 +37,15 @@ public enum IdentificationMethod {
     }
   
     //This method can be used for reverse lookup purpose
-    public static IdentificationMethod get(String name)
+    public static IdentificationMethod get(String name) throws TcXmlException
     {
-        return lookup.get(name.toLowerCase());
+    	
+    	IdentificationMethod ret = lookup.get(name.toLowerCase());
+    	if(ret == null) {
+    		throw new TcXmlException("Unknown identification method:" + name, new IllegalArgumentException());
+    		
+    	}
+        return ret;
     }
 	
 	

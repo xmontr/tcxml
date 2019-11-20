@@ -47,8 +47,9 @@ public class CallFunctionWrapper extends AbstractStepWrapper {
 		for (String key : keys) {			
 		 ArgModel att = argumentMap.get(key);			
 			String val = att.getValue();		
-			Boolean evalJavaScript = att.getIsJavascript();			
-			CallFunctionAttribut callatt = new CallFunctionAttribut(key,val,evalJavaScript);			
+			Boolean evalJavaScript = att.getIsJavascript();	
+			boolean isparam = att.getIsParam() ;
+			CallFunctionAttribut callatt = new CallFunctionAttribut(key,val,evalJavaScript,isparam);			
 			callArguments.add(callatt);
 		}	
 			String name = "Call function " +step.getLibName() + "." +  step.getFuncName();	
@@ -71,8 +72,9 @@ public class CallFunctionWrapper extends AbstractStepWrapper {
 		for (String key : keys) {			
 		 ArgModel att = argumentMap.get(key);			
 			String val = att.getValue();		
-			Boolean evalJavaScript = att.getIsJavascript();			
-			CallFunctionAttribut callatt = new CallFunctionAttribut(key,val,evalJavaScript);			
+			Boolean evalJavaScript = att.getIsJavascript();	
+			Boolean isparm = att.getIsParam();
+			CallFunctionAttribut callatt = new CallFunctionAttribut(key,val,evalJavaScript,isparm);			
 			callArguments.add(callatt);
 		}
 	return callArguments;	

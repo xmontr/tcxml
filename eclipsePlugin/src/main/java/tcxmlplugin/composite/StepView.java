@@ -6,6 +6,7 @@ import java.io.PrintWriter;
 import java.time.LocalTime;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Set;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
@@ -15,10 +16,12 @@ import stepWrapper.StepWrapperFactory;
 import tcxml.core.FfMpegWrapper;
 import tcxml.core.Playable;
 import tcxml.core.PlayingContext;
+import tcxml.core.ProgressType;
 import tcxml.core.TcXmlController;
 import tcxml.core.TcXmlException;
 import tcxml.model.ArgModel;
 import tcxml.model.Step;
+import tcxml.model.Transaction;
 import tcxml.model.TruLibrary;
 import tcxmlplugin.TcXmlPluginController;
 import tcxmlplugin.composite.stepViewer.StepViewer;
@@ -168,7 +171,18 @@ public abstract class StepView extends Composite  implements Playable{
 	
 	@Override
 	public PlayingContext play(PlayingContext ctx) throws TcXmlException {
-		controller.manageStartStopTransaction(stepWrapper);
+		HashMap<String, Transaction> map1 = controller.manageStartStopTransaction(getStepWrapper(),ProgressType.ACTIONSTARTED,ProgressType.STEPSTARTED);
+		
+			for (String key : map1.keySet()) {
+				TcXmlPluginController.getInstance().info(key + map1.get(key).getName());
+				
+			}
+			
+
+			
+				
+		
+		
 		FfMpegWrapper vr = TcXmlPluginController.getInstance().getCurrentVideoRecorder() ;
 		if(vr != null &&  vr.isRecording() ) {
 			
@@ -176,8 +190,20 @@ public abstract class StepView extends Composite  implements Playable{
 		vr.addSubtitle(LocalTime.now(), subtitle,subTitleInterval);
 			
 		}
-		PlayingContext ret = doplay(ctx);
-		controller.manageStartStopTransaction(stepWrapper);
+		PlayingContext ret = doplay(ctx);		
+		HashMap<String, Transaction> map3 = controller.manageStartStopTransaction(getStepWrapper(),ProgressType.ACTIONCOMPLETED,ProgressType.STEPCOMPLETED,ProgressType.AFTERSTEPCOMPLETED,ProgressType.AFTERSTEPENDED);
+
+		
+		
+		for (String key : map3.keySet()) {
+			TcXmlPluginController.getInstance().info(key + map3.get(key).getName());
+			
+		}
+
+		
+		
+		
+		
 		return ret;
 	}
 

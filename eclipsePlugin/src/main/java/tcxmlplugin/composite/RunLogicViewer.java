@@ -2,6 +2,7 @@ package tcxmlplugin.composite;
 
 import org.eclipse.swt.widgets.Composite;
 
+import tcxml.core.PlayingContext;
 import tcxml.core.TcXmlController;
 import tcxml.core.TcXmlException;
 import tcxml.model.Step;
@@ -10,6 +11,7 @@ import tcxmlplugin.composite.stepViewer.StepContainer;
 import tcxmlplugin.composite.stepViewer.StepViewer;
 import tcxmlplugin.composite.stepViewer.StepViewerFactory;
 import tcxmlplugin.composite.stepViewer.TopStepContainer;
+import tcxmlplugin.job.MultipleStepViewerRunner;
 
 import org.eclipse.swt.layout.FillLayout;
 
@@ -20,6 +22,8 @@ import org.eclipse.swt.widgets.ExpandBar;
 import org.eclipse.swt.widgets.ExpandItem;
 
 import com.kscs.util.jaxb.BoundList;
+
+import stepWrapper.RunLogicWrapper;
 
 public class RunLogicViewer extends AStepContainer implements TopStepContainer{
 	
@@ -48,10 +52,10 @@ public class RunLogicViewer extends AStepContainer implements TopStepContainer{
 	
 	
 	
-	public void populate(Step runlogic) throws TcXmlException {
+	public void populate(RunLogicWrapper runlogic) throws TcXmlException {
 		
-		sanityCheck(runlogic);
-		BoundList<Step> li = runlogic.getStep();
+		
+		BoundList<Step> li = runlogic.getStep().getStep();
 		for (Step step : li) {
 			addStep(step);
 		}
@@ -60,6 +64,8 @@ public class RunLogicViewer extends AStepContainer implements TopStepContainer{
 		
 		
 	}
+	
+	
 	
 	
 	public void sanityCheck (Step runlogic) throws TcXmlException {
@@ -73,7 +79,15 @@ public class RunLogicViewer extends AStepContainer implements TopStepContainer{
 
 
 
-
+	public PlayingContext play() throws TcXmlException {
+		PlayingContext ctx = new PlayingContext(controller) ;
+		MultipleStepViewerRunner mc = new MultipleStepViewerRunner(stepViwerChildren);
+		
+		PlayingContext ret = mc.runSteps(ctx);
+		
+		return ret;
+		
+	}
 
 
 

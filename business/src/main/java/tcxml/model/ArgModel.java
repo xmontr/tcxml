@@ -15,6 +15,8 @@ public class ArgModel extends AbstractModel{
 	
 	private Boolean isJavascript ;
 	
+	private Boolean isParam ;
+	
 	
 	private String value ;
 	
@@ -24,7 +26,18 @@ public class ArgModel extends AbstractModel{
 		
 		this.name =n;
 		this.isJavascript = false;
+		this.isParam=false;
 		
+	}
+
+
+	public Boolean getIsParam() {
+		return isParam;
+	}
+
+
+	public void setIsParam(Boolean isParam) {
+		this.isParam = isParam;
 	}
 
 
@@ -88,6 +101,16 @@ public class ArgModel extends AbstractModel{
 	Long loval = src.getJsonNumber("value").longValueExact();
 		setValue(loval.toString());
 		setIsJavascript( false);		
+		
+	}
+	
+	
+	if(src.containsKey("param")) {
+		setIsParam( src.getBoolean("param",false));
+		
+	}
+	else {
+		setIsParam(false);	
 		
 	}
 			

@@ -65,9 +65,10 @@ public class CallFunctionArg extends StepArgument {
 		
 		String val = att.getValue();		
 		Boolean evalJavaScript = att.getIsJavascript();
+		Boolean isparam = att.getIsParam();
 		
 		
-		CallFunctionAttribut callatt = new CallFunctionAttribut(key,val,evalJavaScript);
+		CallFunctionAttribut callatt = new CallFunctionAttribut(key,val,evalJavaScript,isparam);
 		
 		
 		

@@ -1,11 +1,19 @@
 package stepWrapper;
 
 import java.io.PrintWriter;
+import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import javax.json.Json;
+import javax.json.JsonObject;
+import javax.json.JsonWriter;
+
+import org.apache.commons.lang.StringEscapeUtils;
+
 import tcxml.core.Playable;
 import tcxml.core.PlayingContext;
+import tcxml.core.ProgressType;
 import tcxml.core.TcXmlController;
 import tcxml.core.TcXmlException;
 import tcxml.model.ArgModel;
@@ -54,9 +62,11 @@ public abstract class AbstractStepWrapper implements Playable{
 	controller.getLog().info("step " + getTitle() + " is disabled. don't play it.");		
 			return ctx ;
 		}
-		controller.manageStartStopTransaction(this);
+		controller.manageStartStopTransaction(this,ProgressType.ACTIONSTARTED,ProgressType.STEPSTARTED);
+		
 		PlayingContext ret = runStep(ctx);
-		controller.manageStartStopTransaction(this);
+		controller.manageStartStopTransaction(this,ProgressType.ACTIONCOMPLETED,ProgressType.STEPCOMPLETED,ProgressType.AFTERSTEPCOMPLETED,ProgressType.AFTERSTEPENDED);
+		
 		return ret;
 	}
 	
@@ -154,6 +164,32 @@ public abstract class AbstractStepWrapper implements Playable{
 				
 				return ret;
 		}
+		
+	/**
+	 * 
+	 * 
+	 *  save the argument into the wrapped step	
+	 * @param argval
+	 * @throws TcXmlException 
+	 */
+		
+	public void saveArguments(  HashMap<String, ArgModel> argval) throws TcXmlException	{
+
+		JsonObject newval = controller.argumentsToJson(argval);
+		final StringWriter writer = new StringWriter();
+	    final JsonWriter jwriter = Json.createWriter(writer);
+	    jwriter.writeObject(newval);
+		
+		String argument = writer.toString();
+		String escapedargument = StringEscapeUtils.escapeHtml(argument);
+		controller.getLog().fine("saving argument for step " + getTitle());
+		controller.getLog().fine(escapedargument);
+		step.setArguments(escapedargument);
+		
+		
+		
+		
+	}
 		
 	
 

@@ -8,6 +8,7 @@ import org.junit.Ignore;
 import org.junit.Test;
 
 import stepWrapper.AbstractStepWrapper;
+import stepWrapper.RunLogicWrapper;
 import stepWrapper.StepWrapperFactory;
 import tcxml.core.PlayingContext;
 import tcxml.core.TcXmlController;
@@ -26,8 +27,8 @@ public class FullApiTest {
 			controller.loadFromDisk(basedir.getAbsolutePath());
 			
 			
-			Step runlogic = controller.getRunLogic();
-			AbstractStepWrapper wr = StepWrapperFactory.getWrapper(runlogic, controller, null);
+			 RunLogicWrapper runlogic = controller.getRunLogic();
+			
 			
 			
 			
@@ -35,7 +36,7 @@ public class FullApiTest {
 			controller.openBrowser("chome", driverPath );
 			
 			PlayingContext ctx = new PlayingContext(controller);
-			wr.play(ctx);
+			runlogic.play(ctx);
 			
 			
 			

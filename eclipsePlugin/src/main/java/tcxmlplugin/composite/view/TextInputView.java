@@ -37,6 +37,7 @@ public class TextInputView extends Composite implements SelectionListener{
 	
 	
 	private ArgModel arggModel ;
+	private MenuItem mntmparam;
 
 	
 
@@ -50,6 +51,7 @@ public class TextInputView extends Composite implements SelectionListener{
 	public static class TextInputViewModel {
 		
 		private boolean javascript;
+		private boolean param;
 		private String inputData;
 		
 		
@@ -96,6 +98,12 @@ public class TextInputView extends Composite implements SelectionListener{
 			    propertyChangeSupport.removePropertyChangeListener(listener);
 			  }
 
+			public void setParam(boolean isparam) {
+				propertyChangeSupport.firePropertyChange("param", this.param,
+						this.javascript = isparam);
+				
+			}
+
 		
 		
 	}
@@ -121,6 +129,10 @@ public class TextInputView extends Composite implements SelectionListener{
 		mntmJs = new MenuItem(menu, SWT.NONE);
 		mntmJs.setText("JS");
 		mntmJs.addSelectionListener(this);
+		
+		mntmparam = new MenuItem(menu, SWT.NONE);
+		mntmparam.setText("PARAM");
+		mntmparam.addSelectionListener(this);
 		
 		text = new Text(this, SWT.BORDER);
 		text.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
@@ -160,6 +172,27 @@ public class TextInputView extends Composite implements SelectionListener{
 		}
 		
 	}
+	
+	
+	private  void  setPara(boolean isparam) {
+		inputtextmodel.setParam(isparam);
+		if(isparam == true) {
+			displayButton.setText(mntmparam.getText());
+		}
+		else {
+			
+			displayButton.setText(mntmTxt.getText());
+		}
+		
+	}
+	
+	
+	
+	
+	
+	
+	
+	
 
 	private  void setInputData(String inputData) {
 		inputtextmodel.setInputData(inputData);
