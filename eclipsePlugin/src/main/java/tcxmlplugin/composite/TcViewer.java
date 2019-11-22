@@ -261,7 +261,9 @@ public class TcViewer extends Composite implements PropertyChangeListener, IJobC
 					
 				} else { // lauch the script
 					try {
-						runLogicViewer.play();
+					RunLogicViewer rlv = TcXmlPluginController.getInstance().getTcviewer().runLogicViewer ;
+						
+					rlv.play();
 					} catch (TcXmlException e) {
 						TcXmlPluginController.getInstance().error("failure in playing script ", e);
 					}

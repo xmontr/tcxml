@@ -1,5 +1,8 @@
 package tcxml.core.parameter;
 
+import java.util.Random;
+import java.util.stream.IntStream;
+
 import org.apache.commons.configuration.HierarchicalINIConfiguration;
 import org.apache.commons.configuration.SubnodeConfiguration;
 
@@ -15,6 +18,8 @@ public class RandomParameter extends StepParameter {
 	private String minValue;
 	
 	private String originalValue;
+
+	private IntStream intstream;
 	
 
 	
@@ -27,6 +32,11 @@ public class RandomParameter extends StepParameter {
 	minValue = config.getString("MinValue");
 	originalValue = config.getString("OriginalValue");
 	
+	Random r = new Random();
+	int randomNumberOrigin = new Integer(minValue);
+	int randomNumberBound= new Integer(maxValue);
+	intstream = r.ints(randomNumberOrigin, randomNumberBound);
+	
 	}
 
 
@@ -34,8 +44,13 @@ public class RandomParameter extends StepParameter {
 
 	@Override
 	public String evalParameter() {
-		// TODO Auto-generated method stub
-		return "not implemented";
+
+		int res = intstream.findAny().getAsInt();
+		
+		
+		
+		
+		return String.format(format, new Integer(res));
 	}
 
 }

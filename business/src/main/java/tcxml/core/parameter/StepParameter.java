@@ -15,7 +15,8 @@ public abstract  class StepParameter {
 		TABLE,
 		UNIQUE,
 		USERID,
-		RANDOM
+		RANDOM,
+		DYNAMIC
 		
 		
 		
@@ -45,14 +46,24 @@ public abstract  class StepParameter {
 	
 	protected StepParameter (HierarchicalINIConfiguration conf ,String  secname , StepParameterType typeparam ) {
 		parameterType = typeparam ;
-		 config = conf.getSection(secname);
-		 this.secname = secname;
-		 this.conf = conf;
-		 
-		 
-			type=config.getString("Type");
-			this.paramName = config.getString("ParamName");
-			this.setName(paramName);
+		if(conf != null) { // dynamic parameter have null config
+			 config = conf.getSection(secname);
+			 this.secname = secname;
+			 this.conf = conf;
+			 
+			 
+				type=config.getString("Type");
+				this.paramName = config.getString("ParamName");
+				this.setName(paramName);
+			
+			
+			
+		}else {
+			
+		this.setName(secname);
+			
+		}
+
 		
 	}
 	

@@ -74,6 +74,7 @@ import stepWrapper.ActionWrapper;
 import stepWrapper.FunctionWrapper;
 import stepWrapper.RunLogicWrapper;
 import stepWrapper.StepWrapperFactory;
+import tcxml.core.parameter.DynamicParameter;
 import tcxml.core.parameter.StepParameter;
 import tcxml.model.ArgModel;
 import tcxml.model.CallFunctionAttribut;
@@ -2551,6 +2552,28 @@ public String getSubtitle(AbstractStepWrapper step) throws TcXmlException {
 	return ret.toString();
 	
 }
+/****
+ * 
+ *  register a new dynamic parameter 
+ * 
+ * @param name  the name of the new parameter
+ * @param value   the value of the arameter
+ */
+ public void setParameter( String name , String value) {
+	 
+	 DynamicParameter dy = new DynamicParameter(name, value);
+	 
+	 if(parameters.containsKey(name)) {
+		 
+		 parameters.remove(name);
+		 log.info(" removing old value for a  dynamic parameter with name " + name  );
+	 }
+	 
+	 log.info(" registering a new dynamic parameter with name " + name + " and value:" + value);
+	 parameters.put(name, dy);
+	 
+	 
+ }
 	
 }
 

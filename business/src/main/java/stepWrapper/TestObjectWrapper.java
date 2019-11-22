@@ -89,6 +89,7 @@ public class TestObjectWrapper extends AbstractStepWrapper {
 		case "Wait":addWaitArgument(ret);break;
 		case "Verify" : addVerifyArgument(ret);break;
 		case "Select":addSelectArgument(ret);break;
+		case "Wait for Property" : addWaitForPropertyArgument(ret);break;
 		
 		default: throw new TcXmlException("no default value for step testobject action = " + step.getAction() + " id= " +step.getStepId()  , new IllegalArgumentException(step.getAction())) ; 
 		
@@ -97,6 +98,18 @@ public class TestObjectWrapper extends AbstractStepWrapper {
 		return ret;
 	}
 	
+	private void addWaitForPropertyArgument(ArrayList<ArgModel> ret) {
+		ArgModel val = new ArgModel("Value");
+		val.setValue("");
+		ret.add(val);
+		
+		
+		ArgModel property = new ArgModel("Property");
+		property.setValue("Visible Text");
+		ret.add(property);
+		
+	}
+
 	private void addNavigateArgument(ArrayList<ArgModel> ret) {
 		ArgModel lo = new ArgModel("Location");
 		lo.setValue("");
@@ -304,6 +317,7 @@ ret.add(mo);
 		case "Evaluate JavaScript":evalJSOnObject(to,ctx);break;
 		case "Select":select(to,ctx);break;
 		case "Set" : doSet(to,ctx);break;
+		case "Wait for Property":waitForProperty(to,ctx);break;
 		
 		default: notImplemented();
 		}
@@ -313,6 +327,11 @@ ret.add(mo);
 	}
 	
 	
+	private void waitForProperty(TestObject to, PlayingContext ctx) throws TcXmlException {
+		waitOn(to, ctx);
+		
+	}
+
 	private void doSet(TestObject to, PlayingContext ctx) throws TcXmlException  {
 		ArgModel thepath = argumentMap.get("Path");
 		WebElement theelement = controller.identifyElement(to, ctx.getCurrentExecutionContext());

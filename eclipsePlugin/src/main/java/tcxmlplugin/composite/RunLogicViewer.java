@@ -28,7 +28,7 @@ import stepWrapper.RunLogicWrapper;
 public class RunLogicViewer extends AStepContainer implements TopStepContainer{
 	
 	
-	private TcXmlController controller;
+	
 
 
 	
