@@ -64,7 +64,7 @@ this.ctx = stepviewer.play(ctx);
 
 
 ret = Status.OK_STATUS;
-	} catch (TcXmlException e1) {
+	} catch (Exception e1) {
 		ret=Status.CANCEL_STATUS;
 		TcXmlPluginController.getInstance().error("fail to play step", e1);
 		errorMessage= e1.getMessage();

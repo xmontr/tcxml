@@ -9,6 +9,7 @@ import java.util.function.Function;
 
 import org.openqa.selenium.By;
 import org.openqa.selenium.JavascriptExecutor;
+import org.openqa.selenium.Keys;
 import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.TimeoutException;
 import org.openqa.selenium.WebDriver;
@@ -580,9 +581,10 @@ public void doclick(TestObject to, PlayingContext ctx) throws TcXmlException {
 		WebElement finded = controller.identifyElement(to,ctx.getCurrentExecutionContext());
 		controller.highlight(finded);
 			final Actions actions = new Actions(controller.getDriver());
+		//	actions.moveToElement(controller.identifyElement(to, ctx.getCurrentExecutionContext())).click().perform();
+			
+			actions.moveToElement(controller.identifyElement(to, ctx.getCurrentExecutionContext())).perform();
 			actions.moveToElement(controller.identifyElement(to, ctx.getCurrentExecutionContext())).click().perform();
-		 
-
 		
 	}
 

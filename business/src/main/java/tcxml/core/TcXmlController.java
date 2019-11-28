@@ -1529,7 +1529,8 @@ try {
 		
 		 highlight(finded);
 		 if(clear) {
-			 finded.clear();
+			 getLog().info("clear input before typing text " + text);
+			 this.identifyElement(to,ctx).clear();
 			 
 		 }
 
@@ -1878,9 +1879,7 @@ private ScriptContext buildEvalOnObjectJavascriptContext(ExecutionContext curent
  * @throws TcXmlException 
  */
 private ScriptContext buildIdentificationJavascriptContext(ExecutionContext curentexeccontext) throws TcXmlException {
-	//ScriptEngine engine = getJSengine();
-	//ScriptContext context = new SimpleScriptContext();
-	//context.setBindings(engine.createBindings(), ScriptContext.ENGINE_SCOPE);
+
 	
 	// the evalXPath function
 	EvalXpathFunction evalXPath = new EvalXpathFunction(this);	
@@ -1893,14 +1892,29 @@ private ScriptContext buildIdentificationJavascriptContext(ExecutionContext cure
 	 //copy already exsiting global variables as member of  ARgsContext	   
 	 
 		
-	Bindings bd = curentexeccontext.getJsContext().getBindings( ScriptContext.ENGINE_SCOPE );
+	Bindings bdengine = curentexeccontext.getJsContext().getBindings( ScriptContext.ENGINE_SCOPE );
 		
 			
-			Set<String>  keys = bd.keySet();
-			for (String key : keys) {
-				Object var = bd.get(key);
+			Set<String>  keysengine = bdengine.keySet();
+			for (String key : keysengine) {
+				Object var = bdengine.get(key);
 				 argscontext.setMember(key, var);
-				 log.info("adding entry to ArgsContext: "+key + " value is :" + var);					
+				 log.info("adding entry to ArgsContext: from engine_scope  "+key + " value is :" + var);					
+			
+				
+			
+			
+				
+		}
+			
+Bindings bdglo = curentexeccontext.getJsContext().getBindings( ScriptContext.GLOBAL_SCOPE);
+		
+			
+			  Set<String> keysglo = bdglo.keySet();
+			for (String key : keysglo) {
+				Object var = bdglo.get(key);
+				 argscontext.setMember(key, var);
+				 log.info("adding entry to ArgsContext: from global scope "+key + " value is :" + var);					
 			
 				
 			
@@ -1909,9 +1923,10 @@ private ScriptContext buildIdentificationJavascriptContext(ExecutionContext cure
 		}
 			
 			
+			
 	// FuncArgs  is accessible in global scope even if it should be accessed via argscontext		
 		
-			 
+			Bindings bd = curentexeccontext.getJsContext().getBindings( ScriptContext.ENGINE_SCOPE );
 			Object FuncArgs = bd.get("FuncArgs");
 		
 			curentexeccontext.getJsContext().setAttribute("FuncArgs", FuncArgs, ScriptContext.ENGINE_SCOPE); 

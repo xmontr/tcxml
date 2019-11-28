@@ -31,27 +31,37 @@ public class RunLogicWrapper extends AbstractStepWrapper {
 		
 		ctx = initRunBlock.runStep(ctx);
 		
+		
+		try {
 		ctx= actionRunBlock.runStep(ctx);
 		
-		ctx = endRunBlock.runStep(ctx);
+		}
+		
+		finally {
+			
+			ctx = endRunBlock.runStep(ctx);
+			
+		}
+		
+		
 		
 		
 		return ctx;
 	}
 
-	private RunBlockWrapper getEndRunblock() throws TcXmlException {
+	public RunBlockWrapper getEndRunblock() throws TcXmlException {
 		Step thestep = step.getStep().get(2);
 		RunBlockWrapper thewrapper = (RunBlockWrapper) StepWrapperFactory.getWrapper(thestep, controller, library);
 		return thewrapper;
 	}
 
-	private RunBlockWrapper getActionRunblock() throws TcXmlException {
+	public RunBlockWrapper getActionRunblock() throws TcXmlException {
 		Step thestep = step.getStep().get(1);
 		RunBlockWrapper thewrapper = (RunBlockWrapper) StepWrapperFactory.getWrapper(thestep, controller, library);
 		return thewrapper;
 	}
 
-	private RunBlockWrapper getInitRunblock() throws TcXmlException {
+	public RunBlockWrapper getInitRunblock() throws TcXmlException {
 		Step thestep = step.getStep().get(0);
 		RunBlockWrapper thewrapper = (RunBlockWrapper) StepWrapperFactory.getWrapper(thestep, controller, library);
 		return thewrapper;

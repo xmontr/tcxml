@@ -20,6 +20,8 @@ public class RandomParameter extends StepParameter {
 	private String originalValue;
 
 	private IntStream intstream;
+
+	private Random therandom;
 	
 
 	
@@ -32,10 +34,9 @@ public class RandomParameter extends StepParameter {
 	minValue = config.getString("MinValue");
 	originalValue = config.getString("OriginalValue");
 	
-	Random r = new Random();
-	int randomNumberOrigin = new Integer(minValue);
-	int randomNumberBound= new Integer(maxValue);
-	intstream = r.ints(randomNumberOrigin, randomNumberBound);
+	 therandom  = new Random();
+
+	
 	
 	}
 
@@ -44,6 +45,10 @@ public class RandomParameter extends StepParameter {
 
 	@Override
 	public String evalParameter() {
+		
+		int randomNumberOrigin = new Integer(minValue);
+		int randomNumberBound= new Integer(maxValue);		
+		intstream = therandom.ints(randomNumberOrigin, randomNumberBound);
 
 		int res = intstream.findAny().getAsInt();
 		

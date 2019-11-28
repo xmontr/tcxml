@@ -60,6 +60,7 @@ public class MultipleStepViewerRunner {
 			} catch (InterruptedException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
+				throw new TcXmlException("interrupted", e);
 			}
 
 			try {
@@ -67,6 +68,7 @@ public class MultipleStepViewerRunner {
 			} catch (InterruptedException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
+				throw new TcXmlException("interrupted", e);
 			}
 
 		}

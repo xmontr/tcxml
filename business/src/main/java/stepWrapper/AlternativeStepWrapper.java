@@ -41,6 +41,7 @@ public class AlternativeStepWrapper extends AbstractStepWrapper{
 		int index = Integer.parseInt(step.getActiveStep()) ;
 		Step altstep = step.getStep().get(index);	
 		altstep.setIndex(step.getIndex());
+		altstep.setDisabled(step.isDisabled());
 		return altstep ;
 		
 	}

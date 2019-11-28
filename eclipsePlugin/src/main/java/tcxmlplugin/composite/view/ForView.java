@@ -8,6 +8,7 @@ import tcxml.core.TcXmlController;
 import tcxml.core.TcXmlException;
 import tcxml.model.Step;
 import tcxml.model.TruLibrary;
+import tcxmlplugin.JsMultipleStepRunner;
 import tcxmlplugin.composite.StepView;
 import tcxmlplugin.composite.stepViewer.StepContainer;
 import tcxmlplugin.composite.stepViewer.StepViewer;
@@ -119,9 +120,22 @@ public class ForView extends StepView  implements StepContainer, ExpandListener 
 		return sb.toString();
 		
 	}
+	
+	
+	private String buildPlayingCommand2() {
+		ForWrapper forwrapper = (ForWrapper)stepWrapper ;
+		StringBuffer sb = new StringBuffer();
+		sb.append(forwrapper.buildLoopString()).append("{jsm();};");
+		
+		return sb.toString();
+		
+	}
+	
+	
+	
+	
 
-	@Override
-	public PlayingContext doplay(PlayingContext ctx) throws TcXmlException {
+	public PlayingContext doplay2(PlayingContext ctx) throws TcXmlException {
 		if(stepWrapper.isDisabled() )  {
 			controller.getLog().info("step" + getTitle() + " is disabled - don't play it");
 			return ctx ;
@@ -138,6 +152,42 @@ public class ForView extends StepView  implements StepContainer, ExpandListener 
 		engine.eval(buildPlayingCommand(),context);
 	} catch (ScriptException e) {
 	
+		throw new TcXmlException(" failure in For loop", e);
+	} 
+	   
+	   
+	   
+	
+		return ctx;
+	}
+	
+	
+
+	@Override
+	public PlayingContext doplay(PlayingContext ctx) throws TcXmlException {
+		if(stepWrapper.isDisabled() )  {
+			controller.getLog().info("step" + getTitle() + " is disabled - don't play it");
+			return ctx ;
+		}
+		
+		
+	MultipleStepViewerRunner mc = new MultipleStepViewerRunner(stepViwerChildren);
+	JsMultipleStepRunner jsm = new JsMultipleStepRunner(mc, ctx);
+	
+	ScriptEngine engine = controller.getJSengine();
+	   ScriptContext context = ctx.getJsContext();
+		// store the global variables 
+	   context.setAttribute("jsm", jsm, ScriptContext.GLOBAL_SCOPE);
+	  
+	  try {
+		engine.eval(buildPlayingCommand2(),context);
+	} catch (ScriptException e) {
+	
+		throw new TcXmlException(" failure in For loop", e);
+	}
+	  
+	 catch (RuntimeException e) {
+		
 		throw new TcXmlException(" failure in For loop", e);
 	} 
 	   

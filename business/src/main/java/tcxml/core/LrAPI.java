@@ -83,6 +83,20 @@ public class LrAPI   {
 	}
 	
 
+	public void setLogLevel(String format, Object param) {
+		
+	controller.getLog().warning(" setloglevel is not implemented yet  ");	
+	}
+	
+	
+	public void restoreLogLevel() {
+		
+		controller.getLog().warning(" restoreLogLevel is not implemented yet  ");	
+		
+	}
+	
+	
+	
 	
 
 }

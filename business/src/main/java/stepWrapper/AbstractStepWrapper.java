@@ -64,6 +64,7 @@ public abstract class AbstractStepWrapper implements Playable{
 		}
 		controller.manageStartStopTransaction(this,ProgressType.ACTIONSTARTED,ProgressType.STEPSTARTED);
 		
+		controller.getLog().info("start step " + getTitle() + " with  disabled=" + isDisabled());
 		PlayingContext ret = runStep(ctx);
 		controller.manageStartStopTransaction(this,ProgressType.ACTIONCOMPLETED,ProgressType.STEPCOMPLETED,ProgressType.AFTERSTEPCOMPLETED,ProgressType.AFTERSTEPENDED);
 		
@@ -82,14 +83,22 @@ public abstract class AbstractStepWrapper implements Playable{
 	}
 	
 	public boolean isDisabled() {
+		boolean ret =false ;
+		
 		if(step.isDisabled() != null && step.isDisabled()) {
 			
-			return true;
+			ret= true;
 		} else {
 			
-			return false;
+			ret = false;
 		}
 		
+	
+	
+
+		
+//System.out.println("xav*** step index " + step.getIndex() + " id=" + step.getStepId() + " ret="+ret + "  step.isDisabled()="+ step.isDisabled());		
+	return ret;	
 		
 	}
 	
