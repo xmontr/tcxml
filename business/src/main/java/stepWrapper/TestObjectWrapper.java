@@ -597,8 +597,9 @@ public void doclick(TestObject to, PlayingContext ctx) throws TcXmlException {
 		
 		 ArgModel cleararg = argumentMap.get("Clear");
 		 boolean clear = new Boolean(cleararg.getValue());
-			 
-			 
+			
+		 final Actions actions = new Actions(controller.getDriver());
+		 actions.moveToElement(controller.identifyElement(to, ctx.getCurrentExecutionContext())).perform(); 
 	/// if argument is in js it should be evaluated before
 			 if(isj) {
 				 

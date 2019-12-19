@@ -42,6 +42,8 @@ public class MultipleStepViewerRunner {
 
 		for (Iterator iterator = stepviewers.iterator(); iterator.hasNext();) {
 			StepViewer stepViewer = (StepViewer) iterator.next();
+			
+			stepViewer.getDisplay().syncExec(new VisibilityEnsurer(stepViewer));
 
 			PlayingJob j = stepViewer.getplayInteractiveJob(temp);
 			j.schedule();

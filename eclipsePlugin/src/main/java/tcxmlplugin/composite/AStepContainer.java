@@ -297,18 +297,20 @@ controller.getLog().info("**********    ASTEPCONTAINER " + this.getClass()  +"**
 				
 
 				Point p = getControlLocation(st);	
+				scroller.setOrigin(p);
 				
-				getDisplay().asyncExec(new Runnable() {
-					
-					@Override
-					public void run() {
-						scroller.setOrigin(p);
-					
-
-						
-						
-					}
-				});
+				
+				
+		/*
+		 * getDisplay().asyncExec(new Runnable() {
+		 * 
+		 * @Override public void run() { scroller.setOrigin(p);
+		 * 
+		 * 
+		 * 
+		 * 
+		 * } });
+		 */
 
 				
 			}

@@ -17,6 +17,7 @@ import tcxmlplugin.composite.view.arguments.ArgumentViewFactory;
 import tcxmlplugin.composite.view.arguments.CallFunctionArg;
 import tcxmlplugin.composite.view.arguments.StepArgument;
 import tcxmlplugin.job.PlayingJob;
+import tcxmlplugin.job.VisibilityEnsurer;
 import util.TcxmlUtils;
 import tcxml.model.ActionsModel;
 import tcxml.model.ArgModel;
@@ -306,6 +307,7 @@ public static class CallFunctionViewModel {
 	
 	PlayingJob j = funcViewer.getplayInteractiveJob(ret);
 	
+	funcViewer.getDisplay().syncExec(new VisibilityEnsurer(funcViewer));
 	
 	
 	j.schedule();	

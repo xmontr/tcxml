@@ -65,6 +65,8 @@ import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.remote.Augmenter;
 import org.openqa.selenium.remote.DesiredCapabilities;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.WebDriverWait;
 
 import com.kscs.util.jaxb.BoundList;
 
@@ -163,7 +165,18 @@ public class TcXmlController {
     
     private Logger log;
     
-    public Map<String, Step> getActionMap() {
+    
+    private PlayingContext currentPlayingContext ;
+    
+    public PlayingContext getCurrentPlayingContext() {
+		return currentPlayingContext;
+	}
+
+	public void setCurrentPlayingContext(PlayingContext currentPlayingContext) {
+		this.currentPlayingContext = currentPlayingContext;
+	}
+
+	public Map<String, Step> getActionMap() {
 		return actionMap;
 	}
 
@@ -1750,6 +1763,13 @@ IdentificationMethod identmetho = IdentificationMethod.get(method);
 		throw new TcXmlException("identification method not supported " + method, new IllegalArgumentException());
 		
 	}
+	// ensure the element is displayed
+		/*
+		 * WebDriverWait wait = new WebDriverWait(driver, 1); try { ret =
+		 * wait.until(ExpectedConditions.elementToBeClickable(ret)); }catch (Exception
+		 * e) { getLog().warning("wait 1s extra to ensure the element is clickable "); }
+		 */
+	
 	return ret;
 }
 
@@ -2148,12 +2168,26 @@ public void vtsConnect(String name, String server, String port) throws TcXmlExce
 
 
 
+public void clearAllVtsConnectons() {
+	
+	this.vtsConnections.clear();
+	
+	
+}
+
+
+public void reset() {
+	
+	clearAllVtsConnectons();
+	
+}
+
 
 private void addVtsConnection(Vts newVts) throws TcXmlException {
 	
 	if(hasVtsConnection(newVts.getName()) ) {
 		
-	throw new TcXmlException("vts connection " + newVts.getName() , new IllegalArgumentException())	;
+	throw new TcXmlException("vts connection already exist" + newVts.getName() , new IllegalArgumentException())	;
 	}
 	
 	String newname = newVts.getName();

@@ -1,6 +1,7 @@
 package tcxmlplugin.composite;
 
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.CoolBar;
 import org.eclipse.swt.widgets.CoolItem;
 import org.eclipse.swt.layout.GridLayout;
@@ -572,8 +573,16 @@ public void ensureVisibility(StepViewer stepviewer) {
 	
 	
 	updateTopContainer(stepviewer);
-	stepviewer.expand();
-	currentTopStep.showOnTop(stepviewer);
+	stepviewer.expandSync();
+	if(currentTopStep != null) {
+		
+		currentTopStep.showOnTop(stepviewer);
+	}else {
+		
+		controller.getLog().warning("currenttopstep is null when ensur visibility of " + stepviewer.getTitle());
+		
+	}
+	
 
 	
 	
@@ -601,32 +610,115 @@ public void ensureVisibility(StepViewer stepviewer) {
 
 	private void updateTopContainer(StepViewer stepviewer) {
 		
-		StepView view = stepviewer .getViewer();
 		
-		
-		if(view instanceof FunctionView) {// start execute newfunction also switch tab
-			
-			String libname = ((FunctionView ) view).getLibName() ;
-			switch2function(libname );
-			currentTopStep =  (LibraryView) view.getViewer().getContainer();
-			
-			return;
+		/**
+		 *  find the topstepcontainer 
+		 * 
+		 */
+		Control currentControl = stepviewer;
+		for (;;) {
+			currentControl = currentControl.getParent();
+			  if (currentControl instanceof TopStepContainer) {
+				  break;				
+			}
+			  
 		}
+			  currentTopStep = (TopStepContainer) currentControl;
+			  
+			  
+				  
+			  
+			  if(currentControl instanceof RunLogicViewer) {				  
+				  tabFolder.setSelection(2);
+				  tabFolder.layout(true,true);
+				  
+			  }
+	  if(currentControl instanceof LibraryView) {
+		  
+		  StepView view = null;
+		  if(stepviewer.getViewer() instanceof FunctionView) { // step is a funcction viewer
+			  view = stepviewer.getViewer();	  
+			  
+		  } else {
+			  
+			  // step part of a function so find the first functonviewer parent
+			  Control temp = stepviewer;
+				for (;;) {
+					temp = temp.getParent();
+					if( temp instanceof StepViewer ) {
+					
+						  view = ((StepViewer)temp ) .getViewer();
+						  if (view instanceof FunctionView) {
+							  break;				
+						}
+				
+						
+						
+						
+					}
 		
-		if(view instanceof CallActionView || view instanceof RunBlockView) {
-		switch2runlogic();	
-		currentTopStep =  runLogicViewer;
-			
-		}
+						
+
+					
+				}
+			  
+			  
+		  }
+		  
+		  
+
+		  
+		  String libname = ((FunctionView ) view).getLibName() ;
+		  switch2function(libname );
+				  
+				  
+			  }
+	  
+	  
+	  if(currentControl instanceof ActionView) {		  
+		  
+		  String actionName =((ActionView)
+				  currentControl).getActionName();		  
+		  switch2Action(actionName );
+			  }
+	  
+	  
+
 		
 		
-		StepContainer pa = stepviewer.getContainer();
-		if( pa instanceof ActionView )
-		{
-		String actionName  =((ActionView) stepviewer.getContainer()).getActionName();
-		switch2Action(actionName );
 		
-		currentTopStep = (ActionView)pa;
+		/*
+		 * StepView view = stepviewer .getViewer();
+		 * 
+		 * 
+		 * if(view instanceof FunctionView) {// start execute newfunction also switch
+		 * tab
+		 * 
+		 * String libname = ((FunctionView ) view).getLibName() ;
+		 * switch2function(libname ); currentTopStep = (LibraryView)
+		 * view.getViewer().getContainer();
+		 * 
+		 * return; }
+		 * 
+		 * if(view instanceof CallActionView || view instanceof RunBlockView) {
+		 * switch2runlogic(); currentTopStep = runLogicViewer;
+		 * 
+		 * }
+		 * 
+		 * 
+		 * StepContainer pa = stepviewer.getContainer(); if( pa instanceof ActionView )
+		 * { String actionName =((ActionView)
+		 * stepviewer.getContainer()).getActionName(); switch2Action(actionName );
+		 * 
+		 * currentTopStep = (ActionView)pa;
+		 * 
+		 */
+		
+		
+		
+		
+		
+		
 		return;
 		
 		}
@@ -634,7 +726,7 @@ public void ensureVisibility(StepViewer stepviewer) {
 		
 		
 
-	}
+	
 
 	private void switch2runlogic() {
 		tabFolder.setSelection(2);

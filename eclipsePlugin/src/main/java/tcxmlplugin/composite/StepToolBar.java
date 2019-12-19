@@ -25,9 +25,12 @@ import tcxmlplugin.TcXmlPluginController;
 import tcxmlplugin.composite.stepViewer.StepViewer;
 import tcxmlplugin.composite.view.TestObjectView;
 import tcxmlplugin.job.PlayingJob;
+import tcxmlplugin.job.VisibilityEnsurer;
 
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.ProgressBar;
+import org.eclipse.swt.events.DisposeEvent;
+import org.eclipse.swt.events.DisposeListener;
 import org.eclipse.swt.events.MouseAdapter;
 import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.swt.widgets.Combo;
@@ -112,6 +115,14 @@ if(isRunning == false) {
 		progressBar = new ProgressBar(this , SWT.INDETERMINATE);
 		progressBar.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		progressBar.setVisible(false);
+		progressBar.addDisposeListener(new DisposeListener() {
+			
+			@Override
+			public void widgetDisposed(DisposeEvent e) {
+				System.out.println(" the progressbar is disposed");
+				
+			}
+		});
 		
 		label = new Label(this, SWT.SEPARATOR | SWT.HORIZONTAL);
 		label.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 7, 1));
@@ -165,6 +176,9 @@ if(isRunning == false) {
 
 	@Override
 	public void aboutToRun(IJobChangeEvent event) {
+		
+		
+		
 		
 		
 		

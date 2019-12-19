@@ -7,6 +7,7 @@ import tcxml.core.TcXmlController;
 import tcxml.core.TcXmlException;
 import tcxml.model.Step;
 import tcxml.model.TruLibrary;
+import tcxmlplugin.TcXmlPluginController;
 import tcxmlplugin.composite.stepViewer.StepContainer;
 import tcxmlplugin.composite.stepViewer.StepViewer;
 import tcxmlplugin.composite.stepViewer.StepViewerFactory;
@@ -14,13 +15,16 @@ import tcxmlplugin.composite.stepViewer.TitleListener;
 import tcxmlplugin.composite.stepViewer.TopStepContainer;
 import tcxmlplugin.job.MultipleStepViewerRunner;
 import tcxmlplugin.job.PlayingJob;
+import tcxmlplugin.job.VisibilityEnsurer;
 
 import org.eclipse.swt.layout.FillLayout;
 
 import java.util.List;
 
+import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.ExpandBar;
 import org.eclipse.swt.widgets.ExpandItem;
@@ -129,12 +133,37 @@ public class RunLogicViewer extends AStepContainer implements TopStepContainer{
 		}
 		
 	}
-
-
-
-	public void  play() throws TcXmlException {
+	
+	
+	
+	public void play() throws TcXmlException {
 		
 		
+		Job playwholescriptjob = new Job("run script") {
+			
+			@Override
+			protected IStatus run(IProgressMonitor monitor) {
+				IStatus ret = Status.OK_STATUS;
+				try {
+					doplay();
+				} catch (TcXmlException e) {
+					// TODO Auto-generated catch block
+					TcXmlPluginController.getInstance().error("failure in replaying  script", e);
+				}
+				return ret;
+			}
+		};
+		
+		
+		playwholescriptjob.schedule();
+		
+	}
+
+
+
+	public void  doplay() throws TcXmlException {
+		
+		controller.reset();
 		// play init 
 		PlayingContext context = new PlayingContext(controller );		
 		PlayingJob initJob = initviewer.getplayInteractiveJob(  context);		
@@ -142,8 +171,11 @@ public class RunLogicViewer extends AStepContainer implements TopStepContainer{
 		PlayingJob endjob = endviewer.getplayInteractiveJob(context);
 		try {
 			
+			initviewer.getDisplay().syncExec(new VisibilityEnsurer(initviewer));			
 		initJob.schedule();	
 		waitForSuccess(initJob);
+		
+		actionviewer.getDisplay().syncExec(new VisibilityEnsurer(actionviewer));
 		actionjob.schedule();
 		waitForSuccess(actionjob);
 		
@@ -157,6 +189,8 @@ public class RunLogicViewer extends AStepContainer implements TopStepContainer{
 			throw new TcXmlException("failure in playing script", e) ;
 		}
 		finally {
+			
+			endviewer.getDisplay().syncExec(new VisibilityEnsurer(endviewer));
 			endjob.schedule();
 		}
 		

@@ -50,14 +50,19 @@ try {
 	
 	//ensure visible and expanded
 	
-	stepviewer.getDisplay().syncExec(new Runnable() {
-		
-		@Override
-		public void run() {
-			TcXmlPluginController.getInstance().getTcviewer().ensureVisibility(stepviewer);
+//	stepviewer.getDisplay().asyncExec(new VisibilityEnsurer(stepviewer));
+	
 			
-		}
-	});
+			/*
+			 * stepviewer.getDisplay().syncExec(new Runnable() {
+			 * 
+			 * @Override public void run() {
+			 * TcXmlPluginController.getInstance().getTcviewer().ensureVisibility(stepviewer
+			 * );
+			 * 
+			 * } });
+			 */
+			 
 	
 	
 this.ctx = stepviewer.play(ctx);

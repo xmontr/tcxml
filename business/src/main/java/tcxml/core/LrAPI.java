@@ -1,5 +1,7 @@
 package tcxml.core;
 
+import javax.json.JsonObject;
+
 import jdk.nashorn.api.scripting.AbstractJSObject;
 import net.bytebuddy.implementation.bind.annotation.Super;
 import tcxml.core.parameter.StepParameter;
@@ -92,6 +94,28 @@ public class LrAPI   {
 	public void restoreLogLevel() {
 		
 		controller.getLog().warning(" restoreLogLevel is not implemented yet  ");	
+		
+	}
+	
+	
+	public JsonObject vtcPopCells( String vtsname, String variable) throws TcXmlException {
+		
+		
+		JsonObject ret = controller.vtsPopCells(vtsname, variable);
+		PlayingContext ctx = controller.getCurrentPlayingContext();
+
+		
+		//get the data value
+		JsonObject value = ret.getJsonObject("data");
+		controller.addToCurrentJScontext(ctx,variable,value);
+		
+		return value;
+	}
+	
+	
+	public JsonObject vtcPopCells( String vtsname) throws TcXmlException {
+		
+		return vtcPopCells(vtsname, "data");
 		
 	}
 	

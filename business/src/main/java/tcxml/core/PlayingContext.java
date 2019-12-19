@@ -44,6 +44,7 @@ public class PlayingContext {
 	public PlayingContext(TcXmlController controller ) throws TcXmlException {
 		stack = new Stack<ExecutionContext>();
 		this.controller = controller;
+		controller.setCurrentPlayingContext(this);
 		ScriptContext jsContext = controller.buildInitialJavascriptContext();
 		List<CallFunctionAttribut> arrgumentsList = new ArrayList<CallFunctionAttribut>();
 		ExecutionContext initexec = new ExecutionContext("initial execution context", arrgumentsList , jsContext);

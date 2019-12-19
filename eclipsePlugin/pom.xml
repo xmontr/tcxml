@@ -7,11 +7,13 @@
   <version>1.0.0-SNAPSHOT</version>
   <packaging>eclipse-plugin</packaging>
       <repositories>
-    <repository>
-      <id>eclipse</id>
+    <repository> 
+       <id>eclipse</id>
       <name>eclipse repo</name>
-      <url>http://download.eclipse.org/releases/2019-09/</url>
-      <layout>p2</layout>
+      <url>http://download.eclipse.org/releases/2019-09/201909181001/</url>
+      <layout>p2</layout> 
+
+    
       
     </repository>
   </repositories> 

@@ -180,7 +180,7 @@ private PlayingContext runTCMethod(String method, PlayingContext ctx) throws TcX
 		case"vtcConnect": ctx = runVtcConnect(ctx); break;
 		case"vtcAddCells": ctx = runVtcAddCells(ctx); break;
 		case"vtcPopCells": ctx = runVtcPopCells(ctx); break;
-		case"vtcDisConnect": ctx = runVtcDisConnect(ctx); break;
+		case"vtcDisconnect": ctx = runVtcDisConnect(ctx); break;
 		
 		
 		

@@ -153,6 +153,61 @@ public  class StepViewer extends Composite  {
 		
 	}
 	
+	
+	
+	//////// sync version of refresh
+	
+	public void refreshSizeExpanditemSync(StepViewer origin) {
+		//reset size of current
+
+				parentExpandItem.setHeight(computeSize(SWT.DEFAULT, SWT.DEFAULT).y );
+				parentExpandItem.getParent().redraw();
+				
+
+		// refresh size of parent
+		StepContainer pa = getContainer();
+		
+		if( ! (pa instanceof TopStepContainer)) {
+			
+			
+			if(  pa instanceof StepView) {  // bug with if and else container that are not stepview
+				StepView theview = (StepView) pa;
+				theview.getViewer().refreshSizeExpanditemSync(origin);
+				
+			}else { //manage if and else 
+				
+				if( pa instanceof  IfElsecontainer) {
+					
+					((IfElsecontainer)pa).getIfview()  .getViewer().refreshSizeExpanditemSync(origin);
+					
+					
+				}
+				
+				
+			}
+
+			
+		} else { // resiize the top container
+			
+			TopStepContainer topc = (TopStepContainer) pa;
+			topc.refreshSize();
+			topc.setCurrentStepExpanded(origin);
+		}
+		
+
+		
+
+	
+		
+		
+		
+		
+	}
+	
+	
+	
+	/////
+	
 	public   StepViewer( Composite parent , int style) {
 		
 		super(parent, style);
@@ -407,6 +462,18 @@ setMenu(buildMenu());
 		public void expand() {
 			parentExpandItem.setExpanded(true);
 			refreshSizeExpanditem(this);
+	
+			
+
+			
+			
+			
+		}
+		
+		
+		public void expandSync() {
+			parentExpandItem.setExpanded(true);
+			refreshSizeExpanditemSync(this);
 	
 			
 
