@@ -615,52 +615,28 @@ public void ensureVisibility(StepViewer stepviewer) {
 		 *  find the topstepcontainer 
 		 * 
 		 */
-		Control currentControl = stepviewer;
-		for (;;) {
-			currentControl = currentControl.getParent();
-			  if (currentControl instanceof TopStepContainer) {
-				  break;				
-			}
-			  
-		}
-			  currentTopStep = (TopStepContainer) currentControl;
+		//Control currentControl = stepviewer;
+
+			  currentTopStep =  stepviewer.getTopContainer();
 			  
 			  
 				  
 			  
-			  if(currentControl instanceof RunLogicViewer) {				  
+			  if(currentTopStep instanceof RunLogicViewer) {				  
 				  tabFolder.setSelection(2);
-				  tabFolder.layout(true,true);
+				
 				  
 			  }
-	  if(currentControl instanceof LibraryView) {
+	  if(currentTopStep instanceof LibraryView) {
 		  
-		  StepView view = null;
+		  FunctionView view = null;
 		  if(stepviewer.getViewer() instanceof FunctionView) { // step is a funcction viewer
-			  view = stepviewer.getViewer();	  
+			  view =(FunctionView) stepviewer.getViewer();	  
 			  
 		  } else {
 			  
 			  // step part of a function so find the first functonviewer parent
-			  Control temp = stepviewer;
-				for (;;) {
-					temp = temp.getParent();
-					if( temp instanceof StepViewer ) {
-					
-						  view = ((StepViewer)temp ) .getViewer();
-						  if (view instanceof FunctionView) {
-							  break;				
-						}
-				
-						
-						
-						
-					}
-		
-						
-
-					
-				}
+			view = stepviewer.getFunctionViewContainer();
 			  
 			  
 		  }
@@ -668,17 +644,17 @@ public void ensureVisibility(StepViewer stepviewer) {
 		  
 
 		  
-		  String libname = ((FunctionView ) view).getLibName() ;
+		  String libname =  view.getLibName() ;
 		  switch2function(libname );
 				  
 				  
 			  }
 	  
 	  
-	  if(currentControl instanceof ActionView) {		  
+	  if(currentTopStep instanceof ActionView) {		  
 		  
 		  String actionName =((ActionView)
-				  currentControl).getActionName();		  
+				  currentTopStep).getActionName();		  
 		  switch2Action(actionName );
 			  }
 	  

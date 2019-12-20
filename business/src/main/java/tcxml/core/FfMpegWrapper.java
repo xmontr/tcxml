@@ -182,6 +182,8 @@ if( srtfile.exists()) {
 		//.replace(" ", (char) 92 + " ")
 		ret.add("title=" + windowTitle  );
 		//timestamp for thr video
+		// YUV chroma subsampling for firefox compatibility
+		ret.add("-pix_fmt");ret.add("yuv420p");
 
 		// output file for the video
 		ret.add(outputfile);		

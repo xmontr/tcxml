@@ -115,14 +115,7 @@ if(isRunning == false) {
 		progressBar = new ProgressBar(this , SWT.INDETERMINATE);
 		progressBar.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		progressBar.setVisible(false);
-		progressBar.addDisposeListener(new DisposeListener() {
-			
-			@Override
-			public void widgetDisposed(DisposeEvent e) {
-				System.out.println(" the progressbar is disposed");
-				
-			}
-		});
+	
 		
 		label = new Label(this, SWT.SEPARATOR | SWT.HORIZONTAL);
 		label.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 7, 1));

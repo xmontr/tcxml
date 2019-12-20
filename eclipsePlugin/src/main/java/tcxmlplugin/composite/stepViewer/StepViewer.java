@@ -1,6 +1,7 @@
 package tcxmlplugin.composite.stepViewer;
 
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.ExpandBar;
 import org.eclipse.swt.widgets.ExpandItem;
@@ -16,6 +17,7 @@ import tcxmlplugin.TcXmlPluginController;
 import tcxmlplugin.composite.AStepContainer;
 import tcxmlplugin.composite.StepToolBar;
 import tcxmlplugin.composite.StepView;
+import tcxmlplugin.composite.view.FunctionView;
 import tcxmlplugin.composite.view.IfElsecontainer;
 import tcxmlplugin.job.PlayingJob;
 
@@ -155,7 +157,7 @@ public  class StepViewer extends Composite  {
 	
 	
 	
-	//////// sync version of refresh
+	//////// sync version of refresh  called fron display.syncExec
 	
 	public void refreshSizeExpanditemSync(StepViewer origin) {
 		//reset size of current
@@ -557,6 +559,74 @@ public void removeBreakpoint() {
 public void export(PrintWriter pw) throws TcXmlException {
 	view.export(pw);
 	
+}
+
+
+/**
+ * 
+ * 
+ * 
+ * @return the top parent container
+ * 
+ * can be actionView , LibraryView , RunLogicViewer
+ */
+
+
+
+public TopStepContainer getTopContainer() {
+	TopStepContainer currentTopStep = null;
+	
+	Control currentControl = this;
+	for (;;) {
+		currentControl = currentControl.getParent();
+		  if (currentControl instanceof TopStepContainer) {
+			  break;				
+		}
+		  
+	}
+		  currentTopStep = (TopStepContainer) currentControl;	
+	
+
+		  
+		  
+		  return currentTopStep ;
+}
+/**
+ *  find the function view that conatins the stepviewer ( case of library 
+ *  
+ *  
+ *    
+ * 
+ * 
+ * 
+ * 
+ * @return the containing functionViewer or null 
+ */
+
+public FunctionView getFunctionViewContainer() {
+	FunctionView ret = null;
+	  Control temp = this;
+		for (;;) {
+			temp = temp.getParent();
+			if( temp instanceof StepViewer ) {
+			
+				  StepView theview = ((StepViewer)temp ) .getViewer();
+				  if (theview instanceof FunctionView) {
+					  ret = (FunctionView)theview;
+					  break;				
+				}
+		
+				
+				
+				
+			}
+
+				
+
+			
+		}
+	
+return ret;	
 }
 
 
