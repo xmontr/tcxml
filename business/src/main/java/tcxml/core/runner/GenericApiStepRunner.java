@@ -3,6 +3,7 @@ package tcxml.core.runner;
 import javax.json.JsonObject;
 
 import tcxml.core.ExecutionContext;
+import tcxml.core.JsonObjectWrapper;
 import tcxml.core.PlayingContext;
 import tcxml.core.StepRunner;
 import tcxml.core.TcXmlController;
@@ -131,7 +132,8 @@ public class GenericApiStepRunner extends StepRunner {
 		
 		//get the data value
 		JsonObject value = ret.getJsonObject("data");
-		tcXmlController.addToCurrentJScontext(ctx,variable,value);
+		JsonObjectWrapper jsob = new JsonObjectWrapper(value);
+		tcXmlController.addToCurrentJScontext(ctx,variable,jsob);
 		
 		
 		
