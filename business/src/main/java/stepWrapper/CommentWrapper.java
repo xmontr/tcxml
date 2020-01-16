@@ -21,6 +21,7 @@ public class CommentWrapper extends AbstractStepWrapper {
 	public String getTitle() {
 		StringBuffer sb =new StringBuffer();
 		String txt = step.getComment();
+		if(txt == null) {txt = "Insert your comment here";}
 		if(txt.length() > 10) {
 			sb.append(txt.substring(0, 10));
 			sb.append(" ... ");

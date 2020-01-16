@@ -98,7 +98,7 @@ public class LrAPI   {
 	}
 	
 	
-	public JsonObject vtcPopCells( String vtsname, String variable) throws TcXmlException {
+	public JsonObjectWrapper vtcPopCells( String vtsname, String variable) throws TcXmlException {
 		
 		
 		JsonObject ret = controller.vtsPopCells(vtsname, variable);
@@ -107,13 +107,14 @@ public class LrAPI   {
 		
 		//get the data value
 		JsonObject value = ret.getJsonObject("data");
-		controller.addToCurrentJScontext(ctx,variable,value);
+		JsonObjectWrapper jsob = new JsonObjectWrapper(value);
+		//controller.addToCurrentJScontext(ctx,variable,jsob);
 		
-		return value;
+		return jsob;
 	}
 	
 	
-	public JsonObject vtcPopCells( String vtsname) throws TcXmlException {
+	public JsonObjectWrapper vtcPopCells( String vtsname) throws TcXmlException {
 		
 		return vtcPopCells(vtsname, "data");
 		

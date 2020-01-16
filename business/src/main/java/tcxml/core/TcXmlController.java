@@ -1371,7 +1371,7 @@ public void openBrowser (String type, String driverPath) throws TcXmlException {
 	caps.setCapability(ChromeOptions.CAPABILITY, options);
 	
 	options.addArguments("disable-infobars");
-	options.addArguments("start-maximized");
+	
 	if(highlighterExtension == null) {
 		highlighterExtension = generatePathToLocalTemporaryResource("jqueryHighlighter.crx").toFile();
 	}
@@ -1393,6 +1393,7 @@ public void openBrowser (String type, String driverPath) throws TcXmlException {
 	driver = new ChromeDriver(options);
 	// ensure at least a page is loaded ( required by utils.clearcache )
 	driver.get("chrome://version/");
+	 driver.manage().window().maximize();
 	}
 	catch (Exception e) {
 		throw new TcXmlException("failure opening browser", e);
@@ -1882,7 +1883,7 @@ private JSObject createJsObject() throws TcXmlException  {
 private ScriptContext buildEvalOnObjectJavascriptContext(ExecutionContext curentexeccontext,
 		 WebElement element) throws TcXmlException {
 	ScriptContext context = curentexeccontext.getJsContext(); 	 
-		   JSObject thisobject = new WebElementWrapper(element);
+		   JSObject thisobject = new WebElementWrapper(element,this);
 		   context.setAttribute("object", thisobject, ScriptContext.GLOBAL_SCOPE);			
 		
 	return context;
@@ -2234,7 +2235,7 @@ public JsonObject vtsPopCells(String vtsname, String variable) throws TcXmlExcep
 
 
 
-public void addToCurrentJScontext(PlayingContext ctx, String variable, JsonObject value) {
+public void addToCurrentJScontext(PlayingContext ctx, String variable, JsonObjectWrapper value) {
 	if(variable == null || variable.isEmpty()) {
 	variable = "data" ;	
 		

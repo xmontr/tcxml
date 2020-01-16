@@ -18,10 +18,12 @@ public class WebElementWrapper extends AbstractJSObject {
 	
 	private WebElement theElement;
 	private String functioname;
+	private TcXmlController controller;
 
-	public WebElementWrapper(WebElement theElement) {
+	public WebElementWrapper(WebElement theElement, TcXmlController controller) {
 		super();
 		this.theElement = theElement;
+		this.controller=controller;
 	}
 	
 	
@@ -33,7 +35,7 @@ public class WebElementWrapper extends AbstractJSObject {
 		Object ret = theElement.getAttribute(name);
 		
 		if( ret == null) {// no attribut maybe a function is called
-			ret = new MirrorFunction();
+			ret = new MirrorFunction(controller);
 			saveFunctionName(name);
 			
 			
@@ -54,11 +56,7 @@ public class WebElementWrapper extends AbstractJSObject {
 
 
 
-	@Override
-	public Object call(Object thiz, Object... args) {
-		// TODO Auto-generated method stub
-		return super.call(thiz, args);
-	}
+
 	
 	@Override
 	public boolean isArray() {

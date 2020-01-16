@@ -7,6 +7,7 @@ import java.util.List;
 import javax.json.JsonObject;
 
 import tcxml.core.ExecutionContext;
+import tcxml.core.JsonObjectWrapper;
 import tcxml.core.PlayingContext;
 import tcxml.core.TcXmlController;
 import tcxml.core.TcXmlException;
@@ -221,7 +222,9 @@ private PlayingContext runTCMethod(String method, PlayingContext ctx) throws TcX
 		
 		//get the data value
 		JsonObject value = ret.getJsonObject("data");
-		controller.addToCurrentJScontext(ctx,variable,value);
+		JsonObjectWrapper jsob = new JsonObjectWrapper(value);
+		//controller.addToCurrentJScontext(ctx,variable,value);
+		controller.addToCurrentJScontext(ctx,variable,jsob);
 		
 		
 		
