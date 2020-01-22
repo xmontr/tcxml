@@ -2,53 +2,43 @@ package tcxmlplugin.composite.view;
 
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
-import java.beans.PropertyChangeSupport;
 import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import org.eclipse.core.databinding.DataBindingContext;
+import org.eclipse.core.databinding.beans.BeanProperties;
+import org.eclipse.core.databinding.observable.list.IObservableList;
+import org.eclipse.core.databinding.observable.value.IObservableValue;
+import org.eclipse.jface.databinding.swt.WidgetProperties;
+import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.MouseAdapter;
+import org.eclipse.swt.events.MouseEvent;
+import org.eclipse.swt.layout.FillLayout;
+import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
+import org.eclipse.swt.widgets.Button;
+import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Group;
+import org.eclipse.swt.widgets.Label;
+import org.eclipse.swt.widgets.Text;
+import org.eclipse.wb.swt.ResourceManager;
+import org.eclipse.wb.swt.SWTResourceManager;
 
+import stepWrapper.AbstractStepWrapper;
+import stepWrapper.TestObjectWrapper;
 import tcxml.core.PlayingContext;
-import tcxml.core.TcXmlController;
 import tcxml.core.TcXmlException;
-import tcxml.core.export.TestObjectExporter;
-import tcxml.core.runner.TestObjectRunner;
+import tcxml.model.AbstractModel;
+import tcxml.model.ArgModel;
 import tcxml.model.Step;
 import tcxml.model.TestObject;
-import tcxml.model.TruLibrary;
 import tcxmlplugin.TcXmlPluginController;
 import tcxmlplugin.composite.StepView;
 import tcxmlplugin.composite.view.arguments.ArgumentViewFactory;
 import tcxmlplugin.composite.view.arguments.StepArgument;
-import tcxml.model.AbstractModel;
-import tcxml.model.ArgModel;
-
-import org.eclipse.swt.widgets.Label;
-import org.eclipse.swt.SWT;
-import org.eclipse.swt.widgets.Combo;
-import org.eclipse.swt.layout.FillLayout;
-import org.eclipse.swt.layout.GridData;
-import org.eclipse.swt.widgets.Text;
-import org.eclipse.core.databinding.DataBindingContext;
-import org.eclipse.core.databinding.observable.list.IObservableList;
-import org.eclipse.jface.databinding.swt.WidgetProperties;
-import org.eclipse.core.databinding.beans.BeanProperties;
-import org.eclipse.core.databinding.observable.value.IObservableValue;
-import org.eclipse.wb.swt.SWTResourceManager;
-
-import stepWrapper.AbstractStepWrapper;
-import stepWrapper.ForWrapper;
-import stepWrapper.TestObjectWrapper;
-
-import org.eclipse.swt.graphics.Point;
-import org.eclipse.swt.widgets.Button;
-import org.eclipse.wb.swt.ResourceManager;
-import org.eclipse.swt.events.MouseAdapter;
-import org.eclipse.swt.events.MouseEvent;
 
 public class TestObjectView extends StepView implements PropertyChangeListener {
 	private DataBindingContext m_bindingContext;

@@ -2,11 +2,14 @@ package stepWrapper;
 
 import java.io.PrintWriter;
 import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 
 import tcxml.core.PlayingContext;
 import tcxml.core.TcXmlController;
 import tcxml.core.TcXmlException;
 import tcxml.model.ArgModel;
+import tcxml.model.ListArgModel;
 import tcxml.model.Step;
 import tcxml.model.TruLibrary;
 
@@ -27,9 +30,14 @@ public class CallActionWrapper extends AbstractStepWrapper {
 	@Override
 	public ArrayList<ArgModel> getDefaultArguments() throws TcXmlException {
 		ArrayList<ArgModel> ret = new ArrayList<ArgModel>();
-		ArgModel arg = new ArgModel("Action Name");
-		arg.setValue("");
-		arg.setIsJavascript(false);
+		
+		Map<String, Step> actionmap = controller.getActionMap();
+		List<String> allActions = new ArrayList<String>(actionmap.keySet()) ;
+	
+
+		ArgModel arg = new ListArgModel("Action Name", allActions);
+		arg.setValue("");		
+
 		ret.add(arg);
 		
 		return ret ;

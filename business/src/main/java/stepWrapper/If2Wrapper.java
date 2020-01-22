@@ -236,7 +236,7 @@ for (Step thestep : firstchild.getStep()) {
 	
 		
 		
-	//HashMap<String, ArgModel> amap = controller.getArguments(model);
+	
 	 ArgModel[] lia = argumentMap.values().toArray(new  ArgModel[argumentMap.size()]);
 		String argjs = controller.generateJSobject(lia);
 	

@@ -12,7 +12,7 @@ import tcxml.core.PlayingContext;
 import tcxml.core.TcXmlController;
 import tcxml.core.TcXmlException;
 import tcxml.core.UtilsAPI;
-import tcxml.core.runner.GenericApiStepRunner;
+
 import tcxml.model.ArgModel;
 import tcxml.model.Step;
 import tcxml.model.TruLibrary;
@@ -319,7 +319,7 @@ controller.vtsConnect(vtsname, sname, sport);
 	}
 	
 	private String exportMethod(String method) throws TcXmlException {
-		//HashMap<String, ArgModel> amap = tcXmlController.getArguments(step);
+		
 		 ArgModel[] lia = argumentMap.values().toArray(new  ArgModel[argumentMap.size()]);
 			String argjs = controller.generateJSobject(lia);
 		
@@ -375,7 +375,7 @@ controller.vtsConnect(vtsname, sname, sport);
 	private Object exportVTSMethod(String method) throws TcXmlException {
 		
 		
-		//HashMap<String, ArgModel> amap = tcXmlController.getArguments(step);
+		
 		 ArgModel[] lia = argumentMap.values().toArray(new  ArgModel[argumentMap.size()]);
 			String argjs = controller.generateJSobject(lia);
 		

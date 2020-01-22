@@ -42,7 +42,7 @@ public class ArgModel extends AbstractModel{
 
 
 	public String getName() {
-		return name;
+		return this.name;
 	}
 
 

@@ -20,6 +20,8 @@ import tcxmlplugin.composite.TcViewer;
 import tcxmlplugin.composite.stepViewer.StepContainer;
 import tcxmlplugin.composite.stepViewer.StepViewer;
 import tcxml.model.ActionsModel;
+import tcxml.model.ArgModel;
+import tcxml.model.ListArgModel;
 
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Label;
@@ -61,8 +63,8 @@ public class CallActionView extends StepView {
 		lblAction.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
 		lblAction.setText("action");
 		
-		comboActions = new Combo(this, SWT.NONE);
-		comboActions.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
+	//	comboActions = new Combo(this, SWT.NONE);
+	//	comboActions.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		
 		
 		
@@ -82,20 +84,30 @@ public void populate(AbstractStepWrapper stepWrapper2) throws TcXmlException {
 		
 	}
 	
-	Step model = stepWrapper2.getModel() ;
+	
+	ListArgModel ar = (ListArgModel) stepWrapper2.getArgumentMap().get("Action Name");
+	ListInputView lin = new ListInputView(this, getStyle());
+	lin.setArgmodel(ar);
+	lin.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 	
 	
-	 Map<String, Step> actionmap = controller.getActionMap();
-	//build the actions model
-	 List<String> allActions =    new ArrayList<String>(actionmap.keySet())    ;
-	 actionmodel.setAllActions(allActions);
-	 m_bindingContext = initDataBindings();
+	///////////// old version
 	
-	// populate argument
-	
-	String selectedAction = controller.readStingArgumentByName(model.getArguments(), "Action Name");
-	
-	actionmodel.setActionSelected(selectedAction);
+		/*
+		 * Step model = stepWrapper2.getModel() ;
+		 * 
+		 * 
+		 * Map<String, Step> actionmap = controller.getActionMap(); //build the actions
+		 * model List<String> allActions = new ArrayList<String>(actionmap.keySet()) ;
+		 * actionmodel.setAllActions(allActions); m_bindingContext = initDataBindings();
+		 * 
+		 * // populate argument
+		 * 
+		 * String selectedAction =
+		 * controller.readStingArgumentByName(model.getArguments(), "Action Name");
+		 * 
+		 * actionmodel.setActionSelected(selectedAction);
+		 */
 	
 
 }

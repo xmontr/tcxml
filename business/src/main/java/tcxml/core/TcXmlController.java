@@ -318,12 +318,12 @@ public class TcXmlController {
 	 * 
 	 * 
 	 * @param step the step
-	 * @param def the default parameter ( parameter with empty values are note stored )
+	 * @param def the default parameter ( parameter with empty values are note stored ) and list of value for listargmodel
 	 * @return
 	 * @throws TcXmlException
 	 */
 	
-	public  HashMap<String, ArgModel> getArguments(Step step , List<ArgModel> def) throws TcXmlException{
+	private  HashMap<String, ArgModel> getArguments(Step step , List<ArgModel> def) throws TcXmlException{
 		
 	String src = step.getArguments();			
 		HashMap<String, ArgModel> ret = new HashMap<String, ArgModel>() ;
@@ -398,7 +398,9 @@ for (ArgModel val : def) {
 	
 	private  void addArgument(HashMap<String, ArgModel> li , String src, String name  ) throws TcXmlException {
 		
-		JsonObject arg = this.readJsonObject(src);		
+		JsonObject arg = this.readJsonObject(src);
+		
+		
 		ArgModel p = new ArgModel(name);				
 		p.populateFromJson(arg.getJsonObject(name));
 		li.put( name,p);
@@ -2521,7 +2523,7 @@ public ActionWrapper getCalledAction(String actionName) throws TcXmlException {
 public HashMap<String, Transaction> manageStartStopTransaction(AbstractStepWrapper wrapper, ProgressType... progresslist) throws TcXmlException {
 	HashMap<String,Transaction> res = new HashMap<String,Transaction>();
 	
-	String stepid = wrapper.getModel().getStepId();
+	String stepid = wrapper.getStepId();
 	
 	for (ProgressType progress : progresslist) {
 		Transaction startTransaction = getVertexForStepid(stepid,"start",progress);

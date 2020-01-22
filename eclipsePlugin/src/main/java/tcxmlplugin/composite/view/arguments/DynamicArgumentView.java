@@ -13,6 +13,8 @@ import org.eclipse.swt.widgets.Label;
 import tcxml.core.TcXmlException;
 import tcxml.model.ArgModel;
 import tcxml.model.CallFunctionAttribut;
+import tcxml.model.ListArgModel;
+import tcxmlplugin.composite.view.ListInputView;
 import tcxmlplugin.composite.view.TextInputView;
 
 public class DynamicArgumentView extends StepArgument{
@@ -48,12 +50,26 @@ public class DynamicArgumentView extends StepArgument{
 	Label newName = new Label(this, SWT.NONE);
 	newName.setText(att.getName());
 	newName.setLayoutData(new GridData(SWT.CENTER, SWT.CENTER, true, false, 1, 1));
+
 	
-	TextInputView tinpu = new TextInputView(this,SWT.NONE);
+	if(att instanceof ListArgModel ) { // list value
+		
+		ListInputView linput = new ListInputView(this,SWT.NONE);
+		linput.setListValue(((ListArgModel)att).getValueList() );
+		linput.setValue(att.getValue());
+		
+		
+	}else { // single value
+		
+		TextInputView tinpu = new TextInputView(this,SWT.NONE);
 		tinpu.SetArgModel(att);
 	
 
 	tinpu.setLayoutData(new GridData(SWT.CENTER, SWT.CENTER, true, false, 1, 1));
+		
+		
+	}
+
 	
 		
 	}

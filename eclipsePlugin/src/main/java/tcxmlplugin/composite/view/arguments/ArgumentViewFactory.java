@@ -23,7 +23,8 @@ public class ArgumentViewFactory {
 	public static DynamicArgumentView getArgumentViewForStep(Step step,StepView view)  throws TcXmlException {
 	
 	AbstractStepWrapper wrapper = StepWrapperFactory.getWrapper(step, view.getController(), view.getLibrary())	;
-	HashMap<String, ArgModel> liar = view.getController().getArguments(step,wrapper.getDefaultArguments());
+	HashMap<String, ArgModel> liar =wrapper.getArgumentMap();
+	//HashMap<String, ArgModel> liar = view.getController().getArguments(step,wrapper.getDefaultArguments());
 	DynamicArgumentView di = new DynamicArgumentView(view, view.getStyle(), liar);
 	return di ;	
 		
@@ -45,7 +46,8 @@ public class ArgumentViewFactory {
 
 	public static StepArgument getArgumentForFUnction(String functName, CallFunctionView callFunctionView)  throws TcXmlException {
 		AbstractStepWrapper wrapper = StepWrapperFactory.getWrapper(callFunctionView.getModel(), callFunctionView.getController(), callFunctionView.getLibrary())	;
-		HashMap<String, ArgModel> ar = callFunctionView.getController().getArguments(callFunctionView.getModel(),wrapper.getDefaultArguments());
+		HashMap<String, ArgModel> ar =wrapper.getArgumentMap();
+		//HashMap<String, ArgModel> ar = callFunctionView.getController().getArguments(callFunctionView.getModel(),wrapper.getDefaultArguments());
 		CallFunctionArg ret = new CallFunctionArg(callFunctionView, callFunctionView.getStyle(), ar );
 
 		return ret;

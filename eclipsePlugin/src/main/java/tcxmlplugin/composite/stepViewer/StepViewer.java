@@ -7,7 +7,7 @@ import org.eclipse.swt.widgets.ExpandBar;
 import org.eclipse.swt.widgets.ExpandItem;
 
 import tcxml.core.PlayingContext;
-import tcxml.core.StepRunner;
+
 import tcxml.core.TcXmlController;
 import tcxml.core.TcXmlException;
 import tcxml.model.Step;
@@ -58,7 +58,7 @@ public  class StepViewer extends Composite  {
 
 
 	protected StepView view;
-	protected StepRunner runner ;
+	//protected StepRunner runner ;
 	private StepToolBar stepToolBar;
 	private Composite contentView;
 	private Label horizontalLabel;
@@ -531,9 +531,9 @@ setMenu(buildMenu());
 
 
 
-		public StepRunner getRunner() {
-			return runner;
-		}
+	/*
+	 * public StepRunner getRunner() { return runner; }
+	 */
 		
 		
 		public void setBreakPoint() {

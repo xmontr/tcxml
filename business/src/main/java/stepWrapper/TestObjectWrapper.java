@@ -31,8 +31,9 @@ import tcxml.core.PlayingContext;
 import tcxml.core.StepStat;
 import tcxml.core.TcXmlController;
 import tcxml.core.TcXmlException;
-import tcxml.core.runner.TestObjectRunner;
+
 import tcxml.model.ArgModel;
+import tcxml.model.ListArgModel;
 import tcxml.model.Step;
 import tcxml.model.TestObject;
 import tcxml.model.TruLibrary;
@@ -152,9 +153,14 @@ ret.add(mo);
 mo = new ArgModel("Shift Key");
 mo.setValue("");
 ret.add(mo);
+ArrayList<String>val = new ArrayList<String>();
+val.add("left");
+val.add("middle");
+val.add("right");
 
-mo = new ArgModel("Button");
+mo = new ListArgModel("Button", val);
 mo.setValue("left");
+
 ret.add(mo);
 
 mo = new ArgModel("X Coordinate");
