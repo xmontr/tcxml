@@ -34,6 +34,7 @@ import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
 import java.io.PrintWriter;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Vector;
 
@@ -216,68 +217,41 @@ public static class CallFunctionViewModel {
 			throw new TcXmlException("For view can only be populated by from a for wrapper ", new IllegalArgumentException());
 			
 		}
-
 		
-		ArrayList<String> li = new ArrayList<String>();
+		CallFunctionWrapper wr = (CallFunctionWrapper)stepWrapper2;
 		
-		
-		Step model = stepWrapper.getModel();
-		
-		
-		
-		callfunctmodel.setSelectedFunction(model.getFuncName());
-		callfunctmodel.setSelectedLib(model.getLibName());
-		
-
-		li.addAll(controller.getLibraries().keySet());
-		callfunctmodel.setAllLibs(li);
-		
-		updateFunctionList(model.getLibName());
-		
-	
-		
-			
+		String selectedfunction = wr.getFunctionName();
+		String selectedlib = wr.getLibName();		
+		ArrayList<String> li = new ArrayList<String>();	
+		li.addAll(wr.getAllLibraryName());
 		
 		
-		
+		callfunctmodel.setSelectedFunction(selectedfunction);
+		callfunctmodel.setSelectedLib(selectedlib);		
+		callfunctmodel.setAllLibs(li);		
+		updateFunctionList(selectedlib);
 		
 	}
 
 
-
-
-
-
-
-
-
-
 	private void updateFunctionList(String libName) {
-		Step model = stepWrapper.getModel();
+		CallFunctionWrapper wr = (CallFunctionWrapper)stepWrapper;
 		try {
 			
-			List<String> listname = controller.getFunctionsNameForLib(model.getLibName());
+			List<String> listname = wr.getFunctionInLibrary(wr.getLibName());
 			
 			callfunctmodel.setAllFunctions(listname);
 			
 		} catch (TcXmlException e) {
-			TcXmlPluginController.getInstance().error("fail to load functions for library" + model.getLibName() , e);
+			TcXmlPluginController.getInstance().error("fail to load functions for library" + wr.getLibName() , e);
 		
 		}
 		
 	}
 
-
-
-
-
-
-
-
-
-
 	@Override
 	public PlayingContext doplay(PlayingContext ctx) throws TcXmlException {
+		saveModel();
 		Step model = stepWrapper.getModel();
 		
 		PlayingContext ret = ctx;
@@ -454,28 +428,35 @@ public static class CallFunctionViewModel {
 					sb2.toString(),
 					objarg.toString()					
 					);
-		
-		
-		
-		
-		
-		/*
-		 * sb2.append(callfunctmodel.selectedLib).append(".").append(callfunctmodel.
-		 * selectedFunction).append("("); //add param of function call CallFunctionArg
-		 * temp = (CallFunctionArg)theArgument; List<CallFunctionAttribut> li =
-		 * temp.getCallArguments() ;
-		 * 
-		 * 
-		 * 
-		 * sb2.append(controller.generateJsFunctArgument(li)); sb2.append(");");
-		 */
 		pw.println(ret.toString());	
 	}
 
 
 
+	@Override
+	public void saveModel() throws TcXmlException {
+		
+		CallFunctionWrapper wr = (CallFunctionWrapper)stepWrapper;
+		
+		wr.saveFunction(callfunctmodel.getSelectedLib(), callfunctmodel.getSelectedFunction());
+		
+// save argument of the function
+		HashMap<String, ArgModel> argval = new HashMap<String, ArgModel>();
+		List<CallFunctionAttribut> listArguments = ((CallFunctionArg)theArgument).getCallArguments();
+		for (CallFunctionAttribut callFunctionAttribut : listArguments) {
+				String name = callFunctionAttribut.getName();
+			ArgModel mo = new ArgModel(name);
+			mo.setValue(callFunctionAttribut.getValue());
+			argval.put(name, mo);
+			
+		}
+		
+	
 
-
+		wr.saveArguments(argval);
+	
+		
+	}
 
 
 

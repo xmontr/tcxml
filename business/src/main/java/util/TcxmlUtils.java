@@ -31,6 +31,7 @@ import org.xml.sax.SAXException;
 import tcxml.core.TcXmlException;
 import tcxml.core.parameter.StepParameter;
 import tcxml.core.parameter.TableParameter;
+import tcxml.model.ListArgModel;
 
 public class TcxmlUtils {
 	
@@ -227,6 +228,19 @@ throw new TcXmlException("fail to add name space to file" + source.getAbsolutePa
 
 	        return str.substring(0, pos);
 	    }
+	   
+	   
+	   public static ListArgModel getTruefalseListArgModel(String name ,String defaultvalue) {
+		   ArrayList<String>val = new ArrayList<String>();
+		   val.add("true");
+		   val.add("false");
+		   ListArgModel mo = new ListArgModel(name, val);  
+		 mo.setValue(defaultvalue);
+		  return mo;
+		   
+		   
+	   }
+	   
 	
 
 }

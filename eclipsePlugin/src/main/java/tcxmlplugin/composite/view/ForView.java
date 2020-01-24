@@ -165,6 +165,8 @@ public class ForView extends StepView  implements StepContainer, ExpandListener 
 
 	@Override
 	public PlayingContext doplay(PlayingContext ctx) throws TcXmlException {
+		
+		saveModel();
 		if(stepWrapper.isDisabled() )  {
 			controller.getLog().info("step" + getTitle() + " is disabled - don't play it");
 			return ctx ;
@@ -315,6 +317,20 @@ conditionString= conditionTxt.getArgModel().getValue();
 		bar.layout();
 		
 	
+	}
+	
+	@Override
+	public void saveModel() throws TcXmlException {
+		
+		HashMap<String, ArgModel> argval = new HashMap<String, ArgModel>();
+		
+		argval.put("Init", initText.getArgModel());
+		argval.put("Condition", conditionTxt.getArgModel());
+		argval.put("Increment", incrementTxt.getArgModel());
+		
+		
+		stepWrapper.saveArguments(argval);
+		
 	}
 	
 

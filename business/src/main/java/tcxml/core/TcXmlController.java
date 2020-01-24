@@ -28,8 +28,10 @@ import java.util.Objects;
 import java.util.Properties;
 import java.util.Set;
 import java.util.UUID;
+import java.util.logging.FileHandler;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.logging.SimpleFormatter;
 import java.util.stream.Collectors;
 
 import javax.json.Json;
@@ -146,6 +148,7 @@ public class TcXmlController {
 	 * 
 	 * 
 	 *  path of the directory containg all files of the script
+	 *  set when loading script
 	 */
     
     private File path ;
@@ -694,6 +697,7 @@ if(parameterFile.exists()) {
 
 
 setPath(file);
+configureLogger();
 	
 }
 public String getScriptDir() {
@@ -1203,11 +1207,11 @@ public Object evaluateJS(String code, ExecutionContext ctx) throws TcXmlExceptio
 	   ScriptContext context = ctx.getJsContext();
 	   
 	   log.info(" evaluationg javascript:\n " + code);
-	   log.info(" context id is" + context);
+	   log.fine(" context id is" + context);
 	try {
 		Object ret = engine.eval(code, context);
 		
-		log.info("return for evaluateJS is " + ret);
+		log.fine("return for evaluateJS is " + ret);
 		// save global variable in the global context 
 		Bindings nashorn_global = (Bindings) context.getAttribute("nashorn.global");
 		context.getBindings( ScriptContext.ENGINE_SCOPE ).putAll(nashorn_global);
@@ -1249,10 +1253,10 @@ public ScriptContext buildCallFunctionContext(ExecutionContext ec) throws TcXmlE
 
 		      
 				
-				log.info("jscontext " + context + " adding entry to FuncArgs: "+name + " value is " + value +  " for execution context " + ec.getName());
+				log.fine("jscontext " + context + " adding entry to FuncArgs: "+name + " value is " + value +  " for execution context " + ec.getName());
 		 	}
 		 
-		 log.info("jscontext " + context + " adding new  FuncArgs into context : " + funcrgsobj );
+		 log.fine("jscontext " + context + " adding new  FuncArgs into context : " + funcrgsobj );
 		 
     context.setAttribute("FuncArgs", funcrgsobj, ScriptContext.ENGINE_SCOPE);		 
 		 return context;
@@ -1545,7 +1549,7 @@ try {
 		
 		 highlight(finded);
 		 if(clear) {
-			 getLog().info("clear input before typing text " + text);
+			 getLog().fine("clear input before typing text " + text);
 			 this.identifyElement(to,ctx).clear();
 			 
 		 }
@@ -1794,11 +1798,11 @@ WebElement evalJavascriptForIdentification(String identjs, ExecutionContext ctx)
 	ScriptEngine engine = getJSengine();
 	
 	   log.info(" evaluationg javascript for identification :\n " + identjs);
-	   log.info(" context id is" + identificationcontext);
+	   log.fine(" context id is" + identificationcontext);
 	   try {
 		   WebElement ret =(WebElement) engine.eval(identjs, identificationcontext);
 			
-			log.info("return for evaluateJS is " + ret);
+			log.fine("return for evaluateJS is " + ret);
 
 			
 			return ret;
@@ -1823,7 +1827,7 @@ public void evalJavascriptOnObject(String identjs,WebElement element, ExecutionC
 	ScriptEngine engine = getJSengine();
 	
 	   log.info(" evaluationg javascript for evaljsonobject :\n " + identjs);
-	   log.info(" context id is" + identificationcontext);
+	   log.fine(" context id is" + identificationcontext);
 	   
 	   try {
 		    engine.eval(identjs, identificationcontext);
@@ -1922,7 +1926,7 @@ private ScriptContext buildIdentificationJavascriptContext(ExecutionContext cure
 			for (String key : keysengine) {
 				Object var = bdengine.get(key);
 				 argscontext.setMember(key, var);
-				 log.info("adding entry to ArgsContext: from engine_scope  "+key + " value is :" + var);					
+				 log.fine("adding entry to ArgsContext: from engine_scope  "+key + " value is :" + var);					
 			
 				
 			
@@ -1937,7 +1941,7 @@ Bindings bdglo = curentexeccontext.getJsContext().getBindings( ScriptContext.GLO
 			for (String key : keysglo) {
 				Object var = bdglo.get(key);
 				 argscontext.setMember(key, var);
-				 log.info("adding entry to ArgsContext: from global scope "+key + " value is :" + var);					
+				 log.fine("adding entry to ArgsContext: from global scope "+key + " value is :" + var);					
 			
 				
 			
@@ -1953,7 +1957,7 @@ Bindings bdglo = curentexeccontext.getJsContext().getBindings( ScriptContext.GLO
 			Object FuncArgs = bd.get("FuncArgs");
 		
 			curentexeccontext.getJsContext().setAttribute("FuncArgs", FuncArgs, ScriptContext.ENGINE_SCOPE); 
-			 log.info("copy funcargs "+FuncArgs + " into context: " + curentexeccontext.getJsContext() );
+			 log.fine("copy funcargs "+FuncArgs + " into context: " + curentexeccontext.getJsContext() );
 	 
 	return curentexeccontext.getJsContext();
 }
@@ -2623,6 +2627,43 @@ public String getSubtitle(AbstractStepWrapper step) throws TcXmlException {
 	 
 	 log.info(" registering a new dynamic parameter with name " + name + " and value:" + value);
 	 parameters.put(name, dy);
+	 
+	 
+ }
+ 
+ 
+ /***
+  * 
+  *  dynamically configure the logger so that the log file handler write the log file in the path of the script with the 
+  *  expected log level
+ * @throws TcXmlException 
+  * 
+  */
+ 
+ 
+ private void configureLogger() throws TcXmlException {
+	 
+FileHandler fhandler;
+String pattern = this.path.getAbsolutePath() + "/tcxml-%u%g.log" ;
+try {
+	fhandler = new FileHandler(pattern);
+	fhandler.setLevel(Level.ALL);	
+	fhandler.setFormatter(new SimpleFormatter());
+	log.addHandler(fhandler);
+	
+	
+	
+	
+	
+} catch (Exception e) {
+	
+	throw new TcXmlException("failure in logger configuration", e) ;
+	
+
+} 
+
+
+	 
 	 
 	 
  }

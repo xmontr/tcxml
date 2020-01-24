@@ -2,6 +2,7 @@ package stepWrapper;
 
 import java.io.PrintWriter;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import org.openqa.selenium.By;
@@ -18,6 +19,7 @@ import tcxml.core.TcXmlController;
 import tcxml.core.TcXmlException;
 import tcxml.core.runner.MultipleStepWrapperRunner;
 import tcxml.model.ArgModel;
+import tcxml.model.ListArgModel;
 import tcxml.model.Step;
 import tcxml.model.TestObject;
 import tcxml.model.TruLibrary;
@@ -58,9 +60,8 @@ public class If2Wrapper extends AbstractStepWrapper {
 	@Override
 	public ArrayList<ArgModel> getDefaultArguments() throws TcXmlException {
 		ArrayList<ArgModel> ret = new ArrayList<ArgModel>();
-		ArgModel mo = new ArgModel("Exists");
-		
-mo.setValue("true");
+		ArgModel mo = TcxmlUtils.getTruefalseListArgModel("Exists","true");
+
 ret.add(mo);
 
 return ret;
@@ -151,6 +152,25 @@ return ret;
 		
 		
 	}
+	
+	
+	
+	public ListArgModel getExistCondition() {
+		return (ListArgModel) argumentMap.get("Exists");
+		
+	}
+	
+	
+	public void saveExistCondition() throws TcXmlException {
+		
+		 ArgModel co = argumentMap.get("Exists");
+
+			HashMap<String, ArgModel> argval = new HashMap<String, ArgModel>();
+			argval.put("Exists", co);
+			saveArguments(argval);
+		
+	}
+	
 	
 	
 	private void runChildIfSteps(PlayingContext ctx) throws TcXmlException {

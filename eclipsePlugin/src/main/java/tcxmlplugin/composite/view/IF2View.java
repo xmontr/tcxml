@@ -50,7 +50,7 @@ import org.eclipse.wb.swt.SWTResourceManager;
 
 public class IF2View extends StepView  implements StepContainer, ExpandListener{
 	
-	private TextInputView conditionTxt;
+	private ListInputView conditionTxt;
 	
 	private List<StepViewer> stepViwerChildren ;
 	
@@ -105,7 +105,7 @@ public class IF2View extends StepView  implements StepContainer, ExpandListener{
 		Label lblCondition = new Label(grpArguments, SWT.NONE);
 		lblCondition.setText("Exists");
 		
-		conditionTxt = new TextInputView(grpArguments, SWT.NONE);
+		conditionTxt = new ListInputView(grpArguments, SWT.NONE);
 		
 		Group grpSteps = new Group(this, SWT.NONE);
 		grpSteps.setLayout(new FillLayout(SWT.HORIZONTAL));
@@ -233,15 +233,12 @@ public class IF2View extends StepView  implements StepContainer, ExpandListener{
 		//add object to test	
 		theTestObject=if2wrapper.getTestobject();
 		
-		/*
-		 * Step tostep = li.get(0); String referencedob = tostep.getTestObject() ;
-		 * theTestObject = controller.getTestObjectById(referencedob, getLibrary());
-		 */
+	
 	identview = new IdentificationView(grpObject, SWT.NONE, controller);
 	identview.populate(theTestObject);	
 	
 
-conditionTxt.SetArgModel(argumentMap.get("Exists"));
+conditionTxt.setArgmodel(if2wrapper.getExistCondition());
 	
 		// add children		
 		
@@ -277,8 +274,15 @@ conditionTxt.SetArgModel(argumentMap.get("Exists"));
 	
 	}
 	
-	
-	
+	@Override
+	public void saveModel() throws TcXmlException {
+		
+		If2Wrapper wr = (If2Wrapper) stepWrapper;
+		
+	wr.saveExistCondition();
+		
+		
+	}
 	
 	
 
@@ -287,48 +291,6 @@ conditionTxt.SetArgModel(argumentMap.get("Exists"));
 		// TODO Auto-generated method stub
 		return stepViwerChildren;
 	}
-
-
-
-	/*
-	 * private String buildIfString() { // TODO Auto-generated method stub return
-	 * "if(" + theTestObject.getAutoName() + " exists ="
-	 * +argumentMap.get("Exists").getValue() ; }
-	 */
-	
-	
-	
-	/*
-	 * private String exportIfString() throws TcXmlException { StringBuffer ret =
-	 * new StringBuffer();
-	 * 
-	 * //get testobject BoundList<Step> li = model.getStep(); //add object to test
-	 * Step theTestobjectref = li.get(0); String referencedob =
-	 * theTestobjectref.getTestObject() ; TestObject theTestObject =
-	 * controller.getTestObjectById(referencedob, getLibrary());
-	 * 
-	 * 
-	 * 
-	 * 
-	 * 
-	 * //HashMap<String, ArgModel> amap = controller.getArguments(model); ArgModel[]
-	 * lia = argumentMap.values().toArray(new ArgModel[argumentMap.size()]); String
-	 * argjs = controller.generateJSobject(lia);
-	 * 
-	 * 
-	 * 
-	 * 
-	 * 
-	 * String func = "await TC.exist"; String txt =
-	 * TcxmlUtils.formatJavascriptFunction( func, argjs,
-	 * controller.generateJsTestObject(theTestObject) );
-	 * 
-	 * String txt2 = txt.substring(0,txt.length() -2 ); // remove semicolumn
-	 * 
-	 * ret.append("if(" ).append(txt2).append(" ) {\n");
-	 * 
-	 * return ret.toString(); }
-	 */
 
 	@Override
 	public PlayingContext doplay(PlayingContext ctx) throws TcXmlException {
@@ -428,18 +390,7 @@ conditionTxt.SetArgModel(argumentMap.get("Exists"));
 	public void export(PrintWriter pw) throws TcXmlException {
 		
 		stepWrapper.export(pw);
-		/*
-		 * StringBuffer sb = new StringBuffer(); pw.println(" // " + getTitle());
-		 * sb.append( exportIfString() ) ; pw.println(sb); List<StepViewer> list =
-		 * ifcontainer.getChildViewer() ; for (StepViewer stepViewer : list) {
-		 * stepViewer.export(pw); } pw.println("}//fin if " ) ; pw.println(" else { " )
-		 * ;
-		 * 
-		 * List<StepViewer> listelse =elsecontainer.getChildViewer() ; for (StepViewer
-		 * stepViewer : listelse) { stepViewer.export(pw); }
-		 * 
-		 * pw.println("}//fin else " ) ;
-		 */
+
 		
 	}
 	

@@ -109,11 +109,13 @@ public void populate( AbstractStepWrapper stepWrapper2 ) throws TcXmlException {
 		
 	}
 	
-	HashMap<String, ArgModel> argumentMap = stepWrapper2.getArgumentMap();		
+	String codejs = ((EvalJavascriptWrapper)stepWrapper2).getJsCode();
 	
-	ArgModel codeArg = argumentMap.get("Code");
+		
 	
-evaljsmodel.setCode(codeArg.getValue());
+
+	
+evaljsmodel.setCode(codejs);
 	
 	
 m_bindingContext = initDataBindings();	
@@ -121,15 +123,16 @@ m_bindingContext = initDataBindings();
 	
 }
 
+@Override
+public void saveModel() throws TcXmlException {
+	
+	EvalJavascriptWrapper wr = (EvalJavascriptWrapper) stepWrapper;
+	wr.saveJsCode(evaljsmodel.getCode());
+	
+}
 
-	/*
-	 * private String getShortCode() {
-	 * 
-	 * String co = argumentMap.get("Code").getValue(); String ret= co ; int size =
-	 * co.length(); if(size > 30) { StringBuffer sb = new StringBuffer();
-	 * sb.append(co.substring(0, 15)); sb.append("......."); sb.append(co.substring(
-	 * size -15 , size )) ; ret = sb.toString(); } return ret; }
-	 */
+
+
 
 
 
@@ -151,12 +154,7 @@ m_bindingContext = initDataBindings();
 	@Override
 	public PlayingContext  doplay( PlayingContext ctx) throws TcXmlException {
 		
-/*String code = evaljsmodel.getCode();
-controller.evaluateJS(code , ctx.getCurrentExecutionContext());
-controller.getLog().info("after evaljavascript step context is :");
-ctx.getCurrentExecutionContext().dumpJsContext();
-return ctx;*/
-		
+saveModel();		
 		PlayingContext ct = stepWrapper.play(ctx);
 		return ct ;
 		

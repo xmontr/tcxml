@@ -11,6 +11,8 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.layout.GridData;
 
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 import java.util.List;
 
 import org.eclipse.core.databinding.DataBindingContext;
@@ -19,7 +21,7 @@ import org.eclipse.jface.databinding.swt.WidgetProperties;
 import org.eclipse.core.databinding.beans.BeanProperties;
 import org.eclipse.core.databinding.observable.value.IObservableValue;
 
-public class ListInputView extends Composite {
+public class ListInputView extends Composite implements PropertyChangeListener {
 	private DataBindingContext m_bindingContext;
 	
 	
@@ -32,10 +34,14 @@ public class ListInputView extends Composite {
 	public ListArgModel getArgmodel() {
 		return argmodel;
 	}
+	
+	
 	public void setArgmodel(ListArgModel argmodel) {
 		this.argmodel = argmodel;
 		setListValue(argmodel.getValueList());
 		setValue(argmodel.getValue());
+		
+		model.addPropertyChangeListener("actionSelected", this);
 		
 		
 	}
@@ -78,6 +84,16 @@ public class ListInputView extends Composite {
 	
 	public void setValue(String val) {
 		model.setActionSelected(val);
+		
+	}
+
+
+	@Override
+	public void propertyChange(PropertyChangeEvent evt) {
+		if(evt.getPropertyName().equals("actionSelected")) {
+			argmodel.setValue((String) evt.getNewValue());
+			
+		}
 		
 	}
 }

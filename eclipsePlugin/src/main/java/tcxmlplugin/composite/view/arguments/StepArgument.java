@@ -36,5 +36,10 @@ public abstract class StepArgument  extends Composite {
 	}
 
 
+	
+	public HashMap<String, ArgModel> getArguments() {
+		
+		return this.arg;
+	}
 
 }

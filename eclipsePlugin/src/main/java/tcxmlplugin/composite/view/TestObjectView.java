@@ -415,6 +415,12 @@ public class TestObjectView extends StepView implements PropertyChangeListener {
 		
 	}
 
+	@Override
+	public void saveModel() throws TcXmlException {
+		// TODO Auto-generated method stub
+		
+	}
+
 }
 
 

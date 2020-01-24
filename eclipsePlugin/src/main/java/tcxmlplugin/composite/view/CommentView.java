@@ -53,7 +53,9 @@ public class CommentView extends StepView{
 
 	@Override
 	public PlayingContext doplay(PlayingContext ctx) throws TcXmlException {
-		// TODO Auto-generated method stub
+		
+		saveModel();
+		// nothing to do for a comment
 		return ctx;
 	}
 
@@ -74,18 +76,24 @@ public class CommentView extends StepView{
 		if(! (stepWrapper2 instanceof CommentWrapper )) {
 			throw new TcXmlException("comment  view can only be populated by from a comment wrapper ", new IllegalArgumentException());
 			
-		}
+		}		
+		CommentWrapper commentwrapper = (CommentWrapper)stepWrapper2 ;		
 		
-		CommentWrapper commentwrapper = (CommentWrapper)stepWrapper2 ;
-		
-		Step model = commentwrapper.getModel();
-		
-		commentModel.setComment(model.getComment());
+		commentModel.setComment(commentwrapper.getComment());
 	}
 
 	@Override
 	public void export(PrintWriter pw) throws TcXmlException {
+		saveModel();
 stepWrapper.export(pw);
+		
+	}
+	
+	@Override
+	public void saveModel() {
+		
+		CommentWrapper thecomment = (CommentWrapper) stepWrapper ;
+		thecomment.saveComment(commentModel.getComment());
 		
 	}
 

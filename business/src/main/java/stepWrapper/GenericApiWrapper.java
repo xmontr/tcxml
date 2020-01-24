@@ -31,6 +31,34 @@ public class GenericApiWrapper extends AbstractStepWrapper {
 		
 		return( formatTitle(step.getIndex(), sb.toString()) );
 	}
+	
+	
+	public String getCategory() {
+		
+		return step.getCategoryName();
+	}
+	
+	
+	public String getMethod() {
+		
+		return step.getMethodName();
+		
+	}
+	
+	
+	
+	public void SaveCategoryMethod( String category, String method) {
+		
+		step.setCategoryName(category);
+		step.setMethodName(method);
+		
+		
+		
+	}
+	
+	
+	
+	
 
 	@Override
 	public ArrayList<ArgModel> getDefaultArguments()  throws TcXmlException{
@@ -133,7 +161,7 @@ public class GenericApiWrapper extends AbstractStepWrapper {
 			
 		case "IO":
 			
-			controller.getLog().info(" ****************************** warning not implemented IO ");	
+			controller.getLog().warning(" ****************************** warning not implemented IO ");	
 				
 				break;
 		

@@ -46,6 +46,9 @@ public class GenericAPIStepView extends StepView implements PropertyChangeListen
 	private Group argGroup;
 	private Combo categorycombo;
 	private Combo methodCombo;
+
+
+	private StepArgument ar;
 	
 
 	public GenericAPIStepView(Composite parent, int style)  {
@@ -91,12 +94,25 @@ public class GenericAPIStepView extends StepView implements PropertyChangeListen
 			throw new TcXmlException("GenericApiWrapper view can only be populated by from a GenericApiWrapper wrapper ", new IllegalArgumentException());
 			
 		}
+		GenericApiWrapper wr = (GenericApiWrapper) stepWrapper2;
 		
 		Step model = stepWrapper2.getModel();
 	
-		genericapimodel.setSelectedCategory(model.getCategoryName());
-		genericapimodel.setMethodName(model.getMethodName()); 
+		genericapimodel.setSelectedCategory(wr.getCategory());
+			
+		genericapimodel.setMethodName(wr.getMethod()); 
 		
+	}
+	
+	
+	@Override
+	public void saveModel() throws TcXmlException {
+		
+		GenericApiWrapper wr = (GenericApiWrapper)stepWrapper ;
+		wr.SaveCategoryMethod(genericapimodel.getSelectedCategory(), genericapimodel.getMethodName());
+		// save argument
+		
+		wr.saveArguments(this.ar.getArguments());
 	}
 	
 	
@@ -122,7 +138,7 @@ public class GenericAPIStepView extends StepView implements PropertyChangeListen
 	@Override
 	public PlayingContext doplay(PlayingContext ctx) throws TcXmlException {
 
-		
+		saveModel();
 		PlayingContext ret	 = stepWrapper.play(ctx);
 	return ret;
 	}
@@ -141,7 +157,6 @@ public class GenericAPIStepView extends StepView implements PropertyChangeListen
 		String prop = evt.getPropertyName();
 		if(prop.equals("methodName")) { //adapt the argument to the selected method
 			String newmethod = (String) evt.getNewValue();
-			StepArgument ar;
 			try {
 				
 				getModel().setMethodName(newmethod);

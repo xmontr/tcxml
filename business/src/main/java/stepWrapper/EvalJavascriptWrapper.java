@@ -2,6 +2,7 @@ package stepWrapper;
 
 import java.io.PrintWriter;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import tcxml.core.PlayingContext;
 import tcxml.core.TcXmlController;
@@ -93,6 +94,24 @@ return ret;
 		
 	
 		pw.println(ret);
+		
+	}
+	
+	
+	public String getJsCode() {
+		
+		return  argumentMap.get("Code").getValue();
+		
+	}
+	
+	
+	public void saveJsCode(String js) throws TcXmlException {
+		
+	 ArgModel co = argumentMap.get("Code");
+	 co.setValue(js);
+		HashMap<String, ArgModel> argval = new HashMap<String, ArgModel>();
+		argval.put("Code", co);
+		saveArguments(argval);
 		
 	}
 	

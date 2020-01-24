@@ -68,5 +68,37 @@ public class CallActionWrapper extends AbstractStepWrapper {
 
 		
 	}
+	
+	/****
+	 * 
+	 * 
+	 * @return the name of the action called
+	 */
+	
+	public ListArgModel getCalledAction() {
+		
+		return (ListArgModel) getArgumentMap().get("Action Name");
+		
+		
+	}
+	
+	/***
+	 * 
+	 *  save the name of the action to be called
+	 * 
+	 * 
+	 * @param calledaction
+	 */
+	
+	
+	
+	public void saveCalledAction(String calledaction) {
+		
+	
+		getArgumentMap().get("Action Name").setValue(calledaction);
+		
+		
+	}
+	
 
 }

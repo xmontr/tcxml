@@ -21,13 +21,22 @@ public class DynamicArgumentView extends StepArgument{
 	
 
 
+
+
+
+
+
 	public DynamicArgumentView(Composite parent, int style,HashMap<String, ArgModel> arg ) throws TcXmlException {
 		super(parent, style,arg);
+	
 		
 		setLayout(new GridLayout(2, false));
 		populate();
 	}
 	
+
+
+
 
 	public void populate() throws TcXmlException {
 		// TODO Auto-generated method stub

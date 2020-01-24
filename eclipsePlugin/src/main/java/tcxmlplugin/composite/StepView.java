@@ -211,6 +211,8 @@ public abstract class StepView extends Composite  implements Playable{
 	
 	public abstract void export(PrintWriter pw) throws TcXmlException  ;
 	
+	public abstract  void saveModel() throws TcXmlException ;
+	
 	
 	
 

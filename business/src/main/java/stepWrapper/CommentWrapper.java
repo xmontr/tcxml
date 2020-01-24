@@ -60,4 +60,16 @@ public class CommentWrapper extends AbstractStepWrapper {
 	}	
 	
 
+	public String getComment() {
+		return step.getComment();
+		
+	}
+	
+	
+	public void saveComment(String comment) {
+	step.setComment(comment);	
+		
+		
+	}
+	
 }

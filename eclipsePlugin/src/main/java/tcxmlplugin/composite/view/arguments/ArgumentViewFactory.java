@@ -24,7 +24,7 @@ public class ArgumentViewFactory {
 	
 	AbstractStepWrapper wrapper = StepWrapperFactory.getWrapper(step, view.getController(), view.getLibrary())	;
 	HashMap<String, ArgModel> liar =wrapper.getArgumentMap();
-	//HashMap<String, ArgModel> liar = view.getController().getArguments(step,wrapper.getDefaultArguments());
+	
 	DynamicArgumentView di = new DynamicArgumentView(view, view.getStyle(), liar);
 	return di ;	
 		

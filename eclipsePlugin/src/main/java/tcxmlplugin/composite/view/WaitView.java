@@ -158,4 +158,11 @@ public class WaitView extends StepView  {
 		//
 		return bindingContext;
 	}
+
+
+	@Override
+	public void saveModel() throws TcXmlException {
+		// TODO Auto-generated method stub
+		
+	}
 }
