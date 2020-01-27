@@ -98,22 +98,14 @@ return ret;
 	}
 	
 	
-	public String getJsCode() {
+	public ArgModel getJsCode() {
 		
-		return  argumentMap.get("Code").getValue();
+		return  argumentMap.get("Code");
 		
 	}
 	
 	
-	public void saveJsCode(String js) throws TcXmlException {
-		
-	 ArgModel co = argumentMap.get("Code");
-	 co.setValue(js);
-		HashMap<String, ArgModel> argval = new HashMap<String, ArgModel>();
-		argval.put("Code", co);
-		saveArguments(argval);
-		
-	}
+
 	
 	
 	

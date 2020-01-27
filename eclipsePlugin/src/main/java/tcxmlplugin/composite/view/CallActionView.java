@@ -51,10 +51,10 @@ public class CallActionView extends StepView {
 
 	}
 	@Override
-	public void saveModel() {
+	public void saveModel() throws TcXmlException {
 
 		CallActionWrapper wr = (CallActionWrapper) stepWrapper;
-		wr.saveCalledAction(actionInput.getValueSelected());
+		wr.saveArguments();
 
 	}
 

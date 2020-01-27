@@ -34,7 +34,7 @@ import org.eclipse.core.databinding.beans.BeanProperties;
 
 public class EvaluateJavascriptView extends StepView{
 	private DataBindingContext m_bindingContext;
-	private Text text;
+	private TextInputView text;
 	
 	
 	private EvaluateJavascriptModel evaljsmodel;
@@ -92,7 +92,7 @@ public class EvaluateJavascriptView extends StepView{
 		codeLabel.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, true, 1, 1));
 		codeLabel.setText("code");
 		
-		text = new Text(this, SWT.BORDER);
+		text = new TextInputView(this, SWT.BORDER);
 		text.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 	
 		
@@ -109,16 +109,17 @@ public void populate( AbstractStepWrapper stepWrapper2 ) throws TcXmlException {
 		
 	}
 	
-	String codejs = ((EvalJavascriptWrapper)stepWrapper2).getJsCode();
+	ArgModel codejs = ((EvalJavascriptWrapper)stepWrapper2).getJsCode();
+	text.SetArgModel(codejs);
 	
 		
 	
 
 	
-evaljsmodel.setCode(codejs);
+
 	
 	
-m_bindingContext = initDataBindings();	
+//m_bindingContext = initDataBindings();	
 	
 	
 }
@@ -127,7 +128,8 @@ m_bindingContext = initDataBindings();
 public void saveModel() throws TcXmlException {
 	
 	EvalJavascriptWrapper wr = (EvalJavascriptWrapper) stepWrapper;
-	wr.saveJsCode(evaljsmodel.getCode());
+	
+	wr.saveArguments();
 	
 }
 
@@ -138,15 +140,7 @@ public void saveModel() throws TcXmlException {
 
 
 
-	protected DataBindingContext initDataBindings() {
-		DataBindingContext bindingContext = new DataBindingContext();
-		//
-		IObservableValue observeTextTextObserveWidget = WidgetProperties.text(SWT.Modify).observe(text);
-		IObservableValue codeEvaljsmodelObserveValue = BeanProperties.value("code").observe(evaljsmodel);
-		bindingContext.bindValue(observeTextTextObserveWidget, codeEvaljsmodelObserveValue, null, null);
-		//
-		return bindingContext;
-	}
+
 
 
 

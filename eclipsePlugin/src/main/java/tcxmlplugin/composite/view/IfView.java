@@ -344,7 +344,7 @@ BoundList<Step> li = ifwrapper.getIfSteps();
 
 	@Override
 	public void saveModel() throws TcXmlException {
-		// TODO Auto-generated method stub
+		stepWrapper.saveArguments();
 		
 	}
 	

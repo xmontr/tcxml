@@ -242,7 +242,16 @@ private Composite createaViewWithsnapshotViewer() {
 	SashForm sf = new SashForm(parent,SWT.HORIZONTAL);		
 	stepContainer = new Composite(sf,sf.getStyle());
 	stepContainer.setLayout(actionlayout);
-	snapshotviewer = new SnapshotViewer(sf, getStyle(),controller);
+	
+	//newversion with palette
+	PaletteAndSnapshotViewer plt = new PaletteAndSnapshotViewer(sf, getStyle());
+	
+	snapshotviewer = new SnapshotViewer(plt.getSnapshot(), getStyle(),controller);
+	
+	DesignPalette palette = new DesignPalette(plt.getPalette(), getStyle());
+	
+	
+	//snapshotviewer = new SnapshotViewer(sf, getStyle(),controller);
 	
 			
 		

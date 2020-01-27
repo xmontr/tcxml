@@ -37,6 +37,7 @@ import tcxml.model.ListArgModel;
 import tcxml.model.Step;
 import tcxml.model.TestObject;
 import tcxml.model.TruLibrary;
+import util.TcxmlUtils;
 
 public class TestObjectWrapper extends AbstractStepWrapper {
 	
@@ -142,16 +143,16 @@ ret.add(mo);
 	
 	private void addClickArgument(ArrayList<ArgModel> ret) {
 		ArgModel mo;
-				mo = new ArgModel("Alt Key");
-		mo.setValue("");
+				mo = TcxmlUtils.getTruefalseListArgModel("Alt Key", "false");	
+
 		ret.add(mo);
 		
-		mo = new ArgModel("Ctrl Key");
-mo.setValue("");
+		mo = TcxmlUtils.getTruefalseListArgModel("Ctrl Key", "false");
+
 ret.add(mo);
 
-mo = new ArgModel("Shift Key");
-mo.setValue("");
+mo =  TcxmlUtils.getTruefalseListArgModel("Shift Key", "false");
+
 ret.add(mo);
 ArrayList<String>val = new ArrayList<String>();
 val.add("left");

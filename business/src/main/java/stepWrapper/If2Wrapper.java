@@ -161,15 +161,7 @@ return ret;
 	}
 	
 	
-	public void saveExistCondition() throws TcXmlException {
-		
-		 ArgModel co = argumentMap.get("Exists");
 
-			HashMap<String, ArgModel> argval = new HashMap<String, ArgModel>();
-			argval.put("Exists", co);
-			saveArguments(argval);
-		
-	}
 	
 	
 	

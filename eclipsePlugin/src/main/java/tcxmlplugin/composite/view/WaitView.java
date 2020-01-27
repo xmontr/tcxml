@@ -18,6 +18,7 @@ import tcxml.core.TcXmlException;
 
 
 import tcxml.model.ArgModel;
+import tcxml.model.ListArgModel;
 import tcxml.model.Step;
 import tcxml.model.TruLibrary;
 import tcxml.model.WaitModel;
@@ -48,7 +49,7 @@ public class WaitView extends StepView  {
 	
 	
 	private TextInputView textInputView;
-	private Combo comboUnit;
+	private ListInputView comboUnit;
 	
 
 	public WaitView(Composite parent, int style )  {
@@ -68,11 +69,10 @@ public class WaitView extends StepView  {
 		UnitLabel.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
 		UnitLabel.setText("Unit");
 		
-		comboUnit = new Combo(this, SWT.NONE);
+		comboUnit = new ListInputView(this, SWT.NONE);
 		comboUnit.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		
-		waitmodel = new WaitModel();
-		m_bindingContext = initDataBindings();
+
 	
 	}
 	
@@ -84,27 +84,17 @@ public class WaitView extends StepView  {
 			throw new TcXmlException("wait view can only be populated by from a waitwrapper", new IllegalArgumentException());
 			
 		}
+		WaitWrapper wr = ((WaitWrapper)stepWrapper2);
 		
-		HashMap<String, ArgModel> argumentMap = stepWrapper2.getArgumentMap();	
+		ArgModel interval = wr.getInterval();
+		ListArgModel unit = wr.getUnit();
 		
-		ArgModel arguinter = argumentMap.get("Interval");
 
-		
-		
-		waitmodel.setInterval(arguinter);
-		
-		
-		ArrayList<String> li = new ArrayList<String>();
-		li.add("Seconds");
-		li.add("MilliSeconds");
-		
-		waitmodel.setAllUnits(li);
 		
 	
-		textInputView.SetArgModel(arguinter);
-		
+		textInputView.SetArgModel(interval);
+		comboUnit.setArgmodel(unit);
 
-			waitmodel.setSelectedunit(argumentMap.get("Unit").getValue());
 			
 		
 
@@ -145,24 +135,12 @@ public class WaitView extends StepView  {
 
 
 
-	protected DataBindingContext initDataBindings() {
-		DataBindingContext bindingContext = new DataBindingContext();
-		//
-		IObservableList itemsComboUnitObserveWidget = WidgetProperties.items().observe(comboUnit);
-		IObservableList allUnitsWaitmodelObserveList = BeanProperties.list("allUnits").observe(waitmodel);
-		bindingContext.bindList(itemsComboUnitObserveWidget, allUnitsWaitmodelObserveList, null, null);
-		//
-		IObservableValue observeSelectionComboUnitObserveWidget = WidgetProperties.selection().observe(comboUnit);
-		IObservableValue selectedunitWaitmodelObserveValue = BeanProperties.value("selectedunit").observe(waitmodel);
-		bindingContext.bindValue(observeSelectionComboUnitObserveWidget, selectedunitWaitmodelObserveValue, null, null);
-		//
-		return bindingContext;
-	}
+
 
 
 	@Override
 	public void saveModel() throws TcXmlException {
-		// TODO Auto-generated method stub
+		stepWrapper.saveArguments();
 		
 	}
 }

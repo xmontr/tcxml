@@ -314,14 +314,14 @@ for (ArgModel val : getDefaultArguments()) {
 	/**
 	 * 
 	 * 
-	 *  save the argument into the wrapped step	
-	 * @param argval
+	 *  save the all the arguments of the wrapper  into the wrapped step	
+	 *
 	 * @throws TcXmlException 
 	 */
 		
-	public void saveArguments(  HashMap<String, ArgModel> argval) throws TcXmlException	{
+	public void saveArguments( ) throws TcXmlException	{
 
-		JsonObject newval = controller.argumentsToJson(argval);
+		JsonObject newval = controller.argumentsToJson(argumentMap);
 		final StringWriter writer = new StringWriter();
 	    final JsonWriter jwriter = Json.createWriter(writer);
 	    jwriter.writeObject(newval);
@@ -336,6 +336,11 @@ for (ArgModel val : getDefaultArguments()) {
 		
 		
 	}
+	
+	
+	
+	
+	
 
 	public String getStepId() {
 		// TODO Auto-generated method stub

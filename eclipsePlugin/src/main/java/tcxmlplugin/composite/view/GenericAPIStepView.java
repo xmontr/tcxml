@@ -112,7 +112,7 @@ public class GenericAPIStepView extends StepView implements PropertyChangeListen
 		wr.SaveCategoryMethod(genericapimodel.getSelectedCategory(), genericapimodel.getMethodName());
 		// save argument
 		
-		wr.saveArguments(this.ar.getArguments());
+		wr.saveArguments();
 	}
 	
 	

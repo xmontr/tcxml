@@ -8,6 +8,7 @@ import tcxml.core.TcXmlController;
 import tcxml.core.TcXmlException;
 
 import tcxml.model.ArgModel;
+import tcxml.model.ListArgModel;
 import tcxml.model.Step;
 import tcxml.model.TruLibrary;
 import util.TcxmlUtils;
@@ -33,13 +34,34 @@ public class WaitWrapper extends AbstractStepWrapper {
 mo.setValue("3");
 ret.add(mo);
 
-
-mo = new ArgModel("Unit");
+ArrayList<String> li = new ArrayList<String>();
+li.add("Seconds");
+li.add("MilliSeconds");
+mo = new ListArgModel("Unit", li);
 mo.setValue("Seconds");
 ret.add(mo);
 
 return ret;
 	}
+	
+	
+	public ArgModel getInterval () {
+		
+		return argumentMap.get("Interval");
+		
+	}
+	
+	
+	
+	public ListArgModel getUnit () {
+		
+		return (ListArgModel) argumentMap.get("Unit");
+		
+	}
+	
+	
+	
+	
 	
 
 	@Override
@@ -60,10 +82,10 @@ return ret;
 	
 	if(unit.getValue().equals("Seconds")) {
 		l = l*1000 ;
-		
+
 	}
+	controller.getLog().info("waiting " + l + " ms");
 	
-	controller.getLog().info("waiting " + l + unit.getValue());
 	try {
 		Thread.sleep(l );
 	} catch (InterruptedException e) {

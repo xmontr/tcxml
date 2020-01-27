@@ -92,13 +92,7 @@ public class CallActionWrapper extends AbstractStepWrapper {
 	
 	
 	
-	public void saveCalledAction(String calledaction) {
-		
-	
-		getArgumentMap().get("Action Name").setValue(calledaction);
-		
-		
-	}
+
 	
 
 }

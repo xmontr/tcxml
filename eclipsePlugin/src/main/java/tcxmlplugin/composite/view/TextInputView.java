@@ -17,6 +17,7 @@ import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.MenuItem;
 import org.eclipse.swt.widgets.Button;
 
+import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
 
@@ -26,7 +27,7 @@ import org.eclipse.jface.databinding.swt.WidgetProperties;
 import org.eclipse.core.databinding.beans.PojoProperties;
 import org.eclipse.core.databinding.beans.BeanProperties;
 
-public class TextInputView extends Composite implements SelectionListener{
+public class TextInputView extends Composite implements SelectionListener, PropertyChangeListener{
 	private DataBindingContext m_bindingContext;
 	private Text text;
 	private MenuItem mntmTxt;
@@ -100,7 +101,7 @@ public class TextInputView extends Composite implements SelectionListener{
 
 			public void setParam(boolean isparam) {
 				propertyChangeSupport.firePropertyChange("param", this.param,
-						this.javascript = isparam);
+						this.param = isparam);
 				
 			}
 
@@ -223,8 +224,9 @@ public class TextInputView extends Composite implements SelectionListener{
 	setInputData(mo.getValue());
 	setJavascript(mo.getIsJavascript());
 		
-	
-		
+	inputtextmodel.addPropertyChangeListener("javascript", this);
+	inputtextmodel.addPropertyChangeListener("inputData", this);
+	inputtextmodel.addPropertyChangeListener("param", this);	
 	}
 	
 	public ArgModel getArgModel() {
@@ -232,6 +234,30 @@ public class TextInputView extends Composite implements SelectionListener{
 		arggModel.setIsJavascript(inputtextmodel.getJavascript());	
 		arggModel.setValue(inputtextmodel.getInputData());
 		return arggModel;
+		
+	}
+
+	@Override
+	public void propertyChange(PropertyChangeEvent evt) {  
+	if(evt.getPropertyName().equals("javascript")) {
+		boolean njs =(boolean) evt.getNewValue();
+		this.arggModel.setIsJavascript(njs);
+		
+	}
+	
+	if(evt.getPropertyName().equals("param")) {
+		boolean nparam =(boolean) evt.getNewValue();
+		this.arggModel.setIsParam(nparam);
+		
+	}
+	
+	
+	if(evt.getPropertyName().equals("inputData")) {
+		String ninpit =(String) evt.getNewValue();
+		this.arggModel.setValue(ninpit);
+		
+	}
+	
 		
 	}
 	

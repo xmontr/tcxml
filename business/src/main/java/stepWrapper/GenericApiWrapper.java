@@ -14,6 +14,7 @@ import tcxml.core.TcXmlException;
 import tcxml.core.UtilsAPI;
 
 import tcxml.model.ArgModel;
+import tcxml.model.ListArgModel;
 import tcxml.model.Step;
 import tcxml.model.TruLibrary;
 import util.TcxmlUtils;
@@ -97,6 +98,9 @@ public class GenericApiWrapper extends AbstractStepWrapper {
 		ArgModel mo = new ArgModel("text");
 		mo.setValue("");
 		ret.add(mo);
+		
+		ListArgModel level = TcxmlUtils.getLogLevelListArgModel("Level", "Standard");
+		ret.add(level);
 		
 		
 	}

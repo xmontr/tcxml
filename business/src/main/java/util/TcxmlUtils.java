@@ -241,6 +241,20 @@ throw new TcXmlException("fail to add name space to file" + source.getAbsolutePa
 		   
 	   }
 	   
+	   
+	   
+	   public static ListArgModel getLogLevelListArgModel(String name ,String defaultvalue) {
+		   ArrayList<String>val = new ArrayList<String>();
+		   val.add("Standard");
+		   val.add("Warning");
+		   val.add("Extended");
+		   ListArgModel mo = new ListArgModel(name, val);  
+		 mo.setValue(defaultvalue);
+		  return mo;
+		   
+		   
+	   }
+	   
 	
 
 }

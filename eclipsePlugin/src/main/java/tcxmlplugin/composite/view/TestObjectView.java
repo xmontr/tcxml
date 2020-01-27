@@ -396,7 +396,7 @@ public class TestObjectView extends StepView implements PropertyChangeListener {
 	@Override
 	public PlayingContext doplay( PlayingContext ctx) throws TcXmlException {
 
-	
+	saveModel();
 	PlayingContext ret = stepWrapper.play(ctx);
 	
 	return ret;
@@ -417,7 +417,7 @@ public class TestObjectView extends StepView implements PropertyChangeListener {
 
 	@Override
 	public void saveModel() throws TcXmlException {
-		// TODO Auto-generated method stub
+		stepWrapper.saveArguments();
 		
 	}
 

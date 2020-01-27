@@ -329,7 +329,7 @@ conditionString= conditionTxt.getArgModel().getValue();
 		argval.put("Increment", incrementTxt.getArgModel());
 		
 		
-		stepWrapper.saveArguments(argval);
+		stepWrapper.saveArguments();
 		
 	}
 	

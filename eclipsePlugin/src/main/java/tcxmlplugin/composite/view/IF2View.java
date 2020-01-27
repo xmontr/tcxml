@@ -225,7 +225,7 @@ public class IF2View extends StepView  implements StepContainer, ExpandListener{
 		
 		If2Wrapper if2wrapper = (If2Wrapper)stepWrapper;
 		
-		HashMap<String, ArgModel> argumentMap = stepWrapper2.getArgumentMap();
+	
 		Step model = if2wrapper.getModel();
 		
 		
@@ -279,7 +279,7 @@ conditionTxt.setArgmodel(if2wrapper.getExistCondition());
 		
 		If2Wrapper wr = (If2Wrapper) stepWrapper;
 		
-	wr.saveExistCondition();
+	wr.saveArguments();
 		
 		
 	}

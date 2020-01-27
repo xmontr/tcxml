@@ -214,7 +214,7 @@ public static class CallFunctionViewModel {
 	public void populate(AbstractStepWrapper stepWrapper2) throws TcXmlException {
 		
 		if(! (stepWrapper2 instanceof CallFunctionWrapper )) {
-			throw new TcXmlException("For view can only be populated by from a for wrapper ", new IllegalArgumentException());
+			throw new TcXmlException("call function view can only be populated by from a call function wrapper ", new IllegalArgumentException());
 			
 		}
 		
@@ -453,7 +453,7 @@ public static class CallFunctionViewModel {
 		
 	
 
-		wr.saveArguments(argval);
+		wr.saveArguments();
 	
 		
 	}
