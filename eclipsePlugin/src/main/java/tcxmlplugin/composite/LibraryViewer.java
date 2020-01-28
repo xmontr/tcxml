@@ -59,6 +59,7 @@ public class LibraryViewer extends Composite {
 	private StackLayout functionlayout;
 	private Composite stepContainer;
 	private SnapshotViewer snapshotviewer;
+	private Composite stepContainerwithsnapshot;
 	private Composite stepcontainerwithoutsnapshot;
 	private Composite viewwithSnapshot;
 	private Composite viewWitoutSnapshot;
@@ -104,8 +105,10 @@ public class LibraryViewer extends Composite {
 		maincontainer = new Composite(this,this.getStyle());
 		maincontainer.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 2, 1));
 		maincontainerlayout = new StackLayout();
-		maincontainer.setLayout(maincontainerlayout);		
+		maincontainer.setLayout(maincontainerlayout);	
+		stepContainer =  new Composite(maincontainer, getStyle());		
 		functionlayout = new StackLayout();
+		stepContainer.setLayout(functionlayout);
 		
 		viewwithSnapshot = createaViewWithsnapshotViewer();
 		viewWitoutSnapshot = createViewWithoutsnapshotViewer();
@@ -113,6 +116,7 @@ public class LibraryViewer extends Composite {
 	// default layout with snapshot viewer
 		maincontainerlayout.topControl = viewwithSnapshot;
 		isSnapshotlayout=true;
+		stepContainer.setParent(stepContainerwithsnapshot);
 		
 		
 	}
@@ -142,13 +146,15 @@ public class LibraryViewer extends Composite {
 		
 		Composite parent = new Composite(maincontainer, getStyle());
 		parent.setLayout(new FillLayout());		
-		SashForm sf = new SashForm(parent,SWT.HORIZONTAL);		
-		stepContainer = new Composite(sf,sf.getStyle());
-		stepContainer.setLayout(functionlayout);
-		snapshotviewer = new SnapshotViewer(sf, getStyle(),controller);
+		SashForm sf = new SashForm(parent,SWT.HORIZONTAL);	
+		// the list of step at the left
+		stepContainerwithsnapshot = new Composite(sf,sf.getStyle());
+		stepContainerwithsnapshot.setLayout(new FillLayout());
+		//at the right the palette with the snapshotviewer
+		PaletteAndSnapshotViewer plt = new PaletteAndSnapshotViewer(sf, getStyle());
 		
-				
-			
+		snapshotviewer = new SnapshotViewer(plt.getSnapshot(), getStyle(),controller);	
+		DesignPalette palette = new DesignPalette(plt.getPalette(), getStyle());			
 		return parent;	
 			
 		}
@@ -157,37 +163,41 @@ public class LibraryViewer extends Composite {
 	
 	private Composite createViewWithoutsnapshotViewer() {
 		Composite parent = new Composite(maincontainer, getStyle());
-		parent.setLayout(new FillLayout());
-		stepcontainerwithoutsnapshot = new Composite(parent, getStyle());
-		stepcontainerwithoutsnapshot.setLayout(functionlayout);
-		
-		
-		
-		
+		parent.setLayout(new FillLayout());		
+		SashForm sf = new SashForm(parent,SWT.HORIZONTAL);	
+		// the list of step at the left
+		stepcontainerwithoutsnapshot = new Composite(sf,sf.getStyle());
+		stepcontainerwithoutsnapshot.setLayout(new FillLayout());
+		//palette at the right
+		Composite paletteContainer = new Composite(sf, getStyle());
+		paletteContainer.setLayout(new FillLayout());
+		DesignPalette palette = new DesignPalette(paletteContainer, getStyle());		
 	return parent;	
 	}
 	
 	public void setSnapshotLayout( boolean  issnapshotlayout) {
 		this.isSnapshotlayout=issnapshotlayout;
-		ActionView currentaction = (ActionView) functionlayout.topControl;
+		LibraryView currentaction = (LibraryView) functionlayout.topControl;
 		
 		
 		if(issnapshotlayout == false) { // view without snapshot viewer		
 			if(currentaction != null) {
-				currentaction.setParent(stepcontainerwithoutsnapshot);
+			
 				currentaction.removePropertyChangeListener(snapshotviewer);
 				
 			}
 			
-			
+			stepContainer.setParent(stepcontainerwithoutsnapshot);	
 		maincontainerlayout.topControl = viewWitoutSnapshot;	
 		
 			
 		}else { // view with snapshot viewer 
 			if(currentaction != null) {
-			currentaction.setParent(stepContainer);
+		
 			currentaction.addPropertyChangeListener("currentStepExpanded", snapshotviewer);
 			}
+			
+			stepContainer.setParent(stepContainerwithsnapshot);
 			maincontainerlayout.topControl = viewwithSnapshot;
 		
 		

@@ -58,6 +58,14 @@ public class ActionsViewer extends Composite  {
 
 
 	private Map<String, ActionView> actionsView;
+	
+	
+	/***
+	 * 
+	 * 
+	 *  parent composite for all actionView
+	 * 
+	 */
 
 	private Composite stepContainer;
 
@@ -85,9 +93,24 @@ public class ActionsViewer extends Composite  {
 
 	private Composite viewWitoutSnapshot;
 
-
+/****
+ * 
+ *   parent composite for actionview when snapshot is  not visible
+ * 
+ */
 
 	private Composite stepcontainerwithoutsnapshot;
+	
+	
+	
+	/****
+	 * 
+	 *   parent composite for actionview when snapshot is   visible
+	 * 
+	 */
+
+		private Composite stepcontainerwithsnapshot ;
+	
 
 
 
@@ -129,17 +152,24 @@ public class ActionsViewer extends Composite  {
 		combo.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		
 		maincontainer = new Composite(this,this.getStyle());
+		
+		stepContainer =  new Composite(maincontainer, getStyle());
+		
+		
 		maincontainer.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 2, 1));
 		maincontainerlayout = new StackLayout();
 		maincontainer.setLayout(maincontainerlayout);		
 		actionlayout = new StackLayout();
+		stepContainer.setLayout(actionlayout);
 		
 		viewwithSnapshot = createaViewWithsnapshotViewer();
 		viewWitoutSnapshot = createViewWithoutsnapshotViewer();
 
 	// default layout with snapshot viewer
-		maincontainerlayout.topControl = viewwithSnapshot;
 		isSnapshotlayout=true;
+		maincontainerlayout.topControl = viewwithSnapshot;
+		stepContainer.setParent(stepcontainerwithsnapshot);
+		
 		
 	}
 	
@@ -223,14 +253,19 @@ public class ActionsViewer extends Composite  {
 	
 	
 	private Composite createViewWithoutsnapshotViewer() {
+
 		Composite parent = new Composite(maincontainer, getStyle());
-		parent.setLayout(new FillLayout());
-		stepcontainerwithoutsnapshot = new Composite(parent, getStyle());
-		stepcontainerwithoutsnapshot.setLayout(actionlayout);
+		parent.setLayout(new FillLayout());		
+		SashForm sf = new SashForm(parent,SWT.HORIZONTAL);	
+		// the list of step at the left
+		stepcontainerwithoutsnapshot = new Composite(sf,sf.getStyle());
+		stepcontainerwithoutsnapshot.setLayout(new FillLayout());
+		//palette at the right
+		Composite paletteContainer = new Composite(sf, getStyle());
+		paletteContainer.setLayout(new FillLayout());
+		DesignPalette palette = new DesignPalette(paletteContainer, getStyle());
 		
-		
-		
-		
+				
 	return parent;	
 	}
 	
@@ -239,22 +274,16 @@ private Composite createaViewWithsnapshotViewer() {
 	
 	Composite parent = new Composite(maincontainer, getStyle());
 	parent.setLayout(new FillLayout());		
-	SashForm sf = new SashForm(parent,SWT.HORIZONTAL);		
-	stepContainer = new Composite(sf,sf.getStyle());
-	stepContainer.setLayout(actionlayout);
-	
-	//newversion with palette
+	SashForm sf = new SashForm(parent,SWT.HORIZONTAL);	
+	// the list of step at the left
+	stepcontainerwithsnapshot = new Composite(sf,sf.getStyle());
+	stepcontainerwithsnapshot.setLayout(new FillLayout());
+	//at the right the palette with the snapshotviewer
 	PaletteAndSnapshotViewer plt = new PaletteAndSnapshotViewer(sf, getStyle());
 	
-	snapshotviewer = new SnapshotViewer(plt.getSnapshot(), getStyle(),controller);
-	
+	snapshotviewer = new SnapshotViewer(plt.getSnapshot(), getStyle(),controller);	
 	DesignPalette palette = new DesignPalette(plt.getPalette(), getStyle());
-	
-	
-	//snapshotviewer = new SnapshotViewer(sf, getStyle(),controller);
-	
 			
-		
 	return parent;	
 		
 	}
@@ -271,20 +300,22 @@ private Composite createaViewWithsnapshotViewer() {
 		
 		if(issnapshotlayout == false) { // view without snapshot viewer		
 			if(currentaction != null) {
-				currentaction.setParent(stepcontainerwithoutsnapshot);
+				
 				currentaction.removePropertyChangeListener(snapshotviewer);
 				
 			}
-			
+		stepContainer.setParent(stepcontainerwithoutsnapshot);	
 			
 		maincontainerlayout.topControl = viewWitoutSnapshot;	
 		
 			
 		}else { // view with snapshot viewer 
 			if(currentaction != null) {
-			currentaction.setParent(stepContainer);
+			//currentaction.setParent(stepContainer);
 			currentaction.addPropertyChangeListener("currentStepExpanded", snapshotviewer);
 			}
+			
+			stepContainer.setParent(stepcontainerwithsnapshot);
 			maincontainerlayout.topControl = viewwithSnapshot;
 		
 		

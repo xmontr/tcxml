@@ -308,6 +308,7 @@ public class TcViewer extends Composite implements PropertyChangeListener, IJobC
 			public void widgetSelected(SelectionEvent e) {
 				boolean selection = ((ToolItem)e.getSource()).getSelection();
 				actionsViewer.setSnapshotLayout(selection);
+				libraryViewer.setSnapshotLayout(selection);
 			}
 			
 			@Override
