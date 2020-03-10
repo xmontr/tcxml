@@ -274,6 +274,36 @@ public class ForView extends StepView  implements StepContainer, ExpandListener 
 		 bar.layout();
 		
 	}
+	
+	
+	@Override
+	public void addStep(Step step, int index ) throws TcXmlException {
+		 StepViewer tv = StepViewerFactory.getViewer(step,this, controller,getLibrary());
+		 
+		 if(tv.getViewer() instanceof StepContainer) {
+			 
+			 StepContainer childcont = (StepContainer)tv.getViewer();
+			 childcont.getBar().addExpandListener(this);
+			 
+		 }		
+		ExpandItem xpndtmNewExpanditem = new ExpandItem(bar, SWT.NONE,index);
+
+		xpndtmNewExpanditem.setExpanded(false);
+		xpndtmNewExpanditem.setText(tv.getTitle());
+		
+		xpndtmNewExpanditem.setHeight(tv.computeSize(SWT.DEFAULT, SWT.DEFAULT).y );
+		xpndtmNewExpanditem.setControl(tv);
+		tv.setParentExpandItem(xpndtmNewExpanditem);
+		
+		 stepViwerChildren.add(index,tv);
+		 
+		 bar.layout();
+		
+	}
+	
+	
+	
+	
 
 	@Override
 	public List<StepViewer> getChildViewer() {
@@ -345,6 +375,21 @@ conditionString= conditionTxt.getArgModel().getValue();
 
 	
 	
+		
+	}
+
+
+
+
+
+	@Override
+	public void reIndex() {
+		for (int i = 0; i < stepViwerChildren.size(); i++) {
+			
+			stepViwerChildren.get(i).getViewer().getStepWrapper().getStep().setIndex(new Integer(i).toString() );
+			
+			
+		}
 		
 	}
 	

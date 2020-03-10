@@ -54,7 +54,8 @@ public class MyDragListener implements DragSourceListener{
 		case WAIT:event.data = "WAIT";break;
 		case CALLFUNCTION:event.data = "CALLFUNCTION";break;
 		case CALLGENERICAPI :event.data = "GENAPI";break;
-		default:event.data = "";
+		case WAITFOROBJECT : event.data="WAITFOROBJECT";break;
+		default:event.data = "NODATA";
 			break;
 		}
 		

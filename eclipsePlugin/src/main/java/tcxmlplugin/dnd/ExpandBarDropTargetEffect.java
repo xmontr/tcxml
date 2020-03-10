@@ -19,21 +19,48 @@ import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableItem;
 import org.eclipse.swt.widgets.Widget;
 
+import tcxml.core.StepFactory;
+import tcxml.core.TcXmlException;
+import tcxml.model.Step;
+import tcxmlplugin.TcXmlPluginController;
+import tcxmlplugin.composite.stepViewer.StepContainer;
+import tcxmlplugin.composite.stepViewer.StepViewer;
+import tcxmlplugin.composite.stepViewer.StepViewerFactory;
+
 public class ExpandBarDropTargetEffect extends  DropTargetEffect  {
 	
 	
 
 	
 	
+private static final String DROP_TO_INSERT_HERE = " --------   drop to insert here  -----------------------";
 
+
+
+/****
+ * 
+ *   store the item added and moved during the drop phase
+ */
 	private ExpandItem tempExpandItem;
+	
+	
+	
+	/***
+	 * 
+	 *  store the indexof the item whendrag over. used to limit the move when the use changes item.
+	 */
 	private int lastIndex = -1;
 
 
-	public ExpandBarDropTargetEffect(Control control) {
-		super(control);
+
+	private StepContainer theContainer;
+
+
+	public ExpandBarDropTargetEffect(StepContainer stepContainer) {
+		super(stepContainer.getBar());
+		this.theContainer = stepContainer ;
 	
-		if (! (control instanceof ExpandBar )) {
+		if (! (getControl() instanceof ExpandBar )) {
 			
 		throw new IllegalArgumentException("ExpandBarDropTargetEffect   apply only on expandbar")	;
 		}
@@ -59,14 +86,14 @@ public class ExpandBarDropTargetEffect extends  DropTargetEffect  {
 	}
 	
 
-	
+
 	
 
 	
 	@Override
 	public void dragOver(DropTargetEvent event) {
-		// TODO Auto-generated method stub
-		super.dragOver(event);
+
+		
 		
 		Widget cu = getItem(event.x, event.y) ;
 		
@@ -80,7 +107,7 @@ public class ExpandBarDropTargetEffect extends  DropTargetEffect  {
 			}else {
 				int newindex = getIndexOfItem(newtarget);
 				
-				if( newindex != this.lastIndex  ) {				
+				if( newindex != this.lastIndex  || newtarget.getText() != DROP_TO_INSERT_HERE ) {				
 			
 					moveTempBefore(newtarget);
 					
@@ -141,7 +168,7 @@ nitem.setControl(c);
 nitem.setText(txt);
 tempExpandItem = nitem ;
 
-System.out.println("moved");
+
 	}
 	
 
@@ -151,9 +178,9 @@ System.out.println("moved");
 
 	@Override
 	public void dragEnter(DropTargetEvent event) {
-		// TODO Auto-generated method stub
-		super.dragEnter(event);
-		String txt = " --------   drop to insert here  -----------------------";
+		
+	
+		String txt = DROP_TO_INSERT_HERE;
 		addNewTemporaryItem(txt);
 	
 		
@@ -183,21 +210,45 @@ System.out.println("moved");
 
 
 
-
-
-
-
-
-
-
-
 	@Override
 	public void dragLeave(DropTargetEvent event) {
-		// TODO Auto-generated method stub
-		super.dragLeave(event);
+		
+	
 		removeTemporaryItem() ; 
 	
 	}
+	
+	
+	
+	public  void saveTemporaryItem(String data) {
+		
+		removeTemporaryItem(); // remove the temp item and store the final at correct index in the container
+		
+		try {
+		Step newstep = StepFactory.getStep(data, theContainer.getController(), theContainer.getLibrary());
+		if(this.lastIndex == -1) {
+			newstep.setIndex("1");
+			
+			theContainer.addStep(newstep);
+			
+		}else {
+			
+			newstep.setIndex(new Integer(lastIndex +1).toString());
+			theContainer.addStep(newstep, lastIndex+1);
+			
+			
+		}
+		
+		theContainer.reIndex();
+		
+		
+		
+		} catch (TcXmlException e) {
+				TcXmlPluginController.getInstance().error("failure in adding step ", e);
+		}
+		
+		
+}
 
 
 

@@ -7,6 +7,7 @@ import java.util.List;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.ScrolledComposite;
+import org.eclipse.swt.dnd.DropTarget;
 import org.eclipse.swt.events.ExpandEvent;
 import org.eclipse.swt.events.ExpandListener;
 import org.eclipse.swt.graphics.Point;
@@ -28,8 +29,11 @@ import tcxmlplugin.composite.stepViewer.StepContainer;
 import tcxmlplugin.composite.stepViewer.StepViewer;
 import tcxmlplugin.composite.stepViewer.StepViewerFactory;
 import tcxmlplugin.composite.stepViewer.TitleListener;
+import tcxmlplugin.dnd.MyExpandBarDropUtil;
 
 public abstract class AStepContainer extends Composite   implements StepContainer, ExpandListener {
+	
+	
 	
 	
 	
@@ -58,7 +62,11 @@ public abstract class AStepContainer extends Composite   implements StepContaine
 	}
 
 
-
+@Override
+public TcXmlController getController() {
+	// TODO Auto-generated method stub
+	return controller;
+}
 
 
 
@@ -85,6 +93,7 @@ public abstract class AStepContainer extends Composite   implements StepContaine
 	//content.setBackground( getDisplay().getSystemColor( SWT.COLOR_RED) );	
 	content.setLayout(new GridLayout(1, false));
 	bar = new ExpandBar(content, SWT.NONE);
+
 	bar.setBackground( getDisplay().getSystemColor( SWT.COLOR_WHITE) );
 	bar.setSpacing(10);
 	bar.addExpandListener(this);
@@ -107,7 +116,8 @@ public abstract class AStepContainer extends Composite   implements StepContaine
 	scroller.setBackground( getDisplay().getSystemColor( SWT.COLOR_DARK_BLUE) );
 	layout(true,true);
 
-	
+	// make the bar dragable
+	DropTarget expandbardroptarget = new MyExpandBarDropUtil(this).buildDropTarget();
 		
 	}
 	
@@ -193,12 +203,32 @@ content.setSize(newsize);
 		tv.setParentExpandItem(xpndtmNewExpanditem);
 		tv.addPropertyChangeListener("title", new TitleListener(xpndtmNewExpanditem , tv));
 
-		
-		
-		
-		
-		
 	}
+	
+	
+	public void addStep(Step step, int index) throws TcXmlException {
+		
+		 StepViewer tv = StepViewerFactory.getViewer(step,this, controller,getLibrary());		 
+		 stepViwerChildren.add(index,tv);
+		
+		ExpandItem xpndtmNewExpanditem = new ExpandItem(bar, SWT.NONE, index);		
+		
+
+		xpndtmNewExpanditem.setExpanded(false);
+		
+		xpndtmNewExpanditem.setText(tv.getTitle());
+		
+		xpndtmNewExpanditem.setHeight(tv.computeSize(SWT.DEFAULT, SWT.DEFAULT).y  );
+		xpndtmNewExpanditem.setControl(tv);
+		tv.setParentExpandItem(xpndtmNewExpanditem);
+		tv.addPropertyChangeListener("title", new TitleListener(xpndtmNewExpanditem , tv));
+
+	}
+	
+	
+	
+	
+	
 	
 	
 	@Override
@@ -314,9 +344,24 @@ controller.getLog().info("**********    ASTEPCONTAINER " + this.getClass()  +"**
 
 				
 			}
+		  
+		  
+			@Override
+			public void reIndex() {
+				for (int i = 0; i < stepViwerChildren.size(); i++) {
+					
+					stepViwerChildren.get(i).getViewer().getStepWrapper().getStep().setIndex(new Integer(i+1).toString() );
+					
+					
+					
+					
+					
+				}
 	
 	
 	
 	
 	
+}
+			
 }

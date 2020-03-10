@@ -1,21 +1,21 @@
 package tcxml.core;
 
+import java.util.ArrayList;
 import java.util.List;
-
-import javax.script.ScriptException;
+import java.util.Random;
 
 import org.openqa.selenium.WebElement;
 
 import jdk.nashorn.api.scripting.AbstractJSObject;
 
-public class EvalXpathFunction extends AbstractJSObject  {
+public class RandomFunction extends AbstractJSObject {
 	
 	
 	private TcXmlController controller;
 	
 	
 
-	public EvalXpathFunction( TcXmlController tc) {
+	public RandomFunction( TcXmlController tc) {
 		this.controller = tc;
 		
 		
@@ -31,18 +31,18 @@ public class EvalXpathFunction extends AbstractJSObject  {
 	
 	@Override
 	public Object call(Object thiz, Object... args) {
-	String xpath = 	(String) args[0];
-	List<WebElement> ret;
-	try {
-		ret = controller.evalXPath(xpath);
-	} catch (TcXmlException e) {
-		throw new RuntimeException(e);
+		List<WebElement> thelist = 	(List<WebElement>) args[0];
+
+
+Random r = new Random();
+int choice = r.nextInt(thelist.size());
+ArrayList<WebElement> ret = new ArrayList<WebElement>();
+ret.add(thelist.get(choice));
+
+	return ret ;
 	}
-	return ret;
-	}
+	
 	
 	
 
 }
-
-

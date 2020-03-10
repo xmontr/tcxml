@@ -160,7 +160,7 @@ public class GenericAPIStepView extends StepView implements PropertyChangeListen
 			try {
 				
 				getModel().setMethodName(newmethod);
-				ar = ArgumentViewFactory.getArgumentViewForStep(getModel(), this);
+				ar = ArgumentViewFactory.getArgumentViewForStep(this);
 				setArgumentView(ar);
 				controller.getLog().info("setting nw argument for method : " + newmethod);
 			} catch (TcXmlException e) {

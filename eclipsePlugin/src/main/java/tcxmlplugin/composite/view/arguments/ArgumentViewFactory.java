@@ -20,15 +20,36 @@ public class ArgumentViewFactory {
 	
 	
 	
-	public static DynamicArgumentView getArgumentViewForStep(Step step,StepView view)  throws TcXmlException {
+	/*
+	 * public static DynamicArgumentView getArgumentViewForStep(Step step,StepView
+	 * view) throws TcXmlException {
+	 * 
+	 * HashMap<String, ArgModel> liar =view.getStepWrapper().getArgumentMap();
+	 * 
+	 * //AbstractStepWrapper wrapper = StepWrapperFactory.getWrapper(step,
+	 * view.getController(), view.getLibrary()) ; //HashMap<String, ArgModel> liar
+	 * =wrapper.getArgumentMap();
+	 * 
+	 * DynamicArgumentView di = new DynamicArgumentView(view, view.getStyle(),
+	 * liar); return di ;
+	 * 
+	 * }
+	 */
 	
-	AbstractStepWrapper wrapper = StepWrapperFactory.getWrapper(step, view.getController(), view.getLibrary())	;
-	HashMap<String, ArgModel> liar =wrapper.getArgumentMap();
 	
-	DynamicArgumentView di = new DynamicArgumentView(view, view.getStyle(), liar);
-	return di ;	
-		
-	}
+	
+	  public static DynamicArgumentView getArgumentViewForStep(StepView
+	  view) throws TcXmlException {
+	  
+	  HashMap<String, ArgModel> liar =view.getStepWrapper().getArgumentMap();
+	  
+
+	  
+	  DynamicArgumentView di = new DynamicArgumentView(view, view.getStyle(),
+	  liar); return di ;
+	  
+	  }
+	 
 	
 	
 	

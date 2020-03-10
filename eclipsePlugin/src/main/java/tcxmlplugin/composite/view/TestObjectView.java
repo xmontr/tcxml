@@ -38,6 +38,7 @@ import tcxml.model.TestObject;
 import tcxmlplugin.TcXmlPluginController;
 import tcxmlplugin.composite.StepView;
 import tcxmlplugin.composite.view.arguments.ArgumentViewFactory;
+import tcxmlplugin.composite.view.arguments.DynamicArgumentView;
 import tcxmlplugin.composite.view.arguments.StepArgument;
 
 public class TestObjectView extends StepView implements PropertyChangeListener {
@@ -248,17 +249,29 @@ public class TestObjectView extends StepView implements PropertyChangeListener {
 
 	@Override
 	public void propertyChange(PropertyChangeEvent evt) {
-		String newAction = (String) evt.getNewValue();
-		StepArgument ar;
-		try {
-			getModel().setAction(newAction);
-			ar = ArgumentViewFactory.getArgumentViewForStep(getModel(), this);
-			setArgumentView(ar);
-			controller.getLog().info("setting nw action for step : " + newAction);
-		} catch (TcXmlException e) {
-			TcXmlPluginController.getInstance().error("fail to create argument view for step", e);
+		
+		if(evt.getPropertyName().equals("selectedAction")) {
+			
+			String newAction = (String) evt.getNewValue();
+			StepArgument ar;
+			try {
+				getModel().setAction(newAction);
+				ar = ArgumentViewFactory.getArgumentViewForStep(this);
+				
+			
+				
+				
+				setArgumentView(ar);
+				controller.getLog().info("setting nw action for step : " + newAction);
+			} catch (TcXmlException e) {
+				TcXmlPluginController.getInstance().error("fail to create argument view for step", e);
 
+			}
+			
+			
+			
 		}
+
 
 	}
 

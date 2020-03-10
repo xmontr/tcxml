@@ -290,7 +290,17 @@ ret.add(mo);
 		 
 		 stat.setTimeLoaded(System.currentTimeMillis());
 	        WebDriverWait wait = new WebDriverWait(dr, 30);
+	        
+	        try {
 	        wait.until(pageLoadCondition);
+	        }
+	        catch(Exception e) {
+	        	
+	        controller.getLog().warning(e.getMessage());
+	        
+	        e.printStackTrace();
+	        
+	        }
 	        stat.setTimeComplete(System.currentTimeMillis());
 	        return ctx;
 	     
@@ -369,7 +379,7 @@ ret.add(mo);
 		
 		if(hasRole(to,"listbox")) {
 			
-			selectBySelect(theelement, thetext, theordinal);
+			selectBySelect(theelement, thetext, theordinal,ctx);
 			
 		}else if (hasRole(to,"radiogroup")) {
 			
@@ -391,37 +401,57 @@ ret.add(mo);
 	}
 	
 	
-	private void selectBySelect(WebElement theelement, ArgModel thetext, ArgModel theordinal) throws TcXmlException {
+	private void selectBySelect(WebElement theelement, ArgModel thetext, ArgModel theordinal, PlayingContext ctx) throws TcXmlException {
 		Select theDrobBox = new Select(theelement);
+		int index;
 		if(thetext != null  && !thetext.getValue().isEmpty()) {
 		
 			
 			try {
-		theDrobBox.selectByVisibleText(thetext.getValue());	
+				
+				String dynval =	controller.evaluateJsArgument(thetext, ctx.getCurrentExecutionContext());		
+		theDrobBox.selectByVisibleText(dynval);	
 			}
 			catch (Exception e) {
 				throw new TcXmlException("fail select by visible text ", e);
 				
 			
 			}
-		}else {
+		}else {// as text field is null use ordinal 
 			
-			int index;
-			try {
-	 index = Integer.parseInt(theordinal.getValue())	;
-			}catch ( Exception e) {
-			throw new TcXmlException("fail to parse ordinal parameter for select action", e);
-			}
-	
-			try {
-			theDrobBox.selectByIndex(index);
-			}
-			catch (Exception e) {
-				throw new TcXmlException("fail select by index ", e);
-			}
+			
+	String dynval =	controller.evaluateJsArgument(theordinal, ctx.getCurrentExecutionContext());
+		try {
+ index = Integer.parseInt(dynval)	;
+ 
+ 
+ 
+ 
+		}catch ( Exception e) {
+		throw new TcXmlException("fail to parse ordinal parameter for select action", e);
 		}
 		
-	}
+		try {
+		theDrobBox.selectByIndex(index);
+		}
+		catch (Exception e) {
+			throw new TcXmlException("fail select by index ", e);
+		}	
+		
+		
+		
+		
+				
+				
+			}
+			
+			
+
+	
+
+		}
+		
+	
 	
 	
 	private void selectByRadioGroup(WebElement theelement, ArgModel thetext, ArgModel theordinal) {
@@ -600,7 +630,8 @@ public void doclick(TestObject to, PlayingContext ctx) throws TcXmlException {
 		
 		ArgModel txtarg = argumentMap.get("Value");
 		String txt = txtarg.getValue();
-		 boolean isj = txtarg.getIsJavascript();		
+		 boolean isj = txtarg.getIsJavascript();
+		 boolean isparam = txtarg.getIsParam();
 		
 		 ArgModel cleararg = argumentMap.get("Clear");
 		 boolean clear = new Boolean(cleararg.getValue());
@@ -608,9 +639,12 @@ public void doclick(TestObject to, PlayingContext ctx) throws TcXmlException {
 		 final Actions actions = new Actions(controller.getDriver());
 		 actions.moveToElement(controller.identifyElement(to, ctx.getCurrentExecutionContext())).perform(); 
 	/// if argument is in js it should be evaluated before
-			 if(isj) {
+			 if(isj || isparam) {
 				 
-			txt =(String) controller.evaluateJS(txt,ctx.getCurrentExecutionContext());	 
+			//txt =(String) controller.evaluateJS(txt,ctx.getCurrentExecutionContext());	
+				 txt =(String) controller.evaluateJsArgument(txtarg,ctx.getCurrentExecutionContext());	
+			
+			
 			 }
 			 
 			 controller.typeText(ctx.getCurrentExecutionContext(),to, txt, 20,clear);

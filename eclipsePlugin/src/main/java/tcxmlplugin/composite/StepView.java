@@ -1,5 +1,6 @@
 package tcxmlplugin.composite;
 
+import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
 import java.io.PrintWriter;
@@ -27,7 +28,7 @@ import tcxmlplugin.TcXmlPluginController;
 import tcxmlplugin.composite.stepViewer.StepViewer;
 import tcxmlplugin.composite.view.arguments.StepArgument;
 
-public abstract class StepView extends Composite  implements Playable{
+public abstract class StepView extends Composite  implements Playable, PropertyChangeListener{
 	
 	public TcXmlController getController() {
 		return controller;
@@ -114,10 +115,32 @@ public abstract class StepView extends Composite  implements Playable{
 		//argumentMap = controller.getArguments(model,stepWrapper.getDefaultArguments());
 		setTitle(stepWrapper.getTitle());
 		populate(stepWrapper);
+		
+		this.stepWrapper.getStep().addPropertyChangeListener(this);
 
 			
 		
 	}
+	
+	
+	@Override
+	public void propertyChange(PropertyChangeEvent evt) {
+		if(evt.getPropertyName().equals("index")) {
+			
+			try {
+				setTitle(this.stepWrapper.getTitle());
+			} catch (TcXmlException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			
+		}
+		
+	}
+	
+	
+	
+
 
 	public AbstractStepWrapper getStepWrapper() {
 		return stepWrapper;

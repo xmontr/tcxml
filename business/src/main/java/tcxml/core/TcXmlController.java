@@ -385,12 +385,18 @@ for (ArgModel val : def) {
 		String thename = thearg.getName();
 		String theval = thearg.getValue();
 		Boolean isjs = thearg.getIsJavascript() ;
+		Boolean isparam = thearg.getIsParam() ;
 		if(theval != null && ! theval.isEmpty() ) {
 			newVal.add("value", theval) ;	
 			newVal.add("evalJavaScript", isjs);
+			newVal.add("param", isparam);
 			ret.add(thename, newVal);
 			
 		}
+
+		
+		
+		
 		
 
 		
@@ -1513,12 +1519,12 @@ try {
 	}
 	
 	
-	public WebElement evalXPath(String xpath) throws TcXmlException {
+	public List<WebElement> evalXPath(String xpath) throws TcXmlException {
 		ensureDriver();
 		final ByXPath xp2 = new ByXPath(xpath);
 		List<WebElement> elements = driver.findElements(xp2);
-		checkUnicity(elements, xpath);
-		return elements.get(0);
+		//checkUnicity(elements, xpath);
+		return elements;
 		
 		
 	}
@@ -1800,12 +1806,12 @@ WebElement evalJavascriptForIdentification(String identjs, ExecutionContext ctx)
 	   log.info(" evaluationg javascript for identification :\n " + identjs);
 	   log.fine(" context id is" + identificationcontext);
 	   try {
-		   WebElement ret =(WebElement) engine.eval(identjs, identificationcontext);
+		   List<WebElement> ret =(List<WebElement>) engine.eval(identjs, identificationcontext);
 			
 			log.fine("return for evaluateJS is " + ret);
 
-			
-			return ret;
+			checkUnicity(ret, identjs);
+			return ret.get(0);
 		} catch (ScriptException e) {
 			ctx.dumpJsContext();
 			throw new TcXmlException("fail to evaluate js code for identification ", e);
@@ -1911,6 +1917,9 @@ private ScriptContext buildIdentificationJavascriptContext(ExecutionContext cure
 	// the evalXPath function
 	EvalXpathFunction evalXPath = new EvalXpathFunction(this);	
 	curentexeccontext.getJsContext().setAttribute("evalXPath", evalXPath, ScriptContext.ENGINE_SCOPE);
+	
+	RandomFunction randomf = new RandomFunction(this);
+	curentexeccontext.getJsContext().setAttribute("random", randomf, ScriptContext.ENGINE_SCOPE);
 	 
 	 //build Argscontext objet
 		   JSObject argscontext = createJsObject();
@@ -1964,6 +1973,7 @@ Bindings bdglo = curentexeccontext.getJsContext().getBindings( ScriptContext.GLO
 
 public String evaluateJsArgument(ArgModel theArg, ExecutionContext ctx) throws TcXmlException {
 	boolean isj = theArg.getIsJavascript();
+	boolean isparam = theArg.getIsParam();
 	
 	String ret = theArg.getValue();
 	 
@@ -1976,6 +1986,17 @@ public String evaluateJsArgument(ArgModel theArg, ExecutionContext ctx) throws T
 	log.fine("after eval JS " +  theArg.getName() + "is:" + ret); 
 
 }
+		 
+// eval of parameter argument
+		 if(isparam) {//if attribute is a param
+			 log.fine("evaluation of argument " + theArg.getName() + " as a parameter " );
+				StepParameter stepParam = getParameterByName(theArg.getValue());
+				 ret = stepParam.evalParameter() ;
+			
+				
+				
+			}
+		 
 
 
 

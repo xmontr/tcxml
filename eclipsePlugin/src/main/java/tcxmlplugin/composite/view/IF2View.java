@@ -215,6 +215,34 @@ public class IF2View extends StepView  implements StepContainer, ExpandListener{
 		
 	}
 	
+	
+	@Override
+	public void addStep(Step step, int index ) throws TcXmlException {
+		 StepViewer tv = StepViewerFactory.getViewer(step,this, controller,getLibrary());
+		 
+		 if(tv.getViewer() instanceof StepContainer) {
+			 
+			 StepContainer childcont = (StepContainer)tv.getViewer();
+			 childcont.getBar().addExpandListener(this);
+			 
+		 }		
+		ExpandItem xpndtmNewExpanditem = new ExpandItem(ifbar, SWT.NONE, index);
+
+		xpndtmNewExpanditem.setExpanded(false);
+		xpndtmNewExpanditem.setText(tv.getTitle());
+		
+		xpndtmNewExpanditem.setHeight(tv.computeSize(SWT.DEFAULT, SWT.DEFAULT).y );
+		xpndtmNewExpanditem.setControl(tv);
+		tv.setParentExpandItem(xpndtmNewExpanditem);
+		
+		 stepViwerChildren.add(index,tv);
+		 
+		 ifbar.layout();
+		
+	}
+	
+	
+	
 	@Override
 	public void populate(AbstractStepWrapper stepWrapper2 ) throws TcXmlException {
 		
@@ -400,6 +428,17 @@ conditionTxt.setArgmodel(if2wrapper.getExistCondition());
 		
 		throw new TcXmlException("not expected element  in For step. internal expected but found  " + step.getAction() + " id of step is "+ step.getStepId(), new IllegalStateException());
 	}
+		
+	}
+
+	@Override
+	public void reIndex() {
+		for (int i = 0; i < stepViwerChildren.size(); i++) {
+			
+			stepViwerChildren.get(i).getViewer().getStepWrapper().getStep().setIndex(new Integer(i).toString() );
+			
+			
+		}
 		
 	}
 	

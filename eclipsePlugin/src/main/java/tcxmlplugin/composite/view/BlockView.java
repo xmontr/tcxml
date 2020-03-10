@@ -87,6 +87,32 @@ public class BlockView  extends StepView implements StepContainer, ExpandListene
 	}
 	
 	
+	public void addStep(Step step, int index) throws TcXmlException {
+		
+		 StepViewer tv = StepViewerFactory.getViewer(step,this, controller,getLibrary());
+		 
+		 if(tv.getViewer() instanceof StepContainer) {
+			 
+			 StepContainer childcont = (StepContainer)tv.getViewer();
+			 childcont.getBar().addExpandListener(this);
+			 
+		 }		
+		ExpandItem xpndtmNewExpanditem = new ExpandItem(bar, SWT.NONE, index);
+
+		xpndtmNewExpanditem.setExpanded(false);
+		xpndtmNewExpanditem.setText(tv.getTitle());
+		
+		xpndtmNewExpanditem.setHeight(tv.computeSize(SWT.DEFAULT, SWT.DEFAULT).y );
+		xpndtmNewExpanditem.setControl(tv);
+		tv.setParentExpandItem(xpndtmNewExpanditem);
+		
+		 stepViwerChildren.add(index,tv);
+		 
+		 bar.layout();
+		
+	}
+	
+	
 	@Override
 	public ExpandBar getBar() {
 		// TODO Auto-generated method stub
@@ -210,6 +236,18 @@ public class BlockView  extends StepView implements StepContainer, ExpandListene
 	@Override
 	public void saveModel() throws TcXmlException {
 		// TODO Auto-generated method stub
+		
+	}
+
+
+	@Override
+	public void reIndex() {
+		for (int i = 0; i < stepViwerChildren.size(); i++) {
+			
+			stepViwerChildren.get(i).getViewer().getStepWrapper().getStep().setIndex(new Integer(i).toString() );
+			
+			
+		}
 		
 	}
 		

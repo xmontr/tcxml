@@ -171,6 +171,7 @@ public class TextInputView extends Composite implements SelectionListener, Prope
 			
 			displayButton.setText(mntmTxt.getText());
 		}
+		layout(true, true);
 		
 	}
 	
@@ -184,6 +185,7 @@ public class TextInputView extends Composite implements SelectionListener, Prope
 			
 			displayButton.setText(mntmTxt.getText());
 		}
+		layout(true, true);
 		
 	}
 	
@@ -223,6 +225,7 @@ public class TextInputView extends Composite implements SelectionListener, Prope
 		this.arggModel = mo;
 	setInputData(mo.getValue());
 	setJavascript(mo.getIsJavascript());
+	setPara(mo.getIsParam());
 		
 	inputtextmodel.addPropertyChangeListener("javascript", this);
 	inputtextmodel.addPropertyChangeListener("inputData", this);

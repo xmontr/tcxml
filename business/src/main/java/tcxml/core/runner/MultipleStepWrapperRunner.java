@@ -34,6 +34,8 @@ public PlayingContext runSteps( PlayingContext ctx) throws TcXmlException {
 			
 			temp = thestep.play(ctx);
 			try {
+				
+				controller.getLog().fine("sleeping between step (ms) = " + interva);
 				Thread.currentThread().sleep(interva);
 			} catch (InterruptedException e) {
 throw new TcXmlException("runtime error when waiting interval step time", e) ;

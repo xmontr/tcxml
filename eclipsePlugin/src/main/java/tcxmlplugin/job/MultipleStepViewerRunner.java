@@ -66,6 +66,7 @@ public class MultipleStepViewerRunner {
 			}
 
 			try {
+				stepViewer.getController().getLog().fine("sleeping between step (ms) = " + interva);
 				Thread.currentThread().sleep(interva);
 			} catch (InterruptedException e) {
 				// TODO Auto-generated catch block

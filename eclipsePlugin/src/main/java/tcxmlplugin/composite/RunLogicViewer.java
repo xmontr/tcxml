@@ -238,6 +238,14 @@ private void waitForSuccess(PlayingJob j)  {
 	public void setCurrentStepExpanded(StepViewer st) {
 		// TODO Auto-generated method stub
 		
+	}
+
+
+
+	@Override
+	public void reIndex() {
+		// TODO Auto-generated method stub
+		
 	}	
 	
 	

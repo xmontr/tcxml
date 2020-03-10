@@ -196,6 +196,35 @@ public class IfView extends StepView  implements StepContainer, ExpandListener{
 	}
 	
 	@Override
+	public void addStep(Step step, int index) throws TcXmlException {
+		 StepViewer tv = StepViewerFactory.getViewer(step,this, controller,getLibrary());
+		 
+		 if(tv.getViewer() instanceof StepContainer) {
+			 
+			 StepContainer childcont = (StepContainer)tv.getViewer();
+			 childcont.getBar().addExpandListener(this);
+			 
+		 }		
+		ExpandItem xpndtmNewExpanditem = new ExpandItem(ifbar, SWT.NONE,index);
+
+		xpndtmNewExpanditem.setExpanded(false);
+		xpndtmNewExpanditem.setText(tv.getTitle());
+		
+		xpndtmNewExpanditem.setHeight(tv.computeSize(SWT.DEFAULT, SWT.DEFAULT).y );
+		xpndtmNewExpanditem.setControl(tv);
+		tv.setParentExpandItem(xpndtmNewExpanditem);
+		
+		 stepViwerChildren.add(index,tv);
+		 
+		 ifbar.layout();
+		
+	}
+	
+	
+	
+	
+	
+	@Override
 	public void populate(AbstractStepWrapper stepWrapper2) throws TcXmlException {
 		
 		if(! (stepWrapper2 instanceof IfWrapper )) {
@@ -345,6 +374,17 @@ BoundList<Step> li = ifwrapper.getIfSteps();
 	@Override
 	public void saveModel() throws TcXmlException {
 		stepWrapper.saveArguments();
+		
+	}
+
+	@Override
+	public void reIndex() {
+		for (int i = 0; i < stepViwerChildren.size(); i++) {
+			
+			stepViwerChildren.get(i).getViewer().getStepWrapper().getStep().setIndex(new Integer(i).toString() );
+			
+			
+		}
 		
 	}
 	

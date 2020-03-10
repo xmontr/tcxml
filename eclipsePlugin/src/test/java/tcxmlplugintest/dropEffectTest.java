@@ -85,7 +85,7 @@ public class dropEffectTest extends Composite{
 		Label lblNewLabel_1 = new Label(composite3, SWT.NONE);
 		lblNewLabel_1.setText("New Label");
 
-		DropTarget expandbardroptarget = new MyExpandBarDropUtil(expandBar).buildDropTarget();
+		//DropTarget expandbardroptarget = new MyExpandBarDropUtil(expandBar).buildDropTarget();
 		
 	}
 

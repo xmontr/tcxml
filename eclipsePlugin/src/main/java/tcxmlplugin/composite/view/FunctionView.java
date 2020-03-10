@@ -99,6 +99,33 @@ public class FunctionView extends StepView implements StepContainer, ExpandListe
 		stepViwerChildren.add(tv);
 
 	}
+	
+	
+	public void addStep(Step step, int index) throws TcXmlException {
+
+		StepViewer tv = StepViewerFactory.getViewer(step, this, controller,getLibrary());
+		
+		
+		 
+
+
+		ExpandItem xpndtmNewExpanditem = new ExpandItem(bar, SWT.NONE,index);
+
+		xpndtmNewExpanditem.setExpanded(false);
+		xpndtmNewExpanditem.setText(tv.getTitle());
+
+		xpndtmNewExpanditem.setHeight(tv.computeSize(SWT.DEFAULT, SWT.DEFAULT).y );
+		xpndtmNewExpanditem.setControl(tv);
+		tv.setParentExpandItem(xpndtmNewExpanditem);
+
+		stepViwerChildren.add(index,tv);
+
+	}
+	
+	
+	
+	
+	
 
 	@Override
 	public ExpandBar getBar() {
@@ -257,6 +284,17 @@ controller.getLog().info("***************     function  **********collpased ");
 	@Override
 	public void saveModel() throws TcXmlException {
 		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void reIndex() {
+		for (int i = 0; i < stepViwerChildren.size(); i++) {
+			
+			stepViwerChildren.get(i).getViewer().getStepWrapper().getStep().setIndex(new Integer(i).toString() );
+			
+			
+		}
 		
 	}
 		
