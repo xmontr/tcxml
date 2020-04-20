@@ -116,7 +116,7 @@ public abstract class StepView extends Composite  implements Playable, PropertyC
 		setTitle(stepWrapper.getTitle());
 		populate(stepWrapper);
 		
-		this.stepWrapper.getStep().addPropertyChangeListener(this);
+		this.stepWrapper.addPropertyChangeListener(this);
 
 			
 		
@@ -125,7 +125,7 @@ public abstract class StepView extends Composite  implements Playable, PropertyC
 	
 	@Override
 	public void propertyChange(PropertyChangeEvent evt) {
-		if(evt.getPropertyName().equals("index")) {
+		if(evt.getPropertyName().equals("title")) {
 			
 			try {
 				setTitle(this.stepWrapper.getTitle());

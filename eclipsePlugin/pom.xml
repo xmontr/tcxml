@@ -6,17 +6,17 @@
   <artifactId>tcxmlplugin</artifactId>
   <version>1.0.0-SNAPSHOT</version>
   <packaging>eclipse-plugin</packaging>
-      <repositories>
+      <!-- <repositories>
     <repository> 
        <id>eclipse</id>
       <name>eclipse repo</name>
-      <url>http://download.eclipse.org/releases/2019-09/201909181001/</url>
+      <url>http://download.eclipse.org/releases/2020-03/202003181000/</url>
       <layout>p2</layout> 
 
     
       
     </repository>
-  </repositories> 
+  </repositories>  -->
   
   <build>
       <sourceDirectory>src/main/java</sourceDirectory>

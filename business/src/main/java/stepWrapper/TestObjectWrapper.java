@@ -2,11 +2,20 @@ package stepWrapper;
 
 import java.io.File;
 import java.io.PrintWriter;
+import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Function;
 
+import javax.json.Json;
+import javax.json.JsonMergePatch;
+import javax.json.JsonObject;
+import javax.json.JsonObjectBuilder;
+import javax.json.JsonValue;
+import javax.json.JsonWriter;
+
+import org.apache.commons.lang.StringEscapeUtils;
 import org.openqa.selenium.By;
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.Keys;
@@ -33,6 +42,7 @@ import tcxml.core.TcXmlController;
 import tcxml.core.TcXmlException;
 
 import tcxml.model.ArgModel;
+import tcxml.model.Ident;
 import tcxml.model.ListArgModel;
 import tcxml.model.Step;
 import tcxml.model.TestObject;
@@ -43,23 +53,64 @@ public class TestObjectWrapper extends AbstractStepWrapper {
 	
 	
 	private StepStat stat;
+	
+	private TestObject theTestObject;
+	private boolean isBrowserStep ;
 
 	public TestObjectWrapper(Step step, TcXmlController controller, TruLibrary library) throws TcXmlException {
 		super(step, controller, library);
 		stat = new StepStat();
+		if (!controller.isBrowserStep(step)) { // testobject is not browser
+		theTestObject = controller.getTestObjectById(step.getTestObject(), library);
+		isBrowserStep = false ;
+		
+	} else {
+		isBrowserStep = true ;
+		theTestObject = null;
+		
 	}
+	}
+	
+/***
+ * 
+ * 	
+ * @return if the testobject act on the browser or on an htmlelement
+ */
+	
+public boolean isBrowserStep() {
+	
+	return isBrowserStep;
+	
+}
+
+
+public TestObject getTheTestObject() {
+	return theTestObject;
+}
+
+public ArrayList<String> getIdentificationsMethods() {
+	
+	ArrayList<String> li = new ArrayList<String>();
+	li.add("XPath");
+	li.add("JavaScript");	
+	
+	return li;
+	
+}
+	
+	
 
 	@Override
 	public String getTitle() throws TcXmlException {
 		String ret;
-		TestObject to = null;
-		if (!controller.isBrowserStep(step)) { // testobject is not browser
+		
+		if (!isBrowserStep ) { // testobject is not browser
 
-				to = controller.getTestObjectById(step.getTestObject(), library);
+				
 
-			String name = to.getAutoName() == null ? to.getManualName() : to.getAutoName() ;
+			String name = theTestObject.getAutoName() == null ? theTestObject.getManualName() : theTestObject.getAutoName() ;
 			
-			name = name == null ? to.getFallbackName() : name ;
+			name = name == null ? theTestObject.getFallbackName() : name ;
 			
 			
 			 ret = formatTitle(step.getIndex(), step.getAction() + " on " + name );
@@ -224,7 +275,7 @@ ret.add(mo);
 	
 		
 		
-		if(controller.isBrowserStep(step)) { // test object is the browser
+		if(isBrowserStep) { // test object is the browser
 			
 		  nctx = runBrowserStep(ctx);
 		
@@ -270,11 +321,7 @@ ret.add(mo);
 		WebDriver dr = controller.getDriver();
 		controller.ensureDriver();
 		
-		/*
-		 * JsonObject locobj = arg.getJsonObject("Location"); String location =
-		 * locobj.getJsonString("value").getString(); boolean isj =
-		 * locobj.getBoolean("evalJavaScript");
-		 */
+	
 		 
 		ArgModel locationArg = argumentMap.get("Location") ;
 		
@@ -311,31 +358,24 @@ ret.add(mo);
 	}
 	
 	private PlayingContext runTestObjectStep( PlayingContext ctx) throws TcXmlException {
-		TestObject to;
-		if (library == null) {
-			to = controller.getTestObjectById(step.getTestObject());
 
-		} else {
-			to = controller.getTestObjectById(step.getTestObject(), library);
-
-		}
 		
 
 	
 		switch (step.getAction()) {
 			
-		case "Type": typeText( to,ctx);
+		case "Type": typeText( ctx);
 		break;
-		case "Click":click(to,ctx);
+		case "Click":click(ctx);
 		break;
-		case "Wait":waitOn(to, ctx);
+		case "Wait":waitOn( ctx);
 	break;
-		case "Verify":verify(to, ctx);break;
+		case "Verify":verify( ctx);break;
 		
-		case "Evaluate JavaScript":evalJSOnObject(to,ctx);break;
-		case "Select":select(to,ctx);break;
-		case "Set" : doSet(to,ctx);break;
-		case "Wait for Property":waitForProperty(to,ctx);break;
+		case "Evaluate JavaScript":evalJSOnObject(ctx);break;
+		case "Select":select(ctx);break;
+		case "Set" : doSet(ctx);break;
+		case "Wait for Property":waitForProperty(ctx);break;
 		
 		default: notImplemented();
 		}
@@ -345,14 +385,14 @@ ret.add(mo);
 	}
 	
 	
-	private void waitForProperty(TestObject to, PlayingContext ctx) throws TcXmlException {
-		waitOn(to, ctx);
+	private void waitForProperty( PlayingContext ctx) throws TcXmlException {
+		waitOn( ctx);
 		
 	}
 
-	private void doSet(TestObject to, PlayingContext ctx) throws TcXmlException  {
+	private void doSet( PlayingContext ctx) throws TcXmlException  {
 		ArgModel thepath = argumentMap.get("Path");
-		WebElement theelement = controller.identifyElement(to, ctx.getCurrentExecutionContext());
+		WebElement theelement = controller.identifyElement(theTestObject, ctx.getCurrentExecutionContext());
 		String thefile = controller.evaluateJsArgument(thepath, ctx.getCurrentExecutionContext());
 		File file = new File(thefile);	
 		if( !file.exists()) {
@@ -371,17 +411,17 @@ ret.add(mo);
 	}
 	
 	
-	private void select(TestObject to, PlayingContext ctx) throws TcXmlException {
+	private void select( PlayingContext ctx) throws TcXmlException {
 		ArgModel thetext = argumentMap.get("Text");
 		ArgModel theordinal = argumentMap.get("Ordinal");
-		WebElement theelement = controller.identifyElement(to, ctx.getCurrentExecutionContext());
+		WebElement theelement = controller.identifyElement(theTestObject, ctx.getCurrentExecutionContext());
 		int index = 1;
 		
-		if(hasRole(to,"listbox")) {
+		if(hasRole(theTestObject,"listbox")) {
 			
 			selectBySelect(theelement, thetext, theordinal,ctx);
 			
-		}else if (hasRole(to,"radiogroup")) {
+		}else if (hasRole(theTestObject,"radiogroup")) {
 			
 			selectByRadioGroup(theelement, thetext, theordinal);
 			
@@ -511,13 +551,13 @@ ret.add(mo);
 	}
 	
 	
-	private void verify(TestObject to, PlayingContext ctx) {
+	private void verify( PlayingContext ctx) {
 		// TODO Auto-generated method stub
 		
 	}
 	
-	private void evalJSOnObject(TestObject to, PlayingContext ctx) throws TcXmlException {
-		WebElement finded = controller.identifyElement(to,ctx.getCurrentExecutionContext());
+	private void evalJSOnObject( PlayingContext ctx) throws TcXmlException {
+		WebElement finded = controller.identifyElement(theTestObject,ctx.getCurrentExecutionContext());
 		ArgModel code = argumentMap.get("Code");
 		controller.evalJavascriptOnObject(code.getValue(),finded,ctx.getCurrentExecutionContext());
 		
@@ -525,13 +565,13 @@ ret.add(mo);
 		
 	}
 	
-	private void waitOn(TestObject to, PlayingContext ctx) throws TcXmlException {
+	private void waitOn( PlayingContext ctx) throws TcXmlException {
 		
-		String identmethodstr = to.getIdents().getActive();
+		String identmethodstr = theTestObject.getIdents().getActive();
 		
 		IdentificationMethod identMetho = IdentificationMethod.get(identmethodstr);
 		
-		String identjs = controller.getIdentForTestObject(to, identmethodstr);
+		String identjs = this.getIdentForTestObject( identmethodstr);
 		long TIMEOUTWAIT = 20;
 		WebDriverWait w = new WebDriverWait(controller.getDriver(), TIMEOUTWAIT );
 		switch(identMetho) {
@@ -548,7 +588,7 @@ ret.add(mo);
 		
 		case XPATH : 
 		
-		String xpath = controller.getXpathForTestObject(to);
+		String xpath = controller.getXpathForTestObject(theTestObject);
 		
 		try {
 		
@@ -569,7 +609,7 @@ ret.add(mo);
 	}
 	
 	
-	private void click(TestObject to, PlayingContext ctx) throws TcXmlException {
+	private void click( PlayingContext ctx) throws TcXmlException {
 		
 		String button ="left";
 		
@@ -581,10 +621,10 @@ ret.add(mo);
 	
 		 switch (button) {
 		case "left":
-			clickLeft(to,ctx);
+			clickLeft(ctx);
 			break;
 		case "right":
-			clickRight(to,ctx);
+			clickRight(ctx);
 			break;
 
 		default:notImplemented();
@@ -593,13 +633,13 @@ ret.add(mo);
 		
 	}
 
-	private void clickRight(TestObject to, PlayingContext ctx) throws TcXmlException {
+	private void clickRight( PlayingContext ctx) throws TcXmlException {
 		notImplemented();
 		
 	}
 
-	private void clickLeft(TestObject to, PlayingContext ctx) throws TcXmlException {
-		doclick(to,ctx);
+	private void clickLeft( PlayingContext ctx) throws TcXmlException {
+		doclick(ctx);
 		
 		
 	}
@@ -610,23 +650,23 @@ ret.add(mo);
 	}
 	
 	
-public void doclick(TestObject to, PlayingContext ctx) throws TcXmlException {
+public void doclick( PlayingContext ctx) throws TcXmlException {
 		
 		
 
 		
-		WebElement finded = controller.identifyElement(to,ctx.getCurrentExecutionContext());
+		WebElement finded = controller.identifyElement(theTestObject,ctx.getCurrentExecutionContext());
 		controller.highlight(finded);
 			final Actions actions = new Actions(controller.getDriver());
 		//	actions.moveToElement(controller.identifyElement(to, ctx.getCurrentExecutionContext())).click().perform();
 			
-			actions.moveToElement(controller.identifyElement(to, ctx.getCurrentExecutionContext())).perform();
-			actions.moveToElement(controller.identifyElement(to, ctx.getCurrentExecutionContext())).click().perform();
+			actions.moveToElement(controller.identifyElement(theTestObject, ctx.getCurrentExecutionContext())).perform();
+			actions.moveToElement(controller.identifyElement(theTestObject, ctx.getCurrentExecutionContext())).click().perform();
 		
 	}
 
 	
-	private void typeText(TestObject to, PlayingContext ctx) throws TcXmlException {
+	private void typeText( PlayingContext ctx) throws TcXmlException {
 		
 		ArgModel txtarg = argumentMap.get("Value");
 		String txt = txtarg.getValue();
@@ -637,7 +677,7 @@ public void doclick(TestObject to, PlayingContext ctx) throws TcXmlException {
 		 boolean clear = new Boolean(cleararg.getValue());
 			
 		 final Actions actions = new Actions(controller.getDriver());
-		 actions.moveToElement(controller.identifyElement(to, ctx.getCurrentExecutionContext())).perform(); 
+		 actions.moveToElement(controller.identifyElement(theTestObject, ctx.getCurrentExecutionContext())).perform(); 
 	/// if argument is in js it should be evaluated before
 			 if(isj || isparam) {
 				 
@@ -647,7 +687,7 @@ public void doclick(TestObject to, PlayingContext ctx) throws TcXmlException {
 			
 			 }
 			 
-			 controller.typeText(ctx.getCurrentExecutionContext(),to, txt, 20,clear);
+			 controller.typeText(ctx.getCurrentExecutionContext(),theTestObject, txt, 20,clear);
 		
 	}
 	
@@ -656,7 +696,7 @@ public void doclick(TestObject to, PlayingContext ctx) throws TcXmlException {
 	public void export(PrintWriter pw) throws TcXmlException {
 		
 		String ret;
-		if(controller.isBrowserStep(step)) { // test object is the browser
+		if(isBrowserStep) { // test object is the browser
 			
 			  ret = exportBrowserStep();
 			
@@ -694,30 +734,20 @@ public void doclick(TestObject to, PlayingContext ctx) throws TcXmlException {
 	
 	private String exportTestObjectStep() throws TcXmlException {
 		String ret = null;
-		TestObject to;
-		if (library == null) {
-			to = controller.getTestObjectById(step.getTestObject());
 
-		} else {
-			to = controller.getTestObjectById(step.getTestObject(), library);
-
-		}
-		
-
-	
 		switch (step.getAction()) {
 			
-		case "Type": ret = genericExport("await TC.type",to); 
+		case "Type": ret = genericExport("await TC.type",theTestObject); 
 		break;
-		case "Click":ret = genericExport("await TC.click",to);
+		case "Click":ret = genericExport("await TC.click",theTestObject);
 		break;
-		case "Wait":ret = genericExport("await TC.waitOn",to);
+		case "Wait":ret = genericExport("await TC.waitOn",theTestObject);
 	break;
-		case "Verify": ret = genericExport("await TC.verify",to); break;
+		case "Verify": ret = genericExport("await TC.verify",theTestObject); break;
 		
-		case "Evaluate JavaScript":ret = genericExport("await TC.evaljsOnObject",to);break;
-		case "Select":ret = genericExport("await TC.select",to);break;
-		case "Set" : ret = genericExport("await TC.set",to);break;
+		case "Evaluate JavaScript":ret = genericExport("await TC.evaljsOnObject",theTestObject);break;
+		case "Select":ret = genericExport("await TC.select",theTestObject);break;
+		case "Set" : ret = genericExport("await TC.set",theTestObject);break;
 		
 		default: ret = exportnotImplemented();
 		}
@@ -729,5 +759,112 @@ public void doclick(TestObject to, PlayingContext ctx) throws TcXmlException {
 		return " step not implemented " + step.getAction();
 	}
 	
+	
+	public String getActiveIdentification() {
+		
+		if(isBrowserStep) throw new UnsupportedOperationException(" browser step has no identifgication method");
+		
+	return theTestObject.getIdents().getActive();	
+		
+	}
+	/**
+	 * 
+	 * 
+	 * @param idmethod
+	 * @return the identification string fot thetestobject ( can be an xpath query, a javascript snippet according the identification method)
+	 * @throws TcXmlException
+	 */
+	
+	public String getIdentForTestObject(  String idmethod) throws TcXmlException {
+		String ret =null;		
+		if( idmethod.equals("Electors")) {
+		throw new TcXmlException("unsupported identification method", new IllegalArgumentException("Electors"))	;			
+		}
+		BoundList<Ident> identificators = theTestObject.getIdents().getIdent();
+		for (Ident ident : identificators) {
+			if(ident.getType().equals(idmethod)){
+				
+				String json= ident.getValue();
+				JsonObject arg =controller.readJsonObject(json) ;
+				arg = arg.getJsonObject("implData");
+				ret =arg.getJsonString("value").getString();
+				//ret=StringEscapeUtils.unescapeJavaScript(ret);				
+			}			
+		}
+	return ret;
+	}
+	
+	
+	/**
+	 *  set the identification string to the identification method
+	 * 
+	 * @param idmethod
+	 * @param ident
+	 * @throws TcXmlException
+	 */
+public void setIdentForTestObject(  String idmethod, String identstring) throws TcXmlException {
+	if(identstring == null ) {
+		identstring="";
+	}
+	boolean foundedIdent =false;
+	BoundList<Ident> identificators = theTestObject.getIdents().getIdent();
+	for (Ident ident : identificators) {
+		if(ident.getType().equals(idmethod)){
+			 foundedIdent = true;
+			String json= ident.getValue();
+			JsonObject argjson =controller.readJsonObject(json) ;
+			 JsonObject implDatajson = argjson.getJsonObject("implData");
+		
+			
+			JsonObjectBuilder newArg  = Json.createObjectBuilder(argjson);
+			JsonObjectBuilder newimpl  = Json.createObjectBuilder(implDatajson);
+			
+			newimpl.remove("value");			
+			newimpl.add("value", identstring);
+			newArg.remove("implData");
+			newArg.add("implData", newimpl);
+			
+			 StringWriter writer = new StringWriter();
+		     JsonWriter jwriter = Json.createWriter(writer);
+		    jwriter.writeObject(newArg.build());
+			
+			String newIdentValue = StringEscapeUtils.escapeHtml(writer.toString());
+			
+			 
+				 writer = new StringWriter();
+			     jwriter = Json.createWriter(writer);
+			     jwriter.writeObject(argjson);
+			 String oldIdentValue = StringEscapeUtils.escapeHtml(writer.toString());
+			 
+			controller.getLog().fine("update identifification " + idmethod + " new value is :"+newIdentValue);
+			 
+			controller.getLog().fine( " old  value was :"+oldIdentValue);
+						
+		ident.setValue(newIdentValue);					
+		}
+}
+	
+if(!foundedIdent && (! identstring.isEmpty() ) )	{ // ident was not previously existing, create it
+Ident newident = new Ident() ;
+newident.setType(idmethod);
+JsonObjectBuilder newValJson  = Json.createObjectBuilder();
+JsonObjectBuilder newImpl  = Json.createObjectBuilder();
+newImpl.add("value", StringEscapeUtils.escapeHtml(identstring));
+newValJson.add("implData", newImpl);
+
+newident.setValue(newValJson.toString());
+theTestObject.getIdents().getIdent().add(newident);
+	
+}	
+
+}
+
+
+
+public void setActiveIdentMehod(String idmethod) {
+	
+	theTestObject.getIdents().setActive(idmethod);	
+	
+}
 
 }

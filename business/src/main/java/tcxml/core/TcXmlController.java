@@ -239,6 +239,8 @@ public class TcXmlController {
 	
 	
 	private static  ScriptEngineManager  scriptFactory = new ScriptEngineManager();
+
+	private FileHandler fhandler;
 	
 	
 	
@@ -596,7 +598,12 @@ private  TruLibrary loadLibrary( InputStream inputStream) throws TcXmlException 
 }
 
 
-
+/***
+ * load all the configurations files from path dir
+ * 
+ * @param pathdir
+ * @throws TcXmlException
+ */
 
 
 public void loadFromDisk(String pathdir) throws TcXmlException {
@@ -706,6 +713,25 @@ setPath(file);
 configureLogger();
 	
 }
+
+/**
+ * 
+ *  free all resources allocated by loadfromfisk
+ * 
+ */
+
+
+public void dispose() {
+	
+	log.removeHandler(fhandler);
+	fhandler.close();
+	
+}
+
+
+
+
+
 public String getScriptDir() {
 	return scriptDir;
 }
@@ -1034,7 +1060,10 @@ public String getXpathForTestObject( TestObject obj) throws TcXmlException {
 public String getIdentForTestObject( TestObject obj, String idmethod) throws TcXmlException {
 	String ret =null;
 	boolean isXpathDefined = false;
-	
+	if( idmethod.equals("Electors")) {
+	throw new TcXmlException("unsupported identification method", new IllegalArgumentException("Electors"))	;
+		
+	}
 	BoundList<Ident> identificators = obj.getIdents().getIdent();
 	
 	
@@ -2664,7 +2693,6 @@ public String getSubtitle(AbstractStepWrapper step) throws TcXmlException {
  
  private void configureLogger() throws TcXmlException {
 	 
-FileHandler fhandler;
 String pattern = this.path.getAbsolutePath() + "/tcxml-%u%g.log" ;
 try {
 	fhandler = new FileHandler(pattern);

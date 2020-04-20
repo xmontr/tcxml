@@ -630,7 +630,10 @@ return ret;
 }
 
 
-
+public void setIndex(int i) {
+	
+	getViewer().getStepWrapper().getStep().setIndex(new Integer(i+1).toString() );
+}
 	
 		
 }

@@ -349,8 +349,13 @@ controller.getLog().info("**********    ASTEPCONTAINER " + this.getClass()  +"**
 			@Override
 			public void reIndex() {
 				for (int i = 0; i < stepViwerChildren.size(); i++) {
+					StepViewer stepviewer = stepViwerChildren.get(i);
+					StepView theview = stepviewer.getViewer();
+			
+					int j = i+1;
 					
-					stepViwerChildren.get(i).getViewer().getStepWrapper().getStep().setIndex(new Integer(i+1).toString() );
+				
+					theview.getStepWrapper().setIndex(j );
 					
 					
 					

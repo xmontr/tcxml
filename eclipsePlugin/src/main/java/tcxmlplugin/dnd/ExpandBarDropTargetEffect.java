@@ -234,7 +234,7 @@ tempExpandItem = nitem ;
 		}else {
 			
 			newstep.setIndex(new Integer(lastIndex +1).toString());
-			theContainer.addStep(newstep, lastIndex+1);
+			theContainer.addStep(newstep, lastIndex);
 			
 			
 		}

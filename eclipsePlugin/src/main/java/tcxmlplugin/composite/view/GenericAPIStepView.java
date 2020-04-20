@@ -96,7 +96,7 @@ public class GenericAPIStepView extends StepView implements PropertyChangeListen
 		}
 		GenericApiWrapper wr = (GenericApiWrapper) stepWrapper2;
 		
-		Step model = stepWrapper2.getModel();
+		//Step model = stepWrapper2.getModel();
 	
 		genericapimodel.setSelectedCategory(wr.getCategory());
 			
@@ -154,6 +154,7 @@ public class GenericAPIStepView extends StepView implements PropertyChangeListen
 
 	@Override
 	public void propertyChange(PropertyChangeEvent evt) {
+		super.propertyChange(evt);
 		String prop = evt.getPropertyName();
 		if(prop.equals("methodName")) { //adapt the argument to the selected method
 			String newmethod = (String) evt.getNewValue();

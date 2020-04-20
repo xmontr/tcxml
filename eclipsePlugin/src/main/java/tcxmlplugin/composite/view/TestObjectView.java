@@ -249,6 +249,7 @@ public class TestObjectView extends StepView implements PropertyChangeListener {
 
 	@Override
 	public void propertyChange(PropertyChangeEvent evt) {
+		super.propertyChange(evt);
 		
 		if(evt.getPropertyName().equals("selectedAction")) {
 			
@@ -311,35 +312,28 @@ public class TestObjectView extends StepView implements PropertyChangeListener {
 		testobjectmodel.setSelectedAction(model.getAction());
 		
 		
-		ArrayList<String> li = new ArrayList<String>();
-		li.add("XPath");
-		li.add("JavaScript");		
-		testobjectmodel.setAllMethods(li);
+		
+		testobjectmodel.setAllMethods(testobjectwrapper.getIdentificationsMethods());
 		
 
 
-		TestObject to = null;
-		if (!controller.isBrowserStep(model)) { // testobject is not browser
+		if (!testobjectwrapper.isBrowserStep()) { // testobject is not browser
 
 			showXpath();
 			// find the testobject in the script or in the lib
 
-				to = controller.getTestObjectById(model.getTestObject(), getLibrary());
-
-						
-			
-			// the selected method
-	String act = controller.getActiveIdentificationForTestObject(to);
+				// the selected method
+	String act = testobjectwrapper.getActiveIdentification();
 	testobjectmodel.setSelectedMethod(act);
 			
 			
 		if(act.equals("XPath"))	{
-			testobjectmodel.setXpath(controller.getXpathForTestObject(to));
+			testobjectmodel.setXpath(testobjectwrapper.getIdentForTestObject( "XPath"));
 			
 		}
 		
 		if(act.equals("JavaScript"))	{
-			testobjectmodel.setJavascript(controller.getIdentForTestObject(to, "JavaScript"));
+			testobjectmodel.setJavascript(testobjectwrapper.getIdentForTestObject( "JavaScript"));
 			
 		}
 			
@@ -431,6 +425,18 @@ public class TestObjectView extends StepView implements PropertyChangeListener {
 	@Override
 	public void saveModel() throws TcXmlException {
 		stepWrapper.saveArguments();
+		
+		TestObjectWrapper towrapper = (TestObjectWrapper)stepWrapper ;
+		towrapper.saveAction(testobjectmodel.getSelectedAction());
+		if(!towrapper.isBrowserStep()) {
+			
+			towrapper.setActiveIdentMehod(testobjectmodel.getSelectedMethod());
+			towrapper.setIdentForTestObject("XPath", testobjectmodel.getXpath());
+			towrapper.setIdentForTestObject("JavaScript", testobjectmodel.getJavascript());
+			
+		}
+
+		
 		
 	}
 
