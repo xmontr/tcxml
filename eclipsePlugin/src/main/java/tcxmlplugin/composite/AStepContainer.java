@@ -29,6 +29,7 @@ import tcxmlplugin.composite.stepViewer.StepContainer;
 import tcxmlplugin.composite.stepViewer.StepViewer;
 import tcxmlplugin.composite.stepViewer.StepViewerFactory;
 import tcxmlplugin.composite.stepViewer.TitleListener;
+import tcxmlplugin.dnd.ExpandBarDragListener;
 import tcxmlplugin.dnd.MyExpandBarDropUtil;
 
 public abstract class AStepContainer extends Composite   implements StepContainer, ExpandListener {
@@ -78,6 +79,9 @@ public TcXmlController getController() {
 
 
 	protected ScrolledComposite scroller;
+
+
+	private DropTarget expandbardroptarget;
 	
 	
 	
@@ -116,8 +120,8 @@ public TcXmlController getController() {
 	scroller.setBackground( getDisplay().getSystemColor( SWT.COLOR_DARK_BLUE) );
 	layout(true,true);
 
-	// make the bar dragable
-	DropTarget expandbardroptarget = new MyExpandBarDropUtil(this).buildDropTarget();
+	expandbardroptarget = new MyExpandBarDropUtil(this).buildDropTarget();
+	
 		
 	}
 	
@@ -186,9 +190,28 @@ content.setSize(newsize);
 	stepViwerChildren = new ArrayList<StepViewer>();
 	}
 	
+	
+	@Override
+	public void remove(Step step) throws TcXmlException {
+	for (StepViewer stepViewer : stepViwerChildren) {
+		
+		String currentid = stepViewer.getViewer().getStepWrapper().getStepId()	;
+		if(currentid.equals(step.getStepId())) {
+			stepViewer.dispose();
+			stepViwerChildren.remove(stepViewer);
+			reIndex();
+			
+		}
+		
+		
+	}
+		
+	}
+	
 	public void addStep(Step step) throws TcXmlException {
 		
-		 StepViewer tv = StepViewerFactory.getViewer(step,this, controller,getLibrary());		 
+		 StepViewer tv = StepViewerFactory.getViewer(step,this, controller,getLibrary());	
+		 tv.setDragSource(ExpandBarDragListener.buildDragsource(tv));
 		 stepViwerChildren.add(tv);
 		
 		ExpandItem xpndtmNewExpanditem = new ExpandItem(bar, SWT.NONE);		
@@ -368,5 +391,12 @@ controller.getLog().info("**********    ASTEPCONTAINER " + this.getClass()  +"**
 	
 	
 }
+			
+			@Override
+			public void dispose() {
+				
+				super.dispose();
+				expandbardroptarget.dispose();
+			}
 			
 }

@@ -12,6 +12,9 @@ import java.util.Set;
 import javax.json.Json;
 import javax.json.JsonObject;
 import javax.json.JsonWriter;
+import javax.xml.bind.JAXBContext;
+import javax.xml.bind.JAXBException;
+import javax.xml.bind.Marshaller;
 
 import org.apache.commons.lang.StringEscapeUtils;
 
@@ -401,6 +404,25 @@ for (ArgModel val : getDefaultArguments()) {
 				}
 				
 				
+				
+			}
+			
+			
+			public String marshallStep() throws TcXmlException {
+				String ret = null;
+				try {
+					JAXBContext jaxbContext     = JAXBContext.newInstance( Step.class );
+					Marshaller jaxbMarshaller   = jaxbContext.createMarshaller();
+					jaxbMarshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, false);
+					jaxbMarshaller.setProperty(Marshaller.JAXB_ENCODING, "UTF-8");
+					StringWriter writer = new StringWriter();
+					jaxbMarshaller.marshal(step,  writer);
+					ret = writer.toString();
+					return ret;
+					
+				} catch (JAXBException e) {
+					throw new TcXmlException("fail to marschal step " , e);
+				}
 				
 			}
 		  

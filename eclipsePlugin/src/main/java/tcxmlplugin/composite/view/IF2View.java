@@ -48,7 +48,7 @@ import tcxmlplugin.job.MultipleStepViewerRunner;
 import util.TcxmlUtils;
 import org.eclipse.wb.swt.SWTResourceManager;
 
-public class IF2View extends StepView  implements StepContainer, ExpandListener{
+public class IF2View extends StepView  implements ExpandListener{
 	
 	private ListInputView conditionTxt;
 	
@@ -161,85 +161,79 @@ public class IF2View extends StepView  implements StepContainer, ExpandListener{
 		
 	}
 
-	@Override
-	public ExpandBar getBar() {
-		// TODO Auto-generated method stub
-		return ifbar;
-	}
+	/*
+	 * @Override public ExpandBar getBar() { // TODO Auto-generated method stub
+	 * return ifbar; }
+	 */
 
-	@Override
-	public void clean() {
-		ExpandItem[] li = ifbar.getItems();
-		for (ExpandItem expandItem : li) {
-		Control innercontrol = expandItem.getControl();
-		if( innercontrol instanceof StepContainer) {
-			
-			expandItem.dispose();
-			((StepContainer) innercontrol).clean();
-			
-		}
-			
-			
-		else {
-			innercontrol.dispose();
-			expandItem.dispose();
-		}
-			
-		}
-		ifbar.redraw();
-		
-	}
+	/*
+	 * @Override public void clean() { ExpandItem[] li = ifbar.getItems(); for
+	 * (ExpandItem expandItem : li) { Control innercontrol =
+	 * expandItem.getControl(); if( innercontrol instanceof StepContainer) {
+	 * 
+	 * expandItem.dispose(); ((StepContainer) innercontrol).clean();
+	 * 
+	 * }
+	 * 
+	 * 
+	 * else { innercontrol.dispose(); expandItem.dispose(); }
+	 * 
+	 * } ifbar.redraw();
+	 * 
+	 * }
+	 */
 
-	@Override
-	public void addStep(Step step) throws TcXmlException {
-		 StepViewer tv = StepViewerFactory.getViewer(step,this, controller,getLibrary());
-		 
-		 if(tv.getViewer() instanceof StepContainer) {
-			 
-			 StepContainer childcont = (StepContainer)tv.getViewer();
-			 childcont.getBar().addExpandListener(this);
-			 
-		 }		
-		ExpandItem xpndtmNewExpanditem = new ExpandItem(ifbar, SWT.NONE);
-
-		xpndtmNewExpanditem.setExpanded(false);
-		xpndtmNewExpanditem.setText(tv.getTitle());
-		
-		xpndtmNewExpanditem.setHeight(tv.computeSize(SWT.DEFAULT, SWT.DEFAULT).y );
-		xpndtmNewExpanditem.setControl(tv);
-		tv.setParentExpandItem(xpndtmNewExpanditem);
-		
-		 stepViwerChildren.add(tv);
-		 
-		 ifbar.layout();
-		
-	}
+	/*
+	 * @Override public void addStep(Step step) throws TcXmlException { StepViewer
+	 * tv = StepViewerFactory.getViewer(step,this, controller,getLibrary());
+	 * 
+	 * if(tv.getViewer() instanceof StepContainer) {
+	 * 
+	 * StepContainer childcont = (StepContainer)tv.getViewer();
+	 * childcont.getBar().addExpandListener(this);
+	 * 
+	 * } ExpandItem xpndtmNewExpanditem = new ExpandItem(ifbar, SWT.NONE);
+	 * 
+	 * xpndtmNewExpanditem.setExpanded(false);
+	 * xpndtmNewExpanditem.setText(tv.getTitle());
+	 * 
+	 * xpndtmNewExpanditem.setHeight(tv.computeSize(SWT.DEFAULT, SWT.DEFAULT).y );
+	 * xpndtmNewExpanditem.setControl(tv);
+	 * tv.setParentExpandItem(xpndtmNewExpanditem);
+	 * 
+	 * stepViwerChildren.add(tv);
+	 * 
+	 * ifbar.layout();
+	 * 
+	 * }
+	 */
 	
 	
-	@Override
-	public void addStep(Step step, int index ) throws TcXmlException {
-		 StepViewer tv = StepViewerFactory.getViewer(step,this, controller,getLibrary());
-		 
-		 if(tv.getViewer() instanceof StepContainer) {
-			 
-			 StepContainer childcont = (StepContainer)tv.getViewer();
-			 childcont.getBar().addExpandListener(this);
-			 
-		 }		
-		ExpandItem xpndtmNewExpanditem = new ExpandItem(ifbar, SWT.NONE, index);
-
-		xpndtmNewExpanditem.setExpanded(false);
-		xpndtmNewExpanditem.setText(tv.getTitle());
-		
-		xpndtmNewExpanditem.setHeight(tv.computeSize(SWT.DEFAULT, SWT.DEFAULT).y );
-		xpndtmNewExpanditem.setControl(tv);
-		tv.setParentExpandItem(xpndtmNewExpanditem);
-		
-		 stepViwerChildren.add(index,tv);
-		 
-		 ifbar.layout();
-		
-	}
+	/*
+	 * @Override public void addStep(Step step, int index ) throws TcXmlException {
+	 * StepViewer tv = StepViewerFactory.getViewer(step,this,
+	 * controller,getLibrary());
+	 * 
+	 * if(tv.getViewer() instanceof StepContainer) {
+	 * 
+	 * StepContainer childcont = (StepContainer)tv.getViewer();
+	 * childcont.getBar().addExpandListener(this);
+	 * 
+	 * } ExpandItem xpndtmNewExpanditem = new ExpandItem(ifbar, SWT.NONE, index);
+	 * 
+	 * xpndtmNewExpanditem.setExpanded(false);
+	 * xpndtmNewExpanditem.setText(tv.getTitle());
+	 * 
+	 * xpndtmNewExpanditem.setHeight(tv.computeSize(SWT.DEFAULT, SWT.DEFAULT).y );
+	 * xpndtmNewExpanditem.setControl(tv);
+	 * tv.setParentExpandItem(xpndtmNewExpanditem);
+	 * 
+	 * stepViwerChildren.add(index,tv);
+	 * 
+	 * ifbar.layout();
+	 * 
+	 * }
+	 */
 	
 	
 	
@@ -314,11 +308,10 @@ conditionTxt.setArgmodel(if2wrapper.getExistCondition());
 	
 	
 
-	@Override
-	public List<StepViewer> getChildViewer() {
-		// TODO Auto-generated method stub
-		return stepViwerChildren;
-	}
+	/*
+	 * @Override public List<StepViewer> getChildViewer() { // TODO Auto-generated
+	 * method stub return stepViwerChildren; }
+	 */
 
 	@Override
 	public PlayingContext doplay(PlayingContext ctx) throws TcXmlException {
@@ -431,16 +424,18 @@ conditionTxt.setArgmodel(if2wrapper.getExistCondition());
 		
 	}
 
-	@Override
-	public void reIndex() {
-		for (int i = 0; i < stepViwerChildren.size(); i++) {
-			
-			stepViwerChildren.get(i).getViewer().getStepWrapper().getStep().setIndex(new Integer(i).toString() );
-			
-			
-		}
-		
-	}
+	/*
+	 * @Override public void reIndex() { for (int i = 0; i <
+	 * stepViwerChildren.size(); i++) {
+	 * 
+	 * stepViwerChildren.get(i).getViewer().getStepWrapper().getStep().setIndex(new
+	 * Integer(i).toString() );
+	 * 
+	 * 
+	 * }
+	 * 
+	 * }
+	 */
 	
 	
 	

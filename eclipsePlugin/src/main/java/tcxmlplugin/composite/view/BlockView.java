@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.dnd.DropTarget;
 import org.eclipse.swt.events.ExpandEvent;
 import org.eclipse.swt.events.ExpandListener;
 import org.eclipse.swt.layout.FillLayout;
@@ -30,12 +31,16 @@ import tcxmlplugin.composite.StepView;
 import tcxmlplugin.composite.stepViewer.StepViewer;
 import tcxmlplugin.composite.stepViewer.StepContainer;
 import tcxmlplugin.composite.stepViewer.StepViewerFactory;
+import tcxmlplugin.dnd.ExpandBarDragListener;
+import tcxmlplugin.dnd.MyExpandBarDropUtil;
 import tcxmlplugin.job.MultipleStepViewerRunner;
 
 public class BlockView  extends StepView implements StepContainer, ExpandListener {
 	private ExpandBar bar;
 	
 	private List<StepViewer> stepViwerChildren ;
+
+	private DropTarget expandbardroptarget;
 
 	public BlockView(Composite parent, int style )  {		
 		super(parent, style);
@@ -57,13 +62,15 @@ public class BlockView  extends StepView implements StepContainer, ExpandListene
 		
 		
 		
-		// TODO Auto-generated constructor stub
+		expandbardroptarget = new MyExpandBarDropUtil(this).buildDropTarget();
 	}
 	
 	
 	public void addStep(Step step) throws TcXmlException {
 		
 		 StepViewer tv = StepViewerFactory.getViewer(step,this, controller,getLibrary());
+		 
+		 tv.setDragSource(ExpandBarDragListener.buildDragsource(tv));
 		 
 		 if(tv.getViewer() instanceof StepContainer) {
 			 
@@ -85,6 +92,24 @@ public class BlockView  extends StepView implements StepContainer, ExpandListene
 		 bar.layout();
 		
 	}
+	
+	@Override
+	public void remove(Step step) throws TcXmlException {
+	for (StepViewer stepViewer : stepViwerChildren) {
+		
+		String currentid = stepViewer.getViewer().getStepWrapper().getStepId()	;
+		if(currentid.equals(step.getStepId())) {
+			stepViewer.dispose();
+			stepViwerChildren.remove(stepViewer);
+			reIndex();
+			
+		}
+		
+		
+	}
+		
+	}
+	
 	
 	
 	public void addStep(Step step, int index) throws TcXmlException {
@@ -249,6 +274,14 @@ public class BlockView  extends StepView implements StepContainer, ExpandListene
 			
 		}
 		
+	}
+	
+	
+	@Override
+	public void dispose() {
+		
+		super.dispose();
+		expandbardroptarget.dispose();
 	}
 		
 	}

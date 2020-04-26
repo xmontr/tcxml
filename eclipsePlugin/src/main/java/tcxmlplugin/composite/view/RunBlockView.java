@@ -57,6 +57,25 @@ public class RunBlockView extends StepView implements StepContainer, ExpandListe
 	}
 	
 	
+	@Override
+	public void remove(Step step) throws TcXmlException {
+	for (StepViewer stepViewer : stepViwerChildren) {
+		
+		String currentid = stepViewer.getViewer().getStepWrapper().getStepId()	;
+		if(currentid.equals(step.getStepId())) {
+			stepViewer.dispose();
+			stepViwerChildren.remove(stepViewer);
+			reIndex();
+			
+		}
+		
+		
+	}
+		
+	}
+	
+	
+	
 	public void addStep(Step step) throws TcXmlException {
 		
 		 StepViewer tv = StepViewerFactory.getViewer(step,this, controller,getLibrary());

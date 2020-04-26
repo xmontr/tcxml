@@ -326,8 +326,8 @@ public static class CallFunctionViewModel {
 	public void propertyChange(PropertyChangeEvent evt) {
 		super.propertyChange(evt);
 	switch (evt.getPropertyName() ) {
-	case "selectedLib" : updateFunctionList(evt.getNewValue().toString());break;
-	case "selectedFunction" :updateArgument (evt.getNewValue().toString(), callfunctmodel.getSelectedLib());break;
+	case "selectedLib" :if(evt.getNewValue() != null ) {updateFunctionList(evt.getNewValue().toString());} break;
+	case "selectedFunction" :if(evt.getNewValue() != null ) {updateArgument (evt.getNewValue().toString(), callfunctmodel.getSelectedLib());}break;
 	
 	
 	}

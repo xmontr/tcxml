@@ -357,6 +357,42 @@ ret.add(mo);
 		
 	}
 	
+	
+	public List<String> getAvailableAction(){
+		
+		ArrayList<String> ret = new ArrayList<String>();
+	if( ! isBrowserStep())	{//object action
+		ret.add("Type");
+		ret.add("Click");
+		ret.add("Wait");
+		ret.add("dbl click");
+		ret.add("Verify");
+		ret.add("Select");
+		ret.add("Evaluate JavaScript");
+		ret.add("Wait for Property");
+		
+	} else { //browser action
+		ret.add("Navigate");
+	
+		
+	}
+		
+
+		
+	return ret;
+		
+		
+		
+	}
+	
+	public String getAction() {
+		
+		return step.getAction();
+		
+		
+	}
+	
+	
 	private PlayingContext runTestObjectStep( PlayingContext ctx) throws TcXmlException {
 
 		

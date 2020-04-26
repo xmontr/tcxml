@@ -306,10 +306,12 @@ public class TestObjectView extends StepView implements PropertyChangeListener {
 	HashMap<String, ArgModel> argumentMap = stepWrapper2.getArgumentMap();	
 	
 	Step model = testobjectwrapper.getModel();
-
 	
-		testobjectmodel.setAllActions(controller.getAvailableActionForStep(model, getLibrary()));
-		testobjectmodel.setSelectedAction(model.getAction());
+	
+	
+	
+		testobjectmodel.setAllActions(testobjectwrapper.getAvailableAction());
+		testobjectmodel.setSelectedAction(testobjectwrapper.getAction());
 		
 		
 		

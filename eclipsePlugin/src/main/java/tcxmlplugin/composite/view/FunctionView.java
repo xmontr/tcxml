@@ -9,6 +9,7 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.ScrolledComposite;
+import org.eclipse.swt.dnd.DropTarget;
 import org.eclipse.swt.events.ExpandEvent;
 import org.eclipse.swt.events.ExpandListener;
 import org.eclipse.swt.layout.FillLayout;
@@ -34,6 +35,7 @@ import tcxmlplugin.composite.StepView;
 import tcxmlplugin.composite.stepViewer.StepViewer;
 import tcxmlplugin.composite.stepViewer.StepContainer;
 import tcxmlplugin.composite.stepViewer.StepViewerFactory;
+import tcxmlplugin.dnd.MyExpandBarDropUtil;
 import tcxmlplugin.job.MultipleStepViewerRunner;
 import tcxmlplugin.job.PlayingJob;
 
@@ -49,6 +51,10 @@ public class FunctionView extends StepView implements StepContainer, ExpandListe
 	private Function function;
 
 	private List<StepViewer> stepViwerChildren;
+
+
+
+	private DropTarget expandbardroptarget;
 
 	
 
@@ -76,8 +82,29 @@ public class FunctionView extends StepView implements StepContainer, ExpandListe
 		bar.setBackground(getDisplay().getSystemColor(SWT.COLOR_WHITE));
 		bar.setSpacing(10);
 		bar.addExpandListener(this);
+		
+		expandbardroptarget = new MyExpandBarDropUtil(this).buildDropTarget();
 
 	}
+	
+	
+	@Override
+	public void remove(Step step) throws TcXmlException {
+	for (StepViewer stepViewer : stepViwerChildren) {
+		
+		String currentid = stepViewer.getViewer().getStepWrapper().getStepId()	;
+		if(currentid.equals(step.getStepId())) {
+			stepViewer.dispose();
+			stepViwerChildren.remove(stepViewer);
+			reIndex();
+			
+		}
+		
+		
+	}
+		
+	}
+	
 
 	public void addStep(Step step) throws TcXmlException {
 
@@ -298,6 +325,12 @@ controller.getLog().info("***************     function  **********collpased ");
 		
 	}
 		
-	
+	@Override
+	public void dispose() {
+		
+		super.dispose();
+		
+	expandbardroptarget.dispose();	
+	}
 
 }

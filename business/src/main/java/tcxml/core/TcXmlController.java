@@ -84,6 +84,7 @@ import tcxml.model.ArgModel;
 import tcxml.model.CallFunctionAttribut;
 import tcxml.model.Function;
 import tcxml.model.Ident;
+import tcxml.model.Idents;
 import tcxml.model.ObjectFactory;
 import tcxml.model.Step;
 import tcxml.model.TestObject;
@@ -471,6 +472,37 @@ for (ArgModel val : def) {
         	return getTestObjectById(id,li);	
     	}
  
+    }
+    
+    
+    public TestObject generateNewTestObject( TruLibrary library) { 
+    	BoundList<TestObject> li = null;
+    	if( library == null) {
+    		li = script.getTestObjects().getTestObject();
+    		
+    	} else {
+    		li = library.getTestObjects().getTestObject();	
+    	}
+    	TestObject newTo = new TestObject();
+    	String id = UUID.randomUUID().toString();
+    	newTo.setTestObjId("testObj:{" + id + "}");
+		li.add(newTo);
+		newTo.setPlatform("web");
+		Idents newidents = new Idents();
+		//populate default value
+		newTo.setIdents(newidents );
+		
+		newidents.setActive("XPath");
+		Ident newIdent = new Ident();
+		newIdent.setType("XPath");
+		newIdent.setValue("{\"primaryScore\":1,\"implData\":{	\"value\":\"/html\"}}");
+		newTo.getIdents().getIdent().add(newIdent);
+		
+		
+		return (newTo);
+    	
+    	
+    	
     }
     
     
@@ -1167,7 +1199,7 @@ public List<String> getAvailableActionForStep( Step s , TruLibrary lib) throws T
 public List<String> getAvailableActionForTestobject(TestObject obj){
 	ArrayList<String> ret = new ArrayList<String>();
 	ret.add("Type");
-	ret.add("click");
+	ret.add("Click");
 	ret.add("dbl click");
 	
 return ret;	

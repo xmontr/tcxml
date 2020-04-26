@@ -9,7 +9,7 @@ import org.eclipse.swt.widgets.ExpandItem;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 
 import tcxmlplugin.dnd.DragAbleWrapper;
-import tcxmlplugin.dnd.MyDragListener;
+import tcxmlplugin.dnd.DesignPaletteDragListener;
 import tcxmlplugin.dnd.MyDropListener;
 
 import org.eclipse.swt.widgets.Display;
@@ -22,6 +22,7 @@ import org.eclipse.swt.dnd.Transfer;
 import org.eclipse.swt.dnd.DND;
 import org.eclipse.swt.dnd.DropTarget;
 import org.eclipse.swt.dnd.DropTargetListener;
+import org.eclipse.wb.swt.SWTResourceManager;
 
 public class DesignPalette extends Composite {
 	
@@ -29,6 +30,11 @@ public class DesignPalette extends Composite {
 	private Transfer[] types;
 	private DragSource dragSourcewait;
 	private DragSource dragSourcewaitForObject;
+	private DragSource dragSourceCallfFunction;
+	private DragSource dragSourceObjectAction;
+	private Object dragSourceBrowserAction;
+	private DragSource dragSourceGenApi;
+	private DragSource dragSourceComment;
 
 	public DesignPalette(Composite parent, int style) {
 		super(parent, style);
@@ -50,33 +56,56 @@ public class DesignPalette extends Composite {
 		
 		Composite functionContainer = new Composite(expandBar, SWT.NONE);
 		xpndtmNewExpanditem.setControl(functionContainer);
-		xpndtmNewExpanditem.setHeight(xpndtmNewExpanditem.getControl().computeSize(SWT.DEFAULT, SWT.DEFAULT).y);
+
 		functionContainer.setLayout(new FillLayout(SWT.VERTICAL));
 		
-		Label lblwait = new Label(functionContainer, SWT.NONE);
-		lblwait.setText("generic object action");
+		Label lblobject = new Label(functionContainer, SWT.NONE);
+		lblobject.setBackground(SWTResourceManager.getColor(SWT.COLOR_WHITE));
+		lblobject.setText("object action");
+		dragSourceObjectAction =DesignPaletteDragListener.buildDragsource(lblobject, DragAbleWrapper.OBJECTACTION) ;
+		
+		Label lblbrowser = new Label(functionContainer, SWT.NONE);
+		lblbrowser.setBackground(SWTResourceManager.getColor(SWT.COLOR_WHITE));
+		lblbrowser.setText("browser action");
+		dragSourceBrowserAction =DesignPaletteDragListener.buildDragsource(lblbrowser, DragAbleWrapper.BROWSERACTION) ;
 		
 		Label lblWait = new Label(functionContainer, SWT.NONE);
+		lblWait.setBackground(SWTResourceManager.getColor(SWT.COLOR_WHITE));
 		lblWait.setText("wait");
 		
-		dragSourcewait =MyDragListener.buildDragsource(lblWait, DragAbleWrapper.WAIT) ;
+		dragSourcewait =DesignPaletteDragListener.buildDragsource(lblWait, DragAbleWrapper.WAIT) ;
 		
 		
 		
 		Label lblWaitForObj = new Label(functionContainer, SWT.NONE);
 		lblWaitForObj.setText("wait for object");
-		dragSourcewaitForObject =MyDragListener.buildDragsource(lblWaitForObj, DragAbleWrapper.WAITFOROBJECT) ;
+		dragSourcewaitForObject =DesignPaletteDragListener.buildDragsource(lblWaitForObj, DragAbleWrapper.WAITFOROBJECT) ;
+		
+		Label lblcallfunct = new Label(functionContainer, SWT.NONE);
+		lblcallfunct.setBackground(SWTResourceManager.getColor(SWT.COLOR_WHITE));
+		lblcallfunct.setText("call function");
+		dragSourceCallfFunction =DesignPaletteDragListener.buildDragsource(lblcallfunct, DragAbleWrapper.CALLFUNCTION) ;
+		
+		Label lblGenApi = new Label(functionContainer, SWT.NONE);
+		lblGenApi.setBackground(SWTResourceManager.getColor(SWT.COLOR_WHITE));
+		lblGenApi.setText("API");
+		dragSourceGenApi =DesignPaletteDragListener.buildDragsource(lblGenApi, DragAbleWrapper.CALLGENERICAPI) ;
+		
+		xpndtmNewExpanditem.setHeight(xpndtmNewExpanditem.getControl().computeSize(SWT.DEFAULT, SWT.DEFAULT).y);
 		
 		ExpandItem xpndtmMiscellanous = new ExpandItem(expandBar, SWT.NONE);
 		xpndtmMiscellanous.setExpanded(true);
 		xpndtmMiscellanous.setText("miscellanous");
-		
 		Composite miscContainer = new Composite(expandBar, SWT.NONE);
 		xpndtmMiscellanous.setControl(miscContainer);
-	
-		
-		xpndtmMiscellanous.setHeight(xpndtmMiscellanous.getControl().computeSize(SWT.DEFAULT, SWT.DEFAULT).y);
 		miscContainer.setLayout(new FillLayout(SWT.VERTICAL));
+		
+		Label lblComment = new Label(miscContainer, SWT.NONE);
+		lblComment.setBackground(SWTResourceManager.getColor(SWT.COLOR_WHITE));
+		lblComment.setText("comment");
+		dragSourceComment =DesignPaletteDragListener.buildDragsource(lblComment, DragAbleWrapper.COMMENT) ;
+		
+		xpndtmMiscellanous.setHeight(xpndtmNewExpanditem.getControl().computeSize(SWT.DEFAULT, SWT.DEFAULT).y);
 		
 		ExpandItem xpndtmFlowControl = new ExpandItem(expandBar, SWT.NONE);
 		xpndtmFlowControl.setExpanded(true);
@@ -86,8 +115,25 @@ public class DesignPalette extends Composite {
 		xpndtmFlowControl.setControl(flowContainer);
 		
 	
-		xpndtmFlowControl.setHeight(xpndtmFlowControl.getControl().computeSize(SWT.DEFAULT, SWT.DEFAULT).y);
+		
 		flowContainer.setLayout(new FillLayout(SWT.VERTICAL));
+		
+		Label lblFor = new Label(flowContainer, SWT.NONE);
+		lblFor.setBackground(SWTResourceManager.getColor(SWT.COLOR_WHITE));
+		lblFor.setText("For");
+		DragSource dragSourcefor = DesignPaletteDragListener.buildDragsource(lblFor, DragAbleWrapper.FOR) ;
+		
+		Label lblIf = new Label(flowContainer, SWT.NONE);
+		lblIf.setBackground(SWTResourceManager.getColor(SWT.COLOR_WHITE));
+		lblIf.setText("If");
+		DragSource dragSourcefIF = DesignPaletteDragListener.buildDragsource(lblIf, DragAbleWrapper.IF) ;
+		
+		Label lblifexist = new Label(flowContainer, SWT.NONE);
+		lblifexist.setBackground(SWTResourceManager.getColor(SWT.COLOR_WHITE));
+		lblifexist.setText("if Exist");
+		DragSource dragSourcefIFExist = DesignPaletteDragListener.buildDragsource(lblifexist, DragAbleWrapper.IFEXIST) ;
+		
+		xpndtmFlowControl.setHeight(xpndtmFlowControl.getControl().computeSize(SWT.DEFAULT, SWT.DEFAULT).y);
 		
 		
 		

@@ -53,6 +53,7 @@
 						<arg>-Xconstrained-properties</arg>
 						<arg>-constrained=y</arg>
 						<arg>-bound=y</arg>
+						<arg>-Xannotate</arg>
 
 
 
@@ -63,6 +64,11 @@
 							<artifactId>jaxb2-rich-contract-plugin</artifactId>
 							<version>1.18.0</version>
 						</plugin>
+						        <plugin>
+            <groupId>org.jvnet.jaxb2_commons</groupId>
+            <artifactId>jaxb2-basics-annotate</artifactId>
+            <version>1.0.2</version>
+        </plugin>
 
 					</plugins>
 					<dependencies>

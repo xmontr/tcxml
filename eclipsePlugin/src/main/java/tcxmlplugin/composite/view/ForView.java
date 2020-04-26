@@ -13,6 +13,7 @@ import tcxmlplugin.composite.StepView;
 import tcxmlplugin.composite.stepViewer.StepContainer;
 import tcxmlplugin.composite.stepViewer.StepViewer;
 import tcxmlplugin.composite.stepViewer.StepViewerFactory;
+import tcxmlplugin.dnd.MyExpandBarDropUtil;
 import tcxmlplugin.job.MultipleStepViewerRunner;
 import tcxml.model.ArgModel;
 import tcxml.model.ForModel;
@@ -37,6 +38,7 @@ import javax.script.ScriptEngine;
 import javax.script.ScriptException;
 
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.dnd.DropTarget;
 import org.eclipse.swt.events.ExpandEvent;
 import org.eclipse.swt.events.ExpandListener;
 import org.eclipse.swt.widgets.ExpandBar;
@@ -60,6 +62,7 @@ public class ForView extends StepView  implements StepContainer, ExpandListener 
 	private String initString;
 	private String conditionString;
 	private String incrementString;
+	private DropTarget expandbardroptarget;
 
 	public ForView(Composite parent, int style){
 		super(parent, style);
@@ -103,6 +106,7 @@ public class ForView extends StepView  implements StepContainer, ExpandListener 
 		bar.setSpacing(10);
 		
 		bar.addExpandListener(this);
+		expandbardroptarget = new MyExpandBarDropUtil(this).buildDropTarget();
 	}
 
 
@@ -249,6 +253,26 @@ public class ForView extends StepView  implements StepContainer, ExpandListener 
 		bar.redraw();
 		
 	}
+	
+	
+	@Override
+	public void remove(Step step) throws TcXmlException {
+	for (StepViewer stepViewer : stepViwerChildren) {
+		
+		String currentid = stepViewer.getViewer().getStepWrapper().getStepId()	;
+		if(currentid.equals(step.getStepId())) {
+			stepViewer.dispose();
+			stepViwerChildren.remove(stepViewer);
+			reIndex();
+			
+		}
+		
+		
+	}
+		
+	}
+	
+	
 
 	@Override
 	public void addStep(Step step) throws TcXmlException {
@@ -391,6 +415,13 @@ conditionString= conditionTxt.getArgModel().getValue();
 			
 		}
 		
+	}
+	
+	@Override
+	public void dispose() {
+		
+		super.dispose();
+		expandbardroptarget.dispose();
 	}
 	
 	
