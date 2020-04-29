@@ -11,6 +11,8 @@ public enum DragAbleWrapper {
 	IF,
 	FOR,
 	IFEXIST,
-	COMMENT
+	COMMENT,
+	RUNBLOCK,
+	RUNACTION
 
 }

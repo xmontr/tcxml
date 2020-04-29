@@ -260,7 +260,12 @@ public class BlockView  extends StepView implements StepContainer, ExpandListene
 
 	@Override
 	public void saveModel() throws TcXmlException {
-		// TODO Auto-generated method stub
+		for (int i = 0; i < stepViwerChildren.size(); i++) {
+			
+			stepViwerChildren.get(i).getViewer().saveModel();
+			
+			
+		}
 		
 	}
 

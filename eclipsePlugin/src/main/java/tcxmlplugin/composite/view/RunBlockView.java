@@ -249,7 +249,12 @@ public class RunBlockView extends StepView implements StepContainer, ExpandListe
 
 	@Override
 	public void saveModel() throws TcXmlException {
-		// TODO Auto-generated method stub
+		for (int i = 0; i < stepViwerChildren.size(); i++) {
+			
+			stepViwerChildren.get(i).getViewer().saveModel();
+			
+			
+		}
 		
 	}
 

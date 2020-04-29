@@ -385,6 +385,13 @@ conditionString= conditionTxt.getArgModel().getValue();
 		
 		stepWrapper.saveArguments();
 		
+		for (int i = 0; i < stepViwerChildren.size(); i++) {
+			
+			stepViwerChildren.get(i).getViewer().saveModel();
+			
+			
+		}
+		
 	}
 	
 

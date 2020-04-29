@@ -108,6 +108,9 @@ public class TcViewer extends Composite implements PropertyChangeListener, IJobC
 
 	private VideoRecorderComposite videoRecorderComposite;
 
+
+	private RunlogicAndPalettecomposite runlogicAndPaletteView;
+
 	public TcViewer(Composite parent, int style, TcXmlController tccontroller, IFolder testcasefolder) {
 		super(parent, style);
 
@@ -126,7 +129,11 @@ public class TcViewer extends Composite implements PropertyChangeListener, IJobC
 		actionsViewer = new ActionsViewer(tabFolder, SWT.BORDER,controller);
 		this.libraryViewer = new LibraryViewer(tabFolder, SWT.BORDER,controller);
 		
-		this.runLogicViewer = new RunLogicViewer(tabFolder, SWT.BORDER,controller);
+		//this.runLogicViewer = new RunLogicViewer(tabFolder, SWT.BORDER,controller);
+		this.runlogicAndPaletteView = new RunlogicAndPalettecomposite(tabFolder, SWT.BORDER);
+		this.runLogicViewer = new RunLogicViewer(this.runlogicAndPaletteView.getRunlogicview(), SWT.BORDER,controller);
+		
+		
 		
 		
 		this.parameterviewer = new ParameterViewer(tabFolder, SWT.BORDER,controller);
@@ -215,8 +222,8 @@ public class TcViewer extends Composite implements PropertyChangeListener, IJobC
 		CTabItem logicTab = new CTabItem(tabFolder, SWT.NONE);		
 		logicTab.setText("Run Logic");
 		logicTab.setImage(ResourceManager.getPluginImage("tcxmlplugin", "icons/Gear-icon_16.png"));
-		logicTab.setControl(runLogicViewer);
-		
+		//logicTab.setControl(runLogicViewer);  
+		logicTab.setControl(this.runlogicAndPaletteView);
 
 		CTabItem CTabItemparameterTab = new CTabItem(tabFolder, SWT.NONE);
 		CTabItemparameterTab.setText("Parameters");

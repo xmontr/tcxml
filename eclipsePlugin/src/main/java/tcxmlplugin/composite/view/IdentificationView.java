@@ -14,6 +14,7 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.wb.swt.ResourceManager;
 
+import stepWrapper.TestObjectWrapper;
 import tcxml.core.TcXmlController;
 import tcxml.core.TcXmlException;
 import tcxml.model.IdentificationModel;
@@ -38,6 +39,8 @@ public class IdentificationView extends Composite{
 	
 	private IdentificationModel identmodel;
 	private TcXmlController controller ;
+
+	private TestObjectWrapper testObjectWrapper;
 	
 
 	public IdentificationView(Composite parent, int style,TcXmlController controller) {
@@ -112,25 +115,23 @@ public class IdentificationView extends Composite{
 		
 	}
 
-	public void populate(TestObject to) throws TcXmlException {
+	public void populate(TestObjectWrapper testObjectWrapper) throws TcXmlException {
 		
-		ArrayList<String> li = new ArrayList<String>();
-		li.add("XPath");
-		li.add("JavaScript");		
-		identmodel.setAllMethods(li);
+		this.testObjectWrapper = testObjectWrapper;
+		identmodel.setAllMethods(testObjectWrapper.getIdentificationsMethods());
 		
 		// the selected method
-String act = controller.getActiveIdentificationForTestObject(to);
-identmodel.setSelectedMethod(act);
+String act = testObjectWrapper.getActiveIdentification();
+identmodel.setSelectedMethod(testObjectWrapper.getActiveIdentification());
 		
 		
 	if(act.equals("XPath"))	{
-		identmodel.setXpath(controller.getXpathForTestObject(to));
+		identmodel.setXpath(testObjectWrapper.getIdentForTestObject( "XPath"));
 		
 	}
 	
 	if(act.equals("JavaScript"))	{
-		identmodel.setJavascript(controller.getIdentForTestObject(to, "JavaScript"));
+		identmodel.setJavascript(testObjectWrapper.getIdentForTestObject( "JavaScript"));
 		
 	}
 		
@@ -155,5 +156,22 @@ identmodel.setSelectedMethod(act);
 		bindingContext.bindValue(observeSelectionCombo_methodObserveWidget, selectedMethodIdentmodelObserveValue, null, null);
 		//
 		return bindingContext;
+	}
+
+	public void saveModel() throws TcXmlException {
+		
+		
+		testObjectWrapper.saveArguments();
+		
+		
+		testObjectWrapper.saveAction(identmodel.getSelectedMethod());
+		if(!testObjectWrapper.isBrowserStep()) {
+			
+			testObjectWrapper.setActiveIdentMehod(identmodel.getSelectedMethod());
+			testObjectWrapper.setIdentForTestObject("XPath", identmodel.getXpath());
+			testObjectWrapper.setIdentForTestObject("JavaScript", identmodel.getJavascript());
+			
+		}
+		
 	}
 }

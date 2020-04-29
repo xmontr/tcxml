@@ -366,21 +366,12 @@ BoundList<Step> li = ifwrapper.getIfSteps();
 	@Override
 	public void saveModel() throws TcXmlException {
 		stepWrapper.saveArguments();
+		ifcontainer.saveModel();
+		elsecontainer.saveModel();
 		
 	}
 
-	/*
-	 * @Override public void reIndex() { for (int i = 0; i <
-	 * stepViwerChildren.size(); i++) {
-	 * 
-	 * stepViwerChildren.get(i).getViewer().getStepWrapper().getStep().setIndex(new
-	 * Integer(i).toString() );
-	 * 
-	 * 
-	 * }
-	 * 
-	 * }
-	 */
+	
 	
 	
 	

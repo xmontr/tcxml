@@ -61,6 +61,8 @@ public class DesignPaletteDragListener implements DragSourceListener{
 		case IF: event.data="IF";break;
 		case IFEXIST: event.data="IFEXIST";break;
 		case COMMENT: event.data="COMMENT";break;
+		case RUNACTION: event.data="RUNACTION";break;
+		case RUNBLOCK: event.data="RUNBLOCK";break;
 		
 		default:event.data = "NODATA";
 			break;

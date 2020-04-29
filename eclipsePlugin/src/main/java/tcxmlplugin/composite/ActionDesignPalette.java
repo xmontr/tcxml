@@ -24,7 +24,7 @@ import org.eclipse.swt.dnd.DropTarget;
 import org.eclipse.swt.dnd.DropTargetListener;
 import org.eclipse.wb.swt.SWTResourceManager;
 
-public class DesignPalette extends Composite {
+public class ActionDesignPalette extends Composite {
 	
 
 	private Transfer[] types;
@@ -36,7 +36,7 @@ public class DesignPalette extends Composite {
 	private DragSource dragSourceGenApi;
 	private DragSource dragSourceComment;
 
-	public DesignPalette(Composite parent, int style) {
+	public ActionDesignPalette(Composite parent, int style) {
 		super(parent, style);
 		
 		types = new Transfer[] {TextTransfer.getInstance()};

@@ -26,6 +26,7 @@ public class StepFactory {
 		case "BROWSERACTION": ret = generateBrowserStep(controller, library); break ;
 		case "COMMENT": ret = generateCommentStep(controller, library); break ;
 		case "FOR": ret = generateForStep(controller, library); break ;
+		case "If": ret = generateIfStep(controller, library); break ;
 		case "IFEXIST":ret = generateIfExistStep(controller, library); break ;
 		case "NODATA" : 
 		default :  throw new TcXmlException("unknown step type "+steptype,  new IllegalAccessException(steptype)) ;
@@ -34,6 +35,28 @@ public class StepFactory {
 		String id = "step:{" + UUID.randomUUID().toString() + "}";	
 		ret.setStepId(id);
 		ret.setLevel("1");
+		return ret;
+	}
+
+	private static Step generateIfStep(TcXmlController controller, TruLibrary library) {
+		Step ret = new Step();
+		ret.setType("control");
+		ret.setAction("If");
+		ret.setArguments("{\"Condition&quot;:{&quot;value\":\" 2 == 1\"}}");
+		Step internalBlockif= buildInternalBlock() ;
+		Step commentStepif = generateCommentStep(controller, library);
+		commentStepif.setComment("Insert the step for If here");
+		internalBlockif.getStep().add(commentStepif );
+		
+		Step internalBlockelse= buildInternalBlock() ;
+		Step commentStepelse = generateCommentStep(controller, library);
+		commentStepelse.setComment("Insert the step for Else here");
+		internalBlockelse.getStep().add(commentStepelse );
+		ret.getStep().add(internalBlockif);
+		ret.getStep().add(internalBlockelse);
+		
+		
+		
 		return ret;
 	}
 

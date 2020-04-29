@@ -200,6 +200,23 @@ public class IfElsecontainer implements StepContainer, ExpandListener {
 			
 		}
 		
+		
+		
+		
+	}
+	
+	
+	
+	public void saveModel() throws TcXmlException {
+		
+		
+		for (int i = 0; i < stepViwerChildren.size(); i++) {
+			
+			stepViwerChildren.get(i).getViewer().saveModel();
+			
+			
+		}
+		
 	}
 	
 	

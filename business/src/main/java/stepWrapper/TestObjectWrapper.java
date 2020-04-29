@@ -97,6 +97,17 @@ public ArrayList<String> getIdentificationsMethods() {
 	return li;
 	
 }
+
+
+public String getName() {
+	
+	String name = theTestObject.getAutoName() == null ? theTestObject.getManualName() : theTestObject.getAutoName() ;
+	
+	name = name == null ? theTestObject.getFallbackName() : name ;
+	
+	return name;
+	
+}
 	
 	
 
@@ -106,14 +117,10 @@ public ArrayList<String> getIdentificationsMethods() {
 		
 		if (!isBrowserStep ) { // testobject is not browser
 
-				
 
-			String name = theTestObject.getAutoName() == null ? theTestObject.getManualName() : theTestObject.getAutoName() ;
-			
-			name = name == null ? theTestObject.getFallbackName() : name ;
 			
 			
-			 ret = formatTitle(step.getIndex(), step.getAction() + " on " + name );
+			 ret = formatTitle(step.getIndex(), step.getAction() + " on " + getName() );
 			
 			
 		}else {// testobject is browser
