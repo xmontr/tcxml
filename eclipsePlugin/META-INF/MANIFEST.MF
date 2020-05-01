@@ -53,5 +53,5 @@ Bundle-ClassPath: .,
  lib/selenium-safari-driver-3.7.1.jar,
  lib/selenium-support-3.7.1.jar,
  extra/nashorn.jar,
- lib/tcxmlBusiness-0.0.1-SNAPSHOT.jar,
- lib/javax.json-1.1.4.jar
+ lib/javax.json-1.1.4.jar,
+ lib/tcxmlBusiness-0.0.1-SNAPSHOT.jar

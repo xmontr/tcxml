@@ -99,6 +99,7 @@
 
 
     <complexType name="ident">
+     <annotation><appinfo><annox:annotate target="class">@javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter( tcxml.mapping.CdataAdapter.class)</annox:annotate></appinfo></annotation>
     	<simpleContent>
     		<extension base="string">
     			<attribute name="type" type="string"></attribute>
