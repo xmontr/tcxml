@@ -10,6 +10,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
 import java.io.StringReader;
+import java.io.StringWriter;
 import java.io.UnsupportedEncodingException;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
@@ -50,7 +51,9 @@ import javax.script.SimpleScriptContext;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBElement;
 import javax.xml.bind.JAXBException;
+import javax.xml.bind.Marshaller;
 import javax.xml.bind.Unmarshaller;
+import javax.xml.transform.Result;
 
 import org.apache.commons.configuration.ConfigurationException;
 import org.apache.commons.configuration.HierarchicalINIConfiguration;
@@ -2745,6 +2748,29 @@ try {
 
 
 	 
+	 
+	 
+ }
+ 
+ 
+ 
+ public InputStream marshallScript() throws TcXmlException {
+	 try {
+		JAXBContext jaxbContext     = JAXBContext.newInstance( TruScript.class );
+		Marshaller jaxbMarshaller   = jaxbContext.createMarshaller();
+		jaxbMarshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
+		jaxbMarshaller.setProperty(Marshaller.JAXB_ENCODING, "UTF-8");		
+		StringWriter writer = new StringWriter();		
+			jaxbMarshaller.marshal(getScript(), writer);
+			writer.close();
+			InputStream targetStream = new ByteArrayInputStream(writer.toString().getBytes());
+			return targetStream;
+			
+			
+		} catch (Exception e) {
+			throw new TcXmlException(" failure in marsshalling script " , e) ;
+			
+		}
 	 
 	 
  }

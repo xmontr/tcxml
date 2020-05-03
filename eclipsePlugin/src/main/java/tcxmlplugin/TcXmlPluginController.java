@@ -28,6 +28,7 @@ import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IProjectDescription;
+import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.IWorkspace;
 import org.eclipse.core.resources.IWorkspaceRoot;
 import org.eclipse.core.resources.ResourcesPlugin;
@@ -557,10 +558,90 @@ public class TcXmlPluginController
 		
 		return ret;
 	}
+	
+	/**
+	 * 
+	 *  store the model to the disk
+	 * 
+	 * @throws TcXmlPluginException
+	 */
+	public void saveModel() {
+		
+		
+	Job j = new Job("save default.xml") {
+			
+			@Override
+			protected IStatus run(IProgressMonitor monitor) {
+				
+				IStatus ret = Status.OK_STATUS;
+				try {
+					
+					TcXmlPluginController.getInstance().saveMainFile(monitor);
+				} catch (Exception e) {
+					//
+					TcXmlPluginController.getInstance().error(e.getMessage(), e);	
+					
+				
+					ret = Status.CANCEL_STATUS;
+				}
+				
+				finally {
+					monitor.done();
+					
+				}
+				return ret;
+			}
+		};
+		
+		
+			j.schedule();
+			saveLibraries();
+			
+			
+		
+		
+		
+	}
 
     
     
-    public IPath findMainFile( String rootdir ) throws TcXmlPluginException {
+    private void saveLibraries() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	private void saveMainFile(IProgressMonitor monitor) throws TcXmlPluginException{
+		
+		try {
+		//get inputstream of default.xml
+	IFolder scriptFolder = getTcviewer().getTcfolder();
+	IFile mainfile = scriptFolder.getFile("default.xml");
+	IPath destination = mainfile.getParent().getLocation().append("default.back").makeRelativeTo(mainfile.getParent().getLocation()) ;	
+	IFile backfile = scriptFolder.getFile(destination);
+	
+	if(backfile.exists()) {
+		backfile.delete(IResource.FORCE, monitor);
+	}
+		mainfile.copy(destination, true, monitor);
+		try {
+			InputStream newin = getTcviewer().getController().marshallScript();
+			
+	//		mainfile.setContents(newin, IResource.FORCE, monitor);	
+			scriptFolder.getFile(destination).setContents(newin, IResource.FORCE, monitor);	
+			
+		} catch (TcXmlException e) {
+		throw new TcXmlPluginException("failure saving main file", e);
+		}
+		
+		
+	} catch (CoreException e) {
+		throw new TcXmlPluginException("fail to save mainfile", e) ;
+	}
+		
+		
+	}
+
+	public IPath findMainFile( String rootdir ) throws TcXmlPluginException {
     	IPath ret = null;
     
    

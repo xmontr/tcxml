@@ -68,6 +68,7 @@ import tcxml.model.ActionsModel;
 import tcxml.model.LibraryModel;
 
 import org.eclipse.swt.widgets.ProgressBar;
+import org.eclipse.swt.events.SelectionAdapter;
 
 public class TcViewer extends Composite implements PropertyChangeListener, IJobChangeListener  {
 	private ActionsViewer actionsViewer;
@@ -294,7 +295,16 @@ public class TcViewer extends Composite implements PropertyChangeListener, IJobC
 		pauseitem.setImage(ResourceManager.getPluginImage("tcxmlplugin", "icons/media-playback-pause-2.png"));
 		
 		ToolItem saveItem = new ToolItem(scriptToolbar, SWT.NONE);
+		saveItem.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				TcXmlPluginController.getInstance().info("saving script to disk");
+				TcXmlPluginController.getInstance().saveModel();
+				
+			}
+		});
 		saveItem.setImage(ResourceManager.getPluginImage("tcxmlplugin", "icons/document-export.png"));
+	
 		
 		ToolItem stopItem = new ToolItem(scriptToolbar, SWT.NONE);
 		stopItem.setImage(ResourceManager.getPluginImage("tcxmlplugin", "icons/media-playback-stop-2.png"));
