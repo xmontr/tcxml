@@ -790,10 +790,15 @@ public InputStream addExpectedNamespace(String element, String ns, FileInputStre
 	rep.append(old.toString()). append(" ").append(ns).append("  ");
 	
 	java.util.function.Function<String,String> addNS= (String line ) ->{
+	String ret;	
+		if(line.contains(ns)) { // the name space is already set , no nneeds to add it again
+			ret=line;
+			
+		}else {
+			ret = line.replace(old.toString(), rep.toString());	
+		}
 		
-		
-		
-		String  ret = line.replace(old.toString(), rep.toString());
+		  
 		
 		return ret;
 	};
@@ -2751,7 +2756,13 @@ try {
 	 
 	 
  }
- 
+ /***
+  *  marschall the TruScript element of the script into an inputstream
+  * 
+  * 
+  * @return
+  * @throws TcXmlException
+  */
  
  
  public InputStream marshallScript() throws TcXmlException {

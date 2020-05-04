@@ -161,7 +161,7 @@
         	     		<extension base="string">
         </extension>
         </simpleContent>	     		
-     <!-- <annotation><appinfo> <annox:annotate target="field">@javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter( tcxml.mapping.CdataAdapter.class)</annox:annotate></appinfo></annotation> -->      
+           
     	   	
     </complexType>
 </schema>

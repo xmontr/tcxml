@@ -24,6 +24,7 @@ import java.util.Set;
 import java.util.Vector;
 
 import org.apache.commons.lang.StringEscapeUtils;
+import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IProject;
@@ -609,32 +610,57 @@ public class TcXmlPluginController
 		// TODO Auto-generated method stub
 		
 	}
+    /***
+     *  make a backup athe file toto.ext in toto-back.ext in the same folder. old backup is deleted
+     * 
+     * 
+     * @param monitor
+		 @param thefile 
+     * @throws TcXmlPluginException
+     */
+    
+    private void backup(IProgressMonitor monitor, IFile thefile) throws TcXmlPluginException{
+		try {
+    	IContainer folder = thefile.getParent();
+    	String ext = thefile.getFileExtension();
+    	
+    	String nudename = thefile.getFullPath().removeFileExtension().lastSegment();
+    	String newname = nudename + "-back" ;
+    	if(ext != null) {
+    		newname+= "." + ext;
+    	} 	    	
+    	IPath destination = folder.getLocation().append(newname).makeRelativeTo(folder.getLocation()) ;
+    	 IFile backfile = folder.getFile(destination);
+    	if(backfile.exists()) {//delete previous backup
+				backfile.delete(IResource.FORCE, monitor);
+				}
+				thefile.copy(destination, true, monitor);
+				info("backup " +  thefile.getName() + " in " + backfile.getName() + " in folder " + folder.getName());
+			} catch (CoreException e) {
+				// TODO Auto-generated catch block
+				throw new TcXmlPluginException("fail to manage backup file " ,e);
+			}
+    	}
+    	
+    	
+    	
+    
+    
+    
 
-	private void saveMainFile(IProgressMonitor monitor) throws TcXmlPluginException{
+	private void saveMainFile(IProgressMonitor monitor) throws TcXmlPluginException{		
 		
 		try {
 		//get inputstream of default.xml
 	IFolder scriptFolder = getTcviewer().getTcfolder();
-	IFile mainfile = scriptFolder.getFile("default.xml");
-	IPath destination = mainfile.getParent().getLocation().append("default.back").makeRelativeTo(mainfile.getParent().getLocation()) ;	
-	IFile backfile = scriptFolder.getFile(destination);
-	
-	if(backfile.exists()) {
-		backfile.delete(IResource.FORCE, monitor);
-	}
-		mainfile.copy(destination, true, monitor);
-		try {
+	IFile mainfile = findMainFile(scriptFolder);
+	backup(monitor, mainfile);
+
 			InputStream newin = getTcviewer().getController().marshallScript();
 			
-	//		mainfile.setContents(newin, IResource.FORCE, monitor);	
-			scriptFolder.getFile(destination).setContents(newin, IResource.FORCE, monitor);	
-			
-		} catch (TcXmlException e) {
-		throw new TcXmlPluginException("failure saving main file", e);
-		}
+			mainfile.setContents(newin, IResource.FORCE, monitor);			
 		
-		
-	} catch (CoreException e) {
+	} catch (Exception e) {
 		throw new TcXmlPluginException("fail to save mainfile", e) ;
 	}
 		
@@ -650,6 +676,22 @@ public class TcXmlPluginController
 	   ret = mainpath; 
 	   
    }else throw new TcXmlPluginException("fail to find default.xml infolder " + rootdir, new FileNotFoundException()
+		   );
+ 
+   return ret;
+    	
+    }
+	
+	
+	public IFile findMainFile( IFolder parent ) throws TcXmlPluginException {
+		IFile ret = null;
+    
+  IFile mainfile = parent.getFile("default.xml");
+   
+   if(mainfile.exists()) {
+	   ret = mainfile; 
+	   
+   }else throw new TcXmlPluginException("fail to find default.xml infolder " + parent.getName(), new FileNotFoundException()
 		   );
  
    return ret;
