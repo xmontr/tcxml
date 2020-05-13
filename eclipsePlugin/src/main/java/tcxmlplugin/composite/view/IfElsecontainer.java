@@ -91,6 +91,24 @@ public class IfElsecontainer implements StepContainer, ExpandListener {
 		thebar.redraw();
 		
 	}
+	
+	@Override
+	public void remove(Step step) throws TcXmlException {
+	for (StepViewer stepViewer : stepViwerChildren) {
+		
+		String currentid = stepViewer.getViewer().getStepWrapper().getStepId()	;
+		if(currentid.equals(step.getStepId())) {
+			stepViewer.dispose();
+			stepViwerChildren.remove(stepViewer);
+			reIndex();
+			
+		}
+		
+		
+	}
+		
+	}
+	
 
 	@Override
 	public void addStep(Step step) throws TcXmlException {
@@ -178,6 +196,23 @@ public class IfElsecontainer implements StepContainer, ExpandListener {
 		for (int i = 0; i < stepViwerChildren.size(); i++) {
 			
 			stepViwerChildren.get(i).getViewer().getStepWrapper().getStep().setIndex(new Integer(i).toString() );
+			
+			
+		}
+		
+		
+		
+		
+	}
+	
+	
+	
+	public void saveModel() throws TcXmlException {
+		
+		
+		for (int i = 0; i < stepViwerChildren.size(); i++) {
+			
+			stepViwerChildren.get(i).getViewer().saveModel();
 			
 			
 		}

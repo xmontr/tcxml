@@ -118,6 +118,7 @@ public class TcXmlEditor  extends EditorPart   {
 		
 		tccontroller.closeBrowser();	
 		
+		tccontroller.dispose();
 	}
 	
 

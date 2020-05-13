@@ -1,7 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<schema xmlns="http://www.w3.org/2001/XMLSchema" targetNamespace="http://www.example.org/tcxml" xmlns:tns="http://www.example.org/tcxml" elementFormDefault="qualified" attributeFormDefault="unqualified">
+<schema xmlns="http://www.w3.org/2001/XMLSchema" targetNamespace="http://www.example.org/tcxml"
+		 xmlns:tns="http://www.example.org/tcxml" 
+		  xmlns:jaxb="http://java.sun.com/xml/ns/jaxb"
+		      jaxb:version="2.1" 
+    xmlns:annox="http://annox.dev.java.net" 
+    jaxb:extensionBindingPrefixes="annox"
+		 	elementFormDefault="qualified"
+		 	 attributeFormDefault="unqualified">
 
     <complexType name="truScript">
+    <annotation><appinfo><annox:annotate target="class">@javax.xml.bind.annotation.XmlRootElement</annox:annotate></appinfo></annotation>
     	<sequence>
     		<element name="step" type="tns:step"></element>
     		<element name="testObjects" type="tns:testObjects"
@@ -16,6 +24,7 @@
     
 
     <complexType name="step">
+    <annotation><appinfo><annox:annotate target="class">@javax.xml.bind.annotation.XmlRootElement</annox:annotate></appinfo></annotation>
     	<sequence>
     		<element ref="tns:step" maxOccurs="unbounded"
     			minOccurs="0">
@@ -59,7 +68,7 @@
     	<sequence>
     		<element name="roles" type="tns:roles"></element>
     		<element name="idents" type="tns:idents"></element>
-    		<element ref="tns:icon" maxOccurs="unbounded" minOccurs="0"></element>
+    		<element ref="tns:icon" maxOccurs="unbounded" minOccurs="0"></element>    		
     		<element name="methods" type="string"></element>
     	</sequence>
     	<attribute name="testObjId" type="string"></attribute>
@@ -78,10 +87,9 @@
     <simpleType name="role">
     	<restriction base="string"></restriction>
     </simpleType>
-
     <complexType name="idents">
     	<sequence>
-    		<element name="ident" type="tns:ident"
+    	    		<element name="ident" type="tns:ident"
     			maxOccurs="unbounded" minOccurs="1">
     		</element>
     	</sequence>
@@ -92,7 +100,8 @@
 
     <complexType name="ident">
     	<simpleContent>
-    		<extension base="string">
+    		<extension base="tns:cdataString">
+
     			<attribute name="type" type="string"></attribute>
     		</extension>
     	</simpleContent>
@@ -144,4 +153,15 @@
 
 
     <element name="truLibrary" type="tns:truLibrary"></element>
+
+ 
+    <complexType name="cdataString">
+    <annotation><appinfo> <annox:annotate target="field">@javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter( tcxml.mapping.CdataAdapter.class)</annox:annotate></appinfo></annotation>
+        	<simpleContent>
+        	     		<extension base="string">
+        </extension>
+        </simpleContent>	     		
+           
+    	   	
+    </complexType>
 </schema>

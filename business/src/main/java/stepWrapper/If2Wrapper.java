@@ -29,17 +29,19 @@ import util.TcxmlUtils;
 
 public class If2Wrapper extends AbstractStepWrapper {
 
-	private TestObject theTestObject;
+	
+	private TestObjectWrapper theTestObjectWrapper ;
 
 
 	public If2Wrapper(Step step, TcXmlController controller, TruLibrary library) throws TcXmlException {
 		super(step, controller, library);
 		
-		//add object to test	
+		//add object to test
+		theTestObjectWrapper = getTestobject();
 		BoundList<Step> li = step.getStep();
 		 Step tostep = li.get(0);
 		String referencedob = tostep.getTestObject() ;
-	theTestObject = controller.getTestObjectById(referencedob, library);
+	//theTestObject = controller.getTestObjectById(referencedob, library);
 		
 		
 		
@@ -52,9 +54,11 @@ public class If2Wrapper extends AbstractStepWrapper {
 	}
 	
 	
+	
+	
 	private String buildIfString() {
 		// TODO Auto-generated method stub
-		return "if("  + theTestObject.getAutoName()  + " exists =" +argumentMap.get("Exists").getValue() ;
+		return "if("  +  theTestObjectWrapper.getName()  + " exists =" +argumentMap.get("Exists").getValue() ;
 	}
 
 	@Override
@@ -226,23 +230,39 @@ for (Step thestep : firstchild.getStep()) {
 		
 	}
 	
-	public TestObject  getTestobject() throws TcXmlException {
-		BoundList<Step> li = step.getStep();
+	/*
+	 * public TestObject getTestobject() throws TcXmlException { BoundList<Step> li
+	 * = step.getStep();
+	 * 
+	 * Step tostep = li.get(0); String referencedob = tostep.getTestObject() ;
+	 * theTestObject = controller.getTestObjectById(referencedob, getLibrary());
+	 * return theTestObject ;
+	 * 
+	 * 
+	 * }
+	 */
 	
-		 Step tostep = li.get(0);
-		String referencedob = tostep.getTestObject() ;
-	theTestObject = controller.getTestObjectById(referencedob, getLibrary());	
-	return theTestObject ;
+	 public TestObjectWrapper getTestobject() throws TcXmlException {
+		 TestObjectWrapper ret =null; 
+		Step theteststep = step.getStep().get(0) ;
+	AbstractStepWrapper thewrapper = StepWrapperFactory.getWrapper(theteststep, getController(), getLibrary());
+	if(! ( thewrapper instanceof TestObjectWrapper)) {
 		
+	throw new TcXmlException("malformed If2 wrapper : the first step of the If2 step with id " + getStepId() + " isn't a testobject", new IllegalAccessException("getTestobject"))	;
+	} else {
 		
+		ret = (TestObjectWrapper) thewrapper ;
 	}
+	return ret;	 
+		 
+	 }
 	
 	
 	private String exportIfString() throws TcXmlException {
 		StringBuffer ret = new StringBuffer();
 		
 		//get testobject	
-		 TestObject theTestObject = getTestobject();
+		 TestObject theTestObject = theTestObjectWrapper.getTheTestObject() ;
 		 
 		 
 	

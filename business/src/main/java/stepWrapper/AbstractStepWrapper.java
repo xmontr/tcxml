@@ -1,5 +1,8 @@
 package stepWrapper;
 
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
+import java.beans.PropertyChangeSupport;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.util.ArrayList;
@@ -9,6 +12,9 @@ import java.util.Set;
 import javax.json.Json;
 import javax.json.JsonObject;
 import javax.json.JsonWriter;
+import javax.xml.bind.JAXBContext;
+import javax.xml.bind.JAXBException;
+import javax.xml.bind.Marshaller;
 
 import org.apache.commons.lang.StringEscapeUtils;
 
@@ -24,7 +30,7 @@ import tcxml.model.TestObject;
 import tcxml.model.TruLibrary;
 import util.TcxmlUtils;
 
-public abstract class AbstractStepWrapper implements Playable{
+public abstract class AbstractStepWrapper implements Playable, PropertyChangeListener{
 	
 	
 	public Step getStep() {
@@ -70,6 +76,8 @@ public abstract class AbstractStepWrapper implements Playable{
 	 * 
 	 */
 	
+	protected PropertyChangeSupport propertyChangeSupport;
+	
 	protected HashMap<String, ArgModel> defaultArgumentMap ;
 	
 	public AbstractStepWrapper(Step step, TcXmlController controller, TruLibrary library) throws TcXmlException {
@@ -77,11 +85,13 @@ public abstract class AbstractStepWrapper implements Playable{
 		this.step = step;
 		this.controller = controller;
 		this.library = library;
-		//argumentMap = controller.getArguments(step , getDefaultArguments());
+		propertyChangeSupport = new PropertyChangeSupport(this);
 		
 		defaultArgumentMap = buildDefaultArgumentMap();
 		
 		argumentMap = buildArgumentMap();
+		
+	step.addPropertyChangeListener(this);	
 	}
 	
 	
@@ -337,7 +347,11 @@ for (ArgModel val : getDefaultArguments()) {
 		
 	}
 	
-	
+	public void saveAction(String thenewaction) {
+		step.setAction(thenewaction);
+		
+		
+	}
 	
 	
 	
@@ -346,8 +360,73 @@ for (ArgModel val : getDefaultArguments()) {
 		// TODO Auto-generated method stub
 		return step.getStepId();
 	}
+	
+	public void addPropertyChangeListener(
+		      PropertyChangeListener listener) {
+		    propertyChangeSupport.addPropertyChangeListener( listener);
+		  }
+
+		  public void removePropertyChangeListener(PropertyChangeListener listener) {
+		    propertyChangeSupport.removePropertyChangeListener(listener);
+		  }
 		
 	
+		  
+		  
+			@Override
+			public void propertyChange(PropertyChangeEvent evt) {
+				if(evt.getPropertyName().equals("index")) {  
+					
+					controller.getLog().fine("step id "  +  getStepId() + " change index :old=" + evt.getOldValue() + " new=" + evt.getNewValue());
+					
+
+					
+				}
+				
+			}
+
+			protected void fireTitleChange(String oldtitle, String newTitle) {
+				propertyChangeSupport.firePropertyChange("title", oldtitle,newTitle);
+				
+			}
+			
+			
+			public void setIndex( int newIndex) {
+				try {
+					String oldtitle = getTitle();
+					step.setIndex(new Integer(newIndex).toString());
+					String newtitle = getTitle();
+					fireTitleChange(oldtitle, newtitle);
+					
+				} catch (TcXmlException e) {
+					
+					controller.getLog().severe("failure in generating title" +e.getMessage());
+				}
+				
+				
+				
+			}
+			
+			
+			public String marshallStep() throws TcXmlException {
+				String ret = null;
+				try {
+					JAXBContext jaxbContext     = JAXBContext.newInstance( Step.class );
+					Marshaller jaxbMarshaller   = jaxbContext.createMarshaller();
+					jaxbMarshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, false);
+					jaxbMarshaller.setProperty(Marshaller.JAXB_ENCODING, "UTF-8");
+					StringWriter writer = new StringWriter();
+					jaxbMarshaller.marshal(step,  writer);
+					ret = writer.toString();
+					return ret;
+					
+				} catch (JAXBException e) {
+					throw new TcXmlException("fail to marschal step " , e);
+				}
+				
+			}
+		  
+		  
 
 }
 

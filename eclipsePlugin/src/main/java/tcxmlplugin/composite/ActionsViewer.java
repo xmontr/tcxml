@@ -254,27 +254,27 @@ public class ActionsViewer extends Composite  {
 	
 	private Composite createViewWithoutsnapshotViewer() {
 
-		Composite parent = new Composite(maincontainer, getStyle());
-		parent.setLayout(new FillLayout());		
-		SashForm sf = new SashForm(parent,SWT.HORIZONTAL);	
+		Composite parentWithoutSnapshotViewer = new Composite(maincontainer, getStyle());
+		parentWithoutSnapshotViewer.setLayout(new FillLayout());		
+		SashForm sf = new SashForm(parentWithoutSnapshotViewer,SWT.HORIZONTAL);	
 		// the list of step at the left
 		stepcontainerwithoutsnapshot = new Composite(sf,sf.getStyle());
 		stepcontainerwithoutsnapshot.setLayout(new FillLayout());
 		//palette at the right
 		Composite paletteContainer = new Composite(sf, getStyle());
 		paletteContainer.setLayout(new FillLayout());
-		DesignPalette palette = new DesignPalette(paletteContainer, getStyle());
+		ActionDesignPalette palette = new ActionDesignPalette(paletteContainer, getStyle());
 		
 				
-	return parent;	
+	return parentWithoutSnapshotViewer;	
 	}
 	
 	
 private Composite createaViewWithsnapshotViewer() {
 	
-	Composite parent = new Composite(maincontainer, getStyle());
-	parent.setLayout(new FillLayout());		
-	SashForm sf = new SashForm(parent,SWT.HORIZONTAL);	
+	Composite parentWithSnapshotViewer = new Composite(maincontainer, getStyle());
+	parentWithSnapshotViewer.setLayout(new FillLayout());		
+	SashForm sf = new SashForm(parentWithSnapshotViewer,SWT.HORIZONTAL);	
 	// the list of step at the left
 	stepcontainerwithsnapshot = new Composite(sf,sf.getStyle());
 	stepcontainerwithsnapshot.setLayout(new FillLayout());
@@ -282,9 +282,9 @@ private Composite createaViewWithsnapshotViewer() {
 	PaletteAndSnapshotViewer plt = new PaletteAndSnapshotViewer(sf, getStyle());
 	
 	snapshotviewer = new SnapshotViewer(plt.getSnapshot(), getStyle(),controller);	
-	DesignPalette palette = new DesignPalette(plt.getPalette(), getStyle());
+	ActionDesignPalette palette = new ActionDesignPalette(plt.getPalette(), getStyle());
 			
-	return parent;	
+	return parentWithSnapshotViewer;	
 		
 	}
 	

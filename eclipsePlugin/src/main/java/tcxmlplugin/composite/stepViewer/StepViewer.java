@@ -23,6 +23,7 @@ import tcxmlplugin.job.PlayingJob;
 
 import static org.hamcrest.Matchers.instanceOf;
 
+
 import java.beans.PropertyChangeListener;
 import java.io.PrintWriter;
 
@@ -34,6 +35,7 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.IJobChangeListener;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.dnd.DragSource;
 import org.eclipse.swt.events.ControlEvent;
 import org.eclipse.swt.events.ControlListener;
 import org.eclipse.swt.events.ExpandEvent;
@@ -66,10 +68,20 @@ public  class StepViewer extends Composite  {
 	private StepContainer container;
 	private Label verticalabel;
 	private Object breakPoint;
+	private DragSource dragSource;
 	
 	
 	
 	
+	public void setDragSource(DragSource dragSource) {
+		this.dragSource = dragSource;
+	}
+
+
+
+
+
+
 	public StepContainer getContainer() {
 		return container;
 	}
@@ -390,7 +402,16 @@ setMenu(buildMenu());
 		  }
 		  
 		  
-		  public void setPlayable(boolean isplayable) {
+		  public StepToolBar getStepToolBar() {
+			return stepToolBar;
+		}
+
+
+
+
+
+
+		public void setPlayable(boolean isplayable) {
 			  stepToolBar.setPlayable(isplayable);
 			  
 			  
@@ -630,7 +651,19 @@ return ret;
 }
 
 
-
+public void setIndex(int i) {
 	
-		
+	getViewer().getStepWrapper().getStep().setIndex(new Integer(i+1).toString() );
+}
+	
+
+@Override
+public void dispose() {	
+	super.dispose();
+	view.dispose();
+	dragSource.dispose();
+	
+}
+
+
 }

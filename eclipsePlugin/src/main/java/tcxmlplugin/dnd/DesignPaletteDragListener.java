@@ -10,7 +10,7 @@ import org.eclipse.swt.dnd.TextTransfer;
 import org.eclipse.swt.dnd.Transfer;
 import org.eclipse.swt.widgets.Control;
 
-public class MyDragListener implements DragSourceListener{
+public class DesignPaletteDragListener implements DragSourceListener{
 	
 	
 	private static  Transfer[] types = new Transfer[] {TextTransfer.getInstance()};
@@ -22,7 +22,7 @@ public class MyDragListener implements DragSourceListener{
 		
 		DragSource ret = new DragSource(ctrl , DND.DROP_MOVE | DND.DROP_COPY);	
 		ret.setTransfer(types);		
-		ret.addDragListener( new MyDragListener(type));		
+		ret.addDragListener( new DesignPaletteDragListener(type));		
 	return ret;	
 	}
 	
@@ -33,7 +33,7 @@ public class MyDragListener implements DragSourceListener{
 	
 	
 
-	public MyDragListener(DragAbleWrapper dragable) {
+	public DesignPaletteDragListener(DragAbleWrapper dragable) {
 		super();
 		this.dragable = dragable;
 	}
@@ -51,10 +51,19 @@ public class MyDragListener implements DragSourceListener{
 		event.doit=true;
 		event.detail=DND.DROP_MOVE ;
 		switch (dragable) {		
-		case WAIT:event.data = "WAIT";break;
+		case WAIT:    event.data = "WAIT";break;
 		case CALLFUNCTION:event.data = "CALLFUNCTION";break;
 		case CALLGENERICAPI :event.data = "GENAPI";break;
 		case WAITFOROBJECT : event.data="WAITFOROBJECT";break;
+		case OBJECTACTION: event.data="OBJECTACTION";break;
+		case BROWSERACTION: event.data="BROWSERACTION";break;
+		case FOR: event.data="FOR";break;
+		case IF: event.data="IF";break;
+		case IFEXIST: event.data="IFEXIST";break;
+		case COMMENT: event.data="COMMENT";break;
+		case RUNACTION: event.data="RUNACTION";break;
+		case RUNBLOCK: event.data="RUNBLOCK";break;
+		
 		default:event.data = "NODATA";
 			break;
 		}

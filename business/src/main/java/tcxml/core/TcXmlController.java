@@ -10,6 +10,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
 import java.io.StringReader;
+import java.io.StringWriter;
 import java.io.UnsupportedEncodingException;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
@@ -50,7 +51,9 @@ import javax.script.SimpleScriptContext;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBElement;
 import javax.xml.bind.JAXBException;
+import javax.xml.bind.Marshaller;
 import javax.xml.bind.Unmarshaller;
+import javax.xml.transform.Result;
 
 import org.apache.commons.configuration.ConfigurationException;
 import org.apache.commons.configuration.HierarchicalINIConfiguration;
@@ -84,6 +87,7 @@ import tcxml.model.ArgModel;
 import tcxml.model.CallFunctionAttribut;
 import tcxml.model.Function;
 import tcxml.model.Ident;
+import tcxml.model.Idents;
 import tcxml.model.ObjectFactory;
 import tcxml.model.Step;
 import tcxml.model.TestObject;
@@ -239,6 +243,8 @@ public class TcXmlController {
 	
 	
 	private static  ScriptEngineManager  scriptFactory = new ScriptEngineManager();
+
+	private FileHandler fhandler;
 	
 	
 	
@@ -472,6 +478,37 @@ for (ArgModel val : def) {
     }
     
     
+    public TestObject generateNewTestObject( TruLibrary library) { 
+    	BoundList<TestObject> li = null;
+    	if( library == null) {
+    		li = script.getTestObjects().getTestObject();
+    		
+    	} else {
+    		li = library.getTestObjects().getTestObject();	
+    	}
+    	TestObject newTo = new TestObject();
+    	String id = UUID.randomUUID().toString();
+    	newTo.setTestObjId("testObj:{" + id + "}");
+		li.add(newTo);
+		newTo.setPlatform("web");
+		Idents newidents = new Idents();
+		//populate default value
+		newTo.setIdents(newidents );
+		
+		newidents.setActive("XPath");
+		Ident newIdent = new Ident();
+		newIdent.setType("XPath");
+		newIdent.setValue("{\"primaryScore\":1,\"implData\":{	\"value\":\"/html\"}}");
+		newTo.getIdents().getIdent().add(newIdent);
+		
+		
+		return (newTo);
+    	
+    	
+    	
+    }
+    
+    
     
     
     
@@ -596,7 +633,12 @@ private  TruLibrary loadLibrary( InputStream inputStream) throws TcXmlException 
 }
 
 
-
+/***
+ * load all the configurations files from path dir
+ * 
+ * @param pathdir
+ * @throws TcXmlException
+ */
 
 
 public void loadFromDisk(String pathdir) throws TcXmlException {
@@ -706,6 +748,25 @@ setPath(file);
 configureLogger();
 	
 }
+
+/**
+ * 
+ *  free all resources allocated by loadfromfisk
+ * 
+ */
+
+
+public void dispose() {
+	
+	log.removeHandler(fhandler);
+	fhandler.close();
+	
+}
+
+
+
+
+
 public String getScriptDir() {
 	return scriptDir;
 }
@@ -729,10 +790,15 @@ public InputStream addExpectedNamespace(String element, String ns, FileInputStre
 	rep.append(old.toString()). append(" ").append(ns).append("  ");
 	
 	java.util.function.Function<String,String> addNS= (String line ) ->{
+	String ret;	
+		if(line.contains(ns)) { // the name space is already set , no nneeds to add it again
+			ret=line;
+			
+		}else {
+			ret = line.replace(old.toString(), rep.toString());	
+		}
 		
-		
-		
-		String  ret = line.replace(old.toString(), rep.toString());
+		  
 		
 		return ret;
 	};
@@ -1034,7 +1100,10 @@ public String getXpathForTestObject( TestObject obj) throws TcXmlException {
 public String getIdentForTestObject( TestObject obj, String idmethod) throws TcXmlException {
 	String ret =null;
 	boolean isXpathDefined = false;
-	
+	if( idmethod.equals("Electors")) {
+	throw new TcXmlException("unsupported identification method", new IllegalArgumentException("Electors"))	;
+		
+	}
 	BoundList<Ident> identificators = obj.getIdents().getIdent();
 	
 	
@@ -1138,7 +1207,7 @@ public List<String> getAvailableActionForStep( Step s , TruLibrary lib) throws T
 public List<String> getAvailableActionForTestobject(TestObject obj){
 	ArrayList<String> ret = new ArrayList<String>();
 	ret.add("Type");
-	ret.add("click");
+	ret.add("Click");
 	ret.add("dbl click");
 	
 return ret;	
@@ -2664,7 +2733,6 @@ public String getSubtitle(AbstractStepWrapper step) throws TcXmlException {
  
  private void configureLogger() throws TcXmlException {
 	 
-FileHandler fhandler;
 String pattern = this.path.getAbsolutePath() + "/tcxml-%u%g.log" ;
 try {
 	fhandler = new FileHandler(pattern);
@@ -2685,6 +2753,35 @@ try {
 
 
 	 
+	 
+	 
+ }
+ /***
+  *  marschall the TruScript element of the script into an inputstream
+  * 
+  * 
+  * @return
+  * @throws TcXmlException
+  */
+ 
+ 
+ public InputStream marshallScript() throws TcXmlException {
+	 try {
+		JAXBContext jaxbContext     = JAXBContext.newInstance( TruScript.class );
+		Marshaller jaxbMarshaller   = jaxbContext.createMarshaller();
+		jaxbMarshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
+		jaxbMarshaller.setProperty(Marshaller.JAXB_ENCODING, "UTF-8");		
+		StringWriter writer = new StringWriter();		
+			jaxbMarshaller.marshal(getScript(), writer);
+			writer.close();
+			InputStream targetStream = new ByteArrayInputStream(writer.toString().getBytes());
+			return targetStream;
+			
+			
+		} catch (Exception e) {
+			throw new TcXmlException(" failure in marsshalling script " , e) ;
+			
+		}
 	 
 	 
  }

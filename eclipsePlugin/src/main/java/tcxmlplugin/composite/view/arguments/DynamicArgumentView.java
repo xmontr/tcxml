@@ -64,8 +64,9 @@ public class DynamicArgumentView extends StepArgument{
 	if(att instanceof ListArgModel ) { // list value
 		
 		ListInputView linput = new ListInputView(this,SWT.NONE);
-		linput.setListValue(((ListArgModel)att).getValueList() );
-		linput.setValue(att.getValue());
+		
+		linput.setArgmodel((ListArgModel) att);
+
 		
 		
 	}else { // single value

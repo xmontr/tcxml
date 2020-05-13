@@ -1,6 +1,11 @@
 package tcxmlplugin.dnd;
 
+import java.io.StringReader;
+
 import javax.swing.plaf.synth.SynthSeparatorUI;
+import javax.xml.bind.JAXBContext;
+import javax.xml.bind.JAXBException;
+import javax.xml.bind.Unmarshaller;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.dnd.DropTargetEffect;
@@ -219,13 +224,59 @@ tempExpandItem = nitem ;
 	}
 	
 	
+	private boolean isSerialisedStep(String data) {
+		boolean ret = false;
+		if( data.startsWith("<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>")  ) {
+			ret = true;	
+			
+		}else {
+			
+		ret = false;	
+		}
+		
+		
+		return ret;
+		
+	}
+	
+	private Step readStep(String data ) throws TcXmlException {
+		JAXBContext jaxbContext;
+		Step theStep = null;
+		try {
+			jaxbContext = JAXBContext.newInstance(Step.class);
+			Unmarshaller unmarshaller = jaxbContext.createUnmarshaller();
+			StringReader reader = new StringReader(data);
+			 theStep = (Step) unmarshaller.unmarshal(reader);
+		} catch (JAXBException e) {
+throw new TcXmlException("failure in parsing step object ", e);
+		}
+		
+
+	
+		return theStep;
+		
+	}
+	
+	
 	
 	public  void saveTemporaryItem(String data) {
-		
+		Step newstep = null;
 		removeTemporaryItem(); // remove the temp item and store the final at correct index in the container
-		
+			
 		try {
-		Step newstep = StepFactory.getStep(data, theContainer.getController(), theContainer.getLibrary());
+			
+			// whether src is serialized step or not cause dragsource can be designpalette or other already existing step
+			if(isSerialisedStep(data)) {
+				
+				newstep = readStep(data);
+				
+			} else {
+				
+				 newstep = StepFactory.getStep(data, theContainer.getController(), theContainer.getLibrary());	
+			}
+			
+			
+		
 		if(this.lastIndex == -1) {
 			newstep.setIndex("1");
 			
@@ -234,7 +285,7 @@ tempExpandItem = nitem ;
 		}else {
 			
 			newstep.setIndex(new Integer(lastIndex +1).toString());
-			theContainer.addStep(newstep, lastIndex+1);
+			theContainer.addStep(newstep, lastIndex);
 			
 			
 		}

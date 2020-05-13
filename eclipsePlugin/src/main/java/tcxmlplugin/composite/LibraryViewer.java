@@ -154,7 +154,7 @@ public class LibraryViewer extends Composite {
 		PaletteAndSnapshotViewer plt = new PaletteAndSnapshotViewer(sf, getStyle());
 		
 		snapshotviewer = new SnapshotViewer(plt.getSnapshot(), getStyle(),controller);	
-		DesignPalette palette = new DesignPalette(plt.getPalette(), getStyle());			
+		ActionDesignPalette palette = new ActionDesignPalette(plt.getPalette(), getStyle());			
 		return parent;	
 			
 		}
@@ -171,7 +171,7 @@ public class LibraryViewer extends Composite {
 		//palette at the right
 		Composite paletteContainer = new Composite(sf, getStyle());
 		paletteContainer.setLayout(new FillLayout());
-		DesignPalette palette = new DesignPalette(paletteContainer, getStyle());		
+		ActionDesignPalette palette = new ActionDesignPalette(paletteContainer, getStyle());		
 	return parent;	
 	}
 	

@@ -18,6 +18,8 @@ public interface StepContainer {
 	 
 	 public void addStep(Step step) throws TcXmlException ;
 	 
+	 public void remove(Step step) throws TcXmlException ;
+	 
 	 
 	 public void addStep(Step step, int index) throws TcXmlException ;
 	 

@@ -68,6 +68,7 @@ import tcxml.model.ActionsModel;
 import tcxml.model.LibraryModel;
 
 import org.eclipse.swt.widgets.ProgressBar;
+import org.eclipse.swt.events.SelectionAdapter;
 
 public class TcViewer extends Composite implements PropertyChangeListener, IJobChangeListener  {
 	private ActionsViewer actionsViewer;
@@ -108,6 +109,9 @@ public class TcViewer extends Composite implements PropertyChangeListener, IJobC
 
 	private VideoRecorderComposite videoRecorderComposite;
 
+
+	private RunlogicAndPalettecomposite runlogicAndPaletteView;
+
 	public TcViewer(Composite parent, int style, TcXmlController tccontroller, IFolder testcasefolder) {
 		super(parent, style);
 
@@ -126,7 +130,11 @@ public class TcViewer extends Composite implements PropertyChangeListener, IJobC
 		actionsViewer = new ActionsViewer(tabFolder, SWT.BORDER,controller);
 		this.libraryViewer = new LibraryViewer(tabFolder, SWT.BORDER,controller);
 		
-		this.runLogicViewer = new RunLogicViewer(tabFolder, SWT.BORDER,controller);
+		//this.runLogicViewer = new RunLogicViewer(tabFolder, SWT.BORDER,controller);
+		this.runlogicAndPaletteView = new RunlogicAndPalettecomposite(tabFolder, SWT.BORDER);
+		this.runLogicViewer = new RunLogicViewer(this.runlogicAndPaletteView.getRunlogicview(), SWT.BORDER,controller);
+		
+		
 		
 		
 		this.parameterviewer = new ParameterViewer(tabFolder, SWT.BORDER,controller);
@@ -215,8 +223,8 @@ public class TcViewer extends Composite implements PropertyChangeListener, IJobC
 		CTabItem logicTab = new CTabItem(tabFolder, SWT.NONE);		
 		logicTab.setText("Run Logic");
 		logicTab.setImage(ResourceManager.getPluginImage("tcxmlplugin", "icons/Gear-icon_16.png"));
-		logicTab.setControl(runLogicViewer);
-		
+		//logicTab.setControl(runLogicViewer);  
+		logicTab.setControl(this.runlogicAndPaletteView);
 
 		CTabItem CTabItemparameterTab = new CTabItem(tabFolder, SWT.NONE);
 		CTabItemparameterTab.setText("Parameters");
@@ -287,7 +295,16 @@ public class TcViewer extends Composite implements PropertyChangeListener, IJobC
 		pauseitem.setImage(ResourceManager.getPluginImage("tcxmlplugin", "icons/media-playback-pause-2.png"));
 		
 		ToolItem saveItem = new ToolItem(scriptToolbar, SWT.NONE);
+		saveItem.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				TcXmlPluginController.getInstance().info("saving script to disk");
+				TcXmlPluginController.getInstance().saveModel();
+				
+			}
+		});
 		saveItem.setImage(ResourceManager.getPluginImage("tcxmlplugin", "icons/document-export.png"));
+	
 		
 		ToolItem stopItem = new ToolItem(scriptToolbar, SWT.NONE);
 		stopItem.setImage(ResourceManager.getPluginImage("tcxmlplugin", "icons/media-playback-stop-2.png"));
