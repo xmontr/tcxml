@@ -219,6 +219,8 @@ public class TcXmlController {
 	
 	private File chromeApiExtension;
 	
+	private File identPickerExtension;
+	
 	/**
 	 *  absolute base dir for all the files of the testcase : default.xml , extrafile , .dat , .prm ...
 	 * 
@@ -245,6 +247,8 @@ public class TcXmlController {
 	private static  ScriptEngineManager  scriptFactory = new ScriptEngineManager();
 
 	private FileHandler fhandler;
+
+	
 	
 	
 	
@@ -1455,16 +1459,19 @@ public void openBrowser (String type, String driverPath) throws TcXmlException {
 	
 	if(highlighterExtension == null) {
 		highlighterExtension = generatePathToLocalTemporaryResource("jqueryHighlighter.crx").toFile();
-	}
-	 
+	}	 
 	 options.addExtensions(highlighterExtension);
 	 
 	 
 		if(chromeApiExtension == null) {
 			chromeApiExtension = generatePathToLocalTemporaryResource("chromeApiInjector.zip").toFile();
-		}
-		 
+			}		 
 		 options.addExtensions(chromeApiExtension);
+		 
+			if(identPickerExtension == null) {
+				identPickerExtension = generatePathToLocalTemporaryResource("identPickerExtension.zip").toFile();
+				}		 
+			 options.addExtensions(identPickerExtension);
 	 
 	 
 
