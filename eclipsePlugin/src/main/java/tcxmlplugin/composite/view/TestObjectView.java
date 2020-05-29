@@ -127,6 +127,22 @@ public class TestObjectView extends StepView implements PropertyChangeListener {
 		new Label(grpIdentification, SWT.NONE);
 		new Label(grpIdentification, SWT.NONE);
 		
+		selectInBrowserButton = new Button(grpIdentification, SWT.NONE);
+		selectInBrowserButton.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, false, false, 1, 1));
+		selectInBrowserButton.setText("Select in the Browser");
+		selectInBrowserButton.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseDown(MouseEvent e) {
+				try {
+					TestObjectWrapper newObject = TcXmlPluginController.getInstance().selectInBrowser(getLibrary());
+					setStepWrapper(newObject);
+					
+				} catch (TcXmlException e1) {
+					TcXmlPluginController.getInstance().error("fail to highlight xpath " + testobjectmodel.getXpath() , e1);
+				}
+			}
+		});
+		
 		
 		
 		
@@ -142,6 +158,7 @@ public class TestObjectView extends StepView implements PropertyChangeListener {
 		label = new Label(this, SWT.SEPARATOR | SWT.HORIZONTAL);
 		label.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, false, false, 1, 1));
 		label.setBackground(SWTResourceManager.getColor(SWT.COLOR_DARK_RED));
+		new Label(this, SWT.NONE);
 
 		m_bindingContext = initDataBindings();
 	}
@@ -246,6 +263,7 @@ public class TestObjectView extends StepView implements PropertyChangeListener {
 	private Button HighLightButton2;
 	private Label lblMethod;
 	private Combo combo_method;
+	private Button selectInBrowserButton;
 
 	@Override
 	public void propertyChange(PropertyChangeEvent evt) {
@@ -349,6 +367,7 @@ public class TestObjectView extends StepView implements PropertyChangeListener {
 		
 
 		}
+		layout(true,true);
 
 	}
 

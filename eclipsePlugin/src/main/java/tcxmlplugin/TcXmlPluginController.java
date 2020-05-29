@@ -23,6 +23,9 @@ import java.util.Properties;
 import java.util.Set;
 import java.util.Vector;
 
+import javax.json.JsonObject;
+import javax.sound.midi.ControllerEventListener;
+
 import org.apache.commons.lang.StringEscapeUtils;
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFile;
@@ -44,8 +47,13 @@ import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Listener;
+import org.openqa.selenium.JavascriptExecutor;
 
+import stepWrapper.AbstractStepWrapper;
+import stepWrapper.StepWrapperFactory;
+import stepWrapper.TestObjectWrapper;
 import tcxml.core.FfMpegWrapper;
+import tcxml.core.StepFactory;
 import tcxml.core.TcXmlController;
 import tcxml.core.TcXmlException;
 import tcxml.core.parameter.StepParameter;
@@ -59,7 +67,9 @@ import tcxmlplugin.composite.RunLogicViewer;
 import tcxmlplugin.composite.TcViewer;
 import tcxmlplugin.composite.VideoRecorderComposite;
 import tcxmlplugin.composite.stepViewer.StepViewer;
+import tcxml.model.Ident;
 import tcxml.model.ImportModel;
+import tcxml.model.Step;
 import tcxml.model.TruLibrary;
 import tcxmlplugin.nature.NatureTcXml;
 import util.TcxmlUtils;
@@ -1358,8 +1368,56 @@ public String getDefaultVideoName() {
 	
 }
 
+public TestObjectWrapper selectInBrowser(TruLibrary truLibrary) throws TcXmlException {
+	TestObjectWrapper ret = null;
+	TcXmlController controller = getTcviewer().getController();
+	
+	// launch the selector
+	controller.launchIdentSelector();	
+	//wait the selection
+	controller.waitIdentSelectorCompletion();
+	
+	
+	String status = controller.getIdentSelectorStatus();
+	
+	if(status.equals("done")) {
+		
+	JsonObject thesel = controller.getIdentSelection();	
+	
+	Step newtostep = StepFactory.getStep("OBJECTACTION", controller, truLibrary);
+	//add xpath identification	
+	ret = (TestObjectWrapper)StepWrapperFactory.getWrapper(newtostep, controller, truLibrary);
+	Ident xpathident=controller.buildXpathIdent(thesel.getString("xpath"));
 
-public
+	ret.getTheTestObject().getIdents().getIdent().add(xpathident);
+	ret.setActiveIdentMehod("XPath");
+	ret.getTheTestObject().setAutoName(thesel.getString("autoname"));
+	ret.getTheTestObject().setFallbackName(thesel.getString("fallBackName"));
+	
+	
+	}else { // selection not ended
+		
+	if(status.equals("canceled")){
+		controller.getLog().fine("selection from browser has been canceled" );	
+		ret = null;
+		
+	}
+		
+		
+	}
+	
+	
+	
+	
+	
+	
+	//build the wrapper and return
+	
+	return ret;
+}
+
+
+
 
 	
 	

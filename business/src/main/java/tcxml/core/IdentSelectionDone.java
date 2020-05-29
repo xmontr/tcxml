@@ -12,9 +12,10 @@ public class IdentSelectionDone implements ExpectedCondition<Boolean> {
 	public Boolean apply(WebDriver input) {
 	boolean ret = false;
 	final JavascriptExecutor js = (JavascriptExecutor) controller.getDriver();
-	final String scriptjs = "return document.getElementById('identBox').getAttribute('isSelected');";
-	String isselected = (String) js.executeScript(scriptjs, null);
-	if(isselected != null && isselected.equals("true")) {
+	final String scriptjs = "return document.getElementById('identStorage').getAttribute('status');";
+	String status = (String) js.executeScript(scriptjs);
+	controller.getLog().fine("waiting for the completion of the selection, identbox status is :" + status);
+	if(status != null &&  !status.equals("run")) {
 		
 		ret = true;
 	}

@@ -42,6 +42,8 @@ import javax.json.JsonReader;
 import javax.json.JsonString;
 import javax.json.JsonValue;
 import javax.json.JsonValue.ValueType;
+import javax.json.JsonWriter;
+import javax.json.stream.JsonParser;
 import javax.script.Bindings;
 import javax.script.ScriptContext;
 import javax.script.ScriptEngine;
@@ -64,12 +66,14 @@ import org.openqa.selenium.By.ByXPath;
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.OutputType;
 import org.openqa.selenium.TakesScreenshot;
+import org.openqa.selenium.TimeoutException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.remote.Augmenter;
 import org.openqa.selenium.remote.DesiredCapabilities;
+import org.openqa.selenium.support.ui.ExpectedCondition;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
@@ -1692,6 +1696,92 @@ public void highlight(final WebElement webElement) throws TcXmlException {
 	final String scriptSetAttrValue = "var event = new CustomEvent('highlight', { detail: 'xa' });arguments[0].dispatchEvent(event);";
 	js.executeScript(scriptSetAttrValue, webElement);
 }
+
+
+public void launchIdentSelector() {
+
+	final JavascriptExecutor js = (JavascriptExecutor) driver;
+	final String scriptSetAttrValue = " window.postMessage({ action:'start'}, '*');";
+	js.executeScript(scriptSetAttrValue);
+	
+	
+}
+
+
+public String getIdentSelectorStatus() {
+	String ret = "stop";
+	final JavascriptExecutor js = (JavascriptExecutor) driver;
+	final String scriptSetAttrValue = "return document.getElementById('identStorage').getAttribute('status');";
+	ret = (String) js.executeScript(scriptSetAttrValue);	
+	
+	return ret;
+	
+	
+	
+}
+
+
+public void waitIdentSelectorCompletion() throws TcXmlException {
+	ExpectedCondition<Boolean> completed = new IdentSelectionDone(this);
+	long TIMEOUTWAIT = 500;
+	WebDriverWait w = new WebDriverWait(getDriver(), TIMEOUTWAIT );
+	try {
+	w.until(completed);
+	}catch (TimeoutException e) {
+		throw new TcXmlException("timeout for selection in the browser " + TIMEOUTWAIT, e);
+	}
+	
+	
+	
+	
+}
+
+public JsonObject getIdentSelection() {
+	String ret = null;
+	final JavascriptExecutor js = (JavascriptExecutor) driver;
+	final String scriptSetAttrValue = "return document.getElementById('identStorage').textContent";
+	ret = (String) js.executeScript(scriptSetAttrValue);
+	getLog().fine("content of identStorage:" + ret);
+	StringReader sr = new StringReader(ret);
+	
+	JsonReader jr = Json.createReader(sr );
+	JsonObject json = jr.readObject();	
+	
+	return json;
+	
+	
+	
+	
+}
+
+
+public Ident buildXpathIdent(String xpath) {
+	Ident ret = new Ident();
+	JsonObjectBuilder builder = Json.createObjectBuilder();
+	JsonObjectBuilder implDataBuilder = Json.createObjectBuilder();
+	builder.add("primaryScore",1);
+	builder.add("implData",implDataBuilder);
+	implDataBuilder.add("value" , StringEscapeUtils.escapeHtml(xpath)); 
+	ret.setType("xPath");
+	StringWriter sw = new StringWriter();
+	JsonWriter jsonwriter = Json.createWriter(sw);
+	String value = jsonwriter.toString() ;
+	ret.setValue(value);
+	
+	
+	
+return ret;	
+}
+
+
+
+
+
+
+
+
+
+
 
 public WebDriver getDriver() {
 	return driver;
