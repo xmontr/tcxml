@@ -262,6 +262,13 @@ for (ArgModel val : getDefaultArguments()) {
 	}
 	
 	
+	public String getIndex() {
+		
+		return step.getIndex();
+		
+	}
+	
+	
 	
 	 protected String formatTitle (String index , String txt) {
 		

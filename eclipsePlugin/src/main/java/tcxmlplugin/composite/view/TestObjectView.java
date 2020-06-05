@@ -29,6 +29,7 @@ import org.eclipse.wb.swt.SWTResourceManager;
 
 import stepWrapper.AbstractStepWrapper;
 import stepWrapper.TestObjectWrapper;
+import tcxml.core.IdentificationMethod;
 import tcxml.core.PlayingContext;
 import tcxml.core.TcXmlException;
 import tcxml.model.AbstractModel;
@@ -135,6 +136,8 @@ public class TestObjectView extends StepView implements PropertyChangeListener {
 			public void mouseDown(MouseEvent e) {
 				try {
 					TestObjectWrapper newObject = TcXmlPluginController.getInstance().selectInBrowser(getLibrary());
+					int theindex = Integer.parseInt(getStepWrapper().getIndex() ) ;
+					newObject.setIndex(theindex);
 					setStepWrapper(newObject);
 					
 				} catch (TcXmlException e1) {
@@ -347,13 +350,15 @@ public class TestObjectView extends StepView implements PropertyChangeListener {
 	testobjectmodel.setSelectedMethod(act);
 			
 			
-		if(act.equals("XPath"))	{
-			testobjectmodel.setXpath(testobjectwrapper.getIdentForTestObject( "XPath"));
+		if(act.equals(IdentificationMethod.XPATH.getName()))	{
+			String xp = testobjectwrapper.getIdentForTestObject( IdentificationMethod.XPATH.getName());
+			testobjectmodel.setXpath(xp);
 			
 		}
 		
-		if(act.equals("JavaScript"))	{
-			testobjectmodel.setJavascript(testobjectwrapper.getIdentForTestObject( "JavaScript"));
+		if(act.equals(IdentificationMethod.JAVASCRIPT.getName()))	{
+			String javas = testobjectwrapper.getIdentForTestObject( IdentificationMethod.JAVASCRIPT.getName()) ;
+			testobjectmodel.setJavascript(javas);
 			
 		}
 			

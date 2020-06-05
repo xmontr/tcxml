@@ -49,6 +49,8 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Listener;
 import org.openqa.selenium.JavascriptExecutor;
 
+import com.kscs.util.jaxb.BoundList;
+
 import stepWrapper.AbstractStepWrapper;
 import stepWrapper.StepWrapperFactory;
 import stepWrapper.TestObjectWrapper;
@@ -1387,11 +1389,12 @@ public TestObjectWrapper selectInBrowser(TruLibrary truLibrary) throws TcXmlExce
 	Step newtostep = StepFactory.getStep("OBJECTACTION", controller, truLibrary);
 	//add xpath identification	
 	ret = (TestObjectWrapper)StepWrapperFactory.getWrapper(newtostep, controller, truLibrary);
-	Ident xpathident=controller.buildXpathIdent(thesel.getString("xpath"));
+	Ident xpathident=controller.buildXpathIdent(thesel.getString("xpath"));	
+	ret.getTheTestObject().getIdents().getIdent().remove(0); // remove default xpath
 
-	ret.getTheTestObject().getIdents().getIdent().add(xpathident);
+	ret.getTheTestObject().getIdents().getIdent().add(xpathident); // add the new
 	ret.setActiveIdentMehod("XPath");
-	ret.getTheTestObject().setAutoName(thesel.getString("autoname"));
+	ret.getTheTestObject().setAutoName(thesel.getString("autoName"));
 	ret.getTheTestObject().setFallbackName(thesel.getString("fallBackName"));
 	
 	

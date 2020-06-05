@@ -1760,12 +1760,14 @@ public Ident buildXpathIdent(String xpath) {
 	JsonObjectBuilder builder = Json.createObjectBuilder();
 	JsonObjectBuilder implDataBuilder = Json.createObjectBuilder();
 	builder.add("primaryScore",1);
-	builder.add("implData",implDataBuilder);
-	implDataBuilder.add("value" , StringEscapeUtils.escapeHtml(xpath)); 
-	ret.setType("xPath");
+	implDataBuilder.add("value" , xpath);   //.replaceAll("\"", "\\\\\"")
+	builder.add("implData",implDataBuilder.build());
+	
+	ret.setType(IdentificationMethod.XPATH.getName());
 	StringWriter sw = new StringWriter();
 	JsonWriter jsonwriter = Json.createWriter(sw);
-	String value = jsonwriter.toString() ;
+	jsonwriter.writeObject(builder.build());
+	String value = sw.toString() ;
 	ret.setValue(value);
 	
 	
