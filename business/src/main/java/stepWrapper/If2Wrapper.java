@@ -193,6 +193,40 @@ for (Step thestep : firstchild.getStep()) {
 	}
 	
 	
+	
+	public Step getIfParentStep() {
+		
+		return step.getStep().get(1);
+		
+	}
+	
+	
+	public boolean hasElse() {
+		if(step.getStep().size() > 2) {
+			return true	;
+		} else {
+	return false;		
+		}
+		
+		
+		
+	}
+	
+	
+	public Step getElseParentStep() {
+		BoundList<Step> li = step.getStep();
+		if(li.size() > 2) {
+			return step.getStep().get(2);	
+		} else {
+	return null;		
+		}
+		
+		
+		
+	}
+	
+	
+	
 	private List<AbstractStepWrapper> getElseChildren() throws TcXmlException {
 		List<AbstractStepWrapper> ret = new ArrayList<AbstractStepWrapper>();
 		BoundList<Step> li = step.getStep();

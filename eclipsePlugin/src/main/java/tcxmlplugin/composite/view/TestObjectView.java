@@ -135,10 +135,10 @@ public class TestObjectView extends StepView implements PropertyChangeListener {
 			@Override
 			public void mouseDown(MouseEvent e) {
 				try {
-					TestObjectWrapper newObject = TcXmlPluginController.getInstance().selectInBrowser(getLibrary());
-					int theindex = Integer.parseInt(getStepWrapper().getIndex() ) ;
-					newObject.setIndex(theindex);
-					setStepWrapper(newObject);
+					TestObject newObject = TcXmlPluginController.getInstance().selectInBrowser(getLibrary());
+TestObjectWrapper thewrapper = (TestObjectWrapper) stepWrapper;
+thewrapper.setTheTestObject(newObject);
+					setStepWrapper(thewrapper);
 					
 				} catch (TcXmlException e1) {
 					TcXmlPluginController.getInstance().error("fail to highlight xpath " + testobjectmodel.getXpath() , e1);
@@ -346,21 +346,29 @@ public class TestObjectView extends StepView implements PropertyChangeListener {
 			// find the testobject in the script or in the lib
 
 				// the selected method
-	String act = testobjectwrapper.getActiveIdentification();
-	testobjectmodel.setSelectedMethod(act);
 			
-			
-		if(act.equals(IdentificationMethod.XPATH.getName()))	{
-			String xp = testobjectwrapper.getIdentForTestObject( IdentificationMethod.XPATH.getName());
-			testobjectmodel.setXpath(xp);
-			
-		}
-		
-		if(act.equals(IdentificationMethod.JAVASCRIPT.getName()))	{
-			String javas = testobjectwrapper.getIdentForTestObject( IdentificationMethod.JAVASCRIPT.getName()) ;
-			testobjectmodel.setJavascript(javas);
-			
-		}
+			if(testobjectwrapper.getTheTestObject() != null ) {
+				
+				String act = testobjectwrapper.getActiveIdentification();
+				testobjectmodel.setSelectedMethod(act);
+						
+						
+					if(act.equals(IdentificationMethod.XPATH.getName()))	{
+						String xp = testobjectwrapper.getIdentForTestObject( IdentificationMethod.XPATH.getName());
+						testobjectmodel.setXpath(xp);
+						
+					}
+					
+					if(act.equals(IdentificationMethod.JAVASCRIPT.getName()))	{
+						String javas = testobjectwrapper.getIdentForTestObject( IdentificationMethod.JAVASCRIPT.getName()) ;
+						testobjectmodel.setJavascript(javas);
+						
+					}
+				
+				
+				
+			}
+
 			
 
 	

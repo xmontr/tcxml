@@ -98,7 +98,7 @@
     </complexType>
 
 
-    <complexType name="ident">
+    <complexType name="ident">    
     	<simpleContent>
     		<extension base="tns:cdataString">
 
@@ -132,7 +132,7 @@
 
     <element name="truScript" type="tns:truScript"></element>
 
-    <element name="ident" type="string"></element>
+    <element name="ident" type="tns:ident"></element>
 
     <element name="icon" type="string"></element>
 
@@ -156,9 +156,10 @@
 
  
     <complexType name="cdataString">
-    <annotation><appinfo> <annox:annotate target="field">@javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter( tcxml.mapping.CdataAdapter.class)</annox:annotate></appinfo></annotation>
-        	<simpleContent>
+    
+        	<simpleContent>         	       	
         	     		<extension base="string">
+        	     		
         </extension>
         </simpleContent>	     		
            

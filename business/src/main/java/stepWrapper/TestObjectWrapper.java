@@ -61,7 +61,7 @@ public class TestObjectWrapper extends AbstractStepWrapper {
 		super(step, controller, library);
 		stat = new StepStat();
 		if (!controller.isBrowserStep(step)) { // testobject is not browser
-		theTestObject = controller.getTestObjectById(step.getTestObject(), library);
+		theTestObject = step.getTestObject() == null ? null  : controller.getTestObjectById(step.getTestObject(), library) ; 
 		isBrowserStep = false ;
 		
 	} else {
@@ -88,6 +88,11 @@ public TestObject getTheTestObject() {
 	return theTestObject;
 }
 
+public void setTheTestObject(TestObject newTestObject) {
+	this.theTestObject = newTestObject;
+	step.setTestObject(newTestObject.getTestObjId());
+}
+
 public ArrayList<String> getIdentificationsMethods() {
 	
 	ArrayList<String> li = new ArrayList<String>();
@@ -100,6 +105,13 @@ public ArrayList<String> getIdentificationsMethods() {
 
 
 public String getName() {
+	
+	if( theTestObject == null) {
+		
+		return "please select an object in the browser" ;
+		
+	}
+	
 	
 	String name = theTestObject.getAutoName() == null ? theTestObject.getManualName() : theTestObject.getAutoName() ;
 	
@@ -871,13 +883,13 @@ public void setIdentForTestObject(  String idmethod, String identstring) throws 
 		     JsonWriter jwriter = Json.createWriter(writer);
 		    jwriter.writeObject(newArg.build());
 			
-			String newIdentValue = StringEscapeUtils.escapeHtml(writer.toString());
+			String newIdentValue = writer.toString();
 			
 			 
 				 writer = new StringWriter();
 			     jwriter = Json.createWriter(writer);
 			     jwriter.writeObject(argjson);
-			 String oldIdentValue = StringEscapeUtils.escapeHtml(writer.toString());
+			 String oldIdentValue = writer.toString();
 			 
 			controller.getLog().fine("update identifification " + idmethod + " new value is :"+newIdentValue);
 			 
@@ -892,7 +904,7 @@ Ident newident = new Ident() ;
 newident.setType(idmethod);
 JsonObjectBuilder newValJson  = Json.createObjectBuilder();
 JsonObjectBuilder newImpl  = Json.createObjectBuilder();
-newImpl.add("value", StringEscapeUtils.escapeHtml(identstring));
+newImpl.add("value", identstring);
 newValJson.add("implData", newImpl);
 
 newident.setValue(newValJson.toString());

@@ -68,6 +68,8 @@ public class LibraryView extends AStepContainer implements TopStepContainer{
 	
 
 	public void buildLibrary(TruLibrary truLibrary) {
+		
+		this.parentStep = truLibrary.getStep();
 
 	setLibrary(truLibrary);
 		List<Step> list = truLibrary.getStep().getStep();

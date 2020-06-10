@@ -244,7 +244,11 @@ conditionTxt.SetArgModel(cond);
 		
 		
 		// add if cildren
+
+ifcontainer.setParentStep(ifwrapper.getIfParentStep());
+
 BoundList<Step> li = ifwrapper.getIfSteps();	
+
 		for (Step step : li) {
 			ifcontainer.addStep(step);
 		}
@@ -254,7 +258,7 @@ BoundList<Step> li = ifwrapper.getIfSteps();
 		BoundList<Step> lielse = ifwrapper.getElsefSteps();
 	
 		if(lielse  != null ) { 	//add else children
-			
+			elsecontainer.setParentStep(ifwrapper.getElseParentStep());	
 			
 			for (Step step :lielse) {
 			elsecontainer.addStep(step);

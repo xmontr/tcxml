@@ -453,7 +453,7 @@ for (ArgModel val : def) {
     public boolean isBrowserStep(Step step) {
     	boolean ret = false;
     	
-    	if(step.getTestObject().equals("testObj:{00000000-0000-0000-0000-000000000001}")) {
+    	if( step.getTestObject() != null && step.getTestObject().equals("testObj:{00000000-0000-0000-0000-000000000001}")) {
     		ret =true;
     		
     		
@@ -485,7 +485,7 @@ for (ArgModel val : def) {
  
     }
     
-    
+  /*  
     public TestObject generateNewTestObject( TruLibrary library) { 
     	BoundList<TestObject> li = null;
     	if( library == null) {
@@ -514,9 +514,36 @@ for (ArgModel val : def) {
     	
     	
     	
-    }
+    }*/
     
-    
+    public TestObject generateNewTestObjectWithXpath( TruLibrary library, String xpath) throws TcXmlException { 
+    	BoundList<TestObject> li = null;
+    	if( library == null) {
+    		li = script.getTestObjects().getTestObject();
+    		
+    	} else {
+    		li = library.getTestObjects().getTestObject();	
+    	}
+    	TestObject newTo = new TestObject();
+    	String id = UUID.randomUUID().toString();
+    	newTo.setTestObjId("testObj:{" + id + "}");
+		li.add(newTo);
+		newTo.setPlatform("web");
+		Idents newidents = new Idents();
+		//populate default value
+		newTo.setIdents(newidents );
+		
+		newidents.setActive(IdentificationMethod.XPATH.getName());
+		Ident newIdent =this.buildXpathIdent(xpath);	
+
+		newTo.getIdents().getIdent().add(newIdent);
+		
+		
+		return (newTo);
+    	
+    	
+    	
+    }    
     
     
     
@@ -1755,7 +1782,7 @@ public JsonObject getIdentSelection() {
 }
 
 
-public Ident buildXpathIdent(String xpath) {
+public Ident buildXpathIdent(String xpath) throws TcXmlException {
 	Ident ret = new Ident();
 	JsonObjectBuilder builder = Json.createObjectBuilder();
 	JsonObjectBuilder implDataBuilder = Json.createObjectBuilder();
@@ -1767,7 +1794,10 @@ public Ident buildXpathIdent(String xpath) {
 	StringWriter sw = new StringWriter();
 	JsonWriter jsonwriter = Json.createWriter(sw);
 	jsonwriter.writeObject(builder.build());
-	String value = sw.toString() ;
+	String value;
+	
+		value = sw.toString();
+	
 	ret.setValue(value);
 	
 	
@@ -2873,7 +2903,10 @@ try {
 		StringWriter writer = new StringWriter();		
 			jaxbMarshaller.marshal(getScript(), writer);
 			writer.close();
-			InputStream targetStream = new ByteArrayInputStream(writer.toString().getBytes());
+			InputStream targetStream = new ByteArrayInputStream(writer.toString().getBytes("UTF-8"));
+			
+			
+			
 			return targetStream;
 			
 			

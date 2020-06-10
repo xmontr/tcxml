@@ -72,6 +72,7 @@ import tcxmlplugin.composite.stepViewer.StepViewer;
 import tcxml.model.Ident;
 import tcxml.model.ImportModel;
 import tcxml.model.Step;
+import tcxml.model.TestObject;
 import tcxml.model.TruLibrary;
 import tcxmlplugin.nature.NatureTcXml;
 import util.TcxmlUtils;
@@ -1370,8 +1371,8 @@ public String getDefaultVideoName() {
 	
 }
 
-public TestObjectWrapper selectInBrowser(TruLibrary truLibrary) throws TcXmlException {
-	TestObjectWrapper ret = null;
+public TestObject selectInBrowser(TruLibrary truLibrary) throws TcXmlException {
+	TestObject ret = null;
 	TcXmlController controller = getTcviewer().getController();
 	
 	// launch the selector
@@ -1386,16 +1387,13 @@ public TestObjectWrapper selectInBrowser(TruLibrary truLibrary) throws TcXmlExce
 		
 	JsonObject thesel = controller.getIdentSelection();	
 	
-	Step newtostep = StepFactory.getStep("OBJECTACTION", controller, truLibrary);
-	//add xpath identification	
-	ret = (TestObjectWrapper)StepWrapperFactory.getWrapper(newtostep, controller, truLibrary);
-	Ident xpathident=controller.buildXpathIdent(thesel.getString("xpath"));	
-	ret.getTheTestObject().getIdents().getIdent().remove(0); // remove default xpath
+ret  = controller.generateNewTestObjectWithXpath(truLibrary, thesel.getString("xpath"));
+ret.setAutoName(thesel.getString("autoName"));
+ret.setFallbackName(thesel.getString("fallBackName"));
+	
 
-	ret.getTheTestObject().getIdents().getIdent().add(xpathident); // add the new
-	ret.setActiveIdentMehod("XPath");
-	ret.getTheTestObject().setAutoName(thesel.getString("autoName"));
-	ret.getTheTestObject().setFallbackName(thesel.getString("fallBackName"));
+	
+
 	
 	
 	}else { // selection not ended

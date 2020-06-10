@@ -67,8 +67,10 @@ public class StepFactory {
 		Step tostep = new Step();
 		tostep.setType("testObject");
 		tostep.setAction("Wait");
-		TestObject newTestObject = controller.generateNewTestObject( library); 
-		tostep.setTestObject(newTestObject.getTestObjId());
+		/*
+		 * TestObject newTestObject = controller.generateNewTestObjectWithXpath(
+		 * library, "/html"); tostep.setTestObject(newTestObject.getTestObjId());
+		 */
 		Step internalBlockif= buildInternalBlock() ;
 		Step commentStepif = generateCommentStep(controller, library);
 		commentStepif.setComment("Insert the step for If here");
@@ -127,8 +129,10 @@ public class StepFactory {
 		Step ret = new Step();
 		ret.setType("testObject");
 		ret.setAction("Click");
-		TestObject newTestObject = controller.generateNewTestObject( library); 
-		ret.setTestObject(newTestObject.getTestObjId());
+		/*
+		 * TestObject newTestObject = controller.generateNewTestObjectWithXpath(
+		 * library,"html"); ret.setTestObject(newTestObject.getTestObjId());
+		 */
 		return ret;
 	}
 
@@ -136,16 +140,15 @@ public class StepFactory {
 		Step ret = new Step();
 		ret.setType("testObject");
 		ret.setAction("Wait");
-		TestObject newTestObject = controller.generateNewTestObject( library); 
-		ret.setTestObject(newTestObject.getTestObjId());
+		/*
+		 * TestObject newTestObject = controller.generateNewTestObjectWithXpath(
+		 * library, "/html"); ret.setTestObject(newTestObject.getTestObjId());
+		 */
 		return ret;
 
 	}
 
-	private static Step generateNewTestObject(TcXmlController controller, TruLibrary library) {
-		// TODO Auto-generated method stub
-		return null;
-	}
+
 
 	private static Step generateGenericApiStep() {
 		Step ret = new Step();

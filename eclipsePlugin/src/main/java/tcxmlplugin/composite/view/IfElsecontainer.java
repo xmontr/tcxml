@@ -26,6 +26,14 @@ public class IfElsecontainer implements StepContainer, ExpandListener {
 	
 	public StepView ifview ;
 	
+	protected Step parentStep ;
+	
+	public void setParentStep(Step parentStep) {
+		this.parentStep = parentStep;
+	}
+
+
+
 	private ExpandBar thebar;
 	
 	
@@ -113,6 +121,15 @@ public class IfElsecontainer implements StepContainer, ExpandListener {
 	@Override
 	public void addStep(Step step) throws TcXmlException {
 		
+		if(parentStep == null) {
+			throw new TcXmlException("no parent step for stepContainer", new IllegalStateException());
+			
+		}
+	if(	! parentStep.getStep().contains(step) ){
+			parentStep.getStep().add(step);	
+			
+		}
+		
 		
 		 StepViewer tv = StepViewerFactory.getViewer(step,this, this.ifview.controller,this.ifview.getLibrary());
 		 
@@ -141,6 +158,15 @@ public class IfElsecontainer implements StepContainer, ExpandListener {
 	
 	@Override
 	public void addStep(Step step, int index) throws TcXmlException {
+		
+		if(parentStep == null) {
+			throw new TcXmlException("no parent step for stepContainer", new IllegalStateException());
+			
+		}
+	if(	! parentStep.getStep().contains(step) ){
+			parentStep.getStep().add(step);	
+			
+		}
 		
 		
 		 StepViewer tv = StepViewerFactory.getViewer(step,this, this.ifview.controller,this.ifview.getLibrary());
