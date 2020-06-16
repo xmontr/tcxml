@@ -3,6 +3,8 @@ package stepWrapper;
 import java.io.PrintWriter;
 import java.util.ArrayList;
 
+import com.kscs.util.jaxb.BoundList;
+
 import tcxml.core.PlayingContext;
 import tcxml.core.TcXmlController;
 import tcxml.core.TcXmlException;
@@ -19,8 +21,9 @@ public class AlternativeStepWrapper extends AbstractStepWrapper{
 
 	@Override
 	public String getTitle() throws TcXmlException {
-		// TODO Auto-generated method stub
-		return null;
+	AbstractStepWrapper theactivewrapper = StepWrapperFactory.getWrapper(getAlternative(), controller, getLibrary());
+		
+		return theactivewrapper.getTitle() + " - alternative ";
 	}
 
 	@Override
@@ -50,6 +53,25 @@ public class AlternativeStepWrapper extends AbstractStepWrapper{
 	public void export(PrintWriter pw) throws TcXmlException {
 	AbstractStepWrapper alstep = StepWrapperFactory.getWrapper(getAlternative(), controller, library);
 	alstep.export(pw);
+		
+	}
+	
+	public String getActiveStep() {
+		return step.getActiveStep();
+		
+		
+	}
+	
+	
+	public void setActiveStep( String index) {
+		
+		step.setActiveStep(index);
+	}
+	
+	
+	public BoundList<Step> getAllSteps() {
+		
+		return step.getStep();
 		
 	}
 	

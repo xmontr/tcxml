@@ -413,7 +413,7 @@ public class TcXmlPluginController
 	 * @param ex
 	 */
 	public void error(String message, Throwable ex){
-		Activator.getDefault().log(message, IStatus.ERROR, ex);
+		Activator.getDefault().log(message + " " + ex.getMessage(), IStatus.ERROR, ex);
 		
 	}
 	

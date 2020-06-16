@@ -12,6 +12,7 @@ import java.io.Reader;
 import java.io.StringReader;
 import java.io.StringWriter;
 import java.io.UnsupportedEncodingException;
+import java.io.Writer;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
@@ -78,6 +79,7 @@ import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
 import com.kscs.util.jaxb.BoundList;
+import com.sun.xml.bind.marshaller.CharacterEscapeHandler;
 
 import jdk.nashorn.api.scripting.JSObject;
 import stepWrapper.AbstractStepWrapper;
@@ -838,7 +840,7 @@ public InputStream addExpectedNamespace(String element, String ns, FileInputStre
 		return ret;
 	};
 	
-String tmp = br.lines().map(addNS).collect(Collectors.joining());
+String tmp = br.lines().map(addNS).collect(Collectors.joining(System.lineSeparator()));
 
 //delete all character before first <
 String s1 = tmp.substring(tmp.indexOf("<"));
@@ -2900,7 +2902,12 @@ try {
 		Marshaller jaxbMarshaller   = jaxbContext.createMarshaller();
 		jaxbMarshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
 		jaxbMarshaller.setProperty(Marshaller.JAXB_ENCODING, "UTF-8");		
-		StringWriter writer = new StringWriter();		
+		StringWriter writer = new StringWriter();	
+		  jaxbMarshaller.setProperty(
+		  "com.sun.xml.bind.marshaller.CharacterEscapeHandler", new
+		  CharacterEscapeHandler() { public void escape(char[] ch, int start, int
+		  length, boolean isAttVal, Writer writer) throws IOException {
+		  writer.write(ch, start, length); } });
 			jaxbMarshaller.marshal(getScript(), writer);
 			writer.close();
 			InputStream targetStream = new ByteArrayInputStream(writer.toString().getBytes("UTF-8"));
