@@ -297,7 +297,7 @@ BoundList<Step> li = ifwrapper.getIfSteps();
 	@Override
 	public PlayingContext doplay(PlayingContext ctx) throws TcXmlException {
 	
-		
+	saveModel();	
 		IfWrapper ifwrapper = (IfWrapper)stepWrapper ;
 		
 		ArgModel cond = ifwrapper.getCondition();
@@ -369,7 +369,7 @@ BoundList<Step> li = ifwrapper.getIfSteps();
 
 	@Override
 	public void saveModel() throws TcXmlException {
-		stepWrapper.saveArguments();
+		super.saveModel();
 		ifcontainer.saveModel();
 		elsecontainer.saveModel();
 		

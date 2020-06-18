@@ -223,6 +223,7 @@ public class BlockView  extends StepView implements StepContainer, ExpandListene
 
 	@Override
 	public PlayingContext doplay(PlayingContext ctx) throws TcXmlException {
+		saveModel();
 		MultipleStepViewerRunner mc = new MultipleStepViewerRunner(stepViwerChildren);
 		
 		PlayingContext ret = mc.runSteps(ctx);
@@ -282,6 +283,7 @@ public class BlockView  extends StepView implements StepContainer, ExpandListene
 
 	@Override
 	public void saveModel() throws TcXmlException {
+		super.saveModel();
 		for (int i = 0; i < stepViwerChildren.size(); i++) {
 			
 			stepViwerChildren.get(i).getViewer().saveModel();

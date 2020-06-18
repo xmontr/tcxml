@@ -126,10 +126,12 @@ public void populate( AbstractStepWrapper stepWrapper2 ) throws TcXmlException {
 
 @Override
 public void saveModel() throws TcXmlException {
-	
-	EvalJavascriptWrapper wr = (EvalJavascriptWrapper) stepWrapper;
-	
-	wr.saveArguments();
+	super.saveModel();
+	/*
+	 * EvalJavascriptWrapper wr = (EvalJavascriptWrapper) stepWrapper;
+	 * 
+	 * wr.saveArguments();
+	 */
 	
 }
 

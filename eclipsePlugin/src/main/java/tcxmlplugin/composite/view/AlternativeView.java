@@ -13,6 +13,7 @@ import stepWrapper.AlternativeStepWrapper;
 import stepWrapper.WaitWrapper;
 import tcxml.core.PlayingContext;
 import tcxml.core.TcXmlException;
+import tcxml.model.AlternativeModel;
 import tcxml.model.Step;
 import tcxmlplugin.composite.StepView;
 import tcxmlplugin.composite.stepViewer.StepContainer;
@@ -31,15 +32,22 @@ import org.eclipse.swt.widgets.Text;
 import com.kscs.util.jaxb.BoundList;
 
 import org.eclipse.swt.layout.GridData;
+import org.eclipse.core.databinding.DataBindingContext;
+import org.eclipse.core.databinding.observable.value.IObservableValue;
+import org.eclipse.jface.databinding.swt.WidgetProperties;
+import org.eclipse.core.databinding.beans.BeanProperties;
 
 public class AlternativeView extends StepView implements StepContainer , ExpandListener {
+	private DataBindingContext m_bindingContext;
 
 	private Step alternativeStep;
-	private Object alternativeView;
+	
 	private ExpandBar expandBar;
 	
 	private List<StepViewer> stepViwerChildren ;
 	private Text textActiveStep;
+	
+	private AlternativeModel alternativemodel ;
 
 
 	public AlternativeView(Composite parent, int style) {
@@ -59,7 +67,8 @@ public class AlternativeView extends StepView implements StepContainer , ExpandL
 		new Label(this, SWT.NONE);
 		stepViwerChildren = new ArrayList<StepViewer>();
 
-		// TODO Auto-generated constructor stub
+		alternativemodel = new AlternativeModel();
+		m_bindingContext = initDataBindings();
 	}
 
 	@Override
@@ -71,7 +80,7 @@ public class AlternativeView extends StepView implements StepContainer , ExpandL
 		
 		AlternativeStepWrapper alternativestepwrapper = (AlternativeStepWrapper )stepWrapper2 ;
 		
-		alternativeStep = alternativestepwrapper.getAlternative();
+		alternativeStep = alternativestepwrapper.getModel();
 		textActiveStep.setText(alternativestepwrapper.getActiveStep());
 		BoundList<Step> allsteps = alternativestepwrapper.getAllSteps();
 		for (Step step : allsteps) {
@@ -114,21 +123,48 @@ public class AlternativeView extends StepView implements StepContainer , ExpandL
 
 	@Override
 	protected PlayingContext doplay(PlayingContext ctx) throws TcXmlException {
-		// TODO Auto-generated method stub
-		return null;
+		saveModel(); 
+		PlayingContext ret = getAlternativeView().play(ctx);
+		return ret;
 	}
 
 	@Override
 	public void export(PrintWriter pw) throws TcXmlException {
-		// TODO Auto-generated method stub
+		getAlternativeView().export(pw);
 		
 	}
 
 	@Override
 	public void saveModel() throws TcXmlException {
-		// TODO Auto-generated method stub
+		super.saveModel();
+	((AlternativeStepWrapper )stepWrapper).setActiveStep(alternativemodel.getActiveStep());
+		
+		// save all alternative steps
+	for (StepViewer stepViewer : stepViwerChildren) {
+		stepViewer.getViewer().saveModel();
 		
 	}
+		
+	}
+	
+	
+	public StepViewer getAlternativeView()  throws TcXmlException {
+		
+	String stepindex = ((AlternativeStepWrapper )stepWrapper).getActiveStep();
+	int index = Integer.parseInt(stepindex);
+	
+	if (index < 0 || index >= stepViwerChildren.size()) {
+		
+		throw new TcXmlException("incorrect acitve step for alternative view ",  new IllegalArgumentException(stepindex)) ;
+	}
+	
+	StepViewer theview = stepViwerChildren.get(index);
+return theview ;
+		
+		
+	}
+	
+	
 
 	@Override
 	public ExpandBar getBar() {
@@ -244,4 +280,13 @@ public class AlternativeView extends StepView implements StepContainer , ExpandL
 		
 	}
 
+	protected DataBindingContext initDataBindings() {
+		DataBindingContext bindingContext = new DataBindingContext();
+		//
+		IObservableValue observeTextTextActiveStepObserveWidget = WidgetProperties.text(SWT.Modify).observe(textActiveStep);
+		IObservableValue activeStepAlternativemodelObserveValue = BeanProperties.value("activeStep").observe(alternativemodel);
+		bindingContext.bindValue(observeTextTextActiveStepObserveWidget, activeStepAlternativemodelObserveValue, null, null);
+		//
+		return bindingContext;
+	}
 }

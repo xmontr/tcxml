@@ -231,10 +231,12 @@ Step ifparent = if2wrapper.getIfParentStep() ;
 	
 	@Override
 	public void saveModel() throws TcXmlException {
-		
-		If2Wrapper wr = (If2Wrapper) stepWrapper;
-		
-	wr.saveArguments();
+		super.saveModel();
+		/*
+		 * If2Wrapper wr = (If2Wrapper) stepWrapper;
+		 * 
+		 * wr.saveArguments();
+		 */
 	identview.saveModel();	
 	ifcontainer.saveModel();
 	elsecontainer.saveModel();
@@ -247,7 +249,7 @@ Step ifparent = if2wrapper.getIfParentStep() ;
 
 	@Override
 	public PlayingContext doplay(PlayingContext ctx) throws TcXmlException {
-		
+		saveModel();
 		HashMap<String, ArgModel> argumentMap = stepWrapper.getArgumentMap();
 		
 		String exist = argumentMap.get("Exists").getValue();
