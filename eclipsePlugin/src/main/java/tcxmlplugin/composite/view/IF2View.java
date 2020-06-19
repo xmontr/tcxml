@@ -254,7 +254,7 @@ Step ifparent = if2wrapper.getIfParentStep() ;
 		
 		String exist = argumentMap.get("Exists").getValue();
 		PlayingContext ret = null ;
-		if(exist== "true") {
+		if(exist.equals("true") ) {
 			
 		ret =	runifexist(ctx);
 		}else {

@@ -590,6 +590,7 @@ public class TcXmlPluginController
 				IStatus ret = Status.OK_STATUS;
 				try {
 					
+					TcXmlPluginController.getInstance().SynchronizeMainFile(monitor);
 					TcXmlPluginController.getInstance().saveMainFile(monitor);
 				} catch (Exception e) {
 					//
@@ -659,7 +660,13 @@ public class TcXmlPluginController
     	
     
     
-    
+    /***
+     *   marshall the grap of the model  object in the view and write the default.xml
+     * 
+     * 
+     * @param monitor
+     * @throws TcXmlPluginException
+     */
 
 	private void saveMainFile(IProgressMonitor monitor) throws TcXmlPluginException{		
 		
@@ -679,6 +686,24 @@ public class TcXmlPluginController
 		
 		
 	}
+	
+	/**
+	 * 
+	 *  synchronize the model object from the data of the view 
+	 * 
+	 * @param monitor
+	 * @throws TcXmlPluginException
+	 */
+	
+	private void SynchronizeMainFile (IProgressMonitor monitor) throws TcXmlPluginException{
+		
+		 getTcviewer().synchronizeActions(  monitor) ;
+		 getTcviewer().synchronizeLogic(monitor);
+		
+		
+	}
+	
+	
 
 	public IPath findMainFile( String rootdir ) throws TcXmlPluginException {
     	IPath ret = null;
