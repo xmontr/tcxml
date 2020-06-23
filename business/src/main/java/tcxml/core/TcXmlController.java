@@ -2924,6 +2924,39 @@ try {
 	 
 	 
  }
+ 
+ 
+ public InputStream marshallLibrary(String libname)  throws TcXmlException {
+	 try {
+		JAXBContext jaxbContext     = JAXBContext.newInstance( TruLibrary.class );
+		Marshaller jaxbMarshaller   = jaxbContext.createMarshaller();
+		jaxbMarshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
+		jaxbMarshaller.setProperty(Marshaller.JAXB_ENCODING, "UTF-8");		
+		StringWriter writer = new StringWriter();	
+		  jaxbMarshaller.setProperty(
+		  "com.sun.xml.bind.marshaller.CharacterEscapeHandler", new
+		  CharacterEscapeHandler() { public void escape(char[] ch, int start, int
+		  length, boolean isAttVal, Writer writer) throws IOException {
+		  writer.write(ch, start, length); } });
+			jaxbMarshaller.marshal(getLibrary(libname), writer);
+			writer.close();
+			InputStream targetStream = new ByteArrayInputStream(writer.toString().getBytes("UTF-8"));
+			
+			
+			
+			return targetStream;
+			
+			
+		} catch (Exception e) {
+			throw new TcXmlException(" failure in marsshalling library  " + libname , e) ;
+			
+		} 
+	 
+ }
+ 
+ 
+ 
+
 	
 }
 

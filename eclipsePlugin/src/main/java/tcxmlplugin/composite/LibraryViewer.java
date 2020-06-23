@@ -5,11 +5,13 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import org.eclipse.core.databinding.DataBindingContext;
 import org.eclipse.core.databinding.beans.BeanProperties;
 import org.eclipse.core.databinding.observable.list.IObservableList;
 import org.eclipse.core.databinding.observable.value.IObservableValue;
+import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jface.databinding.swt.WidgetProperties;
 import org.eclipse.jface.viewers.ComboViewer;
 import org.eclipse.swt.SWT;
@@ -30,7 +32,7 @@ import tcxml.core.TcXmlException;
 import tcxml.model.Step;
 import tcxml.model.TruLibrary;
 import tcxmlplugin.TcXmlPluginController;
-
+import tcxmlplugin.TcXmlPluginException;
 import tcxmlplugin.composite.stepViewer.MainStepContainer;
 import tcxmlplugin.composite.stepViewer.StepViewer;
 import tcxml.model.LibraryModel;
@@ -275,6 +277,32 @@ layout(true,true);
 				librariesView.put(name, libv);
 				
 			}
+		
+	}
+
+
+	public void synchronizeAllLibraries(IProgressMonitor monitor)  throws TcXmlPluginException{
+		Set<String> allibnames = librariesView.keySet();
+		for (Iterator iterator = allibnames.iterator(); iterator.hasNext();) {
+			String libname = (String) iterator.next();
+			synchronizeLibrary(libname);
+			
+		}
+	}
+
+
+	private void synchronizeLibrary(String libname) throws TcXmlPluginException {
+		LibraryView thelibview = librariesView.get(libname);
+		 List<StepViewer> listViewer = thelibview.stepViwerChildren;
+		 for (StepViewer stepViewer : listViewer) {
+			 try {
+				stepViewer.getViewer().saveModel();
+			} catch (TcXmlException e) {
+				controller.getLog().severe("fail to syncronize model from view for library " + libname);
+				throw new TcXmlPluginException("fail to syncronize model from view for action " + libname, e);
+			}
+			
+		}
 		
 	}
 

@@ -104,8 +104,9 @@ public StepViewer getFunction(String libName, String funcName) throws TcXmlExcep
 		StepViewer stepViewer = (StepViewer) it.next();
 		if (stepViewer.getViewer()  instanceof FunctionView ) {
 			FunctionView fv = (FunctionView) stepViewer.getViewer();
-			Function fct = fv.getFunction();
-			if( fct.getName().equals(funcName) ) {
+			/* Function fct = fv.getFunction(); */
+			String fname = fv.getFunctionName();
+			if( fname.equals(funcName) ) {
 				
 				ret = stepViewer; break;
 			}

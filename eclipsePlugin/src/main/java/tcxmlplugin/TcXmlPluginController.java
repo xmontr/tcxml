@@ -16,6 +16,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -582,7 +583,7 @@ public class TcXmlPluginController
 	public void saveModel() {
 		
 		
-	Job j = new Job("save default.xml") {
+	Job j = new Job("save model default.xml and all ibname.xml") {
 			
 			@Override
 			protected IStatus run(IProgressMonitor monitor) {
@@ -590,8 +591,15 @@ public class TcXmlPluginController
 				IStatus ret = Status.OK_STATUS;
 				try {
 					
+					// manage default.xml
 					TcXmlPluginController.getInstance().SynchronizeMainFile(monitor);
 					TcXmlPluginController.getInstance().saveMainFile(monitor);
+					
+					// manage libraries
+					TcXmlPluginController.getInstance().synchronizeAllLibraries(monitor);
+					TcXmlPluginController.getInstance().saveAllLibraries(monitor);
+					
+					
 				} catch (Exception e) {
 					//
 					TcXmlPluginController.getInstance().error(e.getMessage(), e);	
@@ -610,7 +618,7 @@ public class TcXmlPluginController
 		
 		
 			j.schedule();
-			saveLibraries();
+			
 			
 			
 		
@@ -620,8 +628,14 @@ public class TcXmlPluginController
 
     
     
-    private void saveLibraries() {
-		// TODO Auto-generated method stub
+    private void saveAllLibraries(IProgressMonitor monitor) throws TcXmlPluginException {
+		Set<String> libnames = getTcviewer().getAllLibrariesNames();
+		for (Iterator iterator = libnames.iterator(); iterator.hasNext();) {
+			String libname = (String) iterator.next();
+			saveLibrary(monitor, libname);
+		}
+		
+		
 		
 	}
     /***
@@ -661,7 +675,7 @@ public class TcXmlPluginController
     
     
     /***
-     *   marshall the grap of the model  object in the view and write the default.xml
+     *   marshall the graph of the model  object in the view and write the default.xml. a backup is saved in default-backup.xml
      * 
      * 
      * @param monitor
@@ -687,6 +701,29 @@ public class TcXmlPluginController
 		
 	}
 	
+	
+	private void saveLibrary(IProgressMonitor monitor,String  libname) throws TcXmlPluginException{		
+		
+		try {
+		//get inputstream of libname.xml
+	IFolder scriptFolder = getTcviewer().getTcfolder();
+	IFile libfile = findLibraryFile(scriptFolder, libname);
+	backup(monitor, libfile);
+	InputStream newin = getTcviewer().getController().marshallLibrary(libname);
+	
+	libfile.setContents(newin, IResource.FORCE, monitor);
+	
+		}catch (Exception e) {
+			throw new TcXmlPluginException("fail to save library " + libname, e) ;
+		}
+		
+		
+		
+	}
+	
+	
+	
+	
 	/**
 	 * 
 	 *  synchronize the model object from the data of the view 
@@ -700,6 +737,12 @@ public class TcXmlPluginController
 		 getTcviewer().synchronizeActions(  monitor) ;
 		 getTcviewer().synchronizeLogic(monitor);
 		
+		
+	}
+	
+	private void synchronizeAllLibraries (IProgressMonitor monitor) throws TcXmlPluginException{
+		
+		getTcviewer().synchronizeLibraries(monitor);
 		
 	}
 	
@@ -720,7 +763,14 @@ public class TcXmlPluginController
     	
     }
 	
-	
+	/**
+	 * 
+	 * 
+	 * 
+	 * @param parent the root directory of the script
+	 * @return a pointer to the default.xml 
+	 * @throws TcXmlPluginException
+	 */
 	public IFile findMainFile( IFolder parent ) throws TcXmlPluginException {
 		IFile ret = null;
     
@@ -735,6 +785,26 @@ public class TcXmlPluginController
    return ret;
     	
     }
+	
+	public IFile findLibraryFile( IFolder parent , String libname) throws TcXmlPluginException {
+		IFile ret = null;	
+		IFolder libfolder = getLibraryFolder(parent);
+		if(!libfolder.exists()) {
+			throw new TcXmlPluginException("no library folder in root folder " + parent.getName(), new IllegalStateException());
+			
+		}
+		String libfilename = libname + ".xml";
+		ret = libfolder.getFile(libfilename);
+		if(!ret.exists()) {
+			throw new TcXmlPluginException("no library " +  libname +" in library folder of  TC  " + parent.getName(), new IllegalStateException());	
+			
+		}
+		
+	return ret;	
+	}
+	
+	
+	
     
     
     public List<String> getLibraries (  String rootdir) {

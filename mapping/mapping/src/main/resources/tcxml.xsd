@@ -138,6 +138,7 @@
 
 
     <complexType name="truLibrary">
+    <annotation><appinfo><annox:annotate target="class">@javax.xml.bind.annotation.XmlRootElement</annox:annotate></appinfo></annotation>
     	<sequence>
     		<element name="step" type="tns:step" maxOccurs="1" minOccurs="1"></element>
     		<element name="testObjects" type="tns:testObjects" maxOccurs="1" minOccurs="0"></element>

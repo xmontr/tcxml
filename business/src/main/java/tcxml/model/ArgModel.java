@@ -13,6 +13,8 @@ public class ArgModel extends AbstractModel{
 	private String name;
 	
 	
+	
+	
 	private Boolean isJavascript ;
 	
 	private Boolean isParam ;
@@ -47,7 +49,7 @@ public class ArgModel extends AbstractModel{
 
 
 	public void setName(String name) {
-		propertyChangeSupport.firePropertyChange("name", this.isJavascript,
+		propertyChangeSupport.firePropertyChange("name", this.name,
 				this.name = name);
 		
 	}

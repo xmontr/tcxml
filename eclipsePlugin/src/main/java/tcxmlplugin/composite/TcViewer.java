@@ -794,6 +794,19 @@ public void ensureVisibility(StepViewer stepviewer) {
 	}
 	
 	
+	public void synchronizeLibraries (IProgressMonitor monitor) throws TcXmlPluginException {
+		
+		libraryViewer.synchronizeAllLibraries(monitor);
+	}
+	
+	
+	public Set<String> getAllLibrariesNames() {
+		
+		return libraryMap.keySet();
+		
+	}
+	
+	
 	
 	
 
