@@ -327,7 +327,22 @@ return name;
 
 	@Override
 	public void saveModel() throws TcXmlException {
-		// TODO Auto-generated method stub
+		super.saveModel(); // save argument
+		
+		//save schema args
+		FunctionWrapper fwrapper = (FunctionWrapper)		stepWrapper;
+		fwrapper.setSchemaArgs(functionArgumentEditor.getModel());
+		fwrapper.saveShemaArgs();
+		//save children
+		for (int i = 0; i < stepViwerChildren.size(); i++) {
+			
+			stepViwerChildren.get(i).getViewer().saveModel();
+			
+			
+		}
+		
+		
+		
 		
 	}
 

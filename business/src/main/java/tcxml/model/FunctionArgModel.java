@@ -1,6 +1,7 @@
 package tcxml.model;
 
 import javax.json.JsonObject;
+import javax.json.JsonString;
 import javax.json.JsonValue;
 import javax.json.JsonValue.ValueType;
 
@@ -9,6 +10,9 @@ public class FunctionArgModel extends AbstractModel{
 	
 	private String name ;
 	private String type ;	
+	private boolean optional ;
+	
+	
 	
 	public FunctionArgModel(String name) {
 		super();
@@ -17,7 +21,7 @@ public class FunctionArgModel extends AbstractModel{
 	}
 
 
-	private boolean optional ;
+	
 	
 	
 	public boolean isOptional() {
@@ -56,9 +60,22 @@ public class FunctionArgModel extends AbstractModel{
 	
 	
 	public void populateFromJson( JsonObject src) {		
-	JsonValue val = src.getJsonString("type")	;
 
-	this.type = val.toString() ;		
+	this.type =src.getJsonString("type").getString()	 ;
+	JsonString opt = src.getJsonString("optional");
+	if(opt != null) {
+		if(opt.getString().equals("true")) {
+			this.optional = true;
+			
+		}else {
+			this.optional = false ;
+		}
+		
+	}else {
+		
+		this.optional = false ;	
+	}
+	
 
 	}
 	

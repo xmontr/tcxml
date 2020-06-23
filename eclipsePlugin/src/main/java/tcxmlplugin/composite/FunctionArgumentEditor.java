@@ -7,18 +7,23 @@ import tcxmlplugin.composite.view.arguments.FunctionArg;
 
 import org.eclipse.swt.layout.FillLayout;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Set;
 
 import org.eclipse.swt.SWT;
 
 public class FunctionArgumentEditor extends Composite{
+	
+	
+	private List<FunctionArg> listArgumentView;
 
 	public FunctionArgumentEditor(Composite parent, int style) {
 		super(parent, style);
 		setLayout(new FillLayout(SWT.HORIZONTAL));
-		// TODO Auto-generated constructor stub
+		listArgumentView = new ArrayList<FunctionArg>() ;
 	}
 	
 	
@@ -31,11 +36,25 @@ public class FunctionArgumentEditor extends Composite{
 		
 		FunctionArgModel theargmodel = model.get(argname);
 		FunctionArg theargview = new FunctionArg(this, getStyle());
-		theargview.setThearg(theargmodel);
+		theargview.populate(theargmodel);
+		listArgumentView.add(theargview);
 		
 	}
 		
 		
+		
+	}
+	
+	
+	public HashMap<String, FunctionArgModel> getModel() {
+		HashMap<String, FunctionArgModel> model = new HashMap<String, FunctionArgModel>();
+		
+		for (FunctionArg functionArg : listArgumentView) {
+			FunctionArgModel newarg = functionArg.getThearg();
+			model.put(newarg.getName(), newarg);
+			
+		}
+		return model;
 		
 	}
 	

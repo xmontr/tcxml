@@ -1,6 +1,9 @@
 package tcxmlplugin.composite.view.arguments;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 
 import org.eclipse.swt.widgets.Composite;
 
@@ -25,6 +28,8 @@ public class FunctionArg extends Composite {
 	private Label lblName;
 	private Combo comboType;
 	
+	 private static String[] allTypes = new String[] {"string", "integer","boolean" } ;
+	
 
 	public FunctionArg(Composite parent, int style) {
 		super(parent, style);
@@ -44,20 +49,32 @@ public class FunctionArg extends Composite {
 		Button btnOtional = new Button(this, SWT.CHECK);
 		btnOtional.setText("optional");
 		
-		// TODO Auto-generated constructor stub
+		thearg = new FunctionArgModel("newarg");
+		m_bindingContext = initDataBindings();
+		comboType.setItems(allTypes);
+	
 	}
+	
+	
+	public List<String>  getAllTypes() {
+		
+		return null;
+		
+	}
+	
+	
 
 	public FunctionArgModel getThearg() {
 		return thearg;
 	}
 
-	public void setThearg(FunctionArgModel thearg) {
-		this.thearg = thearg;
-		populate();
-	}
 
-	private void populate() {
-		m_bindingContext = initDataBindings();
+
+	public void populate(FunctionArgModel newthearg) {
+			thearg.setName(newthearg.getName());
+			thearg.setType(newthearg.getType());
+			thearg.setOptional(newthearg.isOptional());
+			
 		
 	}
 	protected DataBindingContext initDataBindings() {

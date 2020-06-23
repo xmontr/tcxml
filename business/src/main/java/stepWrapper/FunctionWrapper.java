@@ -45,7 +45,7 @@ public class FunctionWrapper extends AbstractStepWrapper {
 
 	@Override
 	public String getTitle() {
-		String ret = "Function " + step.getAction();
+		String ret = "Function " + getFunctionName();
 		return ret;
 	}
 
@@ -121,7 +121,7 @@ public class FunctionWrapper extends AbstractStepWrapper {
 	}
 	
 	
-	public JsonObject argumentsToJson( ) {
+	public JsonObject schemaArgumentsToJson( ) {
 		
 	JsonObjectBuilder ret  = Json.createObjectBuilder();	
 	
@@ -147,7 +147,7 @@ public class FunctionWrapper extends AbstractStepWrapper {
 	
 	
 	public void saveShemaArgs() {
-		JsonObject newval = argumentsToJson();
+		JsonObject newval = schemaArgumentsToJson();
 		final StringWriter writer = new StringWriter();
 	    final JsonWriter jwriter = Json.createWriter(writer);
 	    jwriter.writeObject(newval);
@@ -163,6 +163,10 @@ public class FunctionWrapper extends AbstractStepWrapper {
 	
 	
 	
+	public void setSchemaArgs(HashMap<String, FunctionArgModel> schemaArgs) {
+		this.schemaArgs = schemaArgs;
+	}
+
 	public void buildFunctionArgDef() throws TcXmlException {
 		
 		String src = step.getArgsSchema();			
@@ -184,6 +188,8 @@ public class FunctionWrapper extends AbstractStepWrapper {
 	private void addArgument(String name, String src) throws TcXmlException { 
 		JsonObject arg = controller.readJsonObject(src);
 		FunctionArgModel  thearg = new FunctionArgModel(name);
+		thearg.populateFromJson(arg.getJsonObject(name));
+		
 		schemaArgs.put(name, thearg);
 		
 	}
