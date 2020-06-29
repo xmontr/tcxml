@@ -1515,6 +1515,8 @@ public void openBrowser (String type, String driverPath) throws TcXmlException {
 	// ensure at least a page is loaded ( required by utils.clearcache )
 	driver.get("chrome://version/");
 	 driver.manage().window().maximize();
+	 JavascriptExecutor js = (JavascriptExecutor)driver; 
+	 String title = (String)js.executeScript("document.title = 'ChromeVersion'");
 	}
 	catch (Exception e) {
 		throw new TcXmlException("failure opening browser", e);

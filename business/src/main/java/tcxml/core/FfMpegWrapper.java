@@ -54,6 +54,9 @@ public class FfMpegWrapper {
 		ProcessBuilder builder = new ProcessBuilder(command);
 		
 		
+		System.out.println("********* local for the process builder *****:" +builder.environment().get("LANG") ) ;
+		;
+		builder.environment().put("LANG", "en_EN.UTF-8");
 		
 File subtitlefile = createSubTitleFile(outputfile)	;	
 
