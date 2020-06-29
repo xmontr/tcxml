@@ -54,4 +54,5 @@ Bundle-ClassPath: .,
  lib/selenium-support-3.7.1.jar,
  extra/nashorn.jar,
  lib/javax.json-1.1.4.jar,
- lib/tcxmlBusiness-0.0.1-SNAPSHOT.jar
+ lib/tcxmlBusiness-0.0.1-SNAPSHOT.jar,
+ lib/jaxb-impl-2.2.4-1.jar

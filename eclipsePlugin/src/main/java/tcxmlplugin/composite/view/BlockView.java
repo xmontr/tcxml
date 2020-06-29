@@ -36,6 +36,8 @@ import tcxmlplugin.dnd.MyExpandBarDropUtil;
 import tcxmlplugin.job.MultipleStepViewerRunner;
 
 public class BlockView  extends StepView implements StepContainer, ExpandListener {
+	
+	protected Step parentStep;
 	private ExpandBar bar;
 	
 	private List<StepViewer> stepViwerChildren ;
@@ -67,6 +69,16 @@ public class BlockView  extends StepView implements StepContainer, ExpandListene
 	
 	
 	public void addStep(Step step) throws TcXmlException {
+		
+		if(parentStep == null) {
+			throw new TcXmlException("no parent step for stepContainer", new IllegalStateException());
+			
+		}
+	if(	! parentStep.getStep().contains(step) ){
+			parentStep.getStep().add(step);	
+			
+		}
+		
 		
 		 StepViewer tv = StepViewerFactory.getViewer(step,this, controller,getLibrary());
 		 
@@ -113,6 +125,15 @@ public class BlockView  extends StepView implements StepContainer, ExpandListene
 	
 	
 	public void addStep(Step step, int index) throws TcXmlException {
+		
+		if(parentStep == null) {
+			throw new TcXmlException("no parent step for stepContainer", new IllegalStateException());
+			
+		}
+	if(	! parentStep.getStep().contains(step) ){
+			parentStep.getStep().add(index,step);	
+			
+		}
 		
 		 StepViewer tv = StepViewerFactory.getViewer(step,this, controller,getLibrary());
 		 
@@ -176,6 +197,7 @@ public class BlockView  extends StepView implements StepContainer, ExpandListene
 	
 	@Override
 	public void populate(AbstractStepWrapper stepWrapper2) throws TcXmlException {
+		this.parentStep = stepWrapper2.getModel();
 		
 		if(! (stepWrapper2 instanceof BlockWrapper )) {
 			throw new TcXmlException("block  view can only be populated by from a block  wrapper ", new IllegalArgumentException());
@@ -201,6 +223,7 @@ public class BlockView  extends StepView implements StepContainer, ExpandListene
 
 	@Override
 	public PlayingContext doplay(PlayingContext ctx) throws TcXmlException {
+		saveModel();
 		MultipleStepViewerRunner mc = new MultipleStepViewerRunner(stepViwerChildren);
 		
 		PlayingContext ret = mc.runSteps(ctx);
@@ -260,6 +283,7 @@ public class BlockView  extends StepView implements StepContainer, ExpandListene
 
 	@Override
 	public void saveModel() throws TcXmlException {
+		super.saveModel();
 		for (int i = 0; i < stepViwerChildren.size(); i++) {
 			
 			stepViwerChildren.get(i).getViewer().saveModel();

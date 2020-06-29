@@ -183,8 +183,7 @@ public class IF2View extends StepView  implements ExpandListener{
 		
 		
 		BoundList<Step> li = model.getStep();
-		//add object to test	
-		//theTestObject=if2wrapper.getTestobject();
+
 		
 	
 	identview = new IdentificationView(grpObject, SWT.NONE, controller);
@@ -196,21 +195,24 @@ conditionTxt.setArgmodel(if2wrapper.getExistCondition());
 		// add children		
 		
 		//add children
-		Step firstchild = li.get(1);				
-				sanitycheck(firstchild);
+Step ifparent = if2wrapper.getIfParentStep() ;
+
+	ifcontainer.setParentStep(ifparent);				
+				sanitycheck(ifparent);
 		
 		
-		for (Step step : firstchild.getStep()) {
+		for (Step step : ifparent.getStep()) {
 			ifcontainer.addStep(step);
 		}
 				
 		ifbar.layout();
 		
 		//add else step
-		if(li.size() > 2) { 	//add else children
+		if(if2wrapper.hasElse()) { 	//add else children
 			
-			Step secondchild = li.get(2);
-			for (Step step : secondchild.getStep()) {
+			Step elseparent = if2wrapper.getElseParentStep();
+			elsecontainer.setParentStep(elseparent);
+			for (Step step : elseparent.getStep()) {
 			elsecontainer.addStep(step);
 			}
 			
@@ -229,10 +231,12 @@ conditionTxt.setArgmodel(if2wrapper.getExistCondition());
 	
 	@Override
 	public void saveModel() throws TcXmlException {
-		
-		If2Wrapper wr = (If2Wrapper) stepWrapper;
-		
-	wr.saveArguments();
+		super.saveModel();
+		/*
+		 * If2Wrapper wr = (If2Wrapper) stepWrapper;
+		 * 
+		 * wr.saveArguments();
+		 */
 	identview.saveModel();	
 	ifcontainer.saveModel();
 	elsecontainer.saveModel();
@@ -245,12 +249,12 @@ conditionTxt.setArgmodel(if2wrapper.getExistCondition());
 
 	@Override
 	public PlayingContext doplay(PlayingContext ctx) throws TcXmlException {
-		
+		saveModel();
 		HashMap<String, ArgModel> argumentMap = stepWrapper.getArgumentMap();
 		
 		String exist = argumentMap.get("Exists").getValue();
 		PlayingContext ret = null ;
-		if(exist== "true") {
+		if(exist.equals("true") ) {
 			
 		ret =	runifexist(ctx);
 		}else {

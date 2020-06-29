@@ -12,6 +12,7 @@ import java.io.Reader;
 import java.io.StringReader;
 import java.io.StringWriter;
 import java.io.UnsupportedEncodingException;
+import java.io.Writer;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
@@ -42,6 +43,8 @@ import javax.json.JsonReader;
 import javax.json.JsonString;
 import javax.json.JsonValue;
 import javax.json.JsonValue.ValueType;
+import javax.json.JsonWriter;
+import javax.json.stream.JsonParser;
 import javax.script.Bindings;
 import javax.script.ScriptContext;
 import javax.script.ScriptEngine;
@@ -64,16 +67,19 @@ import org.openqa.selenium.By.ByXPath;
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.OutputType;
 import org.openqa.selenium.TakesScreenshot;
+import org.openqa.selenium.TimeoutException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.remote.Augmenter;
 import org.openqa.selenium.remote.DesiredCapabilities;
+import org.openqa.selenium.support.ui.ExpectedCondition;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
 import com.kscs.util.jaxb.BoundList;
+import com.sun.xml.bind.marshaller.CharacterEscapeHandler;
 
 import jdk.nashorn.api.scripting.JSObject;
 import stepWrapper.AbstractStepWrapper;
@@ -219,6 +225,8 @@ public class TcXmlController {
 	
 	private File chromeApiExtension;
 	
+	private File identPickerExtension;
+	
 	/**
 	 *  absolute base dir for all the files of the testcase : default.xml , extrafile , .dat , .prm ...
 	 * 
@@ -245,6 +253,8 @@ public class TcXmlController {
 	private static  ScriptEngineManager  scriptFactory = new ScriptEngineManager();
 
 	private FileHandler fhandler;
+
+	
 	
 	
 	
@@ -445,7 +455,7 @@ for (ArgModel val : def) {
     public boolean isBrowserStep(Step step) {
     	boolean ret = false;
     	
-    	if(step.getTestObject().equals("testObj:{00000000-0000-0000-0000-000000000001}")) {
+    	if( step.getTestObject() != null && step.getTestObject().equals("testObj:{00000000-0000-0000-0000-000000000001}")) {
     		ret =true;
     		
     		
@@ -477,7 +487,7 @@ for (ArgModel val : def) {
  
     }
     
-    
+  /*  
     public TestObject generateNewTestObject( TruLibrary library) { 
     	BoundList<TestObject> li = null;
     	if( library == null) {
@@ -506,9 +516,36 @@ for (ArgModel val : def) {
     	
     	
     	
-    }
+    }*/
     
-    
+    public TestObject generateNewTestObjectWithXpath( TruLibrary library, String xpath) throws TcXmlException { 
+    	BoundList<TestObject> li = null;
+    	if( library == null) {
+    		li = script.getTestObjects().getTestObject();
+    		
+    	} else {
+    		li = library.getTestObjects().getTestObject();	
+    	}
+    	TestObject newTo = new TestObject();
+    	String id = UUID.randomUUID().toString();
+    	newTo.setTestObjId("testObj:{" + id + "}");
+		li.add(newTo);
+		newTo.setPlatform("web");
+		Idents newidents = new Idents();
+		//populate default value
+		newTo.setIdents(newidents );
+		
+		newidents.setActive(IdentificationMethod.XPATH.getName());
+		Ident newIdent =this.buildXpathIdent(xpath);	
+
+		newTo.getIdents().getIdent().add(newIdent);
+		
+		
+		return (newTo);
+    	
+    	
+    	
+    }    
     
     
     
@@ -803,7 +840,7 @@ public InputStream addExpectedNamespace(String element, String ns, FileInputStre
 		return ret;
 	};
 	
-String tmp = br.lines().map(addNS).collect(Collectors.joining());
+String tmp = br.lines().map(addNS).collect(Collectors.joining(System.lineSeparator()));
 
 //delete all character before first <
 String s1 = tmp.substring(tmp.indexOf("<"));
@@ -1455,16 +1492,19 @@ public void openBrowser (String type, String driverPath) throws TcXmlException {
 	
 	if(highlighterExtension == null) {
 		highlighterExtension = generatePathToLocalTemporaryResource("jqueryHighlighter.crx").toFile();
-	}
-	 
+	}	 
 	 options.addExtensions(highlighterExtension);
 	 
 	 
 		if(chromeApiExtension == null) {
 			chromeApiExtension = generatePathToLocalTemporaryResource("chromeApiInjector.zip").toFile();
-		}
-		 
+			}		 
 		 options.addExtensions(chromeApiExtension);
+		 
+			if(identPickerExtension == null) {
+				identPickerExtension = generatePathToLocalTemporaryResource("identPickerExtension.zip").toFile();
+				}		 
+			 options.addExtensions(identPickerExtension);
 	 
 	 
 
@@ -1685,6 +1725,97 @@ public void highlight(final WebElement webElement) throws TcXmlException {
 	final String scriptSetAttrValue = "var event = new CustomEvent('highlight', { detail: 'xa' });arguments[0].dispatchEvent(event);";
 	js.executeScript(scriptSetAttrValue, webElement);
 }
+
+
+public void launchIdentSelector() {
+
+	final JavascriptExecutor js = (JavascriptExecutor) driver;
+	final String scriptSetAttrValue = " window.postMessage({ action:'start'}, '*');";
+	js.executeScript(scriptSetAttrValue);
+	
+	
+}
+
+
+public String getIdentSelectorStatus() {
+	String ret = "stop";
+	final JavascriptExecutor js = (JavascriptExecutor) driver;
+	final String scriptSetAttrValue = "return document.getElementById('identStorage').getAttribute('status');";
+	ret = (String) js.executeScript(scriptSetAttrValue);	
+	
+	return ret;
+	
+	
+	
+}
+
+
+public void waitIdentSelectorCompletion() throws TcXmlException {
+	ExpectedCondition<Boolean> completed = new IdentSelectionDone(this);
+	long TIMEOUTWAIT = 500;
+	WebDriverWait w = new WebDriverWait(getDriver(), TIMEOUTWAIT );
+	try {
+	w.until(completed);
+	}catch (TimeoutException e) {
+		throw new TcXmlException("timeout for selection in the browser " + TIMEOUTWAIT, e);
+	}
+	
+	
+	
+	
+}
+
+public JsonObject getIdentSelection() {
+	String ret = null;
+	final JavascriptExecutor js = (JavascriptExecutor) driver;
+	final String scriptSetAttrValue = "return document.getElementById('identStorage').textContent";
+	ret = (String) js.executeScript(scriptSetAttrValue);
+	getLog().fine("content of identStorage:" + ret);
+	StringReader sr = new StringReader(ret);
+	
+	JsonReader jr = Json.createReader(sr );
+	JsonObject json = jr.readObject();	
+	
+	return json;
+	
+	
+	
+	
+}
+
+
+public Ident buildXpathIdent(String xpath) throws TcXmlException {
+	Ident ret = new Ident();
+	JsonObjectBuilder builder = Json.createObjectBuilder();
+	JsonObjectBuilder implDataBuilder = Json.createObjectBuilder();
+	builder.add("primaryScore",1);
+	implDataBuilder.add("value" , xpath);   //.replaceAll("\"", "\\\\\"")
+	builder.add("implData",implDataBuilder.build());
+	
+	ret.setType(IdentificationMethod.XPATH.getName());
+	StringWriter sw = new StringWriter();
+	JsonWriter jsonwriter = Json.createWriter(sw);
+	jsonwriter.writeObject(builder.build());
+	String value;
+	
+		value = sw.toString();
+	
+	ret.setValue(value);
+	
+	
+	
+return ret;	
+}
+
+
+
+
+
+
+
+
+
+
 
 public WebDriver getDriver() {
 	return driver;
@@ -2771,10 +2902,18 @@ try {
 		Marshaller jaxbMarshaller   = jaxbContext.createMarshaller();
 		jaxbMarshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
 		jaxbMarshaller.setProperty(Marshaller.JAXB_ENCODING, "UTF-8");		
-		StringWriter writer = new StringWriter();		
+		StringWriter writer = new StringWriter();	
+		  jaxbMarshaller.setProperty(
+		  "com.sun.xml.bind.marshaller.CharacterEscapeHandler", new
+		  CharacterEscapeHandler() { public void escape(char[] ch, int start, int
+		  length, boolean isAttVal, Writer writer) throws IOException {
+		  writer.write(ch, start, length); } });
 			jaxbMarshaller.marshal(getScript(), writer);
 			writer.close();
-			InputStream targetStream = new ByteArrayInputStream(writer.toString().getBytes());
+			InputStream targetStream = new ByteArrayInputStream(writer.toString().getBytes("UTF-8"));
+			
+			
+			
 			return targetStream;
 			
 			
@@ -2785,6 +2924,39 @@ try {
 	 
 	 
  }
+ 
+ 
+ public InputStream marshallLibrary(String libname)  throws TcXmlException {
+	 try {
+		JAXBContext jaxbContext     = JAXBContext.newInstance( TruLibrary.class );
+		Marshaller jaxbMarshaller   = jaxbContext.createMarshaller();
+		jaxbMarshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
+		jaxbMarshaller.setProperty(Marshaller.JAXB_ENCODING, "UTF-8");		
+		StringWriter writer = new StringWriter();	
+		  jaxbMarshaller.setProperty(
+		  "com.sun.xml.bind.marshaller.CharacterEscapeHandler", new
+		  CharacterEscapeHandler() { public void escape(char[] ch, int start, int
+		  length, boolean isAttVal, Writer writer) throws IOException {
+		  writer.write(ch, start, length); } });
+			jaxbMarshaller.marshal(getLibrary(libname), writer);
+			writer.close();
+			InputStream targetStream = new ByteArrayInputStream(writer.toString().getBytes("UTF-8"));
+			
+			
+			
+			return targetStream;
+			
+			
+		} catch (Exception e) {
+			throw new TcXmlException(" failure in marsshalling library  " + libname , e) ;
+			
+		} 
+	 
+ }
+ 
+ 
+ 
+
 	
 }
 

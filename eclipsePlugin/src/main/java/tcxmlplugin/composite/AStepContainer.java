@@ -42,6 +42,8 @@ public abstract class AStepContainer extends Composite   implements StepContaine
 	
 	protected TcXmlController controller;
 	
+	protected Step parentStep ;
+	
 	
 	protected List<StepViewer> stepViwerChildren ;
 	
@@ -210,6 +212,16 @@ content.setSize(newsize);
 	
 	public void addStep(Step step) throws TcXmlException {
 		
+		if(parentStep == null) {
+			throw new TcXmlException("no parent step for stepContainer", new IllegalStateException());
+			
+		}
+	if(	! parentStep.getStep().contains(step) ){
+			parentStep.getStep().add(step);	
+			
+		}
+		
+		
 		 StepViewer tv = StepViewerFactory.getViewer(step,this, controller,getLibrary());	
 		 tv.setDragSource(ExpandBarDragListener.buildDragsource(tv));
 		 stepViwerChildren.add(tv);
@@ -230,6 +242,15 @@ content.setSize(newsize);
 	
 	
 	public void addStep(Step step, int index) throws TcXmlException {
+		
+		if(parentStep == null) {
+			throw new TcXmlException("no parent step for stepContainer", new IllegalStateException());
+			
+		}
+	if(	! parentStep.getStep().contains(step) ){
+			parentStep.getStep().add(index,step);	
+			
+		}
 		
 		 StepViewer tv = StepViewerFactory.getViewer(step,this, controller,getLibrary());		 
 		 stepViwerChildren.add(index,tv);

@@ -376,14 +376,17 @@ conditionString= conditionTxt.getArgModel().getValue();
 	@Override
 	public void saveModel() throws TcXmlException {
 		
-		HashMap<String, ArgModel> argval = new HashMap<String, ArgModel>();
-		
-		argval.put("Init", initText.getArgModel());
-		argval.put("Condition", conditionTxt.getArgModel());
-		argval.put("Increment", incrementTxt.getArgModel());
-		
-		
-		stepWrapper.saveArguments();
+		/*
+		 * HashMap<String, ArgModel> argval = new HashMap<String, ArgModel>();
+		 * 
+		 * argval.put("Init", initText.getArgModel()); argval.put("Condition",
+		 * conditionTxt.getArgModel()); argval.put("Increment",
+		 * incrementTxt.getArgModel());
+		 * 
+		 * 
+		 * stepWrapper.saveArguments();
+		 */
+		super.saveModel();
 		
 		for (int i = 0; i < stepViwerChildren.size(); i++) {
 			

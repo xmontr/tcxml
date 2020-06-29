@@ -55,6 +55,7 @@ import tcxml.model.Step;
 import tcxml.model.Transaction;
 import tcxml.model.TruLibrary;
 import tcxmlplugin.TcXmlPluginController;
+import tcxmlplugin.TcXmlPluginException;
 import tcxmlplugin.composite.parameter.ParameterViewer;
 import tcxmlplugin.composite.stepViewer.StepContainer;
 import tcxmlplugin.composite.stepViewer.StepViewer;
@@ -765,6 +766,43 @@ public void ensureVisibility(StepViewer stepviewer) {
 			
 		}
 		
+		
+	}
+	
+	
+	
+	
+	/**
+	 * 
+	 *  synchronize the view with the model for all actions of the script
+	 * 
+	 * 
+	 * @param monitor
+	 * @throws TcXmlPluginException 
+	 */
+	
+
+	public void synchronizeActions(IProgressMonitor monitor) throws TcXmlPluginException {
+		actionsViewer.synchronizeAllActions(monitor);
+		
+	}
+	
+	
+	public void synchronizeLogic (IProgressMonitor monitor) throws TcXmlPluginException {
+		
+		runLogicViewer.synchronizeLogic(  monitor);
+	}
+	
+	
+	public void synchronizeLibraries (IProgressMonitor monitor) throws TcXmlPluginException {
+		
+		libraryViewer.synchronizeAllLibraries(monitor);
+	}
+	
+	
+	public Set<String> getAllLibrariesNames() {
+		
+		return libraryMap.keySet();
 		
 	}
 	

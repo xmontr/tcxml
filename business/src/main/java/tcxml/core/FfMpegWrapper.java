@@ -93,7 +93,7 @@ throw new TcXmlException("failure in subtitle management" , e1) ;
 			do {
 			 line = output.readLine() ;
 			
-			bufferError.append(line);
+			bufferError.append(line + System.lineSeparator());
 			 
 			} 
 			while( line != null) ;
@@ -175,7 +175,7 @@ if( srtfile.exists()) {
 		//format for input
 		ret.add("-f");ret.add("gdigrab"); // format for windows
 		//set frame rate (Hz value, fraction or abbreviation)
-		ret.add("-r");ret.add("30");
+		ret.add("-r");ret.add("60");
 		// window tiltle of the window to record
 		ret.add("-i");
 		
@@ -184,6 +184,7 @@ if( srtfile.exists()) {
 		//timestamp for thr video
 		// YUV chroma subsampling for firefox compatibility
 		ret.add("-pix_fmt");ret.add("yuv420p");
+		ret.add("-vf");ret.add("pad=\"width=ceil(iw/2)*2:height=ceil(ih/2)*2\"");
 
 		// output file for the video
 		ret.add(outputfile);		
@@ -260,7 +261,7 @@ if( srtfile.exists()) {
 					do {
 					 line = output.readLine() ;
 					
-					bufferError.append(line);
+					bufferError.append(line+System.lineSeparator());
 					 
 					} 
 					while( line != null) ;

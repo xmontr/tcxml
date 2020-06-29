@@ -9,7 +9,9 @@ import tcxml.core.TcXmlController;
 import tcxml.core.TcXmlException;
 import tcxml.model.Step;
 import tcxmlplugin.TcXmlPluginController;
+import tcxmlplugin.TcXmlPluginException;
 import tcxmlplugin.composite.stepViewer.MainStepContainer;
+import tcxmlplugin.composite.stepViewer.StepViewer;
 import tcxml.model.ActionsModel;
 
 import org.eclipse.swt.SWT;
@@ -28,6 +30,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import org.eclipse.core.databinding.DataBindingContext;
 import org.eclipse.core.databinding.observable.list.IObservableList;
@@ -36,6 +39,7 @@ import org.eclipse.core.databinding.beans.BeanProperties;
 import org.eclipse.core.databinding.beans.PojoProperties;
 import org.eclipse.core.databinding.UpdateListStrategy;
 import org.eclipse.core.databinding.observable.value.IObservableValue;
+import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.widgets.ProgressBar;
 
@@ -323,6 +327,40 @@ private Composite createaViewWithsnapshotViewer() {
 		maincontainer.layout(true,true);
 layout(true,true);
 	}
+	
+	
+	
+	
+	public void synchronizeAllActions(IProgressMonitor monitor) throws TcXmlPluginException {
+		Set<String> allactionsname = actionsView.keySet() ;
+		for (Iterator iterator = allactionsname.iterator(); iterator.hasNext();) {
+			String actname = (String) iterator.next();
+			synchronizeAction(actname,monitor);
+			
+		}
+		
+		
+		
+		
+	}
+
+	private void synchronizeAction(String actname,IProgressMonitor monitor) throws TcXmlPluginException{
+	 ActionView theview = actionsView.get(actname);
+	 List<StepViewer> listViewer = theview.stepViwerChildren;
+	 for (StepViewer stepViewer : listViewer) {
+		 try {
+			stepViewer.getViewer().saveModel();
+		} catch (TcXmlException e) {
+			controller.getLog().severe("fail to syncronize model from view for action " + actname);
+			throw new TcXmlPluginException("fail to syncronize model from view for action " + actname, e);
+		}
+		
+	}
+		
+	}
+	
+	
+	
 
 	
 }

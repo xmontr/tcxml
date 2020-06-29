@@ -107,12 +107,12 @@ public class GenericAPIStepView extends StepView implements PropertyChangeListen
 	
 	@Override
 	public void saveModel() throws TcXmlException {
-		
+		super.saveModel();
 		GenericApiWrapper wr = (GenericApiWrapper)stepWrapper ;
 		wr.SaveCategoryMethod(genericapimodel.getSelectedCategory(), genericapimodel.getMethodName());
 		// save argument
 		
-		wr.saveArguments();
+		/* wr.saveArguments(); */
 	}
 	
 	

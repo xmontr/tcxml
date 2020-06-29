@@ -2,6 +2,7 @@ package tcxmlplugin.composite.view;
 
 import java.io.PrintWriter;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 
@@ -25,6 +26,7 @@ import stepWrapper.AbstractStepWrapper;
 import stepWrapper.ForWrapper;
 import stepWrapper.FunctionWrapper;
 import tcxml.model.Function;
+import tcxml.model.FunctionArgModel;
 import tcxml.core.PlayingContext;
 import tcxml.core.TcXmlController;
 import tcxml.core.TcXmlException;
@@ -42,6 +44,8 @@ import tcxmlplugin.job.PlayingJob;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.wb.swt.SWTResourceManager;
+import org.eclipse.swt.widgets.Group;
+import tcxmlplugin.composite.FunctionArgumentEditor;
 
 public class FunctionView extends StepView implements StepContainer, ExpandListener {
 	private ExpandBar bar;
@@ -55,6 +59,7 @@ public class FunctionView extends StepView implements StepContainer, ExpandListe
 
 
 	private DropTarget expandbardroptarget;
+	private FunctionArgumentEditor functionArgumentEditor;
 
 	
 
@@ -77,6 +82,13 @@ public class FunctionView extends StepView implements StepContainer, ExpandListe
 		GridLayout gridlayout = new GridLayout(1, false);
 		setLayout(gridlayout);
 		stepViwerChildren = new ArrayList<StepViewer>();
+		
+		Group grpFunctionArguments = new Group(this, SWT.NONE);
+		grpFunctionArguments.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
+		grpFunctionArguments.setText("Function arguments");
+		grpFunctionArguments.setLayout(new FillLayout(SWT.HORIZONTAL));
+		
+		functionArgumentEditor = new FunctionArgumentEditor(grpFunctionArguments, SWT.NONE);
 		bar = new ExpandBar(this, SWT.NONE);
 		bar.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 		bar.setBackground(getDisplay().getSystemColor(SWT.COLOR_WHITE));
@@ -199,13 +211,19 @@ public class FunctionView extends StepView implements StepContainer, ExpandListe
 		sanityCheck(model);
 	
 		
-		function = new Function();
-		function.setName(model.getAction());
-		function.setId(model.getStepId());
-		function.setArgumentSchema(model.getArgsSchema());
-		function.setIndex(model.getIndex());
-		function.setLevel(model.getLevel());
+		/*
+		 * function = new Function(); function.setName(model.getAction());
+		 * function.setId(model.getStepId());
+		 * function.setArgumentSchema(model.getArgsSchema());
+		 * function.setIndex(model.getIndex()); function.setLevel(model.getLevel());
+		 */
 
+		
+		//shemaarg of the function
+		HashMap<String, FunctionArgModel> sargs = ((FunctionWrapper)stepWrapper).getSchemaArgs();
+		functionArgumentEditor.edit(sargs);
+		
+		
 		
 		// first step child is internal - skipit
 		
@@ -219,9 +237,9 @@ public class FunctionView extends StepView implements StepContainer, ExpandListe
 		bar.layout(true,true);
 	}
 
-	public Function getFunction() {
-		return function;
-	}
+	/*
+	 * public Function getFunction() { return function; }
+	 */
 
 	private void sanityCheck(Step mo) throws TcXmlException {
 		Step firstchild = mo.getStep().get(0);
@@ -296,21 +314,35 @@ controller.getLog().info("***************     function  **********collpased ");
 		stepWrapper.export(pw);
 		
 		
-		/*
-			StringBuffer sb = new StringBuffer(model.getAction()).append( ": async function  ").append("( FuncArgs ){");
-			pw.println(sb.toString());
-			for (StepViewer stepViewer : getChildViewer()) {
-				stepViewer.export(pw);
-				
-			}
-			
-			pw.println("},");*/
+
 			
 		}
+	
+	
+	public String getFunctionName() {
+		String name = ((FunctionWrapper)		stepWrapper).getFunctionName();
+		
+return name;
+	}
 
 	@Override
 	public void saveModel() throws TcXmlException {
-		// TODO Auto-generated method stub
+		super.saveModel(); // save argument
+		
+		//save schema args
+		FunctionWrapper fwrapper = (FunctionWrapper)		stepWrapper;
+		fwrapper.setSchemaArgs(functionArgumentEditor.getModel());
+		fwrapper.saveShemaArgs();
+		//save children
+		for (int i = 0; i < stepViwerChildren.size(); i++) {
+			
+			stepViwerChildren.get(i).getViewer().saveModel();
+			
+			
+		}
+		
+		
+		
 		
 	}
 

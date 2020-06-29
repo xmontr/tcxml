@@ -8,6 +8,7 @@ import tcxml.core.TcXmlException;
 import tcxml.model.Step;
 import tcxml.model.TruLibrary;
 import tcxmlplugin.TcXmlPluginController;
+import tcxmlplugin.TcXmlPluginException;
 import tcxmlplugin.composite.stepViewer.StepContainer;
 import tcxmlplugin.composite.stepViewer.StepViewer;
 import tcxmlplugin.composite.stepViewer.StepViewerFactory;
@@ -245,6 +246,22 @@ private void waitForSuccess(PlayingJob j)  {
 	@Override
 	public void reIndex() {
 		// TODO Auto-generated method stub
+		
+	}
+
+
+
+	public void synchronizeLogic(IProgressMonitor monitor) throws TcXmlPluginException {
+	try {
+		initviewer.getViewer().saveModel();
+	actionviewer.getViewer().saveModel();
+	endviewer.getViewer().saveModel();;
+	
+	} catch (TcXmlException e) {
+		// TODO Auto-generated catch block
+		throw new TcXmlPluginException("failure syncronize logic model ", e) ;
+	}
+	
 		
 	}	
 	

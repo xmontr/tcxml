@@ -35,6 +35,7 @@ import tcxmlplugin.composite.AStepContainer;
 import tcxmlplugin.composite.ActionView;
 import tcxmlplugin.composite.LibraryView;
 import tcxmlplugin.composite.StepView;
+import tcxmlplugin.composite.view.AlternativeView;
 import tcxmlplugin.composite.view.BasicView;
 import tcxmlplugin.composite.view.BlockView;
 import tcxmlplugin.composite.view.CallActionView;
@@ -198,9 +199,17 @@ public class StepViewerFactory {
 	
 	if(thesteppwrapper instanceof AlternativeStepWrapper  ) {
 		
-		AlternativeStepWrapper thewrapper  = new AlternativeStepWrapper(step, controller, truLibrary);
-		Step thestep = thewrapper.getAlternative();
-		return getViewer(thestep, stepContainer, controller, truLibrary);
+		AlternativeStepWrapper thewrapper = new AlternativeStepWrapper(step,controller, truLibrary);
+		theview = new AlternativeView(stepContainer.getBar(), SWT.NONE) ;
+		theview.setStepWrapper(thewrapper);
+		founded = true ;
+		
+		
+		/*
+		 * AlternativeStepWrapper thewrapper = new AlternativeStepWrapper(step,
+		 * controller, truLibrary); Step thestep = thewrapper.getAlternative(); return
+		 * getViewer(thestep, stepContainer, controller, truLibrary);
+		 */
 	}
 	
 	

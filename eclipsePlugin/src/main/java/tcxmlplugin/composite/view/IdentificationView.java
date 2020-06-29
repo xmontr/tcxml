@@ -164,7 +164,7 @@ identmodel.setSelectedMethod(testObjectWrapper.getActiveIdentification());
 		testObjectWrapper.saveArguments();
 		
 		
-		testObjectWrapper.saveAction(identmodel.getSelectedMethod());
+		testObjectWrapper.saveAction(testObjectWrapper.getAction());
 		if(!testObjectWrapper.isBrowserStep()) {
 			
 			testObjectWrapper.setActiveIdentMehod(identmodel.getSelectedMethod());

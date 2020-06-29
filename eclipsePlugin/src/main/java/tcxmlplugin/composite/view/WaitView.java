@@ -116,7 +116,7 @@ public class WaitView extends StepView  {
 	@Override
 	public PlayingContext doplay(PlayingContext ctx) throws TcXmlException {
 		
-		
+	saveModel();	
 	PlayingContext ret = stepWrapper.play(ctx);
 	return ret;
 	}

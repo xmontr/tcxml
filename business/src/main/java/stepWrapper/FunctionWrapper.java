@@ -1,8 +1,18 @@
 package stepWrapper;
 
 import java.io.PrintWriter;
+import java.io.StringWriter;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Set;
+
+import javax.json.Json;
+import javax.json.JsonObject;
+import javax.json.JsonObjectBuilder;
+import javax.json.JsonWriter;
+
+import org.apache.commons.lang.StringEscapeUtils;
 
 import com.kscs.util.jaxb.BoundList;
 
@@ -11,20 +21,31 @@ import tcxml.core.TcXmlController;
 import tcxml.core.TcXmlException;
 import tcxml.core.runner.MultipleStepWrapperRunner;
 import tcxml.model.ArgModel;
+import tcxml.model.FunctionArgModel;
 import tcxml.model.Step;
 import tcxml.model.TruLibrary;
 
 
 public class FunctionWrapper extends AbstractStepWrapper {
+	
+	
+	private HashMap<String, FunctionArgModel> schemaArgs ;
+	
+	
 
 	public FunctionWrapper(Step step, TcXmlController controller, TruLibrary library) throws TcXmlException {
 		super(step, controller, library);
-		// TODO Auto-generated constructor stub
+		schemaArgs = new HashMap<String, FunctionArgModel>();
+		buildFunctionArgDef();
+	}
+
+	public HashMap<String, FunctionArgModel> getSchemaArgs() {
+		return schemaArgs;
 	}
 
 	@Override
 	public String getTitle() {
-		String ret = "Function " + step.getAction();
+		String ret = "Function " + getFunctionName();
 		return ret;
 	}
 
@@ -91,5 +112,88 @@ public class FunctionWrapper extends AbstractStepWrapper {
 		pw.println("},");
 		
 	}
+	
+	
+	public String getFunctionName() {
+		
+	return step.getAction();	
+		
+	}
+	
+	
+	public JsonObject schemaArgumentsToJson( ) {
+		
+	JsonObjectBuilder ret  = Json.createObjectBuilder();	
+	
+	Set<String> keys = schemaArgs.keySet();
+	
+	for (String key : keys) {
+		
+		JsonObjectBuilder newVal  = Json.createObjectBuilder();
+		
+		FunctionArgModel thearg = schemaArgs.get(key) ;
+		String thename = thearg.getName();
+		String thetype = thearg.getType();
+		Boolean isopt = thearg.isOptional();
+		
+		
+			newVal.add("type", thetype) ;	
+
+			ret.add(thename, newVal);
+		
+	}		
+		return ret.build();
+	}
+	
+	
+	public void saveShemaArgs() {
+		JsonObject newval = schemaArgumentsToJson();
+		final StringWriter writer = new StringWriter();
+	    final JsonWriter jwriter = Json.createWriter(writer);
+	    jwriter.writeObject(newval);
+		
+		String argument = writer.toString();
+		String escapedargument = StringEscapeUtils.escapeHtml(argument);
+		controller.getLog().fine("saving shema  argument for step " + getTitle());
+		controller.getLog().fine(escapedargument);
+		step.setArgsSchema((escapedargument));
+		
+	}
+	
+	
+	
+	
+	public void setSchemaArgs(HashMap<String, FunctionArgModel> schemaArgs) {
+		this.schemaArgs = schemaArgs;
+	}
+
+	public void buildFunctionArgDef() throws TcXmlException {
+		
+		String src = step.getArgsSchema();			
+		HashMap<String, FunctionArgModel> ret = new HashMap<String, FunctionArgModel>() ;
+		if(src != null) {
+			
+			JsonObject arg = controller.readJsonObject(src);
+			Set<String> keys = arg.keySet();
+			for (String key : keys) {
+			 addArgument(key, src);
+			
+			
+		}
+			
+			
+		}
+	}
+
+	private void addArgument(String name, String src) throws TcXmlException { 
+		JsonObject arg = controller.readJsonObject(src);
+		FunctionArgModel  thearg = new FunctionArgModel(name);
+		thearg.populateFromJson(arg.getJsonObject(name));
+		
+		schemaArgs.put(name, thearg);
+		
+	}
+		
+
 
 }

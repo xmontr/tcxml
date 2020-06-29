@@ -198,6 +198,44 @@ for (Step thestep : firstchild.getStep()) {
 		return ret;
 	}
 	
+	public Step getIfParentStep() {
+		
+		return step.getStep().get(0);
+		
+	}
+	
+	
+	public boolean hasElse() {
+		if(step.getStep().size() > 1) {
+			return true	;
+		} else {
+	return false;		
+		}
+		
+		
+		
+	}
+	
+	
+	public Step getElseParentStep() {
+		BoundList<Step> li = step.getStep();
+		if(li.size() > 1) {
+			return step.getStep().get(1);	
+		} else {
+	return null;		
+		}
+		
+		
+		
+	}
+	
+	
+	
+	
+	
+	
+	
+	
 	
 	@Override
 	public void export(PrintWriter pw) throws TcXmlException {

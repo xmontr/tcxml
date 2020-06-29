@@ -3,8 +3,11 @@ package stepWrapper;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.StringWriter;
+import java.io.Writer;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Set;
@@ -15,6 +18,8 @@ import javax.json.JsonWriter;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
+import javax.xml.stream.XMLOutputFactory;
+import javax.xml.stream.XMLStreamWriter;
 
 import org.apache.commons.lang.StringEscapeUtils;
 
@@ -29,6 +34,11 @@ import tcxml.model.Step;
 import tcxml.model.TestObject;
 import tcxml.model.TruLibrary;
 import util.TcxmlUtils;
+
+import com.sun.xml.bind.marshaller.CharacterEscapeHandler;
+
+
+
 
 public abstract class AbstractStepWrapper implements Playable, PropertyChangeListener{
 	
@@ -262,6 +272,13 @@ for (ArgModel val : getDefaultArguments()) {
 	}
 	
 	
+	public String getIndex() {
+		
+		return step.getIndex();
+		
+	}
+	
+	
 	
 	 protected String formatTitle (String index , String txt) {
 		
@@ -414,13 +431,25 @@ for (ArgModel val : getDefaultArguments()) {
 					JAXBContext jaxbContext     = JAXBContext.newInstance( Step.class );
 					Marshaller jaxbMarshaller   = jaxbContext.createMarshaller();
 					jaxbMarshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, false);
-					jaxbMarshaller.setProperty(Marshaller.JAXB_ENCODING, "UTF-8");
+					jaxbMarshaller.setProperty(Marshaller.JAXB_ENCODING, "UTF-8");				
+					
+					  jaxbMarshaller.setProperty(
+					  "com.sun.xml.bind.characterEscapeHandler", new
+					  CharacterEscapeHandler() { public void escape(char[] ch, int start, int
+					  length, boolean isAttVal, Writer writer) throws IOException {
+					  writer.write(ch, start, length); } });
+					 
+					
+					
+					
+					
 					StringWriter writer = new StringWriter();
+
 					jaxbMarshaller.marshal(step,  writer);
 					ret = writer.toString();
 					return ret;
 					
-				} catch (JAXBException e) {
+				} catch (Exception e) {
 					throw new TcXmlException("fail to marschal step " , e);
 				}
 				

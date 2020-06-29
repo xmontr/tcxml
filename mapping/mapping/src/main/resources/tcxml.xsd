@@ -98,7 +98,7 @@
     </complexType>
 
 
-    <complexType name="ident">
+    <complexType name="ident">    
     	<simpleContent>
     		<extension base="tns:cdataString">
 
@@ -132,12 +132,13 @@
 
     <element name="truScript" type="tns:truScript"></element>
 
-    <element name="ident" type="string"></element>
+    <element name="ident" type="tns:ident"></element>
 
     <element name="icon" type="string"></element>
 
 
     <complexType name="truLibrary">
+    <annotation><appinfo><annox:annotate target="class">@javax.xml.bind.annotation.XmlRootElement</annox:annotate></appinfo></annotation>
     	<sequence>
     		<element name="step" type="tns:step" maxOccurs="1" minOccurs="1"></element>
     		<element name="testObjects" type="tns:testObjects" maxOccurs="1" minOccurs="0"></element>
@@ -156,9 +157,10 @@
 
  
     <complexType name="cdataString">
-    <annotation><appinfo> <annox:annotate target="field">@javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter( tcxml.mapping.CdataAdapter.class)</annox:annotate></appinfo></annotation>
-        	<simpleContent>
+    
+        	<simpleContent>         	       	
         	     		<extension base="string">
+        	     		
         </extension>
         </simpleContent>	     		
            

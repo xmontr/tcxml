@@ -111,8 +111,6 @@ public abstract class StepView extends Composite  implements Playable, PropertyC
 		
 		this.controller=stepWrapper.getController();
 		this.Library = stepWrapper.getLibrary();
-		//this.model = stepWrapper.getModel();
-		//argumentMap = controller.getArguments(model,stepWrapper.getDefaultArguments());
 		setTitle(stepWrapper.getTitle());
 		populate(stepWrapper);
 		
@@ -234,7 +232,15 @@ public abstract class StepView extends Composite  implements Playable, PropertyC
 	
 	public abstract void export(PrintWriter pw) throws TcXmlException  ;
 	
-	public abstract  void saveModel() throws TcXmlException ;
+	public   void saveModel() throws TcXmlException {
+	
+		if (stepWrapper == null ) {
+			
+		throw new TcXmlException("unable to save model on view - no del set " , new IllegalStateException()) ;	
+		}
+		stepWrapper.saveArguments();	
+		
+	}
 	
 	
 	

@@ -5,7 +5,7 @@ import java.util.Map;
 
 public enum IdentificationMethod {
 	XPATH("XPath"),
-	JAVASCRIPT("Javascript"),
+	JAVASCRIPT("JavaScript"),
 	ELECTORS("Electors");
 	
 	

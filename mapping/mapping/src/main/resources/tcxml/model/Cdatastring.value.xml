@@ -1,0 +1,1 @@
+<annox:annotate  xmlns:annox="http://annox.dev.java.net" target="field">@javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter( tcxml.mapping.CdataAdapter.class)</annox:annotate>

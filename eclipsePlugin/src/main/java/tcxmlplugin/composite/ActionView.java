@@ -55,6 +55,7 @@ public class ActionView extends AStepContainer implements TopStepContainer{
 	
 	
 	public void buildAction(Step step) {
+		this.parentStep = step;
 
 		List<Step> list = step.getStep();
 		for (Step step2 : list) { // add the step
