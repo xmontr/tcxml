@@ -97,6 +97,7 @@ public class TcXmlPreference extends FieldEditorPreferencePage implements IWorkb
 		firefoxPathField.store();
 		
 		chromePathField.store();
+		ffmpegPathField.store();
 		
 		return true;
 	}

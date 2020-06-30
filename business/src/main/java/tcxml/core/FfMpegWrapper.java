@@ -79,7 +79,12 @@ throw new TcXmlException("failure in subtitle management" , e1) ;
 		try {
 			
 			System.out.println( " *************ffmpeg line used***********************");
-			System.out.println(builder.command());
+			List<String> li = builder.command();
+			StringBuffer cmdline = new StringBuffer();
+			for (String ar : li) {
+				cmdline.append(ar).append(" ");
+			}
+			System.out.println(cmdline);
 			currentProcess = builder.start();
 			
 			startVideoTime = LocalTime.now() ;
@@ -174,8 +179,9 @@ if( srtfile.exists()) {
 		ret.add(this.ffmpeg.toString());
 		//format for input
 		ret.add("-f");ret.add("gdigrab"); // format for windows
+		
 		//set frame rate (Hz value, fraction or abbreviation)
-		ret.add("-r");ret.add("60");
+		ret.add("-r");ret.add("80");
 		// window tiltle of the window to record
 		ret.add("-i");
 		
