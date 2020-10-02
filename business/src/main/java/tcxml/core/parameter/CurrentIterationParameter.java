@@ -19,7 +19,7 @@ public class CurrentIterationParameter extends StepParameter{
 		originalValue = config.getString("OriginalValue");
 		paramName = config.getString("ParamName");
 		format = config.getString("Format");
-		format = config.getString("Format");
+		
 	}
 
 

@@ -940,6 +940,7 @@ private String getShortArgumentForAction(String action) {
 	switch (action) {
 	case "Type": ret = getShortTypeArgument();break;
 	case "Select": ret = getShortSelectArgument(); break;
+	case "Set": ret = getShortSetArgument();break;
 	
 	
 	
@@ -949,6 +950,11 @@ private String getShortArgumentForAction(String action) {
 	
 	
 	return ret;
+}
+
+private String getShortSetArgument() {
+	ArgModel thepath = argumentMap.get("Path");
+	return thepath.getValue();
 }
 
 /**
@@ -983,7 +989,7 @@ private String getShortSelectArgument() {
 		sb.append(" randomly ");
 	} else {
 		sb.append("#").append(txt);
-		
+		ret = sb.toString();
 	}
 		
 		
@@ -1005,11 +1011,9 @@ private String getShortSelectArgument() {
 private ArgModel getSelectArgument() {
 	ArgModel thetext = argumentMap.get("Text");
 	ArgModel theordinal = argumentMap.get("Ordinal");
-	if(thetext != null  && !thetext.getValue().isEmpty()) {
+	if(thetext != null  && !thetext.getValue().isEmpty()) {	
 	
-	
-	return thetext;
-	
+	return thetext;	
 } else {
 	
 	return theordinal;

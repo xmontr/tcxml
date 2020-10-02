@@ -227,6 +227,7 @@ layout(true,true);
 		
 		
 		functionlayout.topControl=ctrl;
+		ctrl.refreshSize();
 		layout(true,true);
 		
 		

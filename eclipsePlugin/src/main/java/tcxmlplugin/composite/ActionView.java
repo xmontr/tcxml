@@ -67,7 +67,8 @@ public class ActionView extends AStepContainer implements TopStepContainer{
 				
 			
 		}
-		bar.layout();
+		
+	
 	
 	}
 

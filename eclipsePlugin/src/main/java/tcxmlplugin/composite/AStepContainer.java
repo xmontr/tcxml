@@ -237,6 +237,7 @@ content.setSize(newsize);
 		xpndtmNewExpanditem.setControl(tv);
 		tv.setParentExpandItem(xpndtmNewExpanditem);
 		tv.addPropertyChangeListener("title", new TitleListener(xpndtmNewExpanditem , tv));
+		
 
 	}
 	

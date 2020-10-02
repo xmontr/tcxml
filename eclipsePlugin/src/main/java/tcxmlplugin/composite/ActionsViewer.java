@@ -211,6 +211,7 @@ public class ActionsViewer extends Composite  {
 
 	
 	actionlayout.topControl = ctrl;
+	ctrl.refreshSize();
 	layout(true,true);
 	
 		//stepContainer.showAction(ctrl);
