@@ -3,6 +3,7 @@ package tcxml.core.parameter;
 import org.apache.commons.configuration.HierarchicalINIConfiguration;
 
 import tcxml.core.TcXmlException;
+import util.TcxmlUtils;
 
 public class UniqueParameter extends StepParameter  {
 	
@@ -15,7 +16,7 @@ public class UniqueParameter extends StepParameter  {
 	private String GenerateNewVal ;
 	
 	
-	private String Format ;
+	private String format ;
 	
 	private String BlockSize ;
 	
@@ -26,7 +27,7 @@ public class UniqueParameter extends StepParameter  {
 
 	protected UniqueParameter(HierarchicalINIConfiguration conf, String secname) {
 		super(conf, secname, StepParameterType.UNIQUE);
-		this.Format = config.getString("Format");
+		this.format = config.getString("Format");
 		this.GenerateNewVal = config.getString("GenerateNewVal");
 		this.BlockSize = config.getString("BlockSize");
 		this.OriginalValue = config.getString("OriginalValue");
@@ -46,7 +47,7 @@ public class UniqueParameter extends StepParameter  {
 
 	@Override
 	public String evalParameter() throws TcXmlException {
-String ret =	String.format(Format, currentValue);
+String ret =	String.format(TcxmlUtils.fromCtoJavaFormat(format), currentValue);
 		currentValue++;
 		return ret;
 	}

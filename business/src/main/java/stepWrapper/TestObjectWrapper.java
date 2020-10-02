@@ -129,10 +129,14 @@ public String getName() {
 		
 		if (!isBrowserStep ) { // testobject is not browser
 
-
+			
+				
+				 ret = formatTitle(step.getIndex(), step.getAction() + " " + getShortArgumentForAction(step.getAction()) + " on " + getName() );
+				 
 			
 			
-			 ret = formatTitle(step.getIndex(), step.getAction() + " on " + getName() );
+			
+			
 			
 			
 		}else {// testobject is browser
@@ -921,5 +925,142 @@ public void setActiveIdentMehod(String idmethod) {
 	theTestObject.getIdents().setActive(idmethod);	
 	
 }
+
+/***
+ *  return the printable argument for the step
+ * 
+ * 
+ * @param action
+ * @return
+ */
+
+private String getShortArgumentForAction(String action) {
+	String ret ="";
+	
+	switch (action) {
+	case "Type": ret = getShortTypeArgument();break;
+	case "Select": ret = getShortSelectArgument(); break;
+	
+	
+	
+	}
+	
+	
+	
+	
+	return ret;
+}
+
+/**
+ *  printable agrument for select step
+ * 
+ * @return
+ */
+private String getShortSelectArgument() {
+	String ret ="";
+	String txt="";
+	ArgModel thearg = getSelectArgument();
+	if (thearg.getName().equals("Text")) { // forrmat text
+		
+		txt = thearg.getValue();
+		int size = txt.length();
+		 ret=txt;
+		if(size > 30) {
+			StringBuffer sb = new StringBuffer();
+			sb.append(txt.substring(0, 15));
+			sb.append(".......");
+			sb.append(txt.substring( size -15 , size )) ;
+			ret = sb.toString();
+		}
+		
+		
+		
+	}else { /// form mat ordinal
+		txt = thearg.getValue();	
+	StringBuffer sb = new StringBuffer();
+		
+	if(txt.equals("0"))	{
+		sb.append(" randomly ");
+	} else {
+		sb.append("#").append(txt);
+		
+	}
+		
+		
+		
+		
+	}
+	
+	
+	return ret;
+}
+
+/***
+ * 
+ * 
+ * 
+ * @return either Text or Ordinal argument for select 
+ */
+
+private ArgModel getSelectArgument() {
+	ArgModel thetext = argumentMap.get("Text");
+	ArgModel theordinal = argumentMap.get("Ordinal");
+	if(thetext != null  && !thetext.getValue().isEmpty()) {
+	
+	
+	return thetext;
+	
+} else {
+	
+	return theordinal;
+}
+	
+}
+
+
+
+
+		
+		
+
+
+
+
+
+/***
+ * 
+ *  gives the text argument of the testobject , split to be shown in the GUI usefule for Type action
+ * 
+ * 
+ * @return
+ */
+private String getShortTypeArgument() {
+	ArgModel txtarg = argumentMap.get("Value");
+	String txt = txtarg.getValue();
+
+	
+	
+	
+	
+	int size = txt.length();
+	String ret=txt;
+	if(size > 30) {
+		StringBuffer sb = new StringBuffer();
+		sb.append(txt.substring(0, 15));
+		sb.append(".......");
+		sb.append(txt.substring( size -15 , size )) ;
+		ret = sb.toString();
+	}
+	
+
+
+
+
+	return ret;
+}
+
+
+
+
 
 }

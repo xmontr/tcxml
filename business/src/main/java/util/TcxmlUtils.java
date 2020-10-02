@@ -36,6 +36,21 @@ import tcxml.model.ListArgModel;
 public class TcxmlUtils {
 	
 	
+	/***
+	 *  convert the C format %lu %01lu ... into jjava format
+	 * 
+	 * 
+	 * @param cformat
+	 * @return
+	 */
+	
+	public static String fromCtoJavaFormat(String cformat) {
+		
+		return cformat.replace("lu", "d").replace("u", "d");
+		
+	}
+	
+	
 	/**
 	 *  search in the .prm paramerter file the files associated to the table parameters
 	 * 

@@ -81,6 +81,12 @@ public class ArgModel extends AbstractModel{
 	
 	public void populateFromJson( JsonObject src) {		
 	JsonValue val = src.get("value")	;
+	if(val == null) {
+		setValue("");
+		setIsJavascript(false);
+		setIsParam(false);
+		
+	} else {
 	ValueType ty = val.getValueType();
 	if(ty.equals(ty.STRING))
 	{
@@ -118,7 +124,7 @@ public class ArgModel extends AbstractModel{
 			
 		
 		
-	
+	}
 		
 
 	}

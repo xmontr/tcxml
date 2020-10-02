@@ -1489,6 +1489,7 @@ public void openBrowser (String type, String driverPath) throws TcXmlException {
 	caps.setCapability(ChromeOptions.CAPABILITY, options);
 	
 	options.addArguments("disable-infobars");
+	options.addArguments("disable-gpu");
 	
 	if(highlighterExtension == null) {
 		highlighterExtension = generatePathToLocalTemporaryResource("jqueryHighlighter.crx").toFile();

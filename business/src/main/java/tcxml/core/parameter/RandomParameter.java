@@ -6,6 +6,8 @@ import java.util.stream.IntStream;
 import org.apache.commons.configuration.HierarchicalINIConfiguration;
 import org.apache.commons.configuration.SubnodeConfiguration;
 
+import util.TcxmlUtils;
+
 public class RandomParameter extends StepParameter {
 	
 	
@@ -55,7 +57,7 @@ public class RandomParameter extends StepParameter {
 		
 		
 		
-		return String.format(format, new Integer(res));
+		return String.format(TcxmlUtils.fromCtoJavaFormat(format), new Integer(res));
 	}
 
 }
