@@ -19,7 +19,6 @@ Bundle-RequiredExecutionEnvironment: JavaSE-1.8
 Bundle-ActivationPolicy: lazy
 Bundle-ClassPath: .,
  swing2swt.jar,
- lib/mapping-0.0.1-SNAPSHOT.jar,
  lib/javax.json-api-1.1.2.jar,
  lib/commons-lang-2.6.jar,
  lib/commons-configuration-1.6.jar,
@@ -54,5 +53,6 @@ Bundle-ClassPath: .,
  lib/selenium-support-3.7.1.jar,
  extra/nashorn.jar,
  lib/javax.json-1.1.4.jar,
- lib/tcxmlBusiness-0.0.1-SNAPSHOT.jar,
- lib/jaxb-impl-2.2.4-1.jar
+ lib/jaxb-impl-2.2.4-1.jar,
+ lib/mapping-0.0.1-SNAPSHOT.jar,
+ lib/tcxmlBusiness-0.0.1-SNAPSHOT.jar
