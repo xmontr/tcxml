@@ -1,6 +1,7 @@
 package tcxml.remote;
 
 import java.io.IOException;
+import java.net.URL;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Function;
 
@@ -23,8 +24,8 @@ public class Express {
 	private HttpServer server ;
 	
 	
-	public Express(int port) {
-		this.port = port;
+	public Express(int listeningport, URL forwardUrl) {
+		this.port = listeningport;
 		
 		HttpProcessor httpProcessor= HttpProcessorBuilder.create()
 		        .add(new ResponseDate())
@@ -37,9 +38,9 @@ public class Express {
 		        .setTcpNoDelay(true)
 		        .build();
 		
-		HttpRequestHandler requestHandler = new DriverRequestHandler();
+		HttpRequestHandler requestHandler = new DriverRequestHandler(forwardUrl);
 		this.server = ServerBootstrap.bootstrap()
-		        .setListenerPort(port)
+		        .setListenerPort(listeningport)
 		        .setHttpProcessor(httpProcessor)
 		        .setSocketConfig(socketConfig)
 		        .setExceptionLogger(new StdErrorExceptionLogger())
