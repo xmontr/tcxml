@@ -7,7 +7,7 @@ public class StdErrorExceptionLogger implements ExceptionLogger  {
 	@Override
 	public void log(Exception ex) {
 		System.out.println("---------- " + ex.getMessage());
-		ex.printStackTrace();
+		//ex.printStackTrace();
 		
 	}
 

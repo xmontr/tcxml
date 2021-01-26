@@ -1,16 +1,41 @@
 package tcxml.remote.handler;
 
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.Reader;
+import java.io.StringReader;
+import java.io.StringWriter;
+import java.lang.annotation.Repeatable;
 import java.net.Socket;
+import java.nio.charset.StandardCharsets;
+import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Map.Entry;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
+import javax.json.Json;
+import javax.json.JsonObject;
+import javax.json.JsonObjectBuilder;
+import javax.json.JsonReader;
+import javax.json.JsonWriter;
+
 import java.util.Set;
 
+import org.apache.commons.io.IOUtils;
+import org.apache.commons.lang.StringEscapeUtils;
+import org.apache.http.Header;
+import org.apache.http.HttpEntity;
 import org.apache.http.HttpException;
 import org.apache.http.HttpHost;
 import org.apache.http.HttpRequest;
 import org.apache.http.HttpResponse;
+import org.apache.http.ParseException;
+import org.apache.http.entity.ContentType;
+import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.DefaultBHttpClientConnection;
+import org.apache.http.message.BasicHttpEntityEnclosingRequest;
 import org.apache.http.protocol.RequestExpectContinue;
 import org.apache.http.protocol.HTTP;
 import org.apache.http.protocol.HttpContext;
@@ -23,8 +48,13 @@ import org.apache.http.protocol.RequestConnControl;
 import org.apache.http.protocol.RequestContent;
 import org.apache.http.protocol.RequestTargetHost;
 import org.apache.http.protocol.RequestUserAgent;
+import org.apache.http.util.EntityUtils;
 
+import tcxml.core.TcXmlController;
+import tcxml.model.ArgModel;
+import tcxml.model.Step;
 import tcxml.remote.DriverRequestHandler;
+import tcxml.remote.RemoteRecordingSession;
 
 public abstract class AbstractHandler implements HttpRequestHandler{
 	
@@ -32,11 +62,15 @@ public abstract class AbstractHandler implements HttpRequestHandler{
 	protected Map<String, String> param;
 	private  final HttpProcessor outhttpproc ;
 	private  final HttpRequestExecutor httpexecutor ;
+	private JsonObject jsonRequestCommand ;
+	private JsonObject jsonResponseCommand ;
+	protected Logger log;
+	protected String requestMethod;
 	
 	
 	
 	protected AbstractHandler(Map<String, String> p) {
-		
+	
 		this.param =p;
         // Set up HTTP protocol processor for outgoing connections
          outhttpproc = new ImmutableHttpProcessor(
@@ -48,22 +82,99 @@ public abstract class AbstractHandler implements HttpRequestHandler{
          
          // Set up outgoing request executor
           httpexecutor = new HttpRequestExecutor();
+          
+          
+      	log = Logger.getLogger(getClass().getName());
+      	log.setLevel(Level.ALL);
 	}
 	
+	public abstract void processRequest(JsonObject thejsonCommand, RemoteRecordingSession recordingSession) ;
 	
+	public abstract void processResponse(JsonObject thejsonCommand, RemoteRecordingSession recordingSession) ;
 	
 	protected void dumpParams() {
 		
 	
 	Set<String> listkey = param.keySet();
 	for (String key : listkey) {
-		System.out.println("handler parameter:" + key + " value:" + param.get(key) );
+		log.info("handler parameter:" + key + " value:" + param.get(key) );
 		
 	}
 			
 		}
 	
 	
+	protected void storeStepInsession(Step theStep, RemoteRecordingSession theRecordindSession) {
+		Optional<RemoteRecordingSession> rs = Optional.ofNullable(theRecordindSession);
+		Optional<String> targetSession = Optional.ofNullable(param.get("sessionId"));
+		
+		if(!targetSession.isPresent()) {
+			throw new IllegalStateException("no target session for storing step");
+			
+		}
+		
+		if(rs.isPresent()) {
+			
+		if(!targetSession.get().equals(rs.get().getSessionId()))	{
+		
+			throw new IllegalStateException("missmatch session for storing step,found:"+targetSession.get() +" expected was:"+rs.get().getSessionId());
+			
+		}else {// store the step in the session
+			
+			rs.get().addStep(theStep);	
+			
+		}
+			
+			
+			
+		}		
+		
+	}
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	/***
+	 * 
+	 * 
+	 * 
+	 * @param entity
+	 * @return true is the content type of the entity is set to application/json
+	 */
+	protected boolean isJsonCommand( HttpEntity entity) {
+		
+		boolean ret = false;
+        ContentType contentype = ContentType.parse(entity.getContentType().getValue());
+        
+        ContentType expectedContentType = ContentType.APPLICATION_JSON.withCharset(contentype.getCharset());
+        
+        if(contentype.toString().equalsIgnoreCase(expectedContentType.toString())) {
+		
+		ret = true;	
+		
+	}else {
+		log.info("unexpected response content type :" + contentype + "-------  expected was " +expectedContentType.toString());
+		
+	}
+      return ret;  
+	}
+	
+	
+	
+	protected JsonObject readJson(String contentstring) {
+		Reader reader = new StringReader(contentstring);
+		JsonReader jr = Json.createReader(reader );
+		JsonObject ret = jr.readObject();
+		jr.close();
+		return ret;
+		
+	}
 	
 	
 	
@@ -72,6 +183,11 @@ public abstract class AbstractHandler implements HttpRequestHandler{
 	@Override
 	public void handle(HttpRequest request, HttpResponse response, HttpContext context)
 			throws HttpException, IOException {
+		
+		RemoteRecordingSession recordingSession = (RemoteRecordingSession) context.getAttribute(DriverRequestHandler.RECORDINGSESSION);
+		
+		//store the method
+		requestMethod = request.getRequestLine().getMethod().toLowerCase();
 		
         final DefaultBHttpClientConnection conn = (DefaultBHttpClientConnection) context.getAttribute(
                 DriverRequestHandler.HTTP_OUT_CONN);
@@ -83,7 +199,64 @@ public abstract class AbstractHandler implements HttpRequestHandler{
         context.setAttribute(HttpCoreContext.HTTP_CONNECTION, conn);
         context.setAttribute(HttpCoreContext.HTTP_TARGET_HOST,target);
         
-        System.out.println(">> Request URI: " + request.getRequestLine().getUri());
+        log.info(">> Request URI: " + request.getRequestLine().getUri());
+        
+        //dump header
+        
+      Header[] allheader = request.getAllHeaders();
+      StringBuffer headerlist = new StringBuffer();
+      for (Header header : allheader) {
+    	  headerlist.append(header.getName()).append(":").append(header.getValue()).append("|");
+		
+	}
+      log.info("header request:" +  headerlist.toString());
+      //dump body
+      
+      
+      
+       if ( request instanceof BasicHttpEntityEnclosingRequest   ) {
+    	   
+    	   
+   	   
+    HttpEntity entity = ((BasicHttpEntityEnclosingRequest) request).getEntity() ;
+    String thestringRequestcontent = EntityUtils.toString(entity) ;
+if(isJsonCommand(entity)) {
+	
+jsonRequestCommand = readJson(thestringRequestcontent);	
+
+}
+
+if(jsonRequestCommand != null) {
+	log.info("found command:" +jsonRequestCommand.toString() ); 	
+	
+} else {
+	
+	log.info("no json :");
+	log.info(thestringRequestcontent);
+	
+}
+			
+
+
+
+	 processRequest(jsonRequestCommand,recordingSession);
+
+
+		// copy the request 
+	
+		StringEntity newentityRequest = new StringEntity(thestringRequestcontent);
+		
+		((BasicHttpEntityEnclosingRequest) request).setEntity(newentityRequest);
+    	   
+    	   
+       } else { // no content in the body of the request no need to copy the entity 
+    	   
+    	log.info(" management of non BasicHttpEntityEnclosingRequest  "); 
+    	 processRequest(jsonRequestCommand,recordingSession);
+       } 
+       
+       
+       
         
         // Remove hop-by-hop headers
         request.removeHeaders(HTTP.TARGET_HOST);
@@ -101,6 +274,17 @@ public abstract class AbstractHandler implements HttpRequestHandler{
         this.httpexecutor.postProcess(response, this.outhttpproc, context);
         
         
+        Header[] allheaderresp = targetResponse.getAllHeaders();
+        
+        StringBuffer headerreslist = new StringBuffer();
+        for (Header header : allheaderresp) {
+        	headerreslist.append(header.getName()).append(":").append(header.getValue()).append("|");
+  		
+  	}
+        log.info("header response:" +  headerlist.toString());
+      
+      
+        
      // Remove hop-by-hop headers
         targetResponse.removeHeaders(HTTP.CONTENT_LEN);
         targetResponse.removeHeaders(HTTP.TRANSFER_ENCODING);
@@ -112,23 +296,85 @@ public abstract class AbstractHandler implements HttpRequestHandler{
 
         response.setStatusLine(targetResponse.getStatusLine());
         response.setHeaders(targetResponse.getAllHeaders());
-        response.setEntity(targetResponse.getEntity());
-
-        System.out.println("<< Response: " + response.getStatusLine());
+        ///// dump the response 
         
         
-		
-		
-		
-		
+      String stringResponseContent = EntityUtils.toString(targetResponse.getEntity());
+        
+        
+        
+        response.setEntity(new StringEntity(stringResponseContent));
 
+        log.info("<< Response: " + response.getStatusLine());
+        
+        log.info("body:" + stringResponseContent);
+        
+        
+        // process the resp
 
-		
-		
-		
-		
-		
+        
+        if(isJsonCommand(targetResponse.getEntity())) {     	
+        jsonResponseCommand = readJson(stringResponseContent);
+        	
+        	
+        }  	
+   
+
+        if(jsonResponseCommand != null) {
+        	log.info("found response  command:" +jsonResponseCommand.toString() ); 	
+        	
+        } else {
+        	
+        	log.info("no json :");
+        	log.info(stringResponseContent);
+        	
+        }
+        
+        //RemoteRecordingSession recordingSession = (RemoteRecordingSession) context.getAttribute(DriverRequestHandler.RECORDINGSESSION);
+
+   	 processResponse(jsonResponseCommand,recordingSession);    
+        
+        
+
+      		
 	}
+	
+	protected String argsTojson(HashMap<String, String> argmap) {
+		
+	JsonObjectBuilder ret  = Json.createObjectBuilder();	
+	
+	Set<String> keys = argmap.keySet();
+	
+	for (String key : keys) {
+		
+		JsonObjectBuilder newVal  = Json.createObjectBuilder();		
+		String thename = key;
+		String theval = argmap.get(key) ;
+
+		if(theval != null && ! theval.isEmpty() ) {
+			newVal.add("value", theval) ;	
+
+			ret.add(thename, newVal);
+			
+		}
+		}
+	
+	final StringWriter writer = new StringWriter();
+    final JsonWriter jwriter = Json.createWriter(writer);
+    jwriter.writeObject(ret.build());
+	
+	String argument = writer.toString();
+	String escapedargument = StringEscapeUtils.escapeHtml(argument);
+	
+		return escapedargument;
+	}
+	
+	
+	
+	
+	
+	
+	
 		
 	}
 	

@@ -3,6 +3,8 @@ package tcxml.remote.handler;
 import java.io.IOException;
 import java.util.Map;
 
+import javax.json.JsonObject;
+
 import org.apache.http.HttpException;
 import org.apache.http.HttpRequest;
 import org.apache.http.HttpResponse;
@@ -10,6 +12,10 @@ import org.apache.http.HttpStatus;
 import org.apache.http.entity.ContentType;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.protocol.HttpContext;
+
+import tcxml.model.Step;
+import tcxml.remote.RecordingSessionListener;
+import tcxml.remote.RemoteRecordingSession;
 
 public class NoHandler extends AbstractHandler {
 
@@ -21,11 +27,21 @@ public class NoHandler extends AbstractHandler {
 	@Override
 	public void handle(HttpRequest request, HttpResponse response, HttpContext context)
 			throws HttpException, IOException {
-        response.setStatusCode(HttpStatus.SC_NOT_FOUND);
-        response.setEntity(
-                new StringEntity("handle request:" + request.getRequestLine(),
-                        ContentType.TEXT_PLAIN));
-	System.out.println( "no handler for  request:" + request.getRequestLine());
+        dumpParams();
+	log.info( "NoHandler handle request:" + request.getRequestLine());
+	super.handle(request, response, context);
+		
+	}
+
+	@Override
+	public void processRequest(JsonObject thejsonCommand,RemoteRecordingSession recordingSession) {
+		
+	
+	}
+
+	@Override
+	public void processResponse(JsonObject thejsonCommand, RemoteRecordingSession recordingSession) {
+		// TODO Auto-generated method stub
 		
 	}
 

@@ -2,6 +2,8 @@ package tcxml.remote;
 
 import java.io.IOException;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Function;
 
@@ -22,10 +24,16 @@ public class Express {
 	
 	private int port;
 	private HttpServer server ;
+	private DriverRequestHandler requestHandler;
+	private List<RecordingSessionListener> recordingsessionlisteners;
 	
 	
-	public Express(int listeningport, URL forwardUrl) {
+	
+	
+	public Express(int listeningport,String httpListenningContext, URL forwardUrl) {
 		this.port = listeningport;
+		
+		recordingsessionlisteners = new ArrayList<RecordingSessionListener>();
 		
 		HttpProcessor httpProcessor= HttpProcessorBuilder.create()
 		        .add(new ResponseDate())
@@ -38,7 +46,7 @@ public class Express {
 		        .setTcpNoDelay(true)
 		        .build();
 		
-		HttpRequestHandler requestHandler = new DriverRequestHandler(forwardUrl);
+		requestHandler = new DriverRequestHandler(forwardUrl,httpListenningContext);
 		this.server = ServerBootstrap.bootstrap()
 		        .setListenerPort(listeningport)
 		        .setHttpProcessor(httpProcessor)
@@ -78,10 +86,16 @@ public class Express {
 	
 	
 	
-	public void minuteListen(long minutes) throws TcXmlException {
+	public RemoteRecordingSession minuteListen(long minutes) throws TcXmlException {
 		try {
+			RemoteRecordingSession recordingSession = new RemoteRecordingSession();
+			recordingsessionlisteners.forEach(li ->  recordingSession.addListenner(li));
+			
+			requestHandler.setRecordingSession(recordingSession);
 		server.start();
+		
 		server.awaitTermination(minutes, TimeUnit.MINUTES);
+		return recordingSession ;
 		} catch (IOException | InterruptedException e) {
 			throw new TcXmlException("uanble to start http server", e);
 			}
@@ -99,27 +113,25 @@ public class Express {
 		
 	}
 	
+	public void registerRecordingListenner( RecordingSessionListener li) {
+		
+		this.recordingsessionlisteners.add(li);
+	
+	}
+	
+	
+	public void unregisterRecordingListener(RecordingSessionListener li) {
+		
+		recordingsessionlisteners.remove(li);
+		
+	}
 	
 	
 	
 	
 	
-	/*
-	  private <H extends HttpHandler> Function<String, HttpHandler> handler(
-		      String template,
-		      Function<Map<String, String>, H> handlerGenerator) {
-		    UrlTemplate urlTemplate = new UrlTemplate(template);
-		    return path -> {
-		      UrlTemplate.Match match = urlTemplate.match(path);
-		      if (match == null) {
-		        return null;
-		      }
-		      return handlerGenerator.apply(match.getParameters());
-		    };
+	
 
-
-
-*/
 
 	
 }
