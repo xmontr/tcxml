@@ -16,7 +16,7 @@ RUNBLOCK("Run Block"),
 // testobject action
 EVALJAVASCRIPT("Evaluate JavaScript"),
 WAIT("Wait"),
-COMMENTT("Comment"),
+COMMENT("Comment"),
 NAVIGATE("Navigate"),
 TYPE("Type"),
 CLICK("Click"),

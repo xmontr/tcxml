@@ -71,9 +71,11 @@ import org.openqa.selenium.TimeoutException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.chrome.ChromeDriverService;
 import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.remote.Augmenter;
 import org.openqa.selenium.remote.DesiredCapabilities;
+import org.openqa.selenium.remote.RemoteWebDriver;
 import org.openqa.selenium.support.ui.ExpectedCondition;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
@@ -254,12 +256,18 @@ public class TcXmlController {
 
 	private FileHandler fhandler;
 
+	private URL driverUrl;
+
 	
 	
 	
 	
     
-    public TcXmlController(String name){
+    public URL getDriverUrl() {
+		return driverUrl;
+	}
+
+	public TcXmlController(String name){
     	
     	
     	
@@ -1518,6 +1526,8 @@ public void openBrowser (String type, String driverPath) throws TcXmlException {
 	 driver.manage().window().maximize();
 	 JavascriptExecutor js = (JavascriptExecutor)driver; 
 	 String title = (String)js.executeScript("document.title = 'ChromeVersion'");
+	 
+	
 	}
 	catch (Exception e) {
 		throw new TcXmlException("failure opening browser", e);
@@ -1525,6 +1535,81 @@ public void openBrowser (String type, String driverPath) throws TcXmlException {
 	
 
 }
+
+/**
+ * 
+ * open the browser relative to the driver chosen firefox / chrome
+ * 
+ * 
+ * @param type
+ * @param driverPath
+ * @throws TcXmlException
+ */
+
+public void openChromeBrowserBrowser (ChromeDriverService cds) throws TcXmlException {
+	
+	
+	//policy to destroy HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Google\Chrome
+	
+
+
+	// only chrome at this point
+	
+	ChromeOptions options = new ChromeOptions();
+	DesiredCapabilities caps = DesiredCapabilities.chrome();
+	caps.setCapability(ChromeOptions.CAPABILITY, options);
+	
+	options.addArguments("disable-infobars");
+	options.addArguments("disable-gpu");
+	
+	if(highlighterExtension == null) {
+		highlighterExtension = generatePathToLocalTemporaryResource("jqueryHighlighter.crx").toFile();
+	}	 
+	 options.addExtensions(highlighterExtension);
+	 
+	 
+		if(chromeApiExtension == null) {
+			chromeApiExtension = generatePathToLocalTemporaryResource("chromeApiInjector.zip").toFile();
+			}		 
+		 options.addExtensions(chromeApiExtension);
+		 
+			if(identPickerExtension == null) {
+				identPickerExtension = generatePathToLocalTemporaryResource("identPickerExtension.zip").toFile();
+				}		 
+			 options.addExtensions(identPickerExtension);
+	 
+	 
+
+	options.setExperimentalOption("useAutomationExtension", false);
+	
+	try {
+		
+	driver= new ChromeDriver(cds, options)	;
+	driverUrl = cds.getUrl();
+	//driver = new ChromeDriver(options);
+	// ensure at least a page is loaded ( required by utils.clearcache )
+	driver.get("chrome://version/");
+	 driver.manage().window().maximize();
+	 JavascriptExecutor js = (JavascriptExecutor)driver; 
+	 String title = (String)js.executeScript("document.title = 'ChromeVersion'");
+	 
+	
+	}
+	catch (Exception e) {
+		throw new TcXmlException("failure opening browser", e);
+	}
+	
+
+}
+
+
+
+
+
+
+
+
+
 
 public FfMpegWrapper getFfMpegWrapper( Path p) throws TcXmlException   {
 	

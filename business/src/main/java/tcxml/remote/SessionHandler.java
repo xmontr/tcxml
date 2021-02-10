@@ -49,9 +49,9 @@ public class SessionHandler extends AbstractHandler{
 		
 		Optional<RemoteRecordingSession> rs = Optional.ofNullable(recordingSession);
 		
-		int status = thejsonCommand.getInt("status");
 		
-		if(status == 0 ) {
+		
+		if(commandSuccess(thejsonCommand) ) {
 			
 			switch (requestMethod) {
 			case "post": log.info("adding new session");
@@ -72,7 +72,7 @@ public class SessionHandler extends AbstractHandler{
 			
 		}else {
 			
-			log.info(" failure in  processing session " );		
+			log.info(" failure in  processing session with command " + thejsonCommand );		
 		}
 
 		

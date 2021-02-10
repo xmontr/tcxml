@@ -16,6 +16,7 @@ import org.eclipse.ui.IEditorSite;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.part.EditorPart;
 import org.eclipse.ui.part.FileEditorInput;
+import org.openqa.selenium.chrome.ChromeDriverService;
 
 import tcxml.core.TcXmlController;
 import tcxml.core.TcXmlException;
@@ -24,6 +25,7 @@ import tcxml.model.TruLibrary;
 import tcxmlplugin.Activator;
 import tcxmlplugin.TcXmlPluginController;
 import tcxmlplugin.composite.TcViewer;
+ 
 
 
 public class TcXmlEditor  extends EditorPart   {
@@ -105,7 +107,9 @@ public class TcXmlEditor  extends EditorPart   {
 		
 		String path2chrome = Activator.getDefault().getPreferenceStore().getString(tcxmlplugin.composite.preference.TcXmlPreference.PATH2CHROME);
 		try {
-			tccontroller.openBrowser("firefox", path2chrome);
+			//tccontroller.openBrowser("firefox", path2chrome);
+			tccontroller.openChromeBrowserBrowser ( TcXmlPluginController.getInstance().getChromeService());
+			TcXmlPluginController.getInstance().info("chrome driver is listenning on " + tccontroller.getDriverUrl());
 		} catch (TcXmlException e) {
 			TcXmlPluginController.getInstance().error("Fail to open browser", e);
 		}

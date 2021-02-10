@@ -25,12 +25,14 @@ import java.util.Set;
 
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.StringEscapeUtils;
+import org.apache.http.Consts;
 import org.apache.http.Header;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpException;
 import org.apache.http.HttpHost;
 import org.apache.http.HttpRequest;
 import org.apache.http.HttpResponse;
+import org.apache.http.HttpStatus;
 import org.apache.http.ParseException;
 import org.apache.http.entity.ContentType;
 import org.apache.http.entity.StringEntity;
@@ -49,6 +51,7 @@ import org.apache.http.protocol.RequestContent;
 import org.apache.http.protocol.RequestTargetHost;
 import org.apache.http.protocol.RequestUserAgent;
 import org.apache.http.util.EntityUtils;
+import org.openqa.selenium.By;
 
 import tcxml.core.TcXmlController;
 import tcxml.model.ArgModel;
@@ -62,10 +65,11 @@ public abstract class AbstractHandler implements HttpRequestHandler{
 	protected Map<String, String> param;
 	private  final HttpProcessor outhttpproc ;
 	private  final HttpRequestExecutor httpexecutor ;
-	private JsonObject jsonRequestCommand ;
-	private JsonObject jsonResponseCommand ;
+
 	protected Logger log;
 	protected String requestMethod;
+	protected String currentRequest;
+	
 	
 	
 	
@@ -133,6 +137,62 @@ public abstract class AbstractHandler implements HttpRequestHandler{
 	
 	
 	
+	protected void storeSelectorInsession(By theSelector,String elemntid, RemoteRecordingSession theRecordindSession) {
+		Optional<RemoteRecordingSession> rs = Optional.ofNullable(theRecordindSession);
+		Optional<String> targetSession = Optional.ofNullable(param.get("sessionId"));
+		
+		if(!targetSession.isPresent()) {
+			throw new IllegalStateException("no target session for storing selector");
+			
+		}
+		
+		if(rs.isPresent()) {
+			
+		if(!targetSession.get().equals(rs.get().getSessionId()))	{
+		
+			throw new IllegalStateException("missmatch session for storing selector,found:"+targetSession.get() +" expected was:"+rs.get().getSessionId());
+			
+		}else {// store the step in the session
+			
+			rs.get().addKnownElements(theSelector, elemntid);
+			
+		}
+			
+			
+			
+		}		
+		
+	}
+	
+	
+	
+	
+	protected boolean commandSuccess(JsonObject thejsonCommand) {
+		boolean ret = false;
+		
+		if(thejsonCommand == null) {
+			
+			throw new IllegalStateException("json command cannot be null");
+		}
+		
+		if( thejsonCommand.get("status") == null ) {
+			
+			throw new IllegalStateException(" json response has no status :"+thejsonCommand);
+			
+		}
+		
+		int status = thejsonCommand.getInt("status");
+		if(status == 0) {
+			ret = true;}
+			
+		return ret ;
+		
+		
+		
+		
+		
+	}
+	
 	
 	
 	
@@ -181,14 +241,18 @@ public abstract class AbstractHandler implements HttpRequestHandler{
 	
 	
 	@Override
-	public void handle(HttpRequest request, HttpResponse response, HttpContext context)
+	public synchronized void  handle(HttpRequest request, HttpResponse response, HttpContext context)
 			throws HttpException, IOException {
-		
+		 JsonObject jsonRequestCommand =null;
+		 JsonObject jsonResponseCommand=null ;
 		RemoteRecordingSession recordingSession = (RemoteRecordingSession) context.getAttribute(DriverRequestHandler.RECORDINGSESSION);
 		
 		//store the method
 		requestMethod = request.getRequestLine().getMethod().toLowerCase();
 		
+		//store the uri
+		
+		currentRequest = request.getRequestLine().getUri();
         final DefaultBHttpClientConnection conn = (DefaultBHttpClientConnection) context.getAttribute(
                 DriverRequestHandler.HTTP_OUT_CONN);
       HttpHost target =   (HttpHost) context.getAttribute(HttpCoreContext.HTTP_TARGET_HOST);
@@ -206,7 +270,7 @@ public abstract class AbstractHandler implements HttpRequestHandler{
       Header[] allheader = request.getAllHeaders();
       StringBuffer headerlist = new StringBuffer();
       for (Header header : allheader) {
-    	  headerlist.append(header.getName()).append(":").append(header.getValue()).append("|");
+    	  headerlist.append(header.getName()).append(":").append(header.getValue()).append("\n");
 		
 	}
       log.info("header request:" +  headerlist.toString());
@@ -229,6 +293,9 @@ jsonRequestCommand = readJson(thestringRequestcontent);
 if(jsonRequestCommand != null) {
 	log.info("found command:" +jsonRequestCommand.toString() ); 	
 	
+
+	
+	
 } else {
 	
 	log.info("no json :");
@@ -242,9 +309,11 @@ if(jsonRequestCommand != null) {
 	 processRequest(jsonRequestCommand,recordingSession);
 
 
-		// copy the request 
+		// copy the request xav extract loacl variable for debug 
 	
-		StringEntity newentityRequest = new StringEntity(thestringRequestcontent);
+		StringEntity newentityRequest = new StringEntity(thestringRequestcontent,ContentType.create("application/json", Consts.UTF_8));
+	
+		
 		
 		((BasicHttpEntityEnclosingRequest) request).setEntity(newentityRequest);
     	   
@@ -274,14 +343,17 @@ if(jsonRequestCommand != null) {
         this.httpexecutor.postProcess(response, this.outhttpproc, context);
         
         
+       
+        
         Header[] allheaderresp = targetResponse.getAllHeaders();
         
         StringBuffer headerreslist = new StringBuffer();
         for (Header header : allheaderresp) {
-        	headerreslist.append(header.getName()).append(":").append(header.getValue()).append("|");
+        	headerreslist.append(header.getName()).append(":").append(header.getValue()).append("\n");
+        	
   		
   	}
-        log.info("header response:" +  headerlist.toString());
+        log.info("header response:" +  headerreslist.toString());
       
       
         
@@ -293,17 +365,24 @@ if(jsonRequestCommand != null) {
         targetResponse.removeHeaders("TE");
         targetResponse.removeHeaders("Trailers");
         targetResponse.removeHeaders("Upgrade");
-
-        response.setStatusLine(targetResponse.getStatusLine());
         response.setHeaders(targetResponse.getAllHeaders());
+        response.setStatusLine(targetResponse.getStatusLine());
+        log.info("proxyfied response status line is :" + targetResponse.getStatusLine());
+        
         ///// dump the response 
         
+        
+        // debug purpose
+        if(targetResponse.getStatusLine().getStatusCode() == HttpStatus.SC_INTERNAL_SERVER_ERROR ){
+        	
+        	log.severe("XXXX http 500 XXXXXXXXXXXXXXXX");
+        }
         
       String stringResponseContent = EntityUtils.toString(targetResponse.getEntity());
         
         
         
-        response.setEntity(new StringEntity(stringResponseContent));
+        response.setEntity(new StringEntity(stringResponseContent,Consts.UTF_8));
 
         log.info("<< Response: " + response.getStatusLine());
         

@@ -41,9 +41,8 @@ public class NavigateToHandler extends AbstractHandler{
 		argmap.put("Location", thejsonCommand.getString("url"));
 		String scriptarg = argsTojson(argmap) ; 
 		ret.setArguments(scriptarg);
-		if(recordingSession != null) {
-			recordingSession.addStep(ret);
-		}
+		storeStepInsession(ret, recordingSession);
+		
 		
 	
 		

@@ -49,6 +49,7 @@ import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Listener;
 import org.openqa.selenium.JavascriptExecutor;
+import org.openqa.selenium.chrome.ChromeDriverService;
 
 import com.kscs.util.jaxb.BoundList;
 
@@ -119,6 +120,8 @@ public class TcXmlPluginController
 
 	private FfMpegWrapper currentVideoRecorder;
 
+	private ChromeDriverService chromeService;
+
 
 
 	public Object getCurrentBreakPoint() {
@@ -176,10 +179,29 @@ public class TcXmlPluginController
 			e.printStackTrace();
 			
 		}
+		 
+		 String path2chrome = Activator.getDefault().getPreferenceStore().getString(tcxmlplugin.composite.preference.TcXmlPreference.PATH2CHROME);	 
+		 chromeService = new ChromeDriverService.Builder()
+				    .usingDriverExecutable(new File(path2chrome))
+				    .usingAnyFreePort()
+				    .build();
+				try {
+					chromeService.start();
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+		 
+		 
+		 
 		
 	}
 
-    public static synchronized TcXmlPluginController getInstance() {
+    public ChromeDriverService getChromeService() {
+		return chromeService;
+	}
+
+	public static synchronized TcXmlPluginController getInstance() {
         if (instance == null) {
             instance = new TcXmlPluginController();
         }

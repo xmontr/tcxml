@@ -32,7 +32,9 @@ import com.google.common.collect.ImmutableMap;
 
 import tcxml.remote.handler.AbstractHandler;
 import tcxml.remote.handler.DefaultHandler;
+import tcxml.remote.handler.ElementClickHandler;
 import tcxml.remote.handler.ExecuteScriptHandler;
+import tcxml.remote.handler.FindElementsHandler;
 import tcxml.remote.handler.NavigateToHandler;
 import tcxml.remote.handler.NoHandler;
 
@@ -46,7 +48,7 @@ public class DriverRequestHandler implements HttpRequestHandler {
 	final Map<String, ImmutableList<Function<String, AbstractHandler>>> additionalHandlers;
 	private  HttpContext context;
 	
-	private final int bufsize = 8 * 1024;
+	private final int bufsize = 16 * 1024;
 	
 	final DefaultBHttpClientConnection outconn  = new DefaultBHttpClientConnection(bufsize);
 	
@@ -88,7 +90,11 @@ public class DriverRequestHandler implements HttpRequestHandler {
 			            handler("/session/{sessionId}/execute",
 			                    params -> new  ExecuteScriptHandler(params)),
 			            handler("/session/{sessionId}/url",
-			                    params -> new  NavigateToHandler(params))
+			                    params -> new  NavigateToHandler(params)),
+			            handler("/session/{sessionId}/elements",
+			                    params -> new  FindElementsHandler(params)),
+			            handler("/session/{sessionId}/element/{elementId}/click",
+			                    params -> new  ElementClickHandler(params))
 			        ));
 		
 		   this.targetHost = new HttpHost(forwardUrl.getHost(), forwardUrl.getPort(), forwardUrl.getProtocol());
@@ -134,13 +140,14 @@ return new NoHandler(p);
 
 
 	@Override
-	public void handle(HttpRequest request, HttpResponse response, HttpContext context)
+	public synchronized void handle(HttpRequest request, HttpResponse response, HttpContext context)
 			throws HttpException, IOException {
 		
         if (!this.outconn.isOpen() ||this.outconn.isStale()) {
             final Socket outsocket = new Socket(this.targetHost.getHostName(),this.targetHost.getPort() );
             this.outconn.bind(outsocket);
-            log.info("Outgoing connection to " + outsocket.getInetAddress() + ":" +outsocket.getPort() );
+            this.outconn.setSocketTimeout(30000);
+            log.info("Outgoing connection to " + outsocket.getInetAddress() + ":" +outsocket.getPort()  + " timeout is "  + this.outconn.getSocketTimeout() + " ms ");
         }
         
         final boolean keepalive = this.connStrategy.keepAlive(response, context);

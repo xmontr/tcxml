@@ -13,6 +13,7 @@ import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
 
 import org.junit.Test;
+import org.openqa.selenium.By;
 
 import tcxml.core.TcXmlException;
 import tcxml.model.Step;
@@ -79,6 +80,15 @@ public class WebdriverTest {
 				
 				
 			}
+
+
+
+			@Override
+			public void onNewSelector(String elemntid) {
+				System.out.println("selector added" + elemntid + " selector is " );
+				
+				
+			}
 		};
 		
 		
@@ -91,7 +101,7 @@ public class WebdriverTest {
 		Express express = new Express(9999,ctx, seleniumdriverurl);
 		express.registerRecordingListenner(listener);
 		try {
-		RemoteRecordingSession rs = express.minuteListen(2);
+		RemoteRecordingSession rs = express.minuteListen(5);
 		
 		
 		express.unregisterRecordingListener(listener);

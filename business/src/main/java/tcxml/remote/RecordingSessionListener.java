@@ -2,6 +2,8 @@ package tcxml.remote;
 
 import javax.json.JsonObject;
 
+import org.openqa.selenium.By;
+
 import tcxml.model.Step;
 
 public interface RecordingSessionListener {
@@ -29,5 +31,15 @@ public interface RecordingSessionListener {
 	 * @param sessionId
 	 */
 	public void onSessionEnd(JsonObject sessionData);
+
+	
+	
+	/***
+	 * 
+	 *  new selenium element identified with By
+	 * 
+	 * @param newstep
+	 */
+	public void onNewSelector(String  elemntid);
 
 }
