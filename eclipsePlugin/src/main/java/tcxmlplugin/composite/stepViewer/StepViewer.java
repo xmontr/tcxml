@@ -14,6 +14,7 @@ import tcxml.model.Step;
 import org.eclipse.swt.layout.GridLayout;
 
 import tcxmlplugin.TcXmlPluginController;
+import tcxmlplugin.ViewerState;
 import tcxmlplugin.composite.AStepContainer;
 import tcxmlplugin.composite.StepToolBar;
 import tcxmlplugin.composite.StepView;
@@ -445,6 +446,7 @@ setMenu(buildMenu());
 					 TcXmlPluginController.getInstance().info("waiting on break point step " + getTitle());
 					  
 					  try {
+						  TcXmlPluginController.getInstance().getTcviewer().setState(ViewerState.PAUSED_PLAY);
 						  
 						  TcXmlPluginController.getInstance().setCurrentBreakPoint(breakPoint);
 						breakPoint.wait();

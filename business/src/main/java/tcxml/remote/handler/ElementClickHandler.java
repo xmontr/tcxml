@@ -12,6 +12,7 @@ import org.apache.http.HttpRequest;
 import org.apache.http.HttpResponse;
 import org.apache.http.protocol.HttpContext;
 import org.openqa.selenium.By;
+import org.openqa.selenium.remote.SessionId;
 
 import tcxml.core.StepAction;
 import tcxml.core.StepType;
@@ -20,8 +21,8 @@ import tcxml.remote.RemoteRecordingSession;
 
 public class ElementClickHandler extends AbstractHandler{
 
-	public ElementClickHandler(Map<String, String> p) {
-		super(p);
+	public ElementClickHandler(Map<String, String> p,Optional<SessionId> seleniumSessionId) {
+		super(p,seleniumSessionId);
 		// TODO Auto-generated constructor stub
 	}
 	
@@ -52,7 +53,7 @@ public class ElementClickHandler extends AbstractHandler{
 
 	
 	
-	storeStepInsession(ret, recordingSession);
+	storeStepInsession(ret,theselector.get(), recordingSession);
 	
 	
 	

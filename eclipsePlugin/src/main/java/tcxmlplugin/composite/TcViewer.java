@@ -56,6 +56,7 @@ import tcxml.model.Transaction;
 import tcxml.model.TruLibrary;
 import tcxmlplugin.TcXmlPluginController;
 import tcxmlplugin.TcXmlPluginException;
+import tcxmlplugin.ViewerState;
 import tcxmlplugin.composite.parameter.ParameterViewer;
 import tcxmlplugin.composite.stepViewer.StepContainer;
 import tcxmlplugin.composite.stepViewer.StepViewer;
@@ -72,6 +73,20 @@ import org.eclipse.swt.widgets.ProgressBar;
 import org.eclipse.swt.events.SelectionAdapter;
 
 public class TcViewer extends Composite implements PropertyChangeListener, IJobChangeListener  {
+	
+	
+	private ViewerState  state;
+	
+	public ViewerState getState() {
+		return state;
+	}
+
+	public void setState(ViewerState state) {
+		this.state = state;
+		this.statusItem.setText(state.getName());
+	}
+
+
 	private ActionsViewer actionsViewer;
 	
 	
@@ -113,6 +128,10 @@ public class TcViewer extends Composite implements PropertyChangeListener, IJobC
 
 	private RunlogicAndPalettecomposite runlogicAndPaletteView;
 
+
+	private ActionsManager actionsManager;
+	private ToolItem statusItem;
+
 	public TcViewer(Composite parent, int style, TcXmlController tccontroller, IFolder testcasefolder) {
 		super(parent, style);
 
@@ -124,12 +143,14 @@ public class TcViewer extends Composite implements PropertyChangeListener, IJobC
 		
 		tabFolder = new CTabFolder(this, SWT.BORDER);
 		this.tcfolder = testcasefolder;
+		
 		this.controller=tccontroller;
 		
 
 		
 		actionsViewer = new ActionsViewer(tabFolder, SWT.BORDER,controller);
 		this.libraryViewer = new LibraryViewer(tabFolder, SWT.BORDER,controller);
+		this.actionsManager = new ActionsManager(tabFolder, SWT.BORDER, controller);
 		
 		//this.runLogicViewer = new RunLogicViewer(tabFolder, SWT.BORDER,controller);
 		this.runlogicAndPaletteView = new RunlogicAndPalettecomposite(tabFolder, SWT.BORDER);
@@ -156,7 +177,7 @@ public class TcViewer extends Composite implements PropertyChangeListener, IJobC
 		buildScriptToolbar();
 		buildVideorecorderToolbar();
 
-		
+		setState(ViewerState.STOP);
 		
 		
 	}
@@ -236,6 +257,12 @@ public class TcViewer extends Composite implements PropertyChangeListener, IJobC
 		CTabItemtransactionTab.setText("transactions");
 		CTabItemtransactionTab.setControl(transactionViewer);
 		
+		
+		CTabItem CTabItemmanageactionTab = new CTabItem(tabFolder, SWT.NONE);
+		CTabItemmanageactionTab.setText("Manage Actions");
+		CTabItemmanageactionTab.setControl(actionsManager);
+		
+		
 	}
 
 	private void buildScriptToolbar() {
@@ -252,7 +279,16 @@ public class TcViewer extends Composite implements PropertyChangeListener, IJobC
 		recorditem.setToolTipText("Record");
 		recorditem.setImage(ResourceManager.getPluginImage("tcxmlplugin", "icons/media-record-2.png"));
 		
-		
+		recorditem.addListener(SWT.Selection, new Listener() {
+			
+			@Override
+			public void handleEvent(Event event) {
+				setState(ViewerState.RECORD);
+				TcXmlPluginController.getInstance().startRecord();
+				
+				
+			}
+		});
 		
 		
 		
@@ -267,10 +303,12 @@ public class TcViewer extends Composite implements PropertyChangeListener, IJobC
 				
 				
 				if(TcXmlPluginController.getInstance().isOnBreakpoint()) {
-					TcXmlPluginController.getInstance().releaseBreakpoint();					
+					TcXmlPluginController.getInstance().releaseBreakpoint();
+					setState(ViewerState.PLAY);
 					
 				} else { // lauch the script
 					try {
+						setState(ViewerState.PLAY);
 					RunLogicViewer rlv = TcXmlPluginController.getInstance().getTcviewer().runLogicViewer ;
 						
 					rlv.play();
@@ -309,6 +347,20 @@ public class TcViewer extends Composite implements PropertyChangeListener, IJobC
 		
 		ToolItem stopItem = new ToolItem(scriptToolbar, SWT.NONE);
 		stopItem.setImage(ResourceManager.getPluginImage("tcxmlplugin", "icons/media-playback-stop-2.png"));
+		stopItem.addListener(SWT.Selection, new Listener() {
+			
+			@Override
+			public void handleEvent(Event event) {
+				if(state.equals(ViewerState.RECORD)) { // stop the recording
+					TcXmlPluginController.getInstance().stopRecord();
+					
+				}
+				
+				
+				setState(ViewerState.STOP);
+				
+			}
+		});
 		
 		
 		ToolItem toolItem = new ToolItem(scriptToolbar, SWT.SEPARATOR);
@@ -339,6 +391,8 @@ public class TcViewer extends Composite implements PropertyChangeListener, IJobC
 		ToolItem exportitem = new ToolItem(scriptToolbar, SWT.PUSH);
 		exportitem.setToolTipText("Export current run Logic ");
 		exportitem.setText("Export");
+		
+		statusItem = new ToolItem(scriptToolbar, SWT.PUSH);
 		exportitem.addSelectionListener(new SelectionListener() {
 			
 			@Override
@@ -383,18 +437,25 @@ public class TcViewer extends Composite implements PropertyChangeListener, IJobC
 	}
 
 	private void populateAction(Map<String, Step> actionmap) {
-		
-		this.actionMap = actionmap;
-		
-	
-		 
-		 
-		 
+		this.actionMap = actionmap;		 
 		 actionsViewer.buildAllActions(actionmap);		
-		actionsViewer.getModel().addPropertyChangeListener(ActionsModel.ACTION_SELECTED, this);
-		
+		actionsViewer.getModel().addPropertyChangeListener(ActionsModel.ACTION_SELECTED, this);		
 			
 	}
+	
+	
+	public void refreshAction(Map<String, Step> actionmap) {
+		actionsViewer.getModel().removePropertyChangeListener(this);
+		this.actionMap = actionmap;
+		actionsViewer.refresh(actionmap);
+		actionsViewer.getModel().addPropertyChangeListener(ActionsModel.ACTION_SELECTED, this);	
+		
+		
+	}
+	
+	
+	
+	
 	
 	
 	private void populateLibrary(Map<String, TruLibrary> libmap) {

@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.io.StringWriter;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.Optional;
 
 import javax.json.JsonObject;
 import javax.xml.bind.JAXBContext;
@@ -83,12 +84,23 @@ public class WebdriverTest {
 
 
 
+	
+
 			@Override
-			public void onNewSelector(String elemntid) {
-				System.out.println("selector added" + elemntid + " selector is " );
-				
+			public void onError(Exception e) {
+				System.out.println("error in script execution " + e.getMessage());
 				
 			}
+
+			@Override
+			public void onNewStep(Step fromRemote, By by) {
+				// TODO Auto-generated method stub
+				
+			}
+
+		
+
+		
 		};
 		
 		
@@ -98,7 +110,7 @@ public class WebdriverTest {
 		
 		
 	
-		Express express = new Express(9999,ctx, seleniumdriverurl);
+		Express express = new Express(9999,ctx, seleniumdriverurl,Optional.empty());
 		express.registerRecordingListenner(listener);
 		try {
 		RemoteRecordingSession rs = express.minuteListen(5);

@@ -16,13 +16,8 @@ public interface RecordingSessionListener {
 	 */
 	public void onSessionStart(JsonObject sessionData);
 	
-	/***
-	 * 
-	 *  new selenium action
-	 * 
-	 * @param newstep
-	 */
-	public void onNewStep(Step newstep);
+
+	
 	
 	
 	/***
@@ -34,12 +29,18 @@ public interface RecordingSessionListener {
 
 	
 	
+	
+	public void onError ( Exception e);
+	
 	/***
 	 * 
-	 *  new selenium element identified with By
+	 *  new selenium action
 	 * 
 	 * @param newstep
 	 */
-	public void onNewSelector(String  elemntid);
+
+	public void onNewStep(Step fromRemote, By by);
+	
+	public void onNewStep(Step fromRemote);
 
 }

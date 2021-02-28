@@ -86,13 +86,13 @@ public class TcXmlEditor  extends EditorPart   {
 		setPartName("TCXML - " + testcasename);
 		
 		tccontroller.loadFromDisk(tcpath.toOSString());
-	openBrowser();
+	
 			
 		tcViewer = new TcViewer(parent, SWT.NONE,tccontroller,testcasefolder);
 		TcXmlPluginController.getInstance().setTcviewer(tcViewer);
 		tcViewer.populate();
 		
-
+		TcXmlPluginController.getInstance().openBrowser();
 		} catch (TcXmlException e) {
 		TcXmlPluginController.getInstance().error("error when editor is retriving content of the file", e);
 		}	
@@ -103,27 +103,11 @@ public class TcXmlEditor  extends EditorPart   {
 	
 
 
-	public  void openBrowser() {
-		
-		String path2chrome = Activator.getDefault().getPreferenceStore().getString(tcxmlplugin.composite.preference.TcXmlPreference.PATH2CHROME);
-		try {
-			//tccontroller.openBrowser("firefox", path2chrome);
-			tccontroller.openChromeBrowserBrowser ( TcXmlPluginController.getInstance().getChromeService());
-			TcXmlPluginController.getInstance().info("chrome driver is listenning on " + tccontroller.getDriverUrl());
-		} catch (TcXmlException e) {
-			TcXmlPluginController.getInstance().error("Fail to open browser", e);
-		}
-		
-	}
+
 	
 	
 	
-	public void closeBrowser() {
-		
-		tccontroller.closeBrowser();	
-		
-		tccontroller.dispose();
-	}
+
 	
 
 	@Override
@@ -136,7 +120,9 @@ public class TcXmlEditor  extends EditorPart   {
 	public void dispose() {
 		// TODO Auto-generated method stub
 		super.dispose();
-		closeBrowser();
+		
+		TcXmlPluginController.getInstance().closeBrowser();
+		
 	}
 	
 	

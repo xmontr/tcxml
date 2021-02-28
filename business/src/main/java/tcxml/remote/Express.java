@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Function;
 
@@ -17,6 +18,7 @@ import org.apache.http.protocol.ResponseConnControl;
 import org.apache.http.protocol.ResponseContent;
 import org.apache.http.protocol.ResponseDate;
 import org.apache.http.protocol.ResponseServer;
+import org.openqa.selenium.remote.SessionId;
 
 import tcxml.core.TcXmlException;
 
@@ -26,12 +28,14 @@ public class Express {
 	private HttpServer server ;
 	private DriverRequestHandler requestHandler;
 	private List<RecordingSessionListener> recordingsessionlisteners;
+	private Optional<SessionId> seleniumSessionId;
 	
 	
 	
 	
-	public Express(int listeningport,String httpListenningContext, URL forwardUrl) {
+	public Express(int listeningport,String httpListenningContext, URL forwardUrl, Optional<SessionId> seleniumSessionId) {
 		this.port = listeningport;
+		this.seleniumSessionId = seleniumSessionId;
 		
 		recordingsessionlisteners = new ArrayList<RecordingSessionListener>();
 		
@@ -46,7 +50,7 @@ public class Express {
 		        .setTcpNoDelay(true)
 		        .build();
 		
-		requestHandler = new DriverRequestHandler(forwardUrl,httpListenningContext);
+		requestHandler = new DriverRequestHandler(forwardUrl,httpListenningContext,this.seleniumSessionId);
 		this.server = ServerBootstrap.bootstrap()
 		        .setListenerPort(listeningport)
 		        .setHttpProcessor(httpProcessor)
@@ -88,7 +92,7 @@ public class Express {
 	
 	public RemoteRecordingSession minuteListen(long minutes) throws TcXmlException {
 		try {
-			RemoteRecordingSession recordingSession = new RemoteRecordingSession();
+			RemoteRecordingSession recordingSession = new RemoteRecordingSession(this.seleniumSessionId);
 			recordingsessionlisteners.forEach(li ->  recordingSession.addListenner(li));
 			
 			requestHandler.setRecordingSession(recordingSession);
@@ -108,7 +112,7 @@ public class Express {
 	
 	public void shutDown() {
 		
-		
+		server.shutdown(5, TimeUnit.SECONDS);
 		
 		
 	}

@@ -76,6 +76,7 @@ import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.remote.Augmenter;
 import org.openqa.selenium.remote.DesiredCapabilities;
 import org.openqa.selenium.remote.RemoteWebDriver;
+import org.openqa.selenium.remote.SessionId;
 import org.openqa.selenium.support.ui.ExpectedCondition;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
@@ -964,37 +965,65 @@ private void parseLibraryXml(TruLibrary library) throws TcXmlException {
 	
 	
 }
+/***
+ * 
+ * 
+ * @return the top container step of the script
+ * @throws TcXmlException
+ */
 
-private void parseMainXml() throws TcXmlException {
+private Step getTopStep() throws TcXmlException{
 	 Step topStep = script.getStep();
 	 String action = topStep.getAction();
 	 if(!action.equals("TopStep")) {
 		 
 		throw new TcXmlException("invalid xml - first step of truScript: action expected:TopStep founded:"+action,  new IllegalStateException()); 
 	 }
-	 
-	 
-	 Step scriptStep = topStep.getStep().get(0); // script  
-	String section = scriptStep.getSection();
-	 if(!section.equals("Script")) {
-		 
-		throw new TcXmlException("invalid xml - first step of topstep : section expected :Script founded:"+section,  new IllegalStateException()); 
-	 }
+return topStep;	
+}
+
+
+
+private Step getScriptSection() throws TcXmlException{
+	 Step scriptStep = getTopStep().getStep().get(0); // script  
+		String section = scriptStep.getSection();
+		 if(!section.equals("Script")) {
+			 
+			throw new TcXmlException("invalid xml - first step of topstep : section expected :Script founded:"+section,  new IllegalStateException()); 
+		 }
 	
-	 
-	 Step libraryStep = topStep.getStep().get(1);   //  Libraries
-	 section = libraryStep.getSection();
+	
+	return  scriptStep;
+}
+
+
+private Step getLibraryStep() throws TcXmlException{
+	Step libraryStep = getTopStep().getStep().get(1);   //  Libraries
+	 String section = libraryStep.getSection();
 	 if(!section.equals("Libraries")) {
 		 
 		throw new TcXmlException("invalid xml - second  step of topstep : section expected expected:Libraries founded:"+section,  new IllegalStateException()); 
 	 }
+return libraryStep ;	
+}
+
+
+
+
+
+
+
+private void parseMainXml() throws TcXmlException {
+	 Step topStep = getTopStep();	 
+	 Step scriptStep = getScriptSection();	 
+	 Step libraryStep = getLibraryStep() ;
 	 
 // browse all step of the script
 	 List<Step> childs = scriptStep.getStep();
 	 Iterator<Step> it = childs.iterator();
 	 while (it.hasNext()) {
 		Step currentstep = (Step) it.next();
-		action = currentstep.getAction();
+		String action = currentstep.getAction();
 		switch (action) {
 		case "action":
 		String actionName = currentstep.getActionName();	
@@ -1543,10 +1572,11 @@ public void openBrowser (String type, String driverPath) throws TcXmlException {
  * 
  * @param type
  * @param driverPath
+ * @return 
  * @throws TcXmlException
  */
 
-public void openChromeBrowserBrowser (ChromeDriverService cds) throws TcXmlException {
+public SessionId openChromeBrowserBrowser (ChromeDriverService cds) throws TcXmlException {
 	
 	
 	//policy to destroy HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Google\Chrome
@@ -1560,7 +1590,8 @@ public void openChromeBrowserBrowser (ChromeDriverService cds) throws TcXmlExcep
 	caps.setCapability(ChromeOptions.CAPABILITY, options);
 	
 	options.addArguments("disable-infobars");
-	options.addArguments("disable-gpu");
+	options.addArguments("disable-gpu"); // ffmprg doesn't support to record window managed with gpu acceeleration : video is black
+	options.setExperimentalOption("w3c", false); // for the re using of session get/session/{sessionid} non wsc command
 	
 	if(highlighterExtension == null) {
 		highlighterExtension = generatePathToLocalTemporaryResource("jqueryHighlighter.crx").toFile();
@@ -1584,7 +1615,7 @@ public void openChromeBrowserBrowser (ChromeDriverService cds) throws TcXmlExcep
 	
 	try {
 		
-	driver= new ChromeDriver(cds, options)	;
+	driver= new ChromeDriver(cds, options)	; 
 	driverUrl = cds.getUrl();
 	//driver = new ChromeDriver(options);
 	// ensure at least a page is loaded ( required by utils.clearcache )
@@ -1592,7 +1623,7 @@ public void openChromeBrowserBrowser (ChromeDriverService cds) throws TcXmlExcep
 	 driver.manage().window().maximize();
 	 JavascriptExecutor js = (JavascriptExecutor)driver; 
 	 String title = (String)js.executeScript("document.title = 'ChromeVersion'");
-	 
+	return  ((ChromeDriver) driver).getSessionId();
 	
 	}
 	catch (Exception e) {
@@ -3043,7 +3074,24 @@ try {
  }
  
  
- 
+ public Map<String, Step> addAction(String newactionname ) throws TcXmlException{
+	 if(newactionname.equalsIgnoreCase("init") || newactionname.equalsIgnoreCase("action") || newactionname.equalsIgnoreCase("end") ) {
+		 
+		throw new TcXmlException("action init and end are system name action that are forbidden", new IllegalArgumentException(newactionname));
+		 
+	 }
+	
+	 //add the new action in script and actionmap
+	 Step scriptstep = getScriptSection();
+	 Step newactionstep = new Step();
+	 newactionstep.setAction("action");
+	 newactionstep.setActionName(newactionname);
+	 scriptstep.getStep().add(newactionstep);
+	 actionMap.put(newactionname, newactionstep);
+	 return actionMap;
+	 
+	 
+ }
 
 	
 }

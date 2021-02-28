@@ -12,6 +12,7 @@ import org.apache.http.HttpRequest;
 import org.apache.http.HttpResponse;
 import org.apache.http.protocol.HttpContext;
 import org.openqa.selenium.By;
+import org.openqa.selenium.remote.SessionId;
 
 import tcxml.remote.BySelector;
 import tcxml.remote.RemoteRecordingSession;
@@ -25,8 +26,8 @@ public class FindElementsHandler extends AbstractHandler{
 
 
 
-	public FindElementsHandler(Map<String, String> p) {
-		super(p);
+	public FindElementsHandler(Map<String, String> p,Optional<SessionId> seleniumSessionId) {
+		super(p,seleniumSessionId);
 		// TODO Auto-generated constructor stub
 	}
 	
@@ -108,6 +109,7 @@ public class FindElementsHandler extends AbstractHandler{
 		}else {
 			
 			log.info("*********** multiple object returned by selector");
+			recordingSession.onError(new IllegalStateException("selector returned " + nbelement  +"   non unique element " + selector.toString()));
 		}
 		
 		

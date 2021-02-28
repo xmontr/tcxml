@@ -10,6 +10,7 @@ import javax.json.JsonObject;
 import javax.json.JsonString;
 
 import org.openqa.selenium.By;
+import org.openqa.selenium.remote.SessionId;
 
 import com.google.common.collect.BiMap;
 import com.google.common.collect.HashBiMap;
@@ -40,7 +41,7 @@ public class RemoteRecordingSession {
 	
 	
 	
-	public RemoteRecordingSession() {
+	public RemoteRecordingSession(Optional<SessionId> seleniumSessionId) {
 		
       	log = Logger.getLogger(getClass().getName());
       	log.setLevel(Level.ALL);
@@ -48,6 +49,13 @@ public class RemoteRecordingSession {
 		recordingsessionlisteners = new ArrayList<RecordingSessionListener>();
 		
 		knownElements = HashBiMap.create();
+		
+		if(seleniumSessionId.isPresent()) {
+			this.sessionId = seleniumSessionId.get().toString();
+			log.info("re using session " + this.sessionId);
+			
+			
+		}
 		
 	}
 	
@@ -68,10 +76,24 @@ public class RemoteRecordingSession {
 		
 	}
 
+	public void addStep(Step fromRemote, By by) {
+
+		recordingsessionlisteners.forEach(li -> li.onNewStep(fromRemote,by));
+		
+	}
+	
+	
 	public void addStep(Step fromRemote) {
 
 		recordingsessionlisteners.forEach(li -> li.onNewStep(fromRemote));
 		
+	}
+	
+	
+	
+	public void onError( Exception e) {
+		
+		recordingsessionlisteners.forEach(li -> li.onError(e));	
 	}
 	
 	
@@ -112,7 +134,7 @@ public class RemoteRecordingSession {
 			   knownElements.put(selector, elemntid);
 			   
 			   log.info("sessionid " +sessionId + "  adding " + elemntid + " in knownelements" + " " + knownElements.containsValue(elemntid) + " " + knownElements.size());
-			   addSelector(elemntid);//notify the listener
+			   
 			    }
 		
 		
@@ -141,10 +163,6 @@ public class RemoteRecordingSession {
 
 
 
-	private void addSelector(String  elemntid) {
-		recordingsessionlisteners.forEach(li -> li.onNewSelector(elemntid));
-		
-	}
 	
 	
 	

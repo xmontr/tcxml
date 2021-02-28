@@ -2,8 +2,11 @@ package tcxml.remote.handler;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 
 import javax.json.JsonObject;
+
+import org.openqa.selenium.remote.SessionId;
 
 import tcxml.core.StepAction;
 import tcxml.core.StepType;
@@ -12,8 +15,8 @@ import tcxml.remote.RemoteRecordingSession;
 
 public class NavigateToHandler extends AbstractHandler{
 
-	public NavigateToHandler(Map<String, String> p) {
-		super(p);
+	public NavigateToHandler(Map<String, String> p,Optional<SessionId> seleniumSessionId) {
+		super(p,seleniumSessionId);
 		// TODO Auto-generated constructor stub
 	}
 	
@@ -34,6 +37,7 @@ public class NavigateToHandler extends AbstractHandler{
 			
 		}		
 		Step ret = new Step();
+		ret.setTestObject("testObj:{00000000-0000-0000-0000-000000000001}"); // browser step
 		ret.setType(StepType.TESTOBJECT.getName());
 		ret.setAction(StepAction.NAVIGATE.getName());
 		//build the argument map for the step 

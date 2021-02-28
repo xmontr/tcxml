@@ -31,13 +31,16 @@ import org.apache.http.HttpEntity;
 import org.apache.http.HttpException;
 import org.apache.http.HttpHost;
 import org.apache.http.HttpRequest;
+import org.apache.http.HttpRequestFactory;
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpStatus;
 import org.apache.http.ParseException;
 import org.apache.http.entity.ContentType;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.DefaultBHttpClientConnection;
+import org.apache.http.impl.client.RequestWrapper;
 import org.apache.http.message.BasicHttpEntityEnclosingRequest;
+import org.apache.http.message.BasicHttpRequest;
 import org.apache.http.protocol.RequestExpectContinue;
 import org.apache.http.protocol.HTTP;
 import org.apache.http.protocol.HttpContext;
@@ -52,6 +55,7 @@ import org.apache.http.protocol.RequestTargetHost;
 import org.apache.http.protocol.RequestUserAgent;
 import org.apache.http.util.EntityUtils;
 import org.openqa.selenium.By;
+import org.openqa.selenium.remote.SessionId;
 
 import tcxml.core.TcXmlController;
 import tcxml.model.ArgModel;
@@ -69,12 +73,14 @@ public abstract class AbstractHandler implements HttpRequestHandler{
 	protected Logger log;
 	protected String requestMethod;
 	protected String currentRequest;
+	protected Optional<SessionId> seleniumSessionId;
 	
 	
 	
 	
-	protected AbstractHandler(Map<String, String> p) {
+	protected AbstractHandler(Map<String, String> p,Optional<SessionId> seleniumSessionId ) {
 	
+		this.seleniumSessionId = seleniumSessionId;
 		this.param =p;
         // Set up HTTP protocol processor for outgoing connections
          outhttpproc = new ImmutableHttpProcessor(
@@ -108,6 +114,34 @@ public abstract class AbstractHandler implements HttpRequestHandler{
 		}
 	
 	
+	protected void storeStepInsession(Step theStep, By by, RemoteRecordingSession theRecordindSession) {
+		Optional<RemoteRecordingSession> rs = Optional.ofNullable(theRecordindSession);
+		Optional<String> targetSession = Optional.ofNullable(param.get("sessionId"));
+		
+		if(!targetSession.isPresent()) {
+			throw new IllegalStateException("no target session for storing step");
+			
+		}
+		
+		if(rs.isPresent()) {
+			
+		if(!targetSession.get().equals(rs.get().getSessionId()))	{
+		
+			throw new IllegalStateException("missmatch session for storing step,found:"+targetSession.get() +" expected was:"+rs.get().getSessionId());
+			
+		}else {// store the step in the session
+			
+			rs.get().addStep(theStep,by);	
+			
+		}
+			
+			
+			
+		}		
+		
+	}
+	
+	
 	protected void storeStepInsession(Step theStep, RemoteRecordingSession theRecordindSession) {
 		Optional<RemoteRecordingSession> rs = Optional.ofNullable(theRecordindSession);
 		Optional<String> targetSession = Optional.ofNullable(param.get("sessionId"));
@@ -134,6 +168,10 @@ public abstract class AbstractHandler implements HttpRequestHandler{
 		}		
 		
 	}
+	
+	
+	
+	
 	
 	
 	
@@ -250,7 +288,17 @@ public abstract class AbstractHandler implements HttpRequestHandler{
 		//store the method
 		requestMethod = request.getRequestLine().getMethod().toLowerCase();
 		
+		// re write the session id with the pre-exsiting one if necessary
+		Optional<SessionId> possibleseleniumsession = (Optional<SessionId>) context.getAttribute(DriverRequestHandler.SELENIUMSESSIONID);
+		if(possibleseleniumsession.isPresent()) {
+					
+			
+			request =rewriteUrlRequest(request);
+			
+		}
+		
 		//store the uri
+		
 		
 		currentRequest = request.getRequestLine().getUri();
         final DefaultBHttpClientConnection conn = (DefaultBHttpClientConnection) context.getAttribute(
@@ -338,6 +386,8 @@ if(jsonRequestCommand != null) {
         request.removeHeaders("Trailers");
         request.removeHeaders("Upgrade");
         
+        
+        
         this.httpexecutor.preProcess(request, this.outhttpproc, context);
         final HttpResponse targetResponse = this.httpexecutor.execute(request, conn, context);
         this.httpexecutor.postProcess(response, this.outhttpproc, context);
@@ -372,10 +422,11 @@ if(jsonRequestCommand != null) {
         ///// dump the response 
         
         
-        // debug purpose
-        if(targetResponse.getStatusLine().getStatusCode() == HttpStatus.SC_INTERNAL_SERVER_ERROR ){
+        
+        if(targetResponse.getStatusLine().getStatusCode() != HttpStatus.SC_OK){
         	
         	log.severe("XXXX http 500 XXXXXXXXXXXXXXXX");
+        	recordingSession.onError(new IllegalStateException(targetResponse.getStatusLine().toString()));
         }
         
       String stringResponseContent = EntityUtils.toString(targetResponse.getEntity());
@@ -418,6 +469,24 @@ if(jsonRequestCommand != null) {
       		
 	}
 	
+	private HttpRequest rewriteUrlRequest(HttpRequest request) {
+		String oldsession =param.get("sessionId")!=null ? param.get("sessionId"):"12345";
+		HttpRequest ret = null;
+		String newUri = request.getRequestLine().getUri().replaceAll(oldsession, seleniumSessionId.get().toString());
+		if ( request instanceof BasicHttpEntityEnclosingRequest   ) {
+		ret=	new BasicHttpEntityEnclosingRequest(request.getRequestLine().getMethod(),newUri,request.getRequestLine().getProtocolVersion());
+		HttpEntity entity = ((BasicHttpEntityEnclosingRequest) request).getEntity() ;
+		((BasicHttpEntityEnclosingRequest) ret).setEntity(entity);
+		}else {
+			
+		ret=new BasicHttpRequest(request.getRequestLine().getMethod(),newUri,request.getRequestLine().getProtocolVersion())	;
+			
+		}
+		ret.setHeaders(request.getAllHeaders());		
+		log.info("rewriting session id " + oldsession + " for url " + request.getRequestLine().getUri()  + " with already running selenium session " + seleniumSessionId.get().toString());
+		return ret;
+	}
+
 	protected String argsTojson(HashMap<String, String> argmap) {
 		
 	JsonObjectBuilder ret  = Json.createObjectBuilder();	

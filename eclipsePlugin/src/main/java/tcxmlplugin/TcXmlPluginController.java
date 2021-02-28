@@ -20,6 +20,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Optional;
 import java.util.Properties;
 import java.util.Set;
 import java.util.Vector;
@@ -50,6 +51,7 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Listener;
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.chrome.ChromeDriverService;
+import org.openqa.selenium.remote.SessionId;
 
 import com.kscs.util.jaxb.BoundList;
 
@@ -76,6 +78,8 @@ import tcxml.model.ImportModel;
 import tcxml.model.Step;
 import tcxml.model.TestObject;
 import tcxml.model.TruLibrary;
+import tcxml.remote.Express;
+import tcxml.remote.RecordingSessionListener;
 import tcxmlplugin.nature.NatureTcXml;
 import util.TcxmlUtils;
 
@@ -121,6 +125,10 @@ public class TcXmlPluginController
 	private FfMpegWrapper currentVideoRecorder;
 
 	private ChromeDriverService chromeService;
+	
+	private RecordingSessionListener currentRecordingSessionListener ;
+
+	private Express express;
 
 
 
@@ -155,6 +163,7 @@ public class TcXmlPluginController
 			currentBreakPoint.notify();
 			info("releasing breakpoint");
 		}
+		getTcviewer().setState(ViewerState.PLAY);
 		
 	}
 	
@@ -171,6 +180,7 @@ public class TcXmlPluginController
 		
 		  URL url = getClass().getResource("/config.properties");
 		 properties = new Properties();
+		 
 		 try {
 			
 			 InputStream in = url.openStream();
@@ -187,6 +197,10 @@ public class TcXmlPluginController
 				    .build();
 				try {
 					chromeService.start();
+					
+					
+					
+					
 				} catch (IOException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
@@ -196,6 +210,42 @@ public class TcXmlPluginController
 		 
 		
 	}
+	
+	public  void openBrowser() {
+		
+		String ctx = "";
+		
+		
+		String path2chrome = Activator.getDefault().getPreferenceStore().getString(tcxmlplugin.composite.preference.TcXmlPreference.PATH2CHROME);
+		try {
+			//tccontroller.openBrowser("firefox", path2chrome);
+		 SessionId newsession = tcviewer.getController().openChromeBrowserBrowser ( TcXmlPluginController.getInstance().getChromeService());
+		 
+			info("chrome driver is listenning on " + tcviewer.getController().getDriverUrl()  + " selenium session =" + newsession.toString());
+			
+			
+			this.express = new Express(9999,ctx, chromeService.getUrl(), Optional.ofNullable(newsession));
+			
+		} catch (TcXmlException e) {
+			TcXmlPluginController.getInstance().error("Fail to open browser", e);
+		}
+		
+	}
+	
+	
+	public void closeBrowser() {
+		
+		tcviewer.getController().closeBrowser();	
+		
+		tcviewer.getController().dispose();
+		this.express=null;
+	}
+	
+	
+	
+	
+	
+	
 
     public ChromeDriverService getChromeService() {
 		return chromeService;
@@ -1535,7 +1585,74 @@ ret.setFallbackName(thesel.getString("fallBackName"));
 }
 
 
+public void createAction(String newaction)  {
+	
+	
+	
+	
+	try {
+		info("creating actions "  + newaction);
+		getTcviewer().refreshAction(getTcviewer().getController().addAction(newaction));
+	} catch (TcXmlException e) {
+		// TODO Auto-generated catch block
+		error("failure in action creation " , e);
+	}
+	
+	
+	
+	
+}
 
+public void startRecord() {
+	// cretz new transaction recor_1 , start the express on the driver port and attach the recordsesson listener
+	String recordingName = getTcviewer().getActionsViewer().getNextRecordingTransactionName();
+	
+	createAction(recordingName);
+
+	ActionView theview = getTcviewer().getActionsViewer().getActionView(recordingName);
+	this.currentRecordingSessionListener = createRecordindSessionListener(theview);
+	
+	this.express.registerRecordingListenner(currentRecordingSessionListener);
+	
+Job expressJob = new Job("express job") {
+	
+	@Override
+	protected IStatus run(IProgressMonitor monitor) {
+		
+		IStatus ret = Status.OK_STATUS ;
+		try {
+			express.minuteListen(30);
+		} catch (TcXmlException e) {
+			ret = Status.CANCEL_STATUS;
+			error("failure starting proxy server", e);
+		}
+		return ret;
+	}
+};
+	
+
+expressJob.schedule();	
+info(" launching proxy server ");
+	
+}
+
+private RecordingSessionListener createRecordindSessionListener(ActionView theview) {
+	// TODO Auto-generated method stub
+	return new ActionViewRecordindListener(theview);
+}
+
+public  void stopRecord() {
+	//stop the express , deregister the record session listener and refresh the action viewer
+	if(this.express != null ) {
+		this.express.shutDown();
+		
+		
+	}else {
+		
+		error("no express found", new IllegalStateException());
+	}
+	
+}
 
 	
 	

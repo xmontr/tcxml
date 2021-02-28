@@ -26,6 +26,7 @@ import org.eclipse.jface.viewers.ComboViewer;
 import org.eclipse.swt.layout.GridData;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -244,11 +245,26 @@ public class ActionsViewer extends Composite  {
 		acv.buildAction(actionmap.get(name));
 		actionsView.put(name, acv);
 		
+	}	
 	}
-		
+	
+	public void refresh(Map<String, Step> actionmap) {
+	Collection<ActionView> allview = actionsView.values();
+		for (Iterator iterator = allview.iterator(); iterator.hasNext();) {
+			ActionView actionView = (ActionView) iterator.next();
+			actionView.dispose();
+			
+		}
+		actionsView.clear();
+		buildAllActions(actionmap);
 		
 		
 	}
+	
+	
+	
+	
+	
 
 	public ActionView getActionView(String actionName) {
 		// TODO Auto-generated method stub
@@ -358,6 +374,21 @@ layout(true,true);
 		
 	}
 		
+	}
+
+	public String getNextRecordingTransactionName() {
+		String baseName = "Recorded_";
+		String proposedName="Recorded_1";
+		Set<String> actionList = controller.getActionMap().keySet();
+		int count=0;
+		do {
+			count++;
+		 proposedName = baseName + count ;
+		
+			
+		}while(actionList.contains(proposedName));
+		
+		return proposedName;
 	}
 	
 	

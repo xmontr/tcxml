@@ -2,6 +2,7 @@ package tcxml.remote.handler;
 
 import java.io.IOException;
 import java.util.Map;
+import java.util.Optional;
 
 import javax.json.JsonObject;
 
@@ -12,6 +13,7 @@ import org.apache.http.HttpStatus;
 import org.apache.http.entity.ContentType;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.protocol.HttpContext;
+import org.openqa.selenium.remote.SessionId;
 
 import tcxml.core.StepAction;
 import tcxml.core.StepType;
@@ -21,8 +23,8 @@ import tcxml.remote.RemoteRecordingSession;
 
 public class NoHandler extends AbstractHandler {
 
-	public NoHandler(Map<String, String> p) {
-		super(p);
+	public NoHandler(Map<String, String> p,Optional<SessionId> seleniumSessionId) {
+		super(p,seleniumSessionId);
 		// TODO Auto-generated constructor stub
 	}
 

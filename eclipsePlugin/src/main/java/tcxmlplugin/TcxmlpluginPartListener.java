@@ -25,7 +25,7 @@ public class TcxmlpluginPartListener implements IPartListener {
 		if( part instanceof TcXmlEditor ) {
 			
 		TcXmlEditor ed = (TcXmlEditor)	part;
-		ed.closeBrowser();
+		TcXmlPluginController.getInstance().closeBrowser();
 			
 		}
 		TcXmlPluginController.getInstance().info("closing browser associated to editor");

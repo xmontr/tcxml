@@ -26,6 +26,7 @@ import org.apache.http.protocol.BasicHttpContext;
 import org.apache.http.protocol.HttpContext;
 import org.apache.http.protocol.HttpCoreContext;
 import org.apache.http.protocol.HttpRequestHandler;
+import org.openqa.selenium.remote.SessionId;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
@@ -37,6 +38,7 @@ import tcxml.remote.handler.ExecuteScriptHandler;
 import tcxml.remote.handler.FindElementsHandler;
 import tcxml.remote.handler.NavigateToHandler;
 import tcxml.remote.handler.NoHandler;
+import tcxml.remote.handler.SessionHandler;
 
 
 public class DriverRequestHandler implements HttpRequestHandler {
@@ -44,6 +46,7 @@ public class DriverRequestHandler implements HttpRequestHandler {
 	
 	public static final String HTTP_OUT_CONN = "http.proxy.out-conn";
 	public static final String RECORDINGSESSION= "recordingsession";
+	public static final String SELENIUMSESSIONID = "seleniumsessionid";
 	
 	final Map<String, ImmutableList<Function<String, AbstractHandler>>> additionalHandlers;
 	private  HttpContext context;
@@ -61,12 +64,14 @@ public class DriverRequestHandler implements HttpRequestHandler {
 	private Logger log;
 
 	private RemoteRecordingSession recordingSession;
+	private Optional<SessionId> seleniumSessionId;
 	
 	
 	
-	public DriverRequestHandler(URL forwardUrl, String httpListenningContext) {
+	public DriverRequestHandler(URL forwardUrl, String httpListenningContext, Optional<SessionId> seleniumSessionId) {
      	log = Logger.getLogger(getClass().getName());
       	log.setLevel(Level.ALL);
+      	this.seleniumSessionId = seleniumSessionId;
 		
 		this.connStrategy = DefaultConnectionReuseStrategy.INSTANCE;
 		
@@ -75,26 +80,27 @@ public class DriverRequestHandler implements HttpRequestHandler {
 			        "DELETE", ImmutableList.of(),
 			        "GET", ImmutableList.of(
 			            handler("/session/{sessionId}/log/types",
-			                    params -> new  DefaultHandler(params)),
-			            handler("/sessions", params ->new  DefaultHandler(params)),
-			            handler("/status", params -> new  DefaultHandler(params))
+			                    params -> new  DefaultHandler(params,seleniumSessionId)),
+			            handler("/sessions", params ->new  DefaultHandler(params,seleniumSessionId)),
+			            handler("/session/{sessionId}", params ->new  SessionHandler(params,seleniumSessionId)), // non w3c
+			            handler("/status", params -> new  DefaultHandler(params,seleniumSessionId))
 			        ),
 			        "POST", ImmutableList.of(
-			            handler("/session", params -> new  SessionHandler(params)),
+			            handler("/session", params -> new  SessionHandler(params,seleniumSessionId)),
 			            handler("/session/{sessionId}/file",
-			                    params -> new   DefaultHandler(params)),
+			                    params -> new   DefaultHandler(params,seleniumSessionId)),
 			            handler("/session/{sessionId}/log",
-			                    params -> new  DefaultHandler(params)),
+			                    params -> new  DefaultHandler(params,seleniumSessionId)),
 			            handler("/session/{sessionId}/se/file",
-			                    params -> new  DefaultHandler(params)),
+			                    params -> new  DefaultHandler(params,seleniumSessionId)),
 			            handler("/session/{sessionId}/execute",
-			                    params -> new  ExecuteScriptHandler(params)),
+			                    params -> new  ExecuteScriptHandler(params,seleniumSessionId)),
 			            handler("/session/{sessionId}/url",
-			                    params -> new  NavigateToHandler(params)),
+			                    params -> new  NavigateToHandler(params,seleniumSessionId)),
 			            handler("/session/{sessionId}/elements",
-			                    params -> new  FindElementsHandler(params)),
+			                    params -> new  FindElementsHandler(params,seleniumSessionId)),
 			            handler("/session/{sessionId}/element/{elementId}/click",
-			                    params -> new  ElementClickHandler(params))
+			                    params -> new  ElementClickHandler(params,seleniumSessionId))
 			        ));
 		
 		   this.targetHost = new HttpHost(forwardUrl.getHost(), forwardUrl.getPort(), forwardUrl.getProtocol());
@@ -135,7 +141,7 @@ if (additionalHandler.isPresent()) {
 Map<String, String> p = new HashMap<String, String>();
 p.put("path", path);
 
-return new NoHandler(p);	
+return new NoHandler(p,seleniumSessionId);	
 }
 
 
@@ -158,6 +164,7 @@ return new NoHandler(p);
 		  context.setAttribute(HTTP_OUT_CONN, this.outconn);		 
 		  context.setAttribute(HttpCoreContext.HTTP_TARGET_HOST, this.targetHost);		
 		  context.setAttribute(RECORDINGSESSION, this.recordingSession);
+		  context.setAttribute(SELENIUMSESSIONID, seleniumSessionId);
 		
 		AbstractHandler thehandler = match(request);		
 		thehandler.handle(request, response, context);

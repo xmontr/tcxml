@@ -11,6 +11,7 @@ import org.apache.http.HttpException;
 import org.apache.http.HttpRequest;
 import org.apache.http.HttpResponse;
 import org.apache.http.protocol.HttpContext;
+import org.openqa.selenium.remote.SessionId;
 
 import stepWrapper.StepWrapperFactory;
 import tcxml.core.StepAction;
@@ -22,8 +23,8 @@ import tcxml.remote.RemoteRecordingSession;
 
 public class ExecuteScriptHandler extends AbstractHandler {
 
-	public ExecuteScriptHandler(Map<String, String> p) {
-		super(p);
+	public ExecuteScriptHandler(Map<String, String> p,Optional<SessionId> seleniumSessionId) {
+		super(p,seleniumSessionId);
 		// TODO Auto-generated constructor stub
 	}
 	
@@ -58,6 +59,7 @@ public class ExecuteScriptHandler extends AbstractHandler {
 		}
 		
 		Step ret = new Step();
+		ret.setTestObject("testObj:{00000000-0000-0000-0000-000000000001}"); // browser step
 		ret.setType(StepType.UTIL.getName());
 		ret.setAction(StepAction.EVALJAVASCRIPT.getName());		
 		//build the argument map for the step 
