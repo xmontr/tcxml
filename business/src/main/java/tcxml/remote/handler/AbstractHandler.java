@@ -8,6 +8,8 @@ import java.io.StringWriter;
 import java.lang.annotation.Repeatable;
 import java.net.Socket;
 import java.nio.charset.StandardCharsets;
+import java.time.Duration;
+import java.time.Instant;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
@@ -27,6 +29,7 @@ import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.StringEscapeUtils;
 import org.apache.http.Consts;
 import org.apache.http.Header;
+import org.apache.http.HttpClientConnection;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpException;
 import org.apache.http.HttpHost;
@@ -35,9 +38,11 @@ import org.apache.http.HttpRequestFactory;
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpStatus;
 import org.apache.http.ParseException;
+import org.apache.http.client.HttpClient;
 import org.apache.http.entity.ContentType;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.DefaultBHttpClientConnection;
+import org.apache.http.impl.client.HttpClients;
 import org.apache.http.impl.client.RequestWrapper;
 import org.apache.http.message.BasicHttpEntityEnclosingRequest;
 import org.apache.http.message.BasicHttpRequest;
@@ -78,6 +83,7 @@ public abstract class AbstractHandler implements HttpRequestHandler{
 	
 	
 	
+	
 	protected AbstractHandler(Map<String, String> p,Optional<SessionId> seleniumSessionId ) {
 	
 		this.seleniumSessionId = seleniumSessionId;
@@ -88,10 +94,13 @@ public abstract class AbstractHandler implements HttpRequestHandler{
                 new RequestTargetHost(),
                 new RequestConnControl(),
                 new RequestUserAgent("Test/1.1"),
-                new RequestExpectContinue(true));
+                new RequestExpectContinue(false));
          
          // Set up outgoing request executor
-          httpexecutor = new HttpRequestExecutor();
+         
+        
+         
+          httpexecutor = new HttpRequestExecutor(); 
           
           
       	log = Logger.getLogger(getClass().getName());
@@ -281,6 +290,7 @@ public abstract class AbstractHandler implements HttpRequestHandler{
 	@Override
 	public synchronized void  handle(HttpRequest request, HttpResponse response, HttpContext context)
 			throws HttpException, IOException {
+		Instant startHandle = Instant.now();
 		 JsonObject jsonRequestCommand =null;
 		 JsonObject jsonResponseCommand=null ;
 		RemoteRecordingSession recordingSession = (RemoteRecordingSession) context.getAttribute(DriverRequestHandler.RECORDINGSESSION);
@@ -301,8 +311,9 @@ public abstract class AbstractHandler implements HttpRequestHandler{
 		
 		
 		currentRequest = request.getRequestLine().getUri();
-        final DefaultBHttpClientConnection conn = (DefaultBHttpClientConnection) context.getAttribute(
-                DriverRequestHandler.HTTP_OUT_CONN);
+//       // final DefaultBHttpClientConnection conn = (DefaultBHttpClientConnection) context.getAttribute(DriverRequestHandler.HTTP_OUT_CONN);
+		 final HttpClientConnection conn = (HttpClientConnection) context.getAttribute(DriverRequestHandler.HTTP_OUT_CONN);
+		
       HttpHost target =   (HttpHost) context.getAttribute(HttpCoreContext.HTTP_TARGET_HOST);
         
 
@@ -324,7 +335,8 @@ public abstract class AbstractHandler implements HttpRequestHandler{
       log.info("header request:" +  headerlist.toString());
       //dump body
       
-      
+      Instant startProcessingRequest =null;
+      Instant stopProcessingRequest = null;
       
        if ( request instanceof BasicHttpEntityEnclosingRequest   ) {
     	   
@@ -353,8 +365,11 @@ if(jsonRequestCommand != null) {
 			
 
 
-
+ startProcessingRequest = Instant.now();
 	 processRequest(jsonRequestCommand,recordingSession);
+	 stopProcessingRequest = Instant.now();
+	 
+	
 
 
 		// copy the request xav extract loacl variable for debug 
@@ -369,7 +384,10 @@ if(jsonRequestCommand != null) {
        } else { // no content in the body of the request no need to copy the entity 
     	   
     	log.info(" management of non BasicHttpEntityEnclosingRequest  "); 
+    	startProcessingRequest = Instant.now();
     	 processRequest(jsonRequestCommand,recordingSession);
+    	 stopProcessingRequest = Instant.now();
+    	 
        } 
        
        
@@ -387,10 +405,18 @@ if(jsonRequestCommand != null) {
         request.removeHeaders("Upgrade");
         
         
-        
+        Instant startPreProcess = Instant.now();
         this.httpexecutor.preProcess(request, this.outhttpproc, context);
-        final HttpResponse targetResponse = this.httpexecutor.execute(request, conn, context);
+        Instant stopPreProcess = Instant.now();
+        Instant startExecution = Instant.now();
+      
+       final HttpResponse targetResponse = this.httpexecutor.execute(request, conn, context);
+        Instant stopExecution = Instant.now();
+        Instant startPostProcess = Instant.now();
         this.httpexecutor.postProcess(response, this.outhttpproc, context);
+        Instant stopPostProcess = Instant.now();
+       
+        
         
         
        
@@ -461,11 +487,21 @@ if(jsonRequestCommand != null) {
         }
         
         //RemoteRecordingSession recordingSession = (RemoteRecordingSession) context.getAttribute(DriverRequestHandler.RECORDINGSESSION);
-
-   	 processResponse(jsonResponseCommand,recordingSession);    
+       Instant startProcessResponse = Instant.now();
+   	 processResponse(jsonResponseCommand,recordingSession); 
+   	 Instant stopProcessResponse = Instant.now();
         
         
+Instant stopHandle = Instant.now();
 
+// statitiques
+
+log.info("total request handle processing time is " + Duration.between(startHandle, stopHandle)); 
+log.info("------------request pre processing time is " + Duration.between(startPreProcess, stopPreProcess));
+log.info("------------request post processing time is " + Duration.between(startPostProcess, stopPostProcess));
+log.info("------------request execution  time is " + Duration.between(startExecution, stopExecution));
+log.info("------------request  processing  time is " + Duration.between(startProcessingRequest, stopProcessingRequest));
+log.info("------------response processing  time is " + Duration.between(startProcessResponse, stopProcessResponse));
       		
 	}
 	

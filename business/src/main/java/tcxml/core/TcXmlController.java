@@ -1592,7 +1592,7 @@ public SessionId openChromeBrowserBrowser (ChromeDriverService cds) throws TcXml
 	options.addArguments("disable-infobars");
 	options.addArguments("disable-gpu"); // ffmprg doesn't support to record window managed with gpu acceeleration : video is black
 	options.setExperimentalOption("w3c", false); // for the re using of session get/session/{sessionid} non wsc command
-	
+
 	if(highlighterExtension == null) {
 		highlighterExtension = generatePathToLocalTemporaryResource("jqueryHighlighter.crx").toFile();
 	}	 

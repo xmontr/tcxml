@@ -1,27 +1,37 @@
 package tcxml.remote;
 
 import java.io.IOException;
+import java.net.InetAddress;
 import java.net.Socket;
 import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.TimeUnit;
 import java.util.function.Function;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import org.apache.http.ConnectionClosedException;
 import org.apache.http.ConnectionReuseStrategy;
+import org.apache.http.HttpClientConnection;
 import org.apache.http.HttpException;
 import org.apache.http.HttpHost;
 import org.apache.http.HttpRequest;
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpStatus;
+import org.apache.http.config.ConnectionConfig;
+import org.apache.http.config.SocketConfig;
+import org.apache.http.conn.ConnectionPoolTimeoutException;
+import org.apache.http.conn.ConnectionRequest;
+import org.apache.http.conn.routing.HttpRoute;
 import org.apache.http.entity.ContentType;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.DefaultBHttpClientConnection;
 import org.apache.http.impl.DefaultConnectionReuseStrategy;
+import org.apache.http.impl.conn.BasicHttpClientConnectionManager;
 import org.apache.http.protocol.BasicHttpContext;
 import org.apache.http.protocol.HttpContext;
 import org.apache.http.protocol.HttpCoreContext;
@@ -51,9 +61,12 @@ public class DriverRequestHandler implements HttpRequestHandler {
 	final Map<String, ImmutableList<Function<String, AbstractHandler>>> additionalHandlers;
 	private  HttpContext context;
 	
-	private final int bufsize = 16 * 1024;
+	// private final int bufsize = 16 * 1024;
 	
-	final DefaultBHttpClientConnection outconn  = new DefaultBHttpClientConnection(bufsize);
+	 //final DefaultBHttpClientConnection outconn  = new DefaultBHttpClientConnection(bufsize);
+	
+	
+	 HttpClientConnection outconn;
 	
 	private final ConnectionReuseStrategy connStrategy;
 	
@@ -65,6 +78,7 @@ public class DriverRequestHandler implements HttpRequestHandler {
 
 	private RemoteRecordingSession recordingSession;
 	private Optional<SessionId> seleniumSessionId;
+	private BasicHttpClientConnectionManager connManager;
 	
 	
 	
@@ -105,7 +119,7 @@ public class DriverRequestHandler implements HttpRequestHandler {
 		
 		   this.targetHost = new HttpHost(forwardUrl.getHost(), forwardUrl.getPort(), forwardUrl.getProtocol());
 		
-
+		   connManager = new BasicHttpClientConnectionManager();
 	}
 	
 	
@@ -149,11 +163,43 @@ return new NoHandler(p,seleniumSessionId);
 	public synchronized void handle(HttpRequest request, HttpResponse response, HttpContext context)
 			throws HttpException, IOException {
 		
-        if (!this.outconn.isOpen() ||this.outconn.isStale()) {
-            final Socket outsocket = new Socket(this.targetHost.getHostName(),this.targetHost.getPort() );
-            this.outconn.bind(outsocket);
-            this.outconn.setSocketTimeout(30000);
-            log.info("Outgoing connection to " + outsocket.getInetAddress() + ":" +outsocket.getPort()  + " timeout is "  + this.outconn.getSocketTimeout() + " ms ");
+        if (this.outconn == null || (!this.outconn.isOpen() ||this.outconn.isStale() ) ) {
+        	
+        	///new connection version
+        	
+        	connManager.setConnectionConfig(ConnectionConfig.custom().setBufferSize(16 * 1024).build());
+        	HttpRoute route = new HttpRoute(this.targetHost);
+        	connManager.setSocketConfig(SocketConfig.custom().
+        		    setSoTimeout(30000).build());
+        	
+        	ConnectionRequest connRequest = connManager.requestConnection(route, null);
+        	
+        	try {
+				this.outconn=connRequest.get(3000, TimeUnit.MILLISECONDS);
+				connManager.connect(this.outconn, route, 1000, context);
+				connManager.routeComplete(outconn, route, context);
+				
+				
+				log.info("outgoing connection to  " + this.targetHost.getHostName() + ":" + this.targetHost.getPort());
+			} catch (ConnectionPoolTimeoutException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (ExecutionException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+        	
+        	
+        	
+        //old version        	
+     //       final Socket outsocket = new Socket(this.targetHost.getHostName(),this.targetHost.getPort() );
+          
+    //        this.outconn.bind(outsocket);
+    //        this.outconn.setSocketTimeout(30000);
+         //   log.info("Outgoing connection to " + outsocket.getInetAddress() + ":" +outsocket.getPort()  + " timeout is "  + this.outconn.getSocketTimeout() + " ms ");
         }
         
         final boolean keepalive = this.connStrategy.keepAlive(response, context);
