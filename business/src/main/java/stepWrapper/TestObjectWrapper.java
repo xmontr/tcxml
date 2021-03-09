@@ -115,7 +115,7 @@ public String getName() {
 	
 	String name = theTestObject.getAutoName() == null ? theTestObject.getManualName() : theTestObject.getAutoName() ;
 	
-	name = name == null ? theTestObject.getFallbackName() : name ;
+	name = (name == null || name.isEmpty() )? theTestObject.getFallbackName() : name ;
 	
 	return name;
 	

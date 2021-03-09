@@ -49,6 +49,7 @@ import tcxml.remote.handler.FindElementsHandler;
 import tcxml.remote.handler.NavigateToHandler;
 import tcxml.remote.handler.NoHandler;
 import tcxml.remote.handler.SessionHandler;
+import tcxml.remote.handler.WaitOnHandler;
 
 
 public class DriverRequestHandler implements HttpRequestHandler {
@@ -89,6 +90,8 @@ public class DriverRequestHandler implements HttpRequestHandler {
 		
 		this.connStrategy = DefaultConnectionReuseStrategy.INSTANCE;
 		
+		
+		
 		this.httpListeningContext = httpListenningContext;
 		   this.additionalHandlers = ImmutableMap.of(
 			        "DELETE", ImmutableList.of(),
@@ -97,7 +100,8 @@ public class DriverRequestHandler implements HttpRequestHandler {
 			                    params -> new  DefaultHandler(params,seleniumSessionId)),
 			            handler("/sessions", params ->new  DefaultHandler(params,seleniumSessionId)),
 			            handler("/session/{sessionId}", params ->new  SessionHandler(params,seleniumSessionId)), // non w3c
-			            handler("/status", params -> new  DefaultHandler(params,seleniumSessionId))
+			            handler("/status", params -> new  DefaultHandler(params,seleniumSessionId)),
+			            handler("/session/{sessionId}/element/{elementId}/enabled", params -> new  WaitOnHandler(params,seleniumSessionId))
 			        ),
 			        "POST", ImmutableList.of(
 			            handler("/session", params -> new  SessionHandler(params,seleniumSessionId)),

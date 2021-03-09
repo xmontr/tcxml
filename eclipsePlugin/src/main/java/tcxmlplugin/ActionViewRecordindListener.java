@@ -83,7 +83,12 @@ public class ActionViewRecordindListener implements RecordingSessionListener{
 		
 		try {
 			String xpath = by.toString().substring(10) ;
+			
 			TestObject to = theactionview.getController().generateNewTestObjectWithXpath(null, xpath);
+			
+			theactionview.getController().computeNames( by,to);
+			
+			
 			step.setTestObject(to.getTestObjId());
 		} catch (TcXmlException e1) {
 			TcXmlPluginController.getInstance().error("fail to add step into recorded action", e1);

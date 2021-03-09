@@ -63,6 +63,7 @@ import org.apache.commons.configuration.HierarchicalINIConfiguration;
 import org.apache.commons.configuration.SubnodeConfiguration;
 import org.apache.commons.lang.StringEscapeUtils;
 import org.apache.commons.lang.StringUtils;
+import org.openqa.selenium.By;
 import org.openqa.selenium.By.ByXPath;
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.OutputType;
@@ -3093,7 +3094,27 @@ try {
 	 
  }
 
+public void computeNames(By by,TestObject to) throws TcXmlException {
 	
+	this.ensureDriver();
+	WebDriver driver = this.getDriver();
+		List<WebElement> elements = driver.findElements(by);
+	this.checkUnicity(elements, by.toString());
+	WebElement theElement = elements.get(0);
+	
+	TargetTestObject tto = new TargetTestObject(theElement, by, driver);
+	to.setAutoName(tto.getAutoName());
+	to.setFallbackName(tto.getFallBackName());
+			
+
+	
+	
+	
+	
+}
+ 
+ 
+ 
 }
 
 
