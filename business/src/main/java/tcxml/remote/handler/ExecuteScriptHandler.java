@@ -58,9 +58,8 @@ public class ExecuteScriptHandler extends AbstractHandler {
 			
 		}
 		
-		Step ret = new Step();
+		Step ret = StepFactory.newStep(StepType.UTIL);
 		ret.setTestObject("testObj:{00000000-0000-0000-0000-000000000001}"); // browser step
-		ret.setType(StepType.UTIL.getName());
 		ret.setAction(StepAction.EVALJAVASCRIPT.getName());		
 		//build the argument map for the step 
 		HashMap<String, String> argmap = new HashMap<String, String>();

@@ -15,6 +15,7 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.remote.SessionId;
 
 import tcxml.core.StepAction;
+import tcxml.core.StepFactory;
 import tcxml.core.StepType;
 import tcxml.model.Step;
 import tcxml.remote.RemoteRecordingSession;
@@ -46,8 +47,8 @@ public class ElementClickHandler extends AbstractHandler{
 	
 	if( !theselector.isPresent()) throw new IllegalStateException("no selector for elementid"+ elementid);
 	
-	Step ret = new Step();
-	ret.setType(StepType.TESTOBJECT.getName());
+	Step ret = StepFactory.newStep(StepType.TESTOBJECT);
+	
 	ret.setAction(StepAction.CLICK.getName());
 	ret.setTestObject(elementid);//trmporary set the ref before the real testobject is created
 

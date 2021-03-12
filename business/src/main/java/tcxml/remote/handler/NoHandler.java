@@ -1,11 +1,15 @@
 package tcxml.remote.handler;
 
 import java.io.IOException;
+import java.io.StringWriter;
 import java.util.Map;
 import java.util.Optional;
 
+import javax.json.Json;
 import javax.json.JsonObject;
+import javax.json.JsonWriter;
 
+import org.apache.commons.lang.StringEscapeUtils;
 import org.apache.http.HttpException;
 import org.apache.http.HttpRequest;
 import org.apache.http.HttpResponse;
@@ -16,6 +20,7 @@ import org.apache.http.protocol.HttpContext;
 import org.openqa.selenium.remote.SessionId;
 
 import tcxml.core.StepAction;
+import tcxml.core.StepFactory;
 import tcxml.core.StepType;
 import tcxml.model.Step;
 import tcxml.remote.RecordingSessionListener;
@@ -41,11 +46,14 @@ public class NoHandler extends AbstractHandler {
 	public void processRequest(JsonObject thejsonCommand,RemoteRecordingSession recordingSession) {
 		
 		// http call managed by the noHandler handler generate comment step 
-		Step ret = new Step();
-		ret.setType(StepType.UTIL.getName());
+		Step ret = StepFactory.newStep(StepType.UTIL);
+		
 		ret.setAction(StepAction.COMMENT.getName());
 		StringBuffer sb = new StringBuffer();
-		sb.append(" skipped http request\n").append(requestMethod).append(currentRequest).append("\n").append(thejsonCommand);
+		StringWriter sw = new StringWriter();
+		JsonWriter jsonwriter = Json.createWriter(sw);
+		jsonwriter.writeObject(thejsonCommand);
+		sb.append(" skipped http request ").append(requestMethod).append(currentRequest).append(" ").append(StringEscapeUtils.escapeHtml(sw.toString()));
 		ret.setComment(sb.toString());
 		
 		recordingSession.addStep(ret);

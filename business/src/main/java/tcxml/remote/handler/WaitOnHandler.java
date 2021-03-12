@@ -10,6 +10,7 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.remote.SessionId;
 
 import tcxml.core.StepAction;
+import tcxml.core.StepFactory;
 import tcxml.core.StepType;
 import tcxml.model.Step;
 import tcxml.remote.RemoteRecordingSession;
@@ -45,7 +46,7 @@ public class WaitOnHandler extends AbstractHandler {
 		boolean isEnabled = thejsonCommand.getBoolean("value");
 		if(isEnabled ) {
 			
-			Step thestep = new Step();
+			Step thestep = StepFactory.newStep(StepType.TESTOBJECT);
 			thestep.setType(StepType.TESTOBJECT.getName());
 			thestep.setAction(StepAction.WAIT.getName());
 			

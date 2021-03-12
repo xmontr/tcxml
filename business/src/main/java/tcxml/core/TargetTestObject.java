@@ -24,12 +24,14 @@ public class TargetTestObject {
 	private String fallBackName;
 	private String xpath;
 	private WebDriver driver;
+	private ArrayList<String> roles;
 
 	public TargetTestObject  ( WebElement  domObject,By by,WebDriver driver) { 
 
 		this.domObject = domObject ;
 		this.driver = driver;
 		this.predicats = new HashMap<String, String>();
+this.roles= new ArrayList<String>();
 		this.position =1 ;
 		this.tagname = this.domObject.getTagName().toLowerCase();
 		this.autoName="";
@@ -182,7 +184,8 @@ while (it.hasNext()) {
 if(name != null && name != "" ){
 	this.autoName=name;
 }
-
+roles.add("element");
+roles.add("listbox");
 }
 	
 	
@@ -193,7 +196,7 @@ if(name != null && name != "" ){
 		if(alt != null &&  !alt.isEmpty() ){
 			this.autoName=alt;
 		}
-		
+		roles.add("element");
 		}
 	
 	
@@ -214,7 +217,13 @@ if(name != null && name != "" ){
 		
 		
 	}
-
+	roles.add("element");
+	String type =this.getPredicat("type");
+	if(type !=null && !type.equalsIgnoreCase("text")) {
+		roles.add("textbox");
+	}
+	
+	
 		}
 	
 
@@ -225,7 +234,7 @@ if(name != null && name != "" ){
 if(txt != null && !txt.isEmpty() ){
 	this.autoName=txt;
 }
-
+roles.add("element");
 	}
 
 
@@ -241,7 +250,8 @@ if(txt != null && !txt.isEmpty() ){
 if(txt != null && !txt.isEmpty() ){
 	this.autoName=this.splitLongText(txt , 40 ) + " heading" ;
 }
-
+roles.add("element");
+roles.add("heading");
 	}
 	
 	
@@ -250,11 +260,17 @@ if(txt != null && !txt.isEmpty() ){
 if(txt != null && !txt.isEmpty() ){
 this.autoName=txt;
 }
-
+roles.add("element");
+roles.add("link");
 }
 	
 	
 	
+	public ArrayList<String> getRoles() {
+		return roles;
+	}
+
+
 	public String getAutoName() {
 		return autoName;
 	}

@@ -37,6 +37,20 @@ public class StepFactory {
 		ret.setLevel("1");
 		return ret;
 	}
+	
+	
+	public static Step newStep(StepType type) {
+		Step ret = new Step();
+		String id = "step:{" + UUID.randomUUID().toString() + "}";	
+		ret.setStepId(id);
+		ret.setType(type.getName());
+		ret.setLevel("1");
+		return ret;
+		
+		
+		
+		
+	}
 
 	private static Step generateIfStep(TcXmlController controller, TruLibrary library) {
 		Step ret = new Step();

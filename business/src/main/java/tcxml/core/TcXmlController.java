@@ -3084,7 +3084,8 @@ try {
 	
 	 //add the new action in script and actionmap
 	 Step scriptstep = getScriptSection();
-	 Step newactionstep = new Step();
+	 Step newactionstep = StepFactory.newStep(StepType.BLOCK);	 
+	 newactionstep.setLevel("43");
 	 newactionstep.setAction("action");
 	 newactionstep.setActionName(newactionname);
 	 scriptstep.getStep().add(newactionstep);
@@ -3105,6 +3106,7 @@ public void computeNames(By by,TestObject to) throws TcXmlException {
 	TargetTestObject tto = new TargetTestObject(theElement, by, driver);
 	to.setAutoName(tto.getAutoName());
 	to.setFallbackName(tto.getFallBackName());
+	to.getRoles().getRole().addAll(tto.getRoles());
 			
 
 	

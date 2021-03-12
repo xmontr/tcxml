@@ -9,6 +9,7 @@ import javax.json.JsonObject;
 import org.openqa.selenium.remote.SessionId;
 
 import tcxml.core.StepAction;
+import tcxml.core.StepFactory;
 import tcxml.core.StepType;
 import tcxml.model.Step;
 import tcxml.remote.RemoteRecordingSession;
@@ -36,9 +37,9 @@ public class NavigateToHandler extends AbstractHandler{
 			throw new IllegalArgumentException("navigateTo step require a non null json command");
 			
 		}		
-		Step ret = new Step();
+		Step ret = StepFactory.newStep(StepType.TESTOBJECT);
 		ret.setTestObject("testObj:{00000000-0000-0000-0000-000000000001}"); // browser step
-		ret.setType(StepType.TESTOBJECT.getName());
+		
 		ret.setAction(StepAction.NAVIGATE.getName());
 		//build the argument map for the step 
 		HashMap<String, String> argmap = new HashMap<String, String>();

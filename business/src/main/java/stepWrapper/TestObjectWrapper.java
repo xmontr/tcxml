@@ -7,6 +7,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Function;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import javax.json.Json;
 import javax.json.JsonMergePatch;
@@ -57,8 +59,15 @@ public class TestObjectWrapper extends AbstractStepWrapper {
 	private TestObject theTestObject;
 	private boolean isBrowserStep ;
 
+	private Logger log;
+
+	
+
 	public TestObjectWrapper(Step step, TcXmlController controller, TruLibrary library) throws TcXmlException {
 		super(step, controller, library);
+		log = Logger.getLogger( TestObjectWrapper.class.getName());
+    	log.setLevel(Level.ALL);
+		
 		stat = new StepStat();
 		if (!controller.isBrowserStep(step)) { // testobject is not browser
 		theTestObject = step.getTestObject() == null ? null  : controller.getTestObjectById(step.getTestObject(), library) ; 
@@ -167,6 +176,8 @@ public String getName() {
 		case "Verify" : addVerifyArgument(ret);break;
 		case "Select":addSelectArgument(ret);break;
 		case "Wait for Property" : addWaitForPropertyArgument(ret);break;
+		case "Go Forward":addGoBackArgument(ret);break;
+		case "Go Back":addGoBackArgument(ret);break;
 		
 		default: throw new TcXmlException("no default value for step testobject action = " + step.getAction() + " id= " +step.getStepId()  , new IllegalArgumentException(step.getAction())) ; 
 		
@@ -175,6 +186,13 @@ public String getName() {
 		return ret;
 	}
 	
+	private void addGoBackArgument(ArrayList<ArgModel> ret) {
+		ArgModel lo = new ArgModel("Count");
+		lo.setValue("1");
+		ret.add(lo);
+		
+	}
+
 	private void addWaitForPropertyArgument(ArrayList<ArgModel> ret) {
 		ArgModel val = new ArgModel("Value");
 		val.setValue("");
@@ -320,6 +338,8 @@ ret.add(mo);
 		PlayingContext ret;
 		switch (step.getAction()) {
 		case "Navigate":ret = navigate(ctx);break;
+		case "Go Back":ret = goback(ctx);break;
+		case "Go Forward":ret = goforward(ctx);break;
 
 
 		default:throw new TcXmlException("not implemented", new IllegalStateException());
@@ -329,6 +349,39 @@ ret.add(mo);
 	}
 	
 	
+	private PlayingContext goforward(PlayingContext ctx) throws TcXmlException {
+		WebDriver dr = controller.getDriver();
+		controller.ensureDriver();
+		ArgModel nbpages = argumentMap.get("Count") ;
+		
+		String nb =  controller.evaluateJsArgument(nbpages,ctx.getCurrentExecutionContext());	
+		if(nb.equals("Default (1)")) {
+			nb="1";
+			}
+		((JavascriptExecutor) dr).executeScript("window.history.go(+"+ nb + ")");
+		log.info(" browser go forward of " +nb + "pages");
+		
+		
+		return ctx;
+	}
+
+	private PlayingContext goback(PlayingContext ctx) throws TcXmlException {
+		WebDriver dr = controller.getDriver();
+		controller.ensureDriver();
+		ArgModel nbpages = argumentMap.get("Count") ;
+		
+		String nb =  controller.evaluateJsArgument(nbpages,ctx.getCurrentExecutionContext());
+		if(nb.equals("Default (1)")) {
+		nb="1";
+		}
+		
+		((JavascriptExecutor) dr).executeScript("window.history.go(-"+ nb + ")");
+		log.info(" browser go back of " +nb + "pages");
+		
+		
+		return ctx;
+	}
+
 	private PlayingContext navigate(PlayingContext ctx) throws TcXmlException {
 		
         ExpectedCondition<Boolean> pageLoadCondition = new
@@ -396,6 +449,8 @@ ret.add(mo);
 		
 	} else { //browser action
 		ret.add("Navigate");
+		ret.add("Go Back");
+		ret.add("Go Forward");
 	
 		
 	}
@@ -776,6 +831,8 @@ public void doclick( PlayingContext ctx) throws TcXmlException {
 		String ret;
 		switch (step.getAction()) {
 		case "Navigate":ret = exportnavigate();break;
+		case "Go Back":ret = exportgoback();break;
+		case "Go Forward":ret = exportgoForward();break;
 
 
 		default:throw new TcXmlException("not implemented", new IllegalStateException());
@@ -783,6 +840,15 @@ public void doclick( PlayingContext ctx) throws TcXmlException {
 		return ret;
 	}
 	
+	private String exportgoForward() {
+		return	genericExport("await TC.goForward");
+		
+	}
+
+	private String exportgoback() {
+		return	genericExport("await TC.goBack");
+	}
+
 	private String exportnavigate() {
 		
 		
@@ -791,22 +857,44 @@ public void doclick( PlayingContext ctx) throws TcXmlException {
 
 	}
 	
+	
+	private String genericExportTestObjectStep(String targetFuncName ) throws TcXmlException {
+		 ArgModel[] li = argumentMap.values().toArray(new  ArgModel[argumentMap.size()]);
+			String argjs = controller.generateJSobject(li);	
+			
+			
+		
+			String ret = TcxmlUtils.formatJavascriptFunction(
+					targetFuncName,
+						argjs,
+						controller.generateJsTestObject(theTestObject)
+					
+						);
+			
+			
+			return ret;
+	}
+	
+	
+	
+	
+	
 	private String exportTestObjectStep() throws TcXmlException {
 		String ret = null;
 
 		switch (step.getAction()) {
 			
-		case "Type": ret = genericExport("await TC.type",theTestObject); 
+		case "Type": ret = genericExportTestObjectStep("await TC.type"); 
 		break;
-		case "Click":ret = genericExport("await TC.click",theTestObject);
+		case "Click":ret = genericExportTestObjectStep("await TC.click");
 		break;
-		case "Wait":ret = genericExport("await TC.waitOn",theTestObject);
+		case "Wait":ret = genericExportTestObjectStep("await TC.waitOn");
 	break;
-		case "Verify": ret = genericExport("await TC.verify",theTestObject); break;
+		case "Verify": ret = genericExportTestObjectStep("await TC.verify"); break;
 		
-		case "Evaluate JavaScript":ret = genericExport("await TC.evaljsOnObject",theTestObject);break;
-		case "Select":ret = genericExport("await TC.select",theTestObject);break;
-		case "Set" : ret = genericExport("await TC.set",theTestObject);break;
+		case "Evaluate JavaScript":ret = genericExportTestObjectStep("await TC.evaljsOnObject");break;
+		case "Select":ret = genericExportTestObjectStep("await TC.select");break;
+		case "Set" : ret = genericExportTestObjectStep("await TC.set");break;
 		
 		default: ret = exportnotImplemented();
 		}

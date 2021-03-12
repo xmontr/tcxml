@@ -321,22 +321,7 @@ for (ArgModel val : getDefaultArguments()) {
 			}
 
 		
-		protected String genericExport(String targetFuncName , TestObject to) throws TcXmlException {
-			 ArgModel[] li = argumentMap.values().toArray(new  ArgModel[argumentMap.size()]);
-				String argjs = controller.generateJSobject(li);	
-				
-				
-			
-				String ret = TcxmlUtils.formatJavascriptFunction(
-						targetFuncName,
-							argjs,
-							controller.generateJsTestObject(to)
-						
-							);
-				
-				
-				return ret;
-		}
+
 		
 	/**
 	 * 
