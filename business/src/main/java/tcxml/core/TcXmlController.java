@@ -99,6 +99,7 @@ import tcxml.model.Function;
 import tcxml.model.Ident;
 import tcxml.model.Idents;
 import tcxml.model.ObjectFactory;
+import tcxml.model.Roles;
 import tcxml.model.Step;
 import tcxml.model.TestObject;
 import tcxml.model.Transaction;
@@ -541,6 +542,8 @@ for (ArgModel val : def) {
     	newTo.setTestObjId("testObj:{" + id + "}");
 		li.add(newTo);
 		newTo.setPlatform("web");
+		Roles newroles = new Roles();
+		newTo.setRoles(newroles);
 		Idents newidents = new Idents();
 		//populate default value
 		newTo.setIdents(newidents );

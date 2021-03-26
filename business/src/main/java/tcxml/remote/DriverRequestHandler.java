@@ -44,6 +44,7 @@ import com.google.common.collect.ImmutableMap;
 import tcxml.remote.handler.AbstractHandler;
 import tcxml.remote.handler.DefaultHandler;
 import tcxml.remote.handler.ElementClickHandler;
+import tcxml.remote.handler.ElementSendKeysHandler;
 import tcxml.remote.handler.ExecuteScriptHandler;
 import tcxml.remote.handler.FindElementsHandler;
 import tcxml.remote.handler.NavigateToHandler;
@@ -118,8 +119,12 @@ public class DriverRequestHandler implements HttpRequestHandler {
 			            handler("/session/{sessionId}/elements",
 			                    params -> new  FindElementsHandler(params,seleniumSessionId)),
 			            handler("/session/{sessionId}/element/{elementId}/click",
-			                    params -> new  ElementClickHandler(params,seleniumSessionId))
+			                    params -> new  ElementClickHandler(params,seleniumSessionId)),
+			            handler("/session/{sessionId}/element/{elementId}/value",
+			                    params -> new   ElementSendKeysHandler(params,seleniumSessionId))
 			        ));
+		   
+		   
 		
 		   this.targetHost = new HttpHost(forwardUrl.getHost(), forwardUrl.getPort(), forwardUrl.getProtocol());
 		

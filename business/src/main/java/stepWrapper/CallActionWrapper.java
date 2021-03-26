@@ -58,8 +58,8 @@ public class CallActionWrapper extends AbstractStepWrapper {
 		StringBuffer sb = new StringBuffer("// ").append( getTitle());
 		pw.println(sb.toString());
 	
-		
-		String actionName = step.getActionName();
+		String actionName = argumentMap.get("Action Name").getValue();
+		//String actionName = step.getActionName();
 		
 		sb = new StringBuffer();
 		sb.append("await ");

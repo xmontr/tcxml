@@ -71,7 +71,7 @@ public class BlockWrapper extends AbstractStepWrapper {
 	}
 	
 	
-	private List<AbstractStepWrapper> getChildren() throws TcXmlException {
+	protected List<AbstractStepWrapper> getChildren() throws TcXmlException {
 		
 		ArrayList<AbstractStepWrapper> ret = new ArrayList<AbstractStepWrapper>();
 		BoundList<Step> li = step.getStep();

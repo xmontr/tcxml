@@ -247,12 +247,12 @@ mo =  TcxmlUtils.getTruefalseListArgModel("Shift Key", "false");
 
 ret.add(mo);
 ArrayList<String>val = new ArrayList<String>();
-val.add("left");
-val.add("middle");
-val.add("right");
+val.add("Left");
+val.add("Middle");
+val.add("Right");
 
 mo = new ListArgModel("Button", val);
-mo.setValue("left");
+mo.setValue("Left");
 
 ret.add(mo);
 

@@ -25,13 +25,6 @@ var ppwdOption = {
 
 
 
-var HtmlScreenshotReporter = require('protractor-jasmine2-screenshot-reporter');
-
-var reporter = new HtmlScreenshotReporter({
-  dest: 'target/screenshots',
-  filename: 'my-report.html'
-});
-
 
 
 var proxy='ps-lux-usr.cec.eu.int:8012'
@@ -58,25 +51,18 @@ exports.config = {
 }*/
   }		
 ,
-afterLaunch: function(exitCode) {
-  return new Promise(function(resolve){
-    reporter.afterLaunch(resolve.bind(this, exitCode));
-  });
-},
-beforeLaunch: function() {
-  return new Promise(function(resolve){
-    reporter.beforeLaunch(resolve);
-  });
-},
+
+
           
     onPrepare: function(){
       browser.waitForAngularEnabled(false);
+console.log(" browser.waitForAngularEnabled is set to false as for a non angular application " );
 
-//console.log(" browser.waitForAngularEnabled is set to false as for a non angular application " );
 
 
-jasmine.getEnv().addReporter(reporter);
 	
   }
+
+
 
 }

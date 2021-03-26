@@ -1279,6 +1279,16 @@ if(libdir.exists()) {
 		
 		pw.println("describe('the logic of the test case ', function() {");
 		
+		pw.println("  beforeEach(function() {\r\n" + 
+				"        originalTimeout = jasmine.DEFAULT_TIMEOUT_INTERVAL;\r\n" + 
+				"        jasmine.DEFAULT_TIMEOUT_INTERVAL = 1000000;\r\n" + 
+				"    });");
+		
+		pw.println();
+		pw.println("    afterEach(function() {\r\n" + 
+				"      jasmine.DEFAULT_TIMEOUT_INTERVAL = originalTimeout;\r\n" + 
+				"    });");
+		
 		pw.println("  it('run the Test case',  async  function() {  ");
 		for (StepViewer stepViewer : runLogicViewer.getChildViewer()) {
 			stepViewer.export(pw);
