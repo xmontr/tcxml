@@ -3026,11 +3026,36 @@ try {
 		jaxbMarshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
 		jaxbMarshaller.setProperty(Marshaller.JAXB_ENCODING, "UTF-8");		
 		StringWriter writer = new StringWriter();	
+		
+		
 		  jaxbMarshaller.setProperty(
 		  "com.sun.xml.bind.marshaller.CharacterEscapeHandler", new
 		  CharacterEscapeHandler() { public void escape(char[] ch, int start, int
 		  length, boolean isAttVal, Writer writer) throws IOException {
-		  writer.write(ch, start, length); } });
+			  
+				StringWriter buffer = new StringWriter();
+				 
+				for (int i = start; i < start + length; i++) {
+					buffer.write(ch[i]);
+				}
+		 
+				String st = buffer.toString();
+				
+				if(!st.startsWith("<![CDATA[")) {
+					st = buffer.toString().replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;").replace("'", "&apos;")
+							.replace("\"", "&quot;");
+					
+				}	 
+				writer.write(st); 
+			  
+		//  writer.write(ch, start, length); 
+		  
+		  
+		  } 
+		  
+		  });
+		  
+		  
 			jaxbMarshaller.marshal(getScript(), writer);
 			writer.close();
 			InputStream targetStream = new ByteArrayInputStream(writer.toString().getBytes("UTF-8"));

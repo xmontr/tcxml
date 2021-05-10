@@ -171,6 +171,7 @@ public String getName() {
 		case "Mouse Up":addClickArgument(ret);break;
 		case "Mouse Down":addClickArgument(ret);break;
 		case "Set":addSetArgument(ret);break;
+		case "Upload":addUploadArgument(ret);break;
 		case "Evaluate JavaScript":addEvalJavascriptArgument(ret);break;
 		case "Wait":addWaitArgument(ret);break;
 		case "Verify" : addVerifyArgument(ret);break;
@@ -178,6 +179,7 @@ public String getName() {
 		case "Wait for Property" : addWaitForPropertyArgument(ret);break;
 		case "Go Forward":addGoBackArgument(ret);break;
 		case "Go Back":addGoBackArgument(ret);break;
+		case "Reload":addReloadArgument(ret);break;
 		
 		default: throw new TcXmlException("no default value for step testobject action = " + step.getAction() + " id= " +step.getStepId()  , new IllegalArgumentException(step.getAction())) ; 
 		
@@ -186,6 +188,21 @@ public String getName() {
 		return ret;
 	}
 	
+	private void addUploadArgument(ArrayList<ArgModel> ret) {
+		ArgModel mo;
+		mo = new ArgModel("Path");
+mo.setValue("");
+ret.add(mo);
+		
+	}
+
+	private void addReloadArgument(ArrayList<ArgModel> ret) {
+		ArgModel lo = new ArgModel("Location");
+		lo.setValue("");
+		ret.add(lo);
+		
+	}
+
 	private void addGoBackArgument(ArrayList<ArgModel> ret) {
 		ArgModel lo = new ArgModel("Count");
 		lo.setValue("1");
@@ -340,6 +357,7 @@ ret.add(mo);
 		case "Navigate":ret = navigate(ctx);break;
 		case "Go Back":ret = goback(ctx);break;
 		case "Go Forward":ret = goforward(ctx);break;
+		case "Reload":ret=reload(ctx);break;
 
 
 		default:throw new TcXmlException("not implemented", new IllegalStateException());
@@ -349,6 +367,26 @@ ret.add(mo);
 	}
 	
 	
+	private PlayingContext reload(PlayingContext ctx) throws TcXmlException  {
+		WebDriver dr = controller.getDriver();
+		controller.ensureDriver();
+		ArgModel location = argumentMap.get("Location") ;
+		
+		String evalloc  =  controller.evaluateJsArgument(location,ctx.getCurrentExecutionContext());	
+		if(evalloc.isEmpty()) {
+			dr.navigate().refresh();
+			}else {
+				
+				dr.navigate().refresh();
+				log.info(" location in  browser reload is not implemented yet " +evalloc );
+			}
+		
+		log.info(" browser reload location " +evalloc );
+		
+		
+		return ctx;
+	}
+
 	private PlayingContext goforward(PlayingContext ctx) throws TcXmlException {
 		WebDriver dr = controller.getDriver();
 		controller.ensureDriver();
@@ -489,6 +527,7 @@ ret.add(mo);
 		case "Evaluate JavaScript":evalJSOnObject(ctx);break;
 		case "Select":select(ctx);break;
 		case "Set" : doSet(ctx);break;
+		case "Upload": doUpload(ctx);break;
 		case "Wait for Property":waitForProperty(ctx);break;
 		
 		default: notImplemented();
@@ -499,6 +538,22 @@ ret.add(mo);
 	}
 	
 	
+	private void doUpload(PlayingContext ctx) throws TcXmlException {
+		ArgModel thepath = argumentMap.get("Path");
+		WebElement theelement = controller.identifyElement(theTestObject, ctx.getCurrentExecutionContext());
+		String thefile = controller.evaluateJsArgument(thepath, ctx.getCurrentExecutionContext());
+		File file = new File(thefile);	
+		if( !file.exists()) {
+			
+		throw new TcXmlException("fail to upload file from location "+ thefile, new IllegalArgumentException(thefile))	;
+			
+		}
+		controller.getLog().info("uploading file from " + thefile + " on element " + theelement.getTagName());
+		
+		theelement.sendKeys(thefile);
+		
+	}
+
 	private void waitForProperty( PlayingContext ctx) throws TcXmlException {
 		waitOn( ctx);
 		
@@ -734,10 +789,13 @@ ret.add(mo);
 	}
 	
 		 switch (button) {
-		case "left":
+		case "Left":
+		case "left":	
+		case "Default (\"Left\")":
 			clickLeft(ctx);
 			break;
 		case "right":
+		case "Right":
 			clickRight(ctx);
 			break;
 
@@ -759,7 +817,7 @@ ret.add(mo);
 	}
 
 	private void notImplemented() throws TcXmlException {
-		throw new TcXmlException("action not imemented " + step.getAction(), new IllegalStateException());
+		throw new TcXmlException("action not implemented:" + step.getAction()+"---", new IllegalStateException());
 		
 	}
 	
