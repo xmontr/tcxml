@@ -5,6 +5,7 @@ import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Function;
 import java.util.logging.Level;
@@ -36,8 +37,10 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 
 import com.kscs.util.jaxb.BoundList;
 
+import tcxml.core.FoundedElement;
 import tcxml.core.IdentificationMethod;
 import tcxml.core.LocatedByJavascript;
+import tcxml.core.LocatedByXpath;
 import tcxml.core.PlayingContext;
 import tcxml.core.StepStat;
 import tcxml.core.TcXmlController;
@@ -180,6 +183,7 @@ public String getName() {
 		case "Go Forward":addGoBackArgument(ret);break;
 		case "Go Back":addGoBackArgument(ret);break;
 		case "Reload":addReloadArgument(ret);break;
+		case "Activate Tab":addActivateTabArgument(ret);break;
 		
 		default: throw new TcXmlException("no default value for step testobject action = " + step.getAction() + " id= " +step.getStepId()  , new IllegalArgumentException(step.getAction())) ; 
 		
@@ -188,6 +192,14 @@ public String getName() {
 		return ret;
 	}
 	
+	private void addActivateTabArgument(ArrayList<ArgModel> ret) {
+		ArgModel mo;
+		mo = new ArgModel("Ordinal");
+mo.setValue("1");
+ret.add(mo);
+		
+	}
+
 	private void addUploadArgument(ArrayList<ArgModel> ret) {
 		ArgModel mo;
 		mo = new ArgModel("Path");
@@ -358,6 +370,7 @@ ret.add(mo);
 		case "Go Back":ret = goback(ctx);break;
 		case "Go Forward":ret = goforward(ctx);break;
 		case "Reload":ret=reload(ctx);break;
+		case "Activate Tab":ret=activateTab(ctx);break;
 
 
 		default:throw new TcXmlException("not implemented", new IllegalStateException());
@@ -367,6 +380,25 @@ ret.add(mo);
 	}
 	
 	
+	private PlayingContext activateTab(PlayingContext ctx) throws TcXmlException {
+		WebDriver dr = controller.getDriver();
+		controller.ensureDriver();
+		ArgModel tabNum = argumentMap.get("Ordinal") ;
+		
+		String evaltabNum  =  controller.evaluateJsArgument(tabNum,ctx.getCurrentExecutionContext());	
+		log.info(" activate Tab  " +evaltabNum );
+		Set<String> allTabs = dr.getWindowHandles();
+		String[] tabArray = allTabs.toArray(new String[allTabs.size()]);
+		try {
+		int tabindex = Integer.parseInt(evaltabNum);
+		dr.switchTo().window(tabArray[tabindex -1 ]);
+		}catch (Exception e) {
+			
+			throw new TcXmlException("fail to activate tab with  " + evaltabNum, e);
+		}
+		return ctx;
+	}
+
 	private PlayingContext reload(PlayingContext ctx) throws TcXmlException  {
 		WebDriver dr = controller.getDriver();
 		controller.ensureDriver();
@@ -540,7 +572,7 @@ ret.add(mo);
 	
 	private void doUpload(PlayingContext ctx) throws TcXmlException {
 		ArgModel thepath = argumentMap.get("Path");
-		WebElement theelement = controller.identifyElement(theTestObject, ctx.getCurrentExecutionContext());
+		FoundedElement theelement = controller.identifyElement(theTestObject, ctx.getCurrentExecutionContext());
 		String thefile = controller.evaluateJsArgument(thepath, ctx.getCurrentExecutionContext());
 		File file = new File(thefile);	
 		if( !file.exists()) {
@@ -548,9 +580,9 @@ ret.add(mo);
 		throw new TcXmlException("fail to upload file from location "+ thefile, new IllegalArgumentException(thefile))	;
 			
 		}
-		controller.getLog().info("uploading file from " + thefile + " on element " + theelement.getTagName());
+		controller.getLog().info("uploading file from " + thefile + " on element " + theelement.getElement().getTagName());
 		
-		theelement.sendKeys(thefile);
+		theelement.getElement().sendKeys(thefile);
 		
 	}
 
@@ -561,7 +593,7 @@ ret.add(mo);
 
 	private void doSet( PlayingContext ctx) throws TcXmlException  {
 		ArgModel thepath = argumentMap.get("Path");
-		WebElement theelement = controller.identifyElement(theTestObject, ctx.getCurrentExecutionContext());
+		FoundedElement theelement = controller.identifyElement(theTestObject, ctx.getCurrentExecutionContext());
 		String thefile = controller.evaluateJsArgument(thepath, ctx.getCurrentExecutionContext());
 		File file = new File(thefile);	
 		if( !file.exists()) {
@@ -569,9 +601,9 @@ ret.add(mo);
 		throw new TcXmlException("fail to upload file from location "+ thefile, new IllegalArgumentException(thefile))	;
 			
 		}
-		controller.getLog().info("uploading file from " + thefile + " on element " + theelement.getTagName());
+		controller.getLog().info("uploading file from " + thefile + " on element " + theelement.getElement().getTagName());
 		
-		theelement.sendKeys(thefile);
+		theelement.getElement().sendKeys(thefile);
 		
 		
 				
@@ -583,16 +615,16 @@ ret.add(mo);
 	private void select( PlayingContext ctx) throws TcXmlException {
 		ArgModel thetext = argumentMap.get("Text");
 		ArgModel theordinal = argumentMap.get("Ordinal");
-		WebElement theelement = controller.identifyElement(theTestObject, ctx.getCurrentExecutionContext());
+		FoundedElement theelement = controller.identifyElement(theTestObject, ctx.getCurrentExecutionContext());
 		int index = 1;
 		
 		if(hasRole(theTestObject,"listbox")) {
 			
-			selectBySelect(theelement, thetext, theordinal,ctx);
+			selectBySelect(theelement.getElement(), thetext, theordinal,ctx);
 			
 		}else if (hasRole(theTestObject,"radiogroup")) {
 			
-			selectByRadioGroup(theelement, thetext, theordinal);
+			selectByRadioGroup(theelement.getElement(), thetext, theordinal);
 			
 		}else {
 			
@@ -726,9 +758,9 @@ ret.add(mo);
 	}
 	
 	private void evalJSOnObject( PlayingContext ctx) throws TcXmlException {
-		WebElement finded = controller.identifyElement(theTestObject,ctx.getCurrentExecutionContext());
+		FoundedElement finded = controller.identifyElement(theTestObject,ctx.getCurrentExecutionContext());
 		ArgModel code = argumentMap.get("Code");
-		controller.evalJavascriptOnObject(code.getValue(),finded,ctx.getCurrentExecutionContext());
+		controller.evalJavascriptOnObject(code.getValue(),finded.getElement(),ctx.getCurrentExecutionContext());
 		
 		
 		
@@ -741,7 +773,7 @@ ret.add(mo);
 		IdentificationMethod identMetho = IdentificationMethod.get(identmethodstr);
 		
 		String identjs = this.getIdentForTestObject( identmethodstr);
-		long TIMEOUTWAIT = 20;
+		long TIMEOUTWAIT = 30;
 		WebDriverWait w = new WebDriverWait(controller.getDriver(), TIMEOUTWAIT );
 		switch(identMetho) {
 		
@@ -756,13 +788,15 @@ ret.add(mo);
 			break;
 		
 		case XPATH : 
-		
-		String xpath = controller.getXpathForTestObject(theTestObject);
+			ExpectedCondition<Boolean> loxp = new LocatedByXpath(controller, ctx.getCurrentExecutionContext(), this.theTestObject);
+		//String xpath = controller.getXpathForTestObject(theTestObject);
 		
 		try {
 		
-		By locator = By.xpath(xpath);
-		w.until(ExpectedConditions.numberOfElementsToBeMoreThan(locator, 0)   );
+		//By locator = By.xpath(xpath);
+			
+			
+			w.until(loxp);
 		//tcXmlController.highLightXpath(xpath);
 		}catch (TimeoutException e) {
 			throw new TcXmlException("timeout " + TIMEOUTWAIT, e);
@@ -827,14 +861,18 @@ public void doclick( PlayingContext ctx) throws TcXmlException {
 		
 
 		
-		WebElement finded = controller.identifyElement(theTestObject,ctx.getCurrentExecutionContext());
+		FoundedElement finded = controller.identifyElement(theTestObject,ctx.getCurrentExecutionContext());
+		controller.switchToCorrectFrame(finded);
 		controller.highlight(finded);
 			final Actions actions = new Actions(controller.getDriver());
 		//	actions.moveToElement(controller.identifyElement(to, ctx.getCurrentExecutionContext())).click().perform();
 			
-			actions.moveToElement(controller.identifyElement(theTestObject, ctx.getCurrentExecutionContext())).perform();
-			actions.moveToElement(controller.identifyElement(theTestObject, ctx.getCurrentExecutionContext())).click().perform();
 		
+			actions.moveToElement(controller.identifyElement(theTestObject, ctx.getCurrentExecutionContext()).getElement()).perform();
+			actions.moveToElement(controller.identifyElement(theTestObject, ctx.getCurrentExecutionContext()).getElement()).click().perform();
+	
+			
+			controller.switchToDefaultFrame();
 	}
 
 	
@@ -849,7 +887,7 @@ public void doclick( PlayingContext ctx) throws TcXmlException {
 		 boolean clear = new Boolean(cleararg.getValue());
 			
 		 final Actions actions = new Actions(controller.getDriver());
-		 actions.moveToElement(controller.identifyElement(theTestObject, ctx.getCurrentExecutionContext())).perform(); 
+		 actions.moveToElement(controller.identifyElement(theTestObject, ctx.getCurrentExecutionContext()).getElement()).perform(); 
 	/// if argument is in js it should be evaluated before
 			 if(isj || isparam) {
 				 

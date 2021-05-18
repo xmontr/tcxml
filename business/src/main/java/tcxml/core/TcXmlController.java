@@ -29,6 +29,7 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.Properties;
 import java.util.Set;
+import java.util.Stack;
 import java.util.UUID;
 import java.util.logging.FileHandler;
 import java.util.logging.Level;
@@ -1781,20 +1782,20 @@ try {
 	public void typeText(ExecutionContext ctx, TestObject to ,String text, long typingInterval, boolean clear) throws TcXmlException {
 		ensureDriver();
 		
-		WebElement finded = this.identifyElement(to,ctx);
+		FoundedElement finded = this.identifyElement(to,ctx);
 		
 	
 		
 		 highlight(finded);
 		 if(clear) {
 			 getLog().fine("clear input before typing text " + text);
-			 this.identifyElement(to,ctx).clear();
+			 this.identifyElement(to,ctx).getElement().clear();
 			 
 		 }
 
 			final String[] aletter = text.split(StringUtils.EMPTY);
 			for(int i = 0 ; i < aletter.length ; i++) {
-				finded.sendKeys(aletter[i]);
+				finded.getElement().sendKeys(aletter[i]);
 				try {
 					Thread.sleep(typingInterval);
 				} catch (InterruptedException e) {
@@ -1839,15 +1840,30 @@ try {
 
 
 
-public void highlight(final WebElement webElement) throws TcXmlException {
+public void highlight(final FoundedElement founded) throws TcXmlException {
 	
 	
 	// store the webelement in the dom and call the highlighter extension
 
 	final JavascriptExecutor js = (JavascriptExecutor) driver;
 	final String scriptSetAttrValue = "var event = new CustomEvent('highlight', { detail: 'xa' });arguments[0].dispatchEvent(event);";
-	js.executeScript(scriptSetAttrValue, webElement);
+	js.executeScript(scriptSetAttrValue, founded.getElement());
 }
+
+
+
+public void highlight(final WebElement founded) throws TcXmlException {
+	
+	
+	// store the webelement in the dom and call the highlighter extension
+
+	final JavascriptExecutor js = (JavascriptExecutor) driver;
+	final String scriptSetAttrValue = "var event = new CustomEvent('highlight', { detail: 'xa' });arguments[0].dispatchEvent(event);";
+	js.executeScript(scriptSetAttrValue, founded);
+}
+
+
+
 
 
 public void launchIdentSelector() {
@@ -2060,6 +2076,115 @@ public HashMap<Transaction, TruLibrary> getAlltransactions() {
 	
 	
 }
+
+
+private List<FoundedElement>  identifyElementAcrossFrame(Stack<WebElement> stackframe, TestObject to, ExecutionContext ctx) throws  TcXmlException{
+
+	List<FoundedElement> ret = new ArrayList<FoundedElement>();	
+	String method = to.getIdents().getActive();
+	
+IdentificationMethod identmetho = IdentificationMethod.get(method);
+	
+	switch (identmetho) {
+	case XPATH:
+		String xp = getIdentForTestObject(to, method);
+		this.ensureDriver();
+		WebDriver driver = this.getDriver();
+		
+		
+	    // look inside the current frame
+		final ByXPath xp2 = new ByXPath(xp);	
+		List<WebElement> elements = driver.findElements(xp2);
+		for (WebElement webElement : elements) {
+			FoundedElement founded = new FoundedElement((Stack<WebElement>) (Stack<WebElement>)stackframe.clone(), webElement);
+		ret.add(founded);	
+		getLog().info("found 1 element " + webElement  );
+		
+		}
+
+		//look inside the frame of the document
+		List<WebElement> iframelist = driver.findElements(By.tagName("iframe"));
+		getLog().info("found " + iframelist.size() + "  frames in document ");
+
+		
+		
+	    for(int i=0; i<iframelist.size(); i++){
+	    	WebElement currentFrame = iframelist.get(i);
+	    	getLog().info("switch to child frame id= " + currentFrame.getAttribute("id"));
+		 driver.switchTo().frame(currentFrame);
+		
+	
+		stackframe.push(currentFrame);
+		
+		
+		  List<FoundedElement> elementsInFrame = identifyElementAcrossFrame(stackframe,to,ctx);
+		ret.addAll(elementsInFrame);
+		getLog().info("found " + elementsInFrame.size() + " elements in frame current frame " );
+	    driver.switchTo().parentFrame();
+	    stackframe.pop();
+	    getLog().info("switch to parent from  frame " );
+	    }
+	
+			
+			
+		
+	
+	
+		
+		
+		
+		break;
+	case JAVASCRIPT :   
+		String identjs = getIdentForTestObject(to, method);
+		WebElement thefounded = evalJavascriptForIdentification(identjs,ctx);
+		FoundedElement founded = new FoundedElement( thefounded);
+		ret.add(founded);
+		break;
+
+	default:
+		throw new TcXmlException("identification method not supported " + method, new IllegalArgumentException());
+		
+	}	
+	
+	
+	
+	
+	
+	
+	
+	return ret;	
+}
+
+
+public void switchToCorrectFrame( FoundedElement founded) { 
+	
+	Stack<WebElement> stack = founded.getFrames();
+	
+	while( !stack.isEmpty()) {
+		
+	WebElement frame = stack.pop() ; 
+	
+	getLog().info("switch to frame " + frame.getAttribute("id"));
+		
+		driver.switchTo().frame(frame);
+	}
+	
+}
+
+public void switchToDefaultFrame() {
+	
+	driver.switchTo().defaultContent();
+	
+	
+	
+}
+
+
+
+
+
+
+
 /**
  *  uniquely identify the testobject acording the identification method or theow TcxmlExceptio
  * 
@@ -2070,41 +2195,21 @@ public HashMap<Transaction, TruLibrary> getAlltransactions() {
  */
 
 
-public WebElement identifyElement(TestObject to, ExecutionContext ctx) throws  TcXmlException{
-	String method = to.getIdents().getActive();
-	
-IdentificationMethod identmetho = IdentificationMethod.get(method);
-	WebElement ret = null;
-	switch (identmetho) {
-	case XPATH:
-		String xp = getIdentForTestObject(to, method);
-		this.ensureDriver();
-		WebDriver driver = this.getDriver();
-		final ByXPath xp2 = new ByXPath(xp);	
-		List<WebElement> elements = driver.findElements(xp2);
-		this.checkUnicity(elements, xp);
-		ret = elements.get(0);
-		
-		
-		
-		break;
-	case JAVASCRIPT :   
-		String identjs = getIdentForTestObject(to, method);
-		ret = evalJavascriptForIdentification(identjs,ctx);
-		
-		
-		break;
+public FoundedElement identifyElement(TestObject to, ExecutionContext ctx) throws  TcXmlException{
 
-	default:
-		throw new TcXmlException("identification method not supported " + method, new IllegalArgumentException());
-		
+	Stack<WebElement> stackframe = new Stack<WebElement>();
+	List<FoundedElement> founded = identifyElementAcrossFrame(stackframe , to, ctx);
+	
+	
+	if (Objects.isNull(founded) || founded.isEmpty()) {
+		throw new TcXmlException("No item found for testobjet"  ,new IllegalStateException());
 	}
-	// ensure the element is displayed
-		/*
-		 * WebDriverWait wait = new WebDriverWait(driver, 1); try { ret =
-		 * wait.until(ExpectedConditions.elementToBeClickable(ret)); }catch (Exception
-		 * e) { getLog().warning("wait 1s extra to ensure the element is clickable "); }
-		 */
+	if ((founded).size() > 1) {
+		throw new TcXmlException("Multiple items found for testobject" , new IllegalStateException());
+	}
+	
+ FoundedElement ret = founded.get(0);	
+	
 	
 	return ret;
 }
