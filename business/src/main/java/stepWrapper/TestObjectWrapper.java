@@ -391,7 +391,9 @@ ret.add(mo);
 		String[] tabArray = allTabs.toArray(new String[allTabs.size()]);
 		try {
 		int tabindex = Integer.parseInt(evaltabNum);
+		String windowName = tabArray[tabindex -1 ] ;
 		dr.switchTo().window(tabArray[tabindex -1 ]);
+		controller.getLog().info("switching to tab index=" + tabindex + " name=" +windowName );
 		}catch (Exception e) {
 			
 			throw new TcXmlException("fail to activate tab with  " + evaltabNum, e);
@@ -778,7 +780,7 @@ ret.add(mo);
 		switch(identMetho) {
 		
 		case JAVASCRIPT:			
-			ExpectedCondition<Boolean> lo = new LocatedByJavascript(identjs, controller, ctx.getCurrentExecutionContext()) ;
+			ExpectedCondition<Boolean> lo = new LocatedByJavascript(identjs, controller, ctx.getCurrentExecutionContext(), this.theTestObject) ;
 			try {
 			w.until(lo);
 			

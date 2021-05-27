@@ -1356,9 +1356,19 @@ public ScriptEngine  getJSengine() {
 
 public Object evaluateJS(String code, ExecutionContext ctx) throws TcXmlException {
 	
-	 
+	
+	
+	
 	ScriptEngine engine = getJSengine();
 	   ScriptContext context = ctx.getJsContext();
+	   
+	   
+	   
+	// set correct windo in context before evaluation
+	   
+	   Object thewindow= getCurrentWindow();
+	   context.setAttribute("window", thewindow, ScriptContext.GLOBAL_SCOPE);
+	   
 	   
 	   log.info(" evaluationg javascript:\n " + code);
 	   log.fine(" context id is" + context);
@@ -1372,14 +1382,20 @@ public Object evaluateJS(String code, ExecutionContext ctx) throws TcXmlExceptio
 		
 		return ret;
 	} catch (ScriptException e) {
+		
 		ctx.dumpJsContext();
-		throw new TcXmlException("fail to evaluate js code" + code , e);
+		throw new TcXmlException("fail to evaluate js code(line=" +e.getLineNumber() + "col=" + e.getColumnNumber() +" )\n" + code , e);
 	
 	}
 	
 	
 	
 	
+}
+
+public  WebElementWrapper2 getCurrentWindow() {
+
+	return new WebElementWrapper2(null, this);
 }
 
 
@@ -1484,6 +1500,11 @@ public  ScriptContext   buildInitialJavascriptContext() throws TcXmlException {
 		// the alert function
 		AlertFunction alert = new AlertFunction(this);	
 		context.setAttribute("alert", alert, ScriptContext.ENGINE_SCOPE);
+		
+		
+		// import the window of the current frame
+		
+		
 	
 	   
 
@@ -2085,11 +2106,12 @@ private List<FoundedElement>  identifyElementAcrossFrame(Stack<WebElement> stack
 	
 IdentificationMethod identmetho = IdentificationMethod.get(method);
 	
+this.ensureDriver();
+WebDriver driver = this.getDriver();
 	switch (identmetho) {
 	case XPATH:
 		String xp = getIdentForTestObject(to, method);
-		this.ensureDriver();
-		WebDriver driver = this.getDriver();
+
 		
 		
 	    // look inside the current frame
@@ -2136,9 +2158,42 @@ IdentificationMethod identmetho = IdentificationMethod.get(method);
 		break;
 	case JAVASCRIPT :   
 		String identjs = getIdentForTestObject(to, method);
-		WebElement thefounded = evalJavascriptForIdentification(identjs,ctx);
-		FoundedElement founded = new FoundedElement( thefounded);
-		ret.add(founded);
+		
+		// look inside the current frame
+		 elements = evalJavascriptForIdentification(identjs,ctx);
+		for (WebElement webElement : elements) {
+			FoundedElement founded = new FoundedElement((Stack<WebElement>) (Stack<WebElement>)stackframe.clone(), webElement);
+		ret.add(founded);	
+		getLog().info("found 1 element " + webElement  );
+		
+		}
+		
+		//look inside the frame of the document
+		 iframelist = driver.findElements(By.tagName("iframe"));
+		getLog().info("found " + iframelist.size() + "  frames in document ");
+
+		
+		
+	    for(int i=0; i<iframelist.size(); i++){
+	    	WebElement currentFrame = iframelist.get(i);
+	    	getLog().info("switch to child frame id= " + currentFrame.getAttribute("id"));
+		 driver.switchTo().frame(currentFrame);
+		
+	
+		stackframe.push(currentFrame);
+		
+		
+		  List<FoundedElement> elementsInFrame = identifyElementAcrossFrame(stackframe,to,ctx);
+		ret.addAll(elementsInFrame);
+		getLog().info("found " + elementsInFrame.size() + " elements in frame current frame " );
+	    driver.switchTo().parentFrame();
+	    stackframe.pop();
+	    getLog().info("switch to parent from  frame " );
+	    }
+		
+		
+		
+
 		break;
 
 	default:
@@ -2225,7 +2280,7 @@ public FoundedElement identifyElement(TestObject to, ExecutionContext ctx) throw
  * @throws TcXmlException
  */
 
-WebElement evalJavascriptForIdentification(String identjs, ExecutionContext ctx) throws  TcXmlException{
+List<WebElement> evalJavascriptForIdentification(String identjs, ExecutionContext ctx) throws  TcXmlException{
 	
 	ScriptContext currentjscontext = ctx.getJsContext();
 	ScriptContext identificationcontext = buildIdentificationJavascriptContext(ctx);
@@ -2238,8 +2293,8 @@ WebElement evalJavascriptForIdentification(String identjs, ExecutionContext ctx)
 			
 			log.fine("return for evaluateJS is " + ret);
 
-			checkUnicity(ret, identjs);
-			return ret.get(0);
+			
+			return ret;
 		} catch (ScriptException e) {
 			ctx.dumpJsContext();
 			throw new TcXmlException("fail to evaluate js code for identification ", e);
