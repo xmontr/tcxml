@@ -105,8 +105,19 @@ while(current.parent != null){
 		
 		retjs = jsexecutor.executeScript(script.toString(),args ) ;	
 	}else { // call made on a htmlelement
-		script.append("return ").append("arguments[0].").append(name).append(".apply(arguments[1])" );
-		retjs = jsexecutor.executeScript(script.toString(),parent,args ) ;	
+		
+	
+		
+		
+		
+		script.append("return ").append("arguments[0].").append(name).append(".apply(arguments[0],arguments[1])" );
+		Object[] convertedArgs = convertArgs(args);
+		// debug
+		String debugscript =" console.log(\"arg0:\"); console.log(arguments[0]);console.log(\"arg1:\"); console.log(arguments[1]);";
+		jsexecutor.executeScript(debugscript.toString() ,parent.getTheElement(),convertedArgs  ) ;
+		
+		String thejs = script.toString();
+		retjs = jsexecutor.executeScript(thejs ,parent.getTheElement(),convertedArgs  ) ;	
 	}
 	if(retjs instanceof WebElement) {
 		ret = new WebElementWrapper2((WebElement)retjs, controller);
@@ -118,6 +129,22 @@ while(current.parent != null){
 	}
 	
 	
+	private Object[] convertArgs(Object[] args) {
+		Object[] ret = new Object[args.length];
+		for (int i = 0; i < args.length; i++) {
+			if(args[i] instanceof  WebElementWrapper2 ) {
+			ret[i]	= ((WebElementWrapper2) args[i]).getTheElement();
+			}else {
+				
+			ret[i]=args[i];	
+			}
+			
+		}
+		
+		
+		return ret;
+	}
+
 	public WebElement getTheElement() {
 		return theElement;
 	}
@@ -161,8 +188,14 @@ while(current.parent != null){
 				
 		if (typejs.equals("object")) { // directly readable by rhino, return it
 			
-			return retjs;
+			ret	=new WebElementWrapper2(this.getTheElement() , controller);
+						ret.setParent(this);
+			ret.setName(name);
 					
+					
+				}else {
+				
+					return retjs;
 					
 				}
 				
