@@ -92,6 +92,7 @@ import stepWrapper.ActionWrapper;
 import stepWrapper.FunctionWrapper;
 import stepWrapper.RunLogicWrapper;
 import stepWrapper.StepWrapperFactory;
+import tcxml.core.javascript.JsObject;
 import tcxml.core.parameter.DynamicParameter;
 import tcxml.core.parameter.StepParameter;
 import tcxml.model.ArgModel;
@@ -1393,9 +1394,9 @@ public Object evaluateJS(String code, ExecutionContext ctx) throws TcXmlExceptio
 	
 }
 
-public  WebElementWrapper2 getCurrentWindow() {
+public  JsObject getCurrentWindow() {
 
-	return new WebElementWrapper2(null, this);
+	return new JsObject("window",null, this);
 }
 
 
@@ -1638,6 +1639,8 @@ public SessionId openChromeBrowserBrowser (ChromeDriverService cds) throws TcXml
 	 
 
 	options.setExperimentalOption("useAutomationExtension", false);
+	
+
 	
 	try {
 		

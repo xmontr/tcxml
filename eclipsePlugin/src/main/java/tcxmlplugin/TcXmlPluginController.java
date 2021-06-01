@@ -190,6 +190,14 @@ public class TcXmlPluginController
 			
 		}
 		 
+		 
+			// verbose loogging
+			
+			System.setProperty(ChromeDriverService.CHROME_DRIVER_LOG_PROPERTY, "C:\\TEMP\\chromedriver.log");
+
+			System.setProperty(ChromeDriverService.CHROME_DRIVER_VERBOSE_LOG_PROPERTY, "true");
+		 
+		 
 		 String path2chrome = Activator.getDefault().getPreferenceStore().getString(tcxmlplugin.composite.preference.TcXmlPreference.PATH2CHROME);	 
 		 chromeService = new ChromeDriverService.Builder()
 				    .usingDriverExecutable(new File(path2chrome))

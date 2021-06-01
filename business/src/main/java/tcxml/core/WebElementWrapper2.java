@@ -36,6 +36,8 @@ public class WebElementWrapper2  extends AbstractJSObject {
 	}
 
 	private TcXmlController controller;
+	private Object[] lastArguments;
+	private String functName;
 	
 	
 	
@@ -99,6 +101,7 @@ while(current.parent != null){
 		WebElementWrapper2 ret = null;
 	JavascriptExecutor jsexecutor = (JavascriptExecutor) controller.getDriver();	
 	StringBuffer script= new StringBuffer();
+	StringBuffer typeofscript= new StringBuffer();
 	
 	if( parent  == null) {// call made on window member
 		script.append("return ").append(name).append(".apply(arguments[1])" );
@@ -107,14 +110,39 @@ while(current.parent != null){
 	}else { // call made on a htmlelement
 		
 	
-		
-		
-		
-		script.append("return ").append("arguments[0].").append(name).append(".apply(arguments[0],arguments[1])" );
+		// check return type
+		typeofscript.append("var res =").append("arguments[0].").append(name).append(".apply(arguments[0],arguments[1]); return typeOf(res);" );
 		Object[] convertedArgs = convertArgs(args);
-		// debug
-		String debugscript =" console.log(\"arg0:\"); console.log(arguments[0]);console.log(\"arg1:\"); console.log(arguments[1]);";
-		jsexecutor.executeScript(debugscript.toString() ,parent.getTheElement(),convertedArgs  ) ;
+		
+		
+		script.append("var res =").append("arguments[0].").append(name).append(".apply(arguments[0],arguments[1]); return res;" );
+		String typejs = (String)jsexecutor.executeScript(typeofscript.toString(),parent.getTheElement(),convertedArgs   ) ; 
+		if (typejs.equals("function")) {
+		ret	=new WebElementWrapper2(this.getTheElement() , controller);
+		ret.setFunct(true);	
+		ret.setParent(this);
+		ret.setName(name);
+		}
+		if (typejs.equals("object")) { // directly readable by rhino, return it
+			
+			ret	=new WebElementWrapper2(this.getTheElement() , controller);
+						ret.setParent(this);
+						ret.setLastArguments(args);
+						ret.setFunctName(name);
+			ret.setName(name);
+					
+					
+				}else { // primitive tyupe return it directly
+					 retjs = jsexecutor.executeScript(script.toString(),parent.getTheElement(),convertedArgs   ) ;
+					return retjs;
+					
+				}
+		
+		
+		
+		
+		
+		
 		
 		String thejs = script.toString();
 		retjs = jsexecutor.executeScript(thejs ,parent.getTheElement(),convertedArgs  ) ;	
@@ -129,6 +157,16 @@ while(current.parent != null){
 	}
 	
 	
+	private void setFunctName(String fname) {
+		this.functName=fname;
+		
+	}
+
+	private void setLastArguments(Object[] args) {
+		this.lastArguments=(args);
+		
+	}
+
 	private Object[] convertArgs(Object[] args) {
 		Object[] ret = new Object[args.length];
 		for (int i = 0; i < args.length; i++) {
@@ -211,7 +249,13 @@ while(current.parent != null){
 			
 			
 		}else { // called on other webelement
-			script.append("return arguments[0]." ).append(name);
+			if(this.lastArguments == null) {
+				script.append("return arguments[0]." ).append(name);	
+			} else {
+				script.append("var res =").append("arguments[0].").append(functName).append(".apply(arguments[0],arguments[1]); return res;" );	
+				script.append("return arguments[0]." ).append(name);
+			}
+			
 			retjs = jsexecutor.executeScript(script.toString(),theElement ) ;	
 			controller.getLog().info("js to evaluate is:" + script.toString());
 			if(! (retjs instanceof WebElement)) { // return a function or object that we need to mirror
