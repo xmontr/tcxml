@@ -184,6 +184,7 @@ public String getName() {
 		case "Go Back":addGoBackArgument(ret);break;
 		case "Reload":addReloadArgument(ret);break;
 		case "Activate Tab":addActivateTabArgument(ret);break;
+		case "Press Key":addPressKeyArgument(ret);break;
 		
 		default: throw new TcXmlException("no default value for step testobject action = " + step.getAction() + " id= " +step.getStepId()  , new IllegalArgumentException(step.getAction())) ; 
 		
@@ -192,6 +193,36 @@ public String getName() {
 		return ret;
 	}
 	
+	private void addPressKeyArgument(ArrayList<ArgModel> ret) {
+		ArrayList<String>val = new ArrayList<String>();
+		val.add("Enter");
+		val.add("Space");
+		val.add("BackSpace");
+		val.add("Tab");
+		val.add("Escape");
+
+		ListArgModel mo = new ListArgModel("Key Name", val);
+		mo.setValue("Enter");
+ret.add(mo);
+mo = TcxmlUtils.getTruefalseListArgModel("Alt Key", "false");	
+
+ret.add(mo);
+
+mo = TcxmlUtils.getTruefalseListArgModel("Ctrl Key", "false");
+
+ret.add(mo);
+
+mo =  TcxmlUtils.getTruefalseListArgModel("Shift Key", "false");
+
+ret.add(mo);
+
+
+
+
+
+		
+	}
+
 	private void addActivateTabArgument(ArrayList<ArgModel> ret) {
 		ArgModel mo;
 		mo = new ArgModel("Ordinal");
@@ -563,6 +594,7 @@ ret.add(mo);
 		case "Set" : doSet(ctx);break;
 		case "Upload": doUpload(ctx);break;
 		case "Wait for Property":waitForProperty(ctx);break;
+		case "Press Key":doKeyPress(ctx);break;
 		
 		default: notImplemented();
 		}
@@ -572,6 +604,26 @@ ret.add(mo);
 	}
 	
 	
+	private void doKeyPress(PlayingContext ctx) throws TcXmlException {
+		ArgModel thekey = argumentMap.get("Key Name");
+		FoundedElement theelement = controller.identifyElement(theTestObject, ctx.getCurrentExecutionContext());
+		
+		String keyVal = thekey.getValue();
+		switch(keyVal) {
+		
+		case "Enter" : theelement.getElement().sendKeys(Keys.RETURN); break;
+		case "Space" : theelement.getElement().sendKeys(Keys.SPACE); break;
+		case "Tab" : theelement.getElement().sendKeys(Keys.TAB); break;
+		case "BackSpace" : theelement.getElement().sendKeys(Keys.BACK_SPACE); break;
+		
+		}
+		
+		controller.getLog().info("pressing key  " + keyVal + " on element " + theelement.getElement().getTagName());	
+		
+		
+		
+	}
+
 	private void doUpload(PlayingContext ctx) throws TcXmlException {
 		ArgModel thepath = argumentMap.get("Path");
 		FoundedElement theelement = controller.identifyElement(theTestObject, ctx.getCurrentExecutionContext());

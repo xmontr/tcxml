@@ -69,7 +69,7 @@
     		<element name="roles" type="tns:roles"></element>
     		<element name="idents" type="tns:idents"></element>
     		<element ref="tns:icon" maxOccurs="unbounded" minOccurs="0"></element>    		
-    		<element name="methods" type="string"></element>
+    		<element name="methods" type="tns:methods"></element>
     	</sequence>
     	<attribute name="testObjId" type="string"></attribute>
     	<attribute name="autoName" type="string"></attribute>
@@ -99,6 +99,14 @@
 
 
     <complexType name="ident">    
+    	<simpleContent>
+    		<extension base="tns:cdataString">
+
+    			<attribute name="type" type="string"></attribute>
+    		</extension>
+    	</simpleContent>
+    </complexType>
+        <complexType name="methods">    
     	<simpleContent>
     		<extension base="tns:cdataString">
 
